@@ -2,10 +2,10 @@
   "name": "graphally",
   "displayName": "graphally",
   "version": "1.0.0",
-  "description": "Professional diagrams as SVG from short HTML: architecture with Azure icons, networks, hierarchies, BPMN, sequence, Gantt, and Terraform repositories.",
+  "description": "Professional diagrams as SVG from short HTML: architecture with Azure and AWS icons, networks, hierarchies, BPMN, sequence, Gantt, and Terraform repositories.",
   "author": { "name": "Kamil Wilczyński", "url": "https://github.com/kwilcz" },
   "homepage": "https://github.com/kwilcz/graphally",
   "repository": "https://github.com/kwilcz/graphally",
   "license": "LicenseRef-graphally-Use-Only-1.0",
-  "keywords": ["diagram", "architecture", "svg", "azure", "terraform", "bpmn", "sequence", "gantt"]
+  "keywords": ["diagram", "architecture", "svg", "azure", "aws", "terraform", "bpmn", "sequence", "gantt"]
 }

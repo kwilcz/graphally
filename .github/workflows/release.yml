@@ -1,19 +1,100 @@
-# Attaches the skill as a zip to every published release, for clients that install skills
-# by upload (Claude.ai, Claude Desktop).
-name: Release skill
+# Checks every pull request, and releases every push to main: a version, a tag and a
+# GitHub release with the skill attached as a zip. Skill installers (gh skill install,
+# npx skills add, Claude Code plugins) then always find the latest code.
+#
+# Versions are MAJOR.MINOR.PATCH. Only the major is set by hand, in
+# .claude-plugin/plugin.json; tools/release.mjs works out the minor and patch, and the
+# release commits the new version back to main.
+name: Release
+
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
 permissions:
-  contents: write
+  contents: read
+
 jobs:
-  package:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate the skill
+        run: pipx run --spec skills-ref==0.1.1 skills-ref validate skills/graphally
+      - name: Validate the plugin and its marketplace
+        run: npx --yes @anthropic-ai/claude-code@2.1.290 plugin validate .
+      - name: Render the samples
+        run: |
+          # Ubuntu 24.04 restricts the user namespaces that Chrome's sandbox uses.
+          sudo sysctl -qw kernel.apparmor_restrict_unprivileged_userns=0 2>/dev/null || true
+          out="$RUNNER_TEMP/out"
+          failed=0
+          mkdir -p "$out/terraform-draft"
+          node skills/graphally/scripts/tf2graphally.mjs samples/terraform/repo --out "$out/terraform-draft/draft.html" || failed=1
+          for f in samples/*/diagram.html "$out/terraform-draft/draft.html"; do
+            node skills/graphally/scripts/graphally.mjs render "$f" --out "$out/$(basename "$(dirname "$f")")" || failed=1
+          done
+          exit $failed
+
+  release:
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # history and tags, to work out the version
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Work out the version
+        id: version
+        run: node tools/release.mjs next
+      - name: Commit and tag the version
+        id: tag
+        if: steps.version.outputs.tag
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898315+github-actions[bot]@users.noreply.github.com'
+          node tools/release.mjs stamp "${TAG#v}"
+          refs=()
+          if ! git diff --quiet; then
+            git commit -qm "Release $TAG" .claude-plugin/plugin.json
+            refs+=(HEAD:main)
+          fi
+          git tag -a "$TAG" -m "graphally $TAG"
+          if git push --atomic origin "${refs[@]}" "refs/tags/$TAG"; then
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          else
+            git fetch -q origin main
+            if [ "$(git rev-parse origin/main)" = "$GITHUB_SHA" ]; then exit 1; fi
+            echo "::notice::main moved during the release; the run for the newer push releases it."
+          fi
       - name: Package the skill
-        run: cd skills && zip -r ../graphally-skill.zip graphally
-      - name: Attach the zip to the release
+        if: steps.tag.outputs.pushed
+        run: cd skills && zip -qr ../graphally-skill.zip graphally -x 'graphally/assets/icons/*'
+      - name: Publish the release
+        if: steps.tag.outputs.pushed
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${{ github.event.release.tag_name }}" graphally-skill.zip --clobber
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          notes=$(cat <<EOF
+          Install:
+          - Claude Code: \`/plugin install graphally --marketplace ${GITHUB_REPOSITORY}\`
+          - GitHub CLI: \`gh skill install ${GITHUB_REPOSITORY} graphally@${TAG} --agent claude-code --scope user\`
+          - Claude.ai and Claude Desktop: upload \`graphally-skill.zip\` from the assets below.
+          EOF
+          )
+          gh release create "$TAG" graphally-skill.zip --verify-tag --title "graphally $TAG" --notes "$notes" --generate-notes

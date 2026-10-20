@@ -48,9 +48,15 @@ gh skill install kwilcz/graphally graphally --agent claude-code --scope user
 npx skills add kwilcz/graphally --skill graphally -a claude-code -g
 ```
 
-**Claude.ai and Claude Desktop**: download `graphally-skill.zip` from the
-[latest release](https://github.com/kwilcz/graphally/releases/latest) and upload it under
-Settings → Capabilities → Skills.
+**Claude.ai and Claude Desktop**: download
+[`graphally-skill.zip`](https://github.com/kwilcz/graphally/releases/latest/download/graphally-skill.zip)
+from the latest release and upload it under Settings → Capabilities → Skills.
+
+**Updates.** Every change to `main` is released, so each installer finds the latest
+version. In Claude Code, turn on auto-update for the graphally marketplace (`/plugin`, then
+Marketplaces) or run `claude plugin update graphally@graphally`. Elsewhere, run
+`gh skill update graphally` or `npx skills update graphally`. To stay on one version,
+install its tag: `gh skill install kwilcz/graphally graphally@v1.2.0`.
 
 If no browser is found, the skill says so; `npx playwright install chromium` installs
 one, or set `CHROMIUM_PATH` to an existing browser. Without internet access, diagrams
@@ -202,7 +208,20 @@ Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling
 | [`.claude-plugin/`](.claude-plugin) | the Claude Code plugin and marketplace manifests |
 | [`samples/`](samples) | briefs and the diagrams drawn from them |
 | [`docs/design.md`](docs/design.md) | how graphally works, illustrated with diagrams it drew ([sources](docs/diagrams)) |
-| [`tools/`](tools) | maintenance scripts, such as rebuilding the icon pack |
+| [`.github/workflows/`](.github/workflows) | the workflow that checks pull requests and releases every push to `main` |
+| [`tools/`](tools) | maintenance scripts: the Azure icon list, the release version |
+
+## Releases
+
+[`release.yml`](.github/workflows/release.yml) checks every pull request and releases
+every push to `main`. The check validates the skill and the plugin manifests and renders
+every sample. The release tags the commit, publishes a GitHub release with the skill
+attached as a zip, and commits the new version to `.claude-plugin/plugin.json`.
+
+Versions are `MAJOR.MINOR.PATCH`, and only the major is set by hand. The minor goes up
+when a release changes the skill or the plugin manifests, the patch when only the rest of
+the repository changed: docs, samples, tools. To start a new major version, raise it in
+`.claude-plugin/plugin.json`; the next release is `MAJOR.0.0`.
 
 ## Licence
 
