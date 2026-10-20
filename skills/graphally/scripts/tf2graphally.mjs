@@ -18,6 +18,7 @@ const icons = name => { const r = resolveIcon(name); return r && !r.error; };
 
 const { html, summary } = terraformToDiagram(dir, { title: opt('--title'), icons });
 const out = opt('--out') || 'draft.html';
+fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
 fs.writeFileSync(out, html);
 const folded = Object.entries(summary.folded).map(([k, v]) => `${v} ${k}`).join(', ');
 console.log(`${out}  ${summary.resources} resources${summary.modules ? `, ${summary.modules + 1} modules` : ''} -> ${summary.groups} boxes, ${summary.nodes} nodes, ${summary.links} links`);
