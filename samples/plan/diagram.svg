@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1136 540" width="1136" height="540" role="img" aria-label="Logistics move to AKS. Network: Hub VNet and site-to-site VPN, Spoke VNets and peering; Platform: AKS cluster and ingress, PostgreSQL and Service Bus, Monitoring and alerts; Applications: Pilot: tracking service, Move remaining services, Go-live; Security review: External pen test. Connections: Hub VNet and site-to-site VPN to Spoke VNets and peering; Spoke VNets and peering to AKS cluster and ingress; AKS cluster and ingress to Pilot: tracking service; Pilot: tracking service to Move remaining services; Move remaining services to Go-live; PostgreSQL and Service Bus to Pilot: tracking service; AKS cluster and ingress to Monitoring and alerts; External pen test to Go-live">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="gr1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker></defs>
+<g style="color: var(--ink); fill: var(--ink)">
+<rect width="100%" height="100%" style="fill: var(--bg)"></rect>
+<text class="g-title" x="24" y="40.5">Logistics move to AKS</text>
+<text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Migration plan for the steering group, first half of 2026</text>
+<rect x="24" y="116" width="1087" height="86" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="116" width="1087" height="86" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="116" width="122.4" height="86" style="fill: var(--lane-a); stroke: var(--line)" stroke-width="1"></rect>
+<text class="g-group" x="38" y="163.5">Network</text>
+<rect x="24" y="202" width="1087" height="122" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="202" width="1087" height="122" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="202" width="122.4" height="122" style="fill: var(--lane-b); stroke: var(--line)" stroke-width="1"></rect>
+<text class="g-group" x="38" y="267.5">Platform</text>
+<rect x="24" y="324" width="1087" height="122" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="324" width="1087" height="122" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="324" width="122.4" height="122" style="fill: var(--lane-c); stroke: var(--line)" stroke-width="1"></rect>
+<text class="g-group" x="38" y="389.5">Applications</text>
+<rect x="24" y="446" width="1087" height="50" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="446" width="1087" height="50" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="24" y="446" width="122.4" height="50" style="fill: var(--lane-d); stroke: var(--line)" stroke-width="1"></rect>
+<text class="g-group" x="38" y="475.5">Security review</text>
+<line x1="146.4" y1="110" x2="1111.2" y2="110" style="fill: none; stroke: var(--line)" stroke-width="1"></line>
+<line x1="315.2" y1="106" x2="315.2" y2="496" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
+<line x1="477.9" y1="106" x2="477.9" y2="496" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
+<line x1="658" y1="106" x2="658" y2="496" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
+<line x1="832.3" y1="106" x2="832.3" y2="496" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
+<path d="M295.6,152 L295.6,158 Q295.6,159 294.6,159 L294.6,159 Q293.6,159 293.6,160 L293.6,172 Q293.6,177 298.6,177 L303.6,177" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M377,188 L377,208 Q377,209 376,209 L376,209 Q375,209 375,210 L375,222 Q375,227 380,227 L385,227" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M499,238 L499,343 Q499,349 505,349 L524.4,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M638.4,360 L638.4,366 Q638.4,367 637.4,367 L637.4,367 Q636.4,367 636.4,368 L636.4,380 Q636.4,385 641.4,385 L646.4,385" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M841.7,396 L841.7,415 Q841.7,421 847.7,421 L971.7,421" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M501.4,274 L501.4,343 Q501.4,349 507.4,349 L524.4,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M499,238 L499,280 Q499,281 498,281 L498,281 Q497,281 497,282 L497,294 Q497,299 502,299 L507,299" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M963.7,460 L963.7,440 Q963.7,439 962.7,439 L962.7,439 Q961.7,439 961.7,438 L961.7,426 Q961.7,421 966.7,421 L971.7,421" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<rect x="158.4" y="130" width="145.2" height="22" rx="5" style="fill: var(--line); stroke: var(--woad)" stroke-width="1.2"></rect>
+<rect x="303.6" y="166" width="81.3" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
+<rect x="385" y="216" width="122" height="22" rx="5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1.2"></rect>
+<rect x="361.7" y="252" width="162.7" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
+<rect x="507" y="288" width="81.3" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
+<rect x="524.4" y="338" width="122" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
+<rect x="646.4" y="374" width="203.3" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
+<rect x="931.1" y="460" width="40.7" height="22" rx="5" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="5 4"></rect>
+<text class="g-msg" x="311.6" y="144.5" style="fill: var(--muted)">Hub VNet and site-to-site VPN</text>
+<text class="g-msg" x="393" y="180.5">Spoke VNets and peering</text>
+<text class="g-msg" x="515" y="230.5">AKS cluster and ingress</text>
+<text class="g-msg" x="532.4" y="266.5">PostgreSQL and Service Bus</text>
+<text class="g-msg" x="596.3" y="302.5">Monitoring and alerts</text>
+<text class="g-msg" x="654.4" y="352.5">Pilot: tracking service</text>
+<text class="g-msg" x="654.4" y="388.5">Move remaining services</text>
+<path d="M971.7331495098038,413 L979.7331495098038,421 L971.7331495098038,429 L963.7331495098038,421 Z" style="fill: var(--ink); stroke: var(--ink)" stroke-width="1"></path>
+<text class="g-msg" x="985.7" y="424.5">Go-live</text>
+<text class="g-msg" x="979.7" y="474.5">External pen test</text>
+<text class="g-sub" x="315.2" y="98" text-anchor="middle" style="fill: var(--muted)">Feb 2026</text>
+<text class="g-sub" x="477.9" y="98" text-anchor="middle" style="fill: var(--muted)">Mar</text>
+<text class="g-sub" x="658" y="98" text-anchor="middle" style="fill: var(--muted)">Apr</text>
+<text class="g-sub" x="832.3" y="98" text-anchor="middle" style="fill: var(--muted)">May</text>
+<line x1="483.7" y1="106" x2="483.7" y2="496" style="fill: none; stroke: var(--rust)" stroke-width="1.4" stroke-dasharray="5 3"></line>
+<text class="g-sub" x="487.7" y="510" style="fill: var(--rust)">today</text>
+</g>
+</svg>

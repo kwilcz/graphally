@@ -1,0 +1,23 @@
+<diagram layout=sequence numbered title="What one render does" subtitle="node scripts/graphally.mjs render diagram.html --png">
+  <node id=agent icon=user>Agent</node>
+  <node id=cli icon=code>graphally.mjs</node>
+  <node id=srv icon=server>Local server | 127.0.0.1 only</node>
+  <node id=chrome icon=browser>Browser | headless</node>
+  <links>
+  agent -> cli : render diagram.html
+  opt icon packs missing
+    cli -> cli : download Azure and AWS icons
+  end
+  cli -> srv : serve the skill and the diagram folder
+  cli -> chrome : launch over a DevTools pipe
+  cli -> chrome : open the harness page
+  chrome -> srv : GET engine, theme, icons, diagram
+  srv --> chrome : files
+  chrome -> chrome : measure, lay out, route, render
+  cli -> chrome : read results
+  chrome --> cli : SVG and problems
+  cli -> chrome : screenshot
+  chrome --> cli : PNG preview
+  cli --> agent : diagram.svg, diagram.png, ok
+  </links>
+</diagram>

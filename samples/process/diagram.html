@@ -1,0 +1,50 @@
+<diagram layout=lanes title="Expense claim approval" subtitle="Northwind, finance operations">
+  <lane id=emp label="Employee">
+    <start id=s>Expense incurred</start>
+    <task id=submit>Submit claim | with receipts</task>
+    <task id=correct>Correct claim</task>
+    <event id=notice type=message>Rejection notice</event>
+    <end id=rejected>Claim rejected</end>
+    <event id=paidnote type=message>Payment notice</event>
+    <end id=paid>Claim paid</end>
+  </lane>
+  <lane id=mgr label="Line manager">
+    <task id=review>Review claim</task>
+    <event id=late type=timer on=review>3 days</event>
+    <gateway id=decide>Approved?</gateway>
+    <task id=reject>Reject claim</task>
+  </lane>
+  <lane id=fin label="Finance">
+    <task id=finrev>Finance review | over £1,000</task>
+    <gateway id=finok>Approved?</gateway>
+    <task id=finrej>Reject claim</task>
+  </lane>
+  <lane id=erp label="ERP system">
+    <task id=validate>Validate claim | policy, receipts</task>
+    <gateway id=valid>Valid?</gateway>
+    <task id=remind>Send reminder</task>
+    <gateway id=over>Over £1,000?</gateway>
+    <task id=pay>Schedule payment | next payment run</task>
+  </lane>
+  <links>
+  s -> submit -> validate -> valid
+  valid -> correct : no
+  correct -> submit : resubmit
+  valid -> review : yes
+  late -> remind
+  remind ~> review : reminder
+  review -> decide
+  decide -> over : yes
+  decide -> reject : no
+  reject ~> notice : rejection
+  over -> pay : ≤ £1,000
+  over -> finrev : > £1,000
+  finrev -> finok
+  finok -> pay : yes
+  finok -> finrej : no
+  finrej ~> notice : rejection
+  notice -> rejected
+  pay ~> paidnote : payment
+  paidnote -> paid
+  </links>
+</diagram>

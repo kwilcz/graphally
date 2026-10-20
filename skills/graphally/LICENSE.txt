@@ -1,0 +1,153 @@
+graphally Use-Only License, version 1.0
+
+Copyright (c) 2026 Kamil Wilczyński (GitHub: kwilcz). All rights reserved.
+https://github.com/kwilcz/graphally
+
+In short (this summary is not part of the licence): you may install graphally, run it,
+and let your AI agents use its skill, for any purpose, including paid work inside your
+organisation, and the diagrams you make with it are yours. You may not copy it for
+others, change it, build on it, sell it, or put it into a product, service or other
+system, unless the author agrees in writing. This is not an open-source licence.
+
+
+1. Definitions
+
+"Licensor" means Kamil Wilczyński (GitHub: kwilcz).
+
+"Software" means all material in the graphally repository at
+https://github.com/kwilcz/graphally and in any copy of it, however obtained (including
+through a plugin marketplace, a skill installer or a release download): source code, the
+agent skill (the skills/graphally directory, including SKILL.md, its references, scripts
+and assets), prompts, documentation, samples, themes and images, any part of them, and
+any modified version of them.
+
+"Output" means the diagrams and other files that the Software generates from input you
+provide, such as an SVG or PNG compiled from a diagram source you or your agent wrote.
+
+"You" means the individual or legal entity exercising the rights in this licence. When
+you are an organisation, your employees and contractors acting on your behalf may
+exercise those rights for you.
+
+
+2. What you may do
+
+Subject to your compliance with this licence, the Licensor grants you a worldwide,
+royalty-free, non-exclusive, non-transferable, non-sublicensable and revocable licence to:
+
+  (a) download and install the Software, including with a plugin marketplace or skill
+      installer, and make the copies reasonably necessary for that, on devices, accounts,
+      build systems and agent environments that you control;
+
+  (b) run the Software, and let AI agents that you operate load and follow its skill, to
+      produce Output for any purpose, including commercial work within your organisation;
+
+  (c) read the Software in order to understand how to use it.
+
+
+3. Output
+
+The Licensor claims no rights in Output. You may use, change, publish and sell Output
+without restriction under this licence. Third-party material that Output contains, such
+as cloud provider icons, remains subject to its owners' terms (section 7).
+
+Diagram sources, themes and icon packs that you write yourself, and that use the
+Software only through its documented syntax and extension points, are yours.
+
+
+4. What you may not do
+
+Except as section 2 expressly permits, or with the Licensor's prior written permission,
+you may not, and may not allow anyone else to:
+
+  (a) copy, reproduce, publish, distribute, share or otherwise make available the
+      Software or any part of it, verbatim or modified, including the text of the skill
+      and its reference pages. Linking to the repository is always allowed;
+
+  (b) modify, translate or adapt the Software, create derivative works of it, or use it
+      (including its code, skill text, prompts or documentation) as the basis for other
+      software, skills, prompts or documentation. You may make changes to your own
+      installed copy that are strictly necessary to run it in your environment, provided
+      you never distribute them;
+
+  (c) incorporate, embed, bundle or integrate the Software or any part of it into any
+      product, service, platform, library, plugin, extension, skill collection, agent,
+      model, dataset or other system that is provided, licensed or made available to
+      anyone else, whether free of charge or for a fee, including hosted and
+      software-as-a-service offerings;
+
+  (d) sell, resell, rent, lease, license, sublicense or otherwise commercialise the
+      Software, or give others access to its functionality as a service;
+
+  (e) use the Software or any part of it to train, fine-tune or evaluate machine-learning
+      models, or include it in training data;
+
+  (f) remove, obscure or alter any copyright, licence or attribution notice in the
+      Software.
+
+
+5. Forks on GitHub
+
+If the repository is public on GitHub, GitHub's Terms of Service allow other GitHub users
+to view it and to fork it within GitHub. Such views and forks receive no rights beyond
+those the GitHub Terms of Service require; this licence governs everything else.
+
+
+6. Permission for other uses
+
+To ask for permission or a separate licence for any use this licence does not allow,
+contact the Licensor through https://github.com/kwilcz, for example by opening an issue
+in the repository. Permission counts only when given in writing by the Licensor.
+
+
+7. Third-party material
+
+This licence covers only the Licensor's own work. In particular:
+
+  - Cloud provider icons are not part of the Software and are not licensed under it.
+    The Software contains no icon artwork: scripts/fetch-icons.mjs downloads Microsoft's
+    Azure icons from the draw.io project and the AWS Architecture Icons from the
+    aws-icons package on the npm registry, onto your machine. Sample diagrams in the
+    repository contain some of these icons, used as the vendors permit icons to be used
+    in architecture diagrams and documentation. They remain subject to Microsoft's and
+    Amazon's terms.
+  - Browsers and other software the Software runs, such as Chrome, Chromium or Edge, are
+    subject to their own licences and are not included.
+  - Fonts named in the theme are not included in the Software.
+
+
+8. Contributions
+
+If you send the Licensor a contribution, such as a pull request, a patch or text in an
+issue, you grant the Licensor a perpetual, irrevocable, worldwide, royalty-free licence
+to use, modify and license it under any terms, and you confirm that you have the right
+to grant this.
+
+
+9. Termination
+
+This licence ends automatically if you breach it. If it is your first breach and you
+cure it within 30 days after the Licensor notifies you, your licence is reinstated. When
+the licence ends, you must stop using the Software and delete your copies of it. Output
+you generated while you held the licence remains yours.
+
+
+10. No warranty
+
+The Software is provided "as is", without warranty of any kind, express or implied,
+including warranties of merchantability, fitness for a particular purpose and
+non-infringement.
+
+
+11. Limitation of liability
+
+To the fullest extent permitted by law, the Licensor is not liable for any claim,
+damages or other liability, whether in contract, tort or otherwise, arising from or in
+connection with the Software or its use, including any indirect, incidental, special or
+consequential damages.
+
+
+12. Reservation of rights
+
+The Licensor reserves all rights not expressly granted in this licence. This licence
+grants no rights in the name "graphally" or in any trademark, and no patent licence
+beyond what using the Software as permitted requires.

@@ -1,0 +1,19 @@
+<diagram layout=flow title="From source to SVG" subtitle="One render, and the agent's fix loop">
+  <start id=s>diagram.html</start>
+  <task id=parse icon=code>Parse | groups, nodes, links</task>
+  <task id=measure icon=browser>Measure | text in the browser</task>
+  <task id=layout>Lay out | grid, tree, lanes, time</task>
+  <task id=route>Route | orthogonal edges</task>
+  <task id=labels>Place labels</task>
+  <task id=render icon=file>Render | SVG with tokens</task>
+  <task id=check>Check | overlaps, ids, icons</task>
+  <gateway id=ok>Problems?</gateway>
+  <task id=fix icon=user>Agent edits | the source</task>
+  <end id=done>diagram.svg</end>
+  <links>
+  s -> parse -> measure -> layout -> route -> labels -> render -> check -> ok
+  ok -> done : none
+  ok -> fix : some
+  fix -> parse : render again
+  </links>
+</diagram>

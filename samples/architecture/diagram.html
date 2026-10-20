@@ -1,0 +1,66 @@
+<diagram title="Contoso Field Service on Azure" subtitle="Production architecture: request path, event path, external systems">
+<layout>
+users  edge  frontend  apps   msg   fns
+key    .     .         data   ext   ext
+</layout>
+<group id=users label="Users" style=plain>
+  <node id=dispatch icon=browser external>Dispatcher | web browser</node>
+  <node id=tech icon=mobile external>Technician | mobile app</node>
+</group>
+<group id=edge label="Edge" icon="front door">
+  <node id=fd icon="front door">Front Door | WAF</node>
+</group>
+<group id=frontend label="Web front end" sub="App Service">
+  <node id=web icon="app service">Web app | production slot</node>
+  <node id=stg icon="app service">Web app | staging slot</node>
+</group>
+<group id=apps label="Container Apps environment">
+  <node id=api icon="container app">jobs-api | public API</node>
+  <node id=engine icon="container app">scheduling-engine | internal</node>
+</group>
+<group id=msg label="Messaging">
+  <node id=sb icon="service bus" accent>Service Bus | job-events topic</node>
+</group>
+<group id=fns label="Functions">
+  <node id=notify icon=functions>notify | SMS and push</node>
+  <node id=billing icon=functions>billing-sync | completed jobs</node>
+</group>
+<group id=data label="Data">
+  <node id=sql icon=sql>Jobs | Azure SQL Database</node>
+  <node id=cosmos icon=cosmos>Locations | Cosmos DB</node>
+  <node id=blob icon=storage>Job photos | Storage account</node>
+</group>
+<group id=ext label="External services" style=external>
+  <node id=twilio icon=mobile external>Twilio | SMS and push</node>
+  <node id=sap icon=building external>SAP ERP | customer ERP</node>
+  <node id=maps icon=globe external>Google Maps | Routes API</node>
+</group>
+<band>
+  <node id=entra icon=entra>Entra ID | sign-in, tokens</node>
+  <node id=acr icon=acr>Container Registry | images</node>
+  <node id=kv icon=kv>Key Vault | secrets</node>
+  <node id=appi icon="app insights">App Insights | telemetry</node>
+  <node id=law icon="log analytics">Log Analytics | logs</node>
+</band>
+<links>
+dispatch, tech -> entra : sign in (OIDC)
+dispatch, tech -> fd : HTTPS
+fd -> web : web app
+fd -> api : API calls
+stg -- web : swap
+api -> entra : validates tokens
+api -> sql : jobs
+api -> blob : photos
+api ~> sb : job-events
+sb ~> notify : events
+sb ~> billing : events
+notify ~> twilio : SMS, push
+billing ~> sap : completed jobs
+engine -> maps : route plans
+engine -> cosmos : locations
+apps -> acr : pulls images
+frontend, apps, fns -> kv : secrets
+frontend, apps, fns -> appi : telemetry
+appi -> law : stores logs
+</links>
+</diagram>

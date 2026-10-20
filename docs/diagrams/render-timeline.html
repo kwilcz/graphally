@@ -1,0 +1,16 @@
+<diagram layout=gantt unit="ms" title="Where a render's time goes" subtitle="Median of five renders of a 21-node architecture diagram, icon packs already downloaded">
+  <lane label="Browser">
+    <task id=launch start=0 end=392>Start server and browser</task>
+    <task id=page start=392 end=509>Open a page</task>
+  </lane>
+  <lane label="Engine">
+    <task id=compile start=509 end=919 accent>Load, measure, lay out, route, render</task>
+  </lane>
+  <lane label="Output">
+    <task id=shot start=919 end=1088>PNG preview</task>
+    <task id=close start=1088 end=1282>Close the browser</task>
+  </lane>
+  <links>
+  launch -> page -> compile -> shot -> close
+  </links>
+</diagram>

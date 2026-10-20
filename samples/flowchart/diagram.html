@@ -1,0 +1,40 @@
+<diagram layout=flow title="Orders service release pipeline" subtitle="From merge to main to production">
+  <start id=merge>Merge to main</start>
+  <task id=build>Build image | unit tests</task>
+  <gateway id=unit>Unit tests pass?</gateway>
+  <task id=notify icon=user>Notify author | pipeline stops</task>
+  <end id=stopped>Stopped</end>
+  <task id=push icon=acr>Push image | registry</task>
+  <task id=deploy icon="app service">Deploy to staging | App Service slot</task>
+  <task id=smoke>Run smoke tests | against staging</task>
+  <gateway id=smokeok>Smoke tests pass?</gateway>
+  <task id=rollback icon="app service">Roll back staging | previous image</task>
+  <task id=page1 icon=user>Page on-call engineer</task>
+  <end id=rolledback>Rolled back</end>
+  <task id=approve icon=user>Manual approval | sign-off</task>
+  <event id=expire type=timer on=approve>24 h</event>
+  <end id=expired>Expired, stopped</end>
+  <task id=swap icon="app service">Swap staging and production slots</task>
+  <task id=watch>Watch error rate | 15 minutes</task>
+  <gateway id=err>Error rate above 2%?</gateway>
+  <task id=swapback icon="app service">Swap back to previous</task>
+  <task id=page2 icon=user>Page on-call engineer</task>
+  <end id=rolledprod>Rolled back in production</end>
+  <end id=done>Release done</end>
+  <links>
+  merge -> build -> unit
+  unit -> push : yes
+  unit -> notify : no
+  notify -> stopped
+  push -> deploy -> smoke -> smokeok
+  smokeok -> rollback : no
+  rollback -> page1 -> rolledback
+  smokeok -> approve : yes
+  approve -> swap : approved
+  expire -> expired
+  swap -> watch -> err
+  err -> swapback : above 2%
+  swapback -> page2 -> rolledprod
+  err -> done : no
+  </links>
+</diagram>

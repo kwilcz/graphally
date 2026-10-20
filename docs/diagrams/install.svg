@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1132 608" width="1132" height="608" role="img" aria-label="Getting graphally into an agent. Source: kwilcz/graphally; Installers: Claude Code, GitHub CLI, skills CLI, Claude.ai; skills/graphally: SKILL.md, references/, scripts/, assets/; At work: Agent, Chrome, Chromium; Icon sources: draw.io repository, npm registry. Connections: kwilcz/graphally to Claude Code; kwilcz/graphally to GitHub CLI; kwilcz/graphally to skills CLI; kwilcz/graphally to Claude.ai; Claude Code to skills/graphally (copy); GitHub CLI to skills/graphally (copy); skills CLI to skills/graphally (copy); Claude.ai to skills/graphally (copy); Agent to SKILL.md (reads); Agent to scripts/ (runs); scripts/ to Chrome, Chromium (drives); draw.io repository sends events to assets/ (first render); npm registry sends events to assets/ (first render)">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="gr1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
+<symbol id="gr1-g-repo" viewBox="0 0 24 24"><path d="M5 4.5A2 2 0 0 1 7 2.5h12v15H7a2 2 0 0 0-2 2z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M5 19.5v-15A2 2 0 0 1 7 2.5h12v15H7a2 2 0 0 0 0 4h12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="gr1-g-code" viewBox="0 0 24 24"><path d="M8.5 7 3.5 12l5 5M15.5 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="gr1-g-file" viewBox="0 0 24 24"><path d="M6 2.5h8l4.5 4.5v14.5H6z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M6 2.5h8l4.5 4.5v14.5H6zM14 2.5V7h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="gr1-g-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="gr1-g-browser" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="2.5" y="4" width="19" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 8.5h19M5.5 6.3h.01M8 6.3h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="gr1-g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
+<g style="color: var(--ink); fill: var(--ink)">
+<rect width="100%" height="100%" style="fill: var(--bg)"></rect>
+<text class="g-title" x="24" y="40.5">Getting graphally into an agent</text>
+<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Every installer copies the same skill folder; icons arrive on the first render</text>
+<text class="g-group" x="24" y="212.5" style="fill: var(--muted)">Source</text>
+<rect x="299" y="82" width="227" height="302" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<text class="g-group" x="315" y="108.5" style="fill: var(--muted)">Installers</text>
+<rect x="606" y="82" width="227" height="302" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<text class="g-group" x="622" y="108.5" style="fill: var(--muted)">skills/graphally</text>
+<text class="g-group" x="913" y="178.5" style="fill: var(--muted)">At work</text>
+<rect x="606" y="416" width="227" height="168" rx="10" style="fill: none; stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="6 4"></rect>
+<text class="g-group" x="622" y="442.5" style="fill: var(--muted)">Icon sources</text>
+<path d="M720,452 L720,368" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
+<path d="M817,543.5 L837,543.5 Q843,543.5 843,537.5 L843,349.5 Q843,343.5 837,343.5 L817,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
+<path d="M817,285.5 L896.5,285.5 Q901,285.5 901,281 L901,281 Q901,276.5 905.5,276.5 L913,276.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L285.8,266.5 Q289,266.5 289,263.3 L289,263.3 Q289,260 292.3,260 L315,260" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L287.8,207 Q289,207 289,208.3 L289,208.3 Q289,209.5 290.3,209.5 L315,209.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M510,209.5 L516,209.5 Q522,209.5 522,215.5 L522,234 Q522,240 528,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M510,276.5 L590,276.5 Q596,276.5 596,270.5 L596,238 Q596,233 601,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M913,199.5 L849,199.5 Q843,199.5 843,193.5 L843,148.5 Q843,142.5 837,142.5 L817,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M913,218.5 L849,218.5 Q843,218.5 843,224.5 L843,260.5 Q843,266.5 837,266.5 L817,266.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L283,266.5 Q289,266.5 289,272.5 L289,337.5 Q289,343.5 295,343.5 L315,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L283,207 Q289,207 289,201 L289,148.5 Q289,142.5 295,142.5 L315,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M510,142.5 L530,142.5 Q536,142.5 536,148.5 L536,234 Q536,240 542,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<path d="M510,343.5 L530,343.5 Q536,343.5 536,337.5 L536,246 Q536,240 542,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<rect x="24" y="219" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-repo" x="36" y="230.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="72" y="241">kwilcz/graphally</text>
+<text class="g-sub" x="72" y="255.5" style="fill: var(--muted)">GitHub</text>
+<rect x="315" y="118" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-code" x="327" y="129.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="363" y="140">Claude Code</text>
+<text class="g-sub" x="363" y="154.5" style="fill: var(--muted)">/plugin install</text>
+<rect x="315" y="185" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-code" x="327" y="196.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="363" y="207">GitHub CLI</text>
+<text class="g-sub" x="363" y="221.5" style="fill: var(--muted)">gh skill install</text>
+<rect x="315" y="252" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-code" x="327" y="263.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="363" y="274">skills CLI</text>
+<text class="g-sub" x="363" y="288.5" style="fill: var(--muted)">npx skills add</text>
+<rect x="315" y="319" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-file" x="327" y="330.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="363" y="341">Claude.ai</text>
+<text class="g-sub" x="363" y="355.5" style="fill: var(--muted)">release zip</text>
+<rect x="622" y="118" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-file" x="634" y="129.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="670" y="140">SKILL.md</text>
+<text class="g-sub" x="670" y="154.5" style="fill: var(--muted)">instructions</text>
+<rect x="622" y="185" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-file" x="634" y="196.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="670" y="207">references/</text>
+<text class="g-sub" x="670" y="221.5" style="fill: var(--muted)">one page per kind</text>
+<rect x="622" y="252" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-code" x="634" y="263.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="670" y="274">scripts/</text>
+<text class="g-sub" x="670" y="288.5" style="fill: var(--muted)">engine and CLIs</text>
+<rect x="622" y="319" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-file" x="634" y="330.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="670" y="341">assets/</text>
+<text class="g-sub" x="670" y="355.5" style="fill: var(--muted)">theme, icon packs</text>
+<rect x="913" y="185" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-user" x="925" y="196.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="961" y="207">Agent</text>
+<text class="g-sub" x="961" y="221.5" style="fill: var(--muted)">Claude, Copilot, Codex…</text>
+<rect x="913" y="252" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
+<use href="#gr1-g-browser" x="925" y="263.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="961" y="274">Chrome, Chromium</text>
+<text class="g-sub" x="961" y="288.5" style="fill: var(--muted)">or Edge</text>
+<rect x="622" y="452" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
+<use href="#gr1-g-globe" x="634" y="463.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="670" y="474">draw.io repository</text>
+<text class="g-sub" x="670" y="488.5" style="fill: var(--muted)">Azure icons</text>
+<rect x="622" y="519" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
+<use href="#gr1-g-globe" x="634" y="530.5" width="26" height="26" style="color: var(--ink)"></use>
+<text class="g-label" x="670" y="541">npm registry</text>
+<text class="g-sub" x="670" y="555.5" style="fill: var(--muted)">AWS icons</text>
+<text class="g-edge" x="727" y="408" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">first render</text>
+<text class="g-edge" x="854.3" y="279.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">drives</text>
+<text class="g-edge" x="545.4" y="234" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">copy</text>
+<text class="g-edge" x="862.7" y="193.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reads</text>
+<text class="g-edge" x="850" y="246.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">runs</text>
+</g>
+</svg>

@@ -1,0 +1,37 @@
+<diagram legend=none title="Getting graphally into an agent" subtitle="Every installer copies the same skill folder; icons arrive on the first render">
+<layout>
+src   inst   skill  run
+.     .      icons  .
+</layout>
+<group id=src label="Source" style=plain>
+  <node id=gh icon=repo>kwilcz/graphally | GitHub</node>
+</group>
+<group id=inst label="Installers">
+  <node id=plugin icon=code>Claude Code | /plugin install</node>
+  <node id=ghs icon=code>GitHub CLI | gh skill install</node>
+  <node id=npx icon=code>skills CLI | npx skills add</node>
+  <node id=zip icon=file>Claude.ai | release zip</node>
+</group>
+<group id=skill label="skills/graphally">
+  <node id=md icon=file>SKILL.md | instructions</node>
+  <node id=refs icon=file>references/ | one page per kind</node>
+  <node id=scripts icon=code>scripts/ | engine and CLIs</node>
+  <node id=assets icon=file>assets/ | theme, icon packs</node>
+</group>
+<group id=run label="At work" style=plain>
+  <node id=agent icon=user>Agent | Claude, Copilot, Codex…</node>
+  <node id=browser icon=browser>Chrome, Chromium | or Edge</node>
+</group>
+<group id=icons label="Icon sources" style=dashed>
+  <node id=drawio icon=globe external>draw.io repository | Azure icons</node>
+  <node id=npm icon=globe external>npm registry | AWS icons</node>
+</group>
+<links>
+gh -> plugin, ghs, npx, zip
+plugin, ghs, npx, zip -> skill : copy
+agent -> md : reads
+agent -> scripts : runs
+scripts -> browser : drives
+drawio, npm ~> assets : first render
+</links>
+</diagram>

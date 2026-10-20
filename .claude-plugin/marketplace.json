@@ -1,0 +1,13 @@
+{
+  "name": "graphally",
+  "description": "graphally: diagrams that agents describe and graphally draws.",
+  "owner": { "name": "Kamil Wilczyński", "url": "https://github.com/kwilcz" },
+  "plugins": [
+    {
+      "name": "graphally",
+      "source": "./",
+      "description": "Professional diagrams as SVG from short HTML: architecture with Azure icons, networks, hierarchies, BPMN, sequence, Gantt, and Terraform repositories.",
+      "version": "1.0.0"
+    }
+  ]
+}

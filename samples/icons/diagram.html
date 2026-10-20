@@ -1,0 +1,26 @@
+<diagram title="Microsoft Entra application proxy" subtitle="Remote access to on-premises web apps without opening inbound ports">
+<layout>
+users  azure  onprem
+</layout>
+<node id=users icon=users style=icon>Remote users | on laptops</node>
+<group id=azure label="Azure" icon=cloud style=plain>
+  <node id=entra icon=entra style=icon>Microsoft Entra ID | pre-auth</node>
+  <node id=proxy icon=globe style=icon>Application Proxy | cloud service</node>
+</group>
+<group id=onprem label="On-premises network" style=dashed>
+  <layout>
+  connector web
+  connector ad
+  </layout>
+  <node id=connector icon=server style=icon>App Proxy connector | outbound only</node>
+  <node id=web icon=browser style=icon>Internal web apps</node>
+  <node id=ad icon="active directory" style=icon>Active Directory</node>
+</group>
+<links>
+users -> entra : sign in first
+users -> proxy : HTTPS
+proxy <-> connector : outbound connection
+connector -> web : HTTP
+connector -> ad : Kerberos SSO
+</links>
+</diagram>

@@ -1,0 +1,25 @@
+<diagram layout=gantt today=2026-03-02 title="Logistics move to AKS" subtitle="Migration plan for the steering group, first half of 2026">
+  <lane label="Network">
+    <task id=hub start=2026-01-05 end=2026-01-30 done>Hub VNet and site-to-site VPN</task>
+    <task id=spoke after=hub duration=2w>Spoke VNets and peering</task>
+  </lane>
+  <lane label="Platform">
+    <task id=aks after=spoke duration=3w accent>AKS cluster and ingress</task>
+    <task id=pg start=2026-02-09 duration=4w>PostgreSQL and Service Bus</task>
+    <task id=mon after=aks duration=2w>Monitoring and alerts</task>
+  </lane>
+  <lane label="Applications">
+    <task id=pilot after=aks,pg duration=3w>Pilot: tracking service</task>
+    <task id=rest after=pilot duration=5w>Move remaining services</task>
+    <milestone id=live at=2026-05-25>Go-live</milestone>
+  </lane>
+  <lane label="Security review">
+    <task id=pen start=2026-05-18 duration=1w external>External pen test</task>
+  </lane>
+  <links>
+  hub -> spoke -> aks -> pilot -> rest -> live
+  pg -> pilot
+  aks -> mon
+  pen -> live
+  </links>
+</diagram>

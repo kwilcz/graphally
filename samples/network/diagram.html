@@ -1,0 +1,72 @@
+<diagram title="Fabrikam Retail network topology" subtitle="Hub and spoke, West Europe">
+<layout>
+inet  key     onprem
+ecom  hub     analytics
+paas  paas    paas
+</layout>
+<group id=inet label="Internet" style=plain>
+  <node id=shopper icon=browser external>Customers | web browser</node>
+</group>
+<group id=onprem label="On-premises" sub="10.200.0.0/16" style=external>
+  <node id=dc icon=building external>Fabrikam datacenter | corporate network</node>
+</group>
+<group id=hub label="vnet-hub-weu" sub="10.0.0.0/16" style=vnet icon=vnet>
+  <layout>
+  fwsn  gwsn
+  dnssn bassn
+  </layout>
+  <group id=gwsn label="GatewaySubnet" sub="10.0.0.0/27" style=subnet>
+    <node id=ergw icon="vpn gateway">ExpressRoute gateway | on-prem link</node>
+  </group>
+  <group id=fwsn label="AzureFirewallSubnet" sub="10.0.1.0/26" style=subnet>
+    <node id=fw icon=firewall accent>Azure Firewall | all spoke egress</node>
+  </group>
+  <group id=bassn label="AzureBastionSubnet" sub="10.0.2.0/26" style=subnet>
+    <node id=bas icon=bastion>Azure Bastion | admin access</node>
+  </group>
+  <group id=dnssn label="snet-dns" sub="10.0.3.0/28" style=subnet>
+    <node id=dnsr icon="dns resolver">DNS Private Resolver | hybrid DNS</node>
+  </group>
+</group>
+<group id=ecom label="vnet-ecommerce-prod" sub="10.10.0.0/16" style=vnet icon=vnet>
+  <group id=agwsn label="snet-agw" sub="10.10.0.0/24" style=subnet>
+    <node id=agw icon="app gateway">Application Gateway | WAF v2</node>
+  </group>
+  <group id=appsn label="snet-app" sub="10.10.1.0/24" style=subnet>
+    <node id=app icon="app service">App Service | VNet integration</node>
+  </group>
+  <group id=pesn label="snet-pe" sub="10.10.2.0/24" style=subnet>
+    <node id=pesql icon="private endpoint">Private endpoint | Azure SQL</node>
+    <node id=pest icon="private endpoint">Private endpoint | Storage</node>
+  </group>
+</group>
+<group id=analytics label="vnet-analytics-prod" sub="10.20.0.0/16" style=vnet icon=vnet>
+  <group id=dbwsn label="snet-dbw-public, -private" sub="10.20.0.0/24, 10.20.1.0/24" style=subnet>
+    <node id=dbw icon=databricks>Azure Databricks | workspace</node>
+  </group>
+  <group id=anpe label="snet-pe" sub="10.20.2.0/24" style=subnet>
+    <node id=pedl icon="private endpoint">Private endpoint | Data Lake</node>
+  </group>
+</group>
+<band id=paas label="Azure PaaS and shared DNS" layout=row>
+  <node id=sql icon=sql>Azure SQL | orders DB</node>
+  <node id=stor icon=storage>Storage | blobs</node>
+  <node id=pdns icon="private dns">Private DNS zones | privatelink</node>
+  <node id=dls icon=storage>Data Lake Storage | Gen2</node>
+</band>
+<links>
+shopper => agw : HTTPS
+agw -> app : HTTPS
+dc -> ergw : ExpressRoute
+ergw -> fw : UDR 0.0.0.0/0
+ecom -> fw : egress UDR
+hub <-> ecom : peering
+hub <-> analytics : peering
+app -> pesql : SQL
+pesql -> sql : private link
+pest -> stor : private link
+dbw -> pedl : ABFS
+pedl -> dls : private link
+hub -- pdns : VNet links
+</links>
+</diagram>

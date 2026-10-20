@@ -1,0 +1,37 @@
+<diagram layout=tree node-style=icon stack=leaves leaves=bottom title="Fabrikam management group hierarchy" subtitle="Azure tenant, governance board">
+  <level depth="0" label="Tenant root group"></level>
+  <level depth="1" label="Top-level management group"></level>
+  <level depth="2-3" label="Management groups"></level>
+  <level depth="4" label="Subscriptions"></level>
+  <node id=root icon=mg>Tenant Root Group
+    <node id=fab icon=mg>Fabrikam
+      <node id=platform icon=mg>Platform
+        <node id=mgmt icon=mg>Management
+          <node icon=subscription>Management</node>
+        </node>
+        <node id=conn icon=mg>Connectivity
+          <node icon=subscription>Connectivity</node>
+        </node>
+        <node id=ident icon=mg>Identity
+          <node icon=subscription>Identity</node>
+        </node>
+      </node>
+      <node id=lz icon=mg>Landing zones
+        <node id=corp icon=mg>Corp
+          <node icon=subscription>Payroll</node>
+          <node icon=subscription>HR portal</node>
+          <node icon=subscription>Finance reporting</node>
+        </node>
+        <node id=online icon=mg>Online
+          <node icon=subscription>E-commerce</node>
+          <node icon=subscription>Loyalty app</node>
+        </node>
+      </node>
+      <node id=sandbox icon=mg>Sandbox
+        <node icon=subscription>Sandbox Team A</node>
+        <node icon=subscription>Sandbox Team B</node>
+      </node>
+      <node id=decom icon=mg depth=2>Decommissioned</node>
+    </node>
+  </node>
+</diagram>

@@ -1,0 +1,19 @@
+<diagram layout=lanes title="From Terraform to a diagram" subtitle="tf2graphally drafts; the agent tells the story">
+  <lane id=tool label="tf2graphally">
+    <start id=s>*.tf files</start>
+    <task id=parse icon=code>Parse HCL | root and local modules</task>
+    <task id=refs>Resolve references | var, local, outputs</task>
+    <task id=place>Place resources | RG, VNet, subnet</task>
+    <task id=fold>Fold plumbing | roles, links, children</task>
+    <task id=draft icon=file>draft.html</task>
+  </lane>
+  <lane id=agent label="Agent">
+    <task id=look icon=browser>Render and look</task>
+    <task id=edit icon=user>Add what code cannot know | users, story</task>
+    <end id=e>diagram.svg</end>
+  </lane>
+  <links>
+  s -> parse -> refs -> place -> fold -> draft
+  draft -> look -> edit -> e
+  </links>
+</diagram>

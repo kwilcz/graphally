@@ -1,0 +1,5 @@
+node_modules/
+out/
+*.zip
+# Cloud icon packs are downloaded by scripts/fetch-icons.mjs, never committed.
+skills/graphally/assets/icons/

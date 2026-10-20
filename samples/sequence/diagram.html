@@ -1,0 +1,40 @@
+<diagram layout=sequence numbered title="Checkout payment" subtitle="Payments runbook">
+  <node id=browser icon=browser>Shopper | browser</node>
+  <node id=shop icon="app service">Web shop | App Service</node>
+  <node id=pay icon="container app">Payments API | Container App</node>
+  <group id=ext label="Third parties" style=external>
+    <node id=stripe icon=cloud external>Stripe | payment provider</node>
+    <node id=bank icon=shield external>Bank | 3-D Secure page</node>
+  </group>
+  <node id=db icon=sql>Orders DB | Azure SQL</node>
+  <node id=sb icon="service bus">Service Bus | order events</node>
+  <links>
+  browser -> shop : POST checkout
+  shop -> pay : create payment
+  pay -> stripe : create PaymentIntent
+  stripe --> pay : client secret
+  pay --> shop : client secret
+  shop --> browser : client secret
+  browser -> stripe : confirm payment
+  alt 3-D Secure required
+    stripe --> browser : redirect to bank
+    browser -> bank : shopper approves
+    bank --> browser : redirect to shop
+    browser ~> shop : return
+  else no 3-D Secure
+    stripe --> browser : payment completes
+  end
+  par webhook
+    stripe ~> pay : payment_intent.succeeded
+    pay -> db : mark order paid
+    pay ~> sb : order paid event
+    pay --> stripe : 200 OK
+  and polling
+    loop every 2 s until paid
+      browser -> shop : GET order status
+      shop --> browser : pending or paid
+    end
+    browser -> browser : confirmation page
+  end
+  </links>
+</diagram>
