@@ -52,7 +52,7 @@ npx skills add kwilcz/graphally --skill graphally -a claude-code -g
 [`graphally-skill.zip`](https://github.com/kwilcz/graphally/releases/latest/download/graphally-skill.zip)
 from the latest release and upload it under Settings → Capabilities → Skills.
 
-**Updates.** Every change to `main` is released, so each installer finds the latest
+**Updates.** Every change to `main` is released, so every installer finds the latest
 version. In Claude Code, turn on auto-update for the graphally marketplace (`/plugin`, then
 Marketplaces) or run `claude plugin update graphally@graphally`. Elsewhere, run
 `gh skill update graphally` or `npx skills update graphally`. To stay on one version,
@@ -208,20 +208,19 @@ Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling
 | [`.claude-plugin/`](.claude-plugin) | the Claude Code plugin and marketplace manifests |
 | [`samples/`](samples) | briefs and the diagrams drawn from them |
 | [`docs/design.md`](docs/design.md) | how graphally works, illustrated with diagrams it drew ([sources](docs/diagrams)) |
-| [`.github/workflows/`](.github/workflows) | the workflow that checks pull requests and releases every push to `main` |
-| [`tools/`](tools) | maintenance scripts: the Azure icon list, the release version |
+| [`.github/workflows/`](.github/workflows) | the workflow that releases every push to `main` |
+| [`tools/`](tools) | maintenance scripts, such as updating the Azure icon list |
 
 ## Releases
 
-[`release.yml`](.github/workflows/release.yml) checks every pull request and releases
-every push to `main`. The check validates the skill and the plugin manifests and renders
-every sample. The release tags the commit, publishes a GitHub release with the skill
-attached as a zip, and commits the new version to `.claude-plugin/plugin.json`.
+Every push to `main` is released as `vMAJOR.N.0` by
+[`release.yml`](.github/workflows/release.yml), with the skill attached as a zip. `N`
+counts up by itself. `MAJOR` is the only number set by hand: raise it in the workflow for
+a breaking change.
 
-Versions are `MAJOR.MINOR.PATCH`, and only the major is set by hand. The minor goes up
-when a release changes the skill or the plugin manifests, the patch when only the rest of
-the repository changed: docs, samples, tools. To start a new major version, raise it in
-`.claude-plugin/plugin.json`; the next release is `MAJOR.0.0`.
+The plugin manifest has no version, so Claude Code takes the commit as the version and
+updates on every change to `main`. `gh skill` installs the latest release, and
+`npx skills` reads `main`.
 
 ## Licence
 
