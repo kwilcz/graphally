@@ -50,7 +50,8 @@ try {
   }
   server = await serve(skillRoot, path.dirname(path.resolve(file)), files);
   browser = await launch();
-  const page = await openPage(browser, { scale });
+  // Compile at scale 1 whatever the PNG's scale: text metrics differ at 2x, and the SVG must not.
+  const page = await openPage(browser);
   const q = new URLSearchParams({ src: `${server.origin}/src/${encodeURIComponent(path.basename(file))}`, source, theme: flag('--dark') ? 'dark' : '', inline: flag('--inline') ? '1' : '', debug: flag('--debug') ? '1' : '' });
   await page.goto(`${server.origin}/scripts/lib/harness.html?${q}`);
   await page.waitFor('document.body && document.body.dataset.ready === "1"');
@@ -70,7 +71,7 @@ try {
     const svgPath = path.join(outDir, `${name}.svg`);
     fs.writeFileSync(svgPath, r.svg + '\n');
     if (flag('--png') || flag('--png2x')) {
-      await page.viewport(Math.max(800, r.width), Math.max(600, r.height));
+      await page.viewport(Math.max(800, r.width), Math.max(600, r.height), scale);
       const box = await page.evaluate(`(() => { const b = document.querySelectorAll('.out svg')[${i}].getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);
       fs.writeFileSync(path.join(outDir, `${name}.png`), await page.screenshot(box));
     }

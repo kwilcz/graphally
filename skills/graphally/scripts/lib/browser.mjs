@@ -113,7 +113,7 @@ export async function openPage(browser, { width = 1400, height = 900, scale = 1 
   browser.on(m => { if (m.sessionId === sessionId && m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text); });
   await s('Page.enable');
   await s('Runtime.enable');
-  const viewport = (w, h) => s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: scale, mobile: false });
+  const viewport = (w, h, sc = scale) => s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
   await viewport(width, height);
   const evaluate = async expression => {
     const r = await s('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });

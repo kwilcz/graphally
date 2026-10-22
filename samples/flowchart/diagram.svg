@@ -32,7 +32,7 @@
 <g style="color: var(--ink); fill: var(--ink)">
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Orders service release pipeline</text>
-<text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">From merge to main to production</text>
+<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">From merge to main to production</text>
 <g data-edge="page2-&gt;rolledprod" data-sides="right,left"><path d="M2416,243 L2478,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="merge-&gt;build" data-sides="right,left"><path d="M82,243 L147,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="push-&gt;deploy" data-sides="right,left"><path d="M647,289 L691,289" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
@@ -59,7 +59,7 @@
 </g>
 <g data-id="build" data-box="147,215,144,56">
 <rect x="147" y="215" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="219" y="239.5" text-anchor="middle">Build image</text>
+<text class="g-label" x="219" y="240.5" text-anchor="middle">Build image</text>
 <text class="g-sub" x="219" y="255" text-anchor="middle" style="fill: var(--muted)">unit tests</text>
 </g>
 <g data-id="unit" data-box="407,220,46,46">
@@ -70,13 +70,13 @@
 <g data-id="notify" data-box="503,169,144,56">
 <rect x="503" y="169" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="512" y="177" width="18" height="18" style="color: var(--ink)"></use>
-<text class="g-label" x="584" y="193.5" text-anchor="middle">Notify author</text>
+<text class="g-label" x="584" y="194.5" text-anchor="middle">Notify author</text>
 <text class="g-sub" x="584" y="209" text-anchor="middle" style="fill: var(--muted)">pipeline stops</text>
 </g>
 <g data-id="push" data-box="503,261,144,56">
 <rect x="503" y="261" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-container-registries" x="512" y="269" width="18" height="18"></use>
-<text class="g-label" x="584" y="285.5" text-anchor="middle">Push image</text>
+<text class="g-label" x="584" y="286.5" text-anchor="middle">Push image</text>
 <text class="g-sub" x="584" y="301" text-anchor="middle" style="fill: var(--muted)">registry</text>
 </g>
 <g data-id="stopped" data-box="745,163,36,36">
@@ -86,13 +86,13 @@
 <g data-id="deploy" data-box="691,255,144,69">
 <rect x="691" y="255" width="144" height="69" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="700" y="263" width="18" height="18"></use>
-<text class="g-label" x="772" y="278" text-anchor="middle">Deploy to</text>
-<text class="g-label" x="772" y="294" text-anchor="middle">staging</text>
+<text class="g-label" x="772" y="279" text-anchor="middle">Deploy to</text>
+<text class="g-label" x="772" y="295" text-anchor="middle">staging</text>
 <text class="g-sub" x="772" y="309.5" text-anchor="middle" style="fill: var(--muted)">App Service slot</text>
 </g>
 <g data-id="smoke" data-box="879,215,144,56">
 <rect x="879" y="215" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="951" y="239.5" text-anchor="middle">Run smoke tests</text>
+<text class="g-label" x="951" y="240.5" text-anchor="middle">Run smoke tests</text>
 <text class="g-sub" x="951" y="255" text-anchor="middle" style="fill: var(--muted)">against staging</text>
 </g>
 <g data-id="smokeok" data-box="1154,220,46,46">
@@ -103,22 +103,22 @@
 <g data-id="rollback" data-box="1250,156,144,69">
 <rect x="1250" y="156" width="144" height="69" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="1259" y="164" width="18" height="18"></use>
-<text class="g-label" x="1331" y="179" text-anchor="middle">Roll back</text>
-<text class="g-label" x="1331" y="195" text-anchor="middle">staging</text>
+<text class="g-label" x="1331" y="180" text-anchor="middle">Roll back</text>
+<text class="g-label" x="1331" y="196" text-anchor="middle">staging</text>
 <text class="g-sub" x="1331" y="210.5" text-anchor="middle" style="fill: var(--muted)">previous image</text>
 </g>
 <g data-id="approve" data-box="1250,261,144,69">
 <rect x="1250" y="261" width="144" height="69" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="1259" y="269" width="18" height="18" style="color: var(--ink)"></use>
-<text class="g-label" x="1331" y="284" text-anchor="middle">Manual</text>
-<text class="g-label" x="1331" y="300" text-anchor="middle">approval</text>
+<text class="g-label" x="1331" y="285" text-anchor="middle">Manual</text>
+<text class="g-label" x="1331" y="301" text-anchor="middle">approval</text>
 <text class="g-sub" x="1331" y="315.5" text-anchor="middle" style="fill: var(--muted)">sign-off</text>
 </g>
 <g data-id="page1" data-box="1476,108,144,56">
 <rect x="1476" y="108" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="1485" y="116" width="18" height="18" style="color: var(--ink)"></use>
-<text class="g-label" x="1557" y="132" text-anchor="middle">Page on-call</text>
-<text class="g-label" x="1557" y="148" text-anchor="middle">engineer</text>
+<text class="g-label" x="1557" y="133" text-anchor="middle">Page on-call</text>
+<text class="g-label" x="1557" y="149" text-anchor="middle">engineer</text>
 </g>
 <g data-id="expired" data-box="1530,200,36,36">
 <circle cx="1548" cy="218" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
@@ -127,10 +127,10 @@
 <g data-id="swap" data-box="1476,292,144,86">
 <rect x="1476" y="292" width="144" height="86" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="1485" y="300" width="18" height="18"></use>
-<text class="g-label" x="1557" y="315" text-anchor="middle">Swap</text>
-<text class="g-label" x="1557" y="331" text-anchor="middle">staging and</text>
-<text class="g-label" x="1557" y="347" text-anchor="middle">production</text>
-<text class="g-label" x="1557" y="363" text-anchor="middle">slots</text>
+<text class="g-label" x="1557" y="316" text-anchor="middle">Swap</text>
+<text class="g-label" x="1557" y="332" text-anchor="middle">staging and</text>
+<text class="g-label" x="1557" y="348" text-anchor="middle">production</text>
+<text class="g-label" x="1557" y="364" text-anchor="middle">slots</text>
 </g>
 <g data-id="rolledback" data-box="1718,169,36,36">
 <circle cx="1736" cy="187" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
@@ -138,7 +138,7 @@
 </g>
 <g data-id="watch" data-box="1664,261,144,56">
 <rect x="1664" y="261" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="1736" y="285.5" text-anchor="middle">Watch error rate</text>
+<text class="g-label" x="1736" y="286.5" text-anchor="middle">Watch error rate</text>
 <text class="g-sub" x="1736" y="301" text-anchor="middle" style="fill: var(--muted)">15 minutes</text>
 </g>
 <g data-id="err" data-box="1953,220,46,46">
@@ -149,8 +149,8 @@
 <g data-id="swapback" data-box="2084,169,144,56">
 <rect x="2084" y="169" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="2093" y="177" width="18" height="18"></use>
-<text class="g-label" x="2165" y="193" text-anchor="middle">Swap back</text>
-<text class="g-label" x="2165" y="209" text-anchor="middle">to previous</text>
+<text class="g-label" x="2165" y="194" text-anchor="middle">Swap back</text>
+<text class="g-label" x="2165" y="210" text-anchor="middle">to previous</text>
 </g>
 <g data-id="done" data-box="2138,261,36,36">
 <circle cx="2156" cy="279" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
@@ -159,8 +159,8 @@
 <g data-id="page2" data-box="2272,215,144,56">
 <rect x="2272" y="215" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="2281" y="223" width="18" height="18" style="color: var(--ink)"></use>
-<text class="g-label" x="2353" y="239" text-anchor="middle">Page on-call</text>
-<text class="g-label" x="2353" y="255" text-anchor="middle">engineer</text>
+<text class="g-label" x="2353" y="240" text-anchor="middle">Page on-call</text>
+<text class="g-label" x="2353" y="256" text-anchor="middle">engineer</text>
 </g>
 <g data-id="rolledprod" data-box="2478,225,36,36">
 <circle cx="2496" cy="243" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>

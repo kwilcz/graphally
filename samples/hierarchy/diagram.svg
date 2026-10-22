@@ -29,7 +29,7 @@
 <g style="color: var(--ink); fill: var(--ink)">
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Fabrikam management group hierarchy</text>
-<text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Azure tenant, governance board</text>
+<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Azure tenant, governance board</text>
 <g data-group="#level0" data-box="24,82,1005,120">
 <rect x="24" y="82" width="1005" height="120" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="176.4" y1="92" x2="176.4" y2="192" style="stroke: var(--line)" stroke-width="1"></line>
@@ -73,91 +73,91 @@
 <g data-edge="sandbox-&gt;n19"><path d="M799.9,422 L799.9,693 Q799.9,699 805.9,699 L827.9,699" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
 <g data-id="n4" data-box="208,579,48,48">
 <use href="#gr1-azure-subscriptions" x="208" y="579" width="48" height="48"></use>
-<text class="g-tile" x="232" y="644" text-anchor="middle">Management</text>
+<text class="g-tile" x="232" y="645" text-anchor="middle">Management</text>
 </g>
 <g data-id="mgmt" data-box="208,462,48,48">
 <use href="#gr1-azure-management-groups" x="208" y="462" width="48" height="48"></use>
-<text class="g-tile" x="232" y="527" text-anchor="middle">Management</text>
+<text class="g-tile" x="232" y="528" text-anchor="middle">Management</text>
 </g>
 <g data-id="n6" data-box="314,579,48,48">
 <use href="#gr1-azure-subscriptions" x="314" y="579" width="48" height="48"></use>
-<text class="g-tile" x="338" y="644" text-anchor="middle">Connectivity</text>
+<text class="g-tile" x="338" y="645" text-anchor="middle">Connectivity</text>
 </g>
 <g data-id="conn" data-box="314,462,48,48">
 <use href="#gr1-azure-management-groups" x="314" y="462" width="48" height="48"></use>
-<text class="g-tile" x="338" y="527" text-anchor="middle">Connectivity</text>
+<text class="g-tile" x="338" y="528" text-anchor="middle">Connectivity</text>
 </g>
 <g data-id="n8" data-box="404,579,48,48">
 <use href="#gr1-azure-subscriptions" x="404" y="579" width="48" height="48"></use>
-<text class="g-tile" x="428" y="644" text-anchor="middle">Identity</text>
+<text class="g-tile" x="428" y="645" text-anchor="middle">Identity</text>
 </g>
 <g data-id="ident" data-box="404,462,48,48">
 <use href="#gr1-azure-management-groups" x="404" y="462" width="48" height="48"></use>
-<text class="g-tile" x="428" y="527" text-anchor="middle">Identity</text>
+<text class="g-tile" x="428" y="528" text-anchor="middle">Identity</text>
 </g>
 <g data-id="platform" data-box="306,349,48,48">
 <use href="#gr1-azure-management-groups" x="306" y="349" width="48" height="48"></use>
-<text class="g-tile" x="330.5" y="414" text-anchor="middle">Platform</text>
+<text class="g-tile" x="330.5" y="415" text-anchor="middle">Platform</text>
 </g>
 <g data-id="corp" data-box="480,462,48,48">
 <use href="#gr1-azure-management-groups" x="480" y="462" width="48" height="48"></use>
-<text class="g-tile" x="504" y="527" text-anchor="middle">Corp</text>
+<text class="g-tile" x="504" y="528" text-anchor="middle">Corp</text>
 </g>
 <g data-id="n11" data-box="532,579,48,48">
 <use href="#gr1-azure-subscriptions" x="532" y="579" width="48" height="48"></use>
-<text class="g-tile" x="556.5" y="644" text-anchor="middle">Payroll</text>
+<text class="g-tile" x="556.5" y="645" text-anchor="middle">Payroll</text>
 </g>
 <g data-id="n12" data-box="532,660,48,48">
 <use href="#gr1-azure-subscriptions" x="532" y="660" width="48" height="48"></use>
-<text class="g-tile" x="556" y="725" text-anchor="middle">HR portal</text>
+<text class="g-tile" x="556" y="726" text-anchor="middle">HR portal</text>
 </g>
 <g data-id="n13" data-box="532,741,48,48">
 <use href="#gr1-azure-subscriptions" x="532" y="741" width="48" height="48"></use>
-<text class="g-tile" x="556.5" y="806" text-anchor="middle">Finance</text>
-<text class="g-tile" x="556.5" y="821" text-anchor="middle">reporting</text>
+<text class="g-tile" x="556.5" y="807" text-anchor="middle">Finance</text>
+<text class="g-tile" x="556.5" y="822" text-anchor="middle">reporting</text>
 </g>
 <g data-id="online" data-box="616,462,48,48">
 <use href="#gr1-azure-management-groups" x="616" y="462" width="48" height="48"></use>
-<text class="g-tile" x="640.5" y="527" text-anchor="middle">Online</text>
+<text class="g-tile" x="640.5" y="528" text-anchor="middle">Online</text>
 </g>
 <g data-id="n15" data-box="668,579,48,48">
 <use href="#gr1-azure-subscriptions" x="668" y="579" width="48" height="48"></use>
-<text class="g-tile" x="692.5" y="644" text-anchor="middle">E-commerce</text>
+<text class="g-tile" x="692.5" y="645" text-anchor="middle">E-commerce</text>
 </g>
 <g data-id="n16" data-box="668,660,48,48">
 <use href="#gr1-azure-subscriptions" x="668" y="660" width="48" height="48"></use>
-<text class="g-tile" x="692" y="725" text-anchor="middle">Loyalty app</text>
+<text class="g-tile" x="692" y="726" text-anchor="middle">Loyalty app</text>
 </g>
 <g data-id="lz" data-box="548,349,48,48">
 <use href="#gr1-azure-management-groups" x="548" y="349" width="48" height="48"></use>
-<text class="g-tile" x="572" y="414" text-anchor="middle">Landing zones</text>
+<text class="g-tile" x="572" y="415" text-anchor="middle">Landing zones</text>
 </g>
 <g data-id="sandbox" data-box="776,349,48,48">
 <use href="#gr1-azure-management-groups" x="776" y="349" width="48" height="48"></use>
-<text class="g-tile" x="799.5" y="414" text-anchor="middle">Sandbox</text>
+<text class="g-tile" x="799.5" y="415" text-anchor="middle">Sandbox</text>
 </g>
 <g data-id="n18" data-box="828,579,48,48">
 <use href="#gr1-azure-subscriptions" x="828" y="579" width="48" height="48"></use>
-<text class="g-tile" x="851.5" y="644" text-anchor="middle">Sandbox</text>
-<text class="g-tile" x="851.5" y="659" text-anchor="middle">Team A</text>
+<text class="g-tile" x="851.5" y="645" text-anchor="middle">Sandbox</text>
+<text class="g-tile" x="851.5" y="660" text-anchor="middle">Team A</text>
 </g>
 <g data-id="n19" data-box="828,675,48,48">
 <use href="#gr1-azure-subscriptions" x="828" y="675" width="48" height="48"></use>
-<text class="g-tile" x="851.5" y="740" text-anchor="middle">Sandbox</text>
-<text class="g-tile" x="851.5" y="755" text-anchor="middle">Team B</text>
+<text class="g-tile" x="851.5" y="741" text-anchor="middle">Sandbox</text>
+<text class="g-tile" x="851.5" y="756" text-anchor="middle">Team B</text>
 </g>
 <g data-id="decom" data-box="937,349,48,48">
 <use href="#gr1-azure-management-groups" x="937" y="349" width="48" height="48"></use>
-<text class="g-tile" x="961" y="414" text-anchor="middle">Decommissioned</text>
+<text class="g-tile" x="961" y="415" text-anchor="middle">Decommissioned</text>
 </g>
 <g data-id="fab" data-box="622,232,48,48">
 <use href="#gr1-azure-management-groups" x="622" y="232" width="48" height="48"></use>
-<text class="g-tile" x="646" y="297" text-anchor="middle">Fabrikam</text>
+<text class="g-tile" x="646" y="298" text-anchor="middle">Fabrikam</text>
 </g>
 <g data-id="root" data-box="622,100,48,48">
 <use href="#gr1-azure-management-groups" x="622" y="100" width="48" height="48"></use>
-<text class="g-tile" x="646" y="165" text-anchor="middle">Tenant</text>
-<text class="g-tile" x="646" y="180" text-anchor="middle">Root Group</text>
+<text class="g-tile" x="646" y="166" text-anchor="middle">Tenant</text>
+<text class="g-tile" x="646" y="181" text-anchor="middle">Root Group</text>
 </g>
 </g>
 </svg>
