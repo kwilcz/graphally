@@ -28,7 +28,7 @@
 <g style="color: var(--ink); fill: var(--ink)">
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Logistics move to AKS</text>
-<text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Migration plan for the steering group, first half of 2026</text>
+<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Migration plan for the steering group, first half of 2026</text>
 <g data-group="g1" data-box="24,116,1087,86">
 <rect x="24" y="116" width="1087" height="86" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="116" width="1087" height="86" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
@@ -74,16 +74,16 @@
 <rect x="524.4" y="338" width="122" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
 <rect x="646.4" y="374" width="203.3" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
 <rect x="931.1" y="460" width="40.7" height="22" rx="5" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="5 4"></rect>
-<text class="g-msg" x="311.6" y="144.5" style="fill: var(--muted)">Hub VNet and site-to-site VPN</text>
-<text class="g-msg" x="393" y="180.5">Spoke VNets and peering</text>
-<text class="g-msg" x="515" y="230.5">AKS cluster and ingress</text>
-<text class="g-msg" x="532.4" y="266.5">PostgreSQL and Service Bus</text>
-<text class="g-msg" x="596.3" y="302.5">Monitoring and alerts</text>
-<text class="g-msg" x="654.4" y="352.5">Pilot: tracking service</text>
-<text class="g-msg" x="654.4" y="388.5">Move remaining services</text>
+<text class="g-msg" x="311.6" y="145.5" style="fill: var(--muted)">Hub VNet and site-to-site VPN</text>
+<text class="g-msg" x="393" y="181.5">Spoke VNets and peering</text>
+<text class="g-msg" x="515" y="231.5">AKS cluster and ingress</text>
+<text class="g-msg" x="532.4" y="267.5">PostgreSQL and Service Bus</text>
+<text class="g-msg" x="596.3" y="303.5">Monitoring and alerts</text>
+<text class="g-msg" x="654.4" y="353.5">Pilot: tracking service</text>
+<text class="g-msg" x="654.4" y="389.5">Move remaining services</text>
 <path d="M971.7331495098038,413 L979.7331495098038,421 L971.7331495098038,429 L963.7331495098038,421 Z" style="fill: var(--ink); stroke: var(--ink)" stroke-width="1"></path>
-<text class="g-msg" x="985.7" y="424.5">Go-live</text>
-<text class="g-msg" x="979.7" y="474.5">External pen test</text>
+<text class="g-msg" x="985.7" y="425.5">Go-live</text>
+<text class="g-msg" x="979.7" y="475.5">External pen test</text>
 <text class="g-sub" x="315.2" y="98" text-anchor="middle" style="fill: var(--muted)">Feb 2026</text>
 <text class="g-sub" x="477.9" y="98" text-anchor="middle" style="fill: var(--muted)">Mar</text>
 <text class="g-sub" x="658" y="98" text-anchor="middle" style="fill: var(--muted)">Apr</text>

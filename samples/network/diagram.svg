@@ -43,7 +43,7 @@
 <g style="color: var(--ink); fill: var(--ink)">
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Fabrikam Retail network topology</text>
-<text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Hub and spoke, West Europe</text>
+<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Hub and spoke, West Europe</text>
 <g data-group="inet" data-box="24,82,266,101">
 <text class="g-group" x="24" y="97.5" style="fill: var(--muted)">Internet</text>
 </g>
@@ -138,97 +138,97 @@
 <g data-id="shopper" data-box="56,119,202,49">
 <rect x="56" y="119" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-browser" x="68" y="130.5" width="26" height="26" style="color: var(--ink)"></use>
-<text class="g-label" x="104" y="140">Customers</text>
+<text class="g-label" x="104" y="141">Customers</text>
 <text class="g-sub" x="104" y="155.5" style="fill: var(--muted)">web browser</text>
 </g>
 <g data-id="dc" data-box="1147,118,202,49">
 <rect x="1147" y="118" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-building" x="1159" y="129.5" width="26" height="26" style="color: var(--ink)"></use>
-<text class="g-label" x="1195" y="139">Fabrikam datacenter</text>
+<text class="g-label" x="1195" y="140">Fabrikam datacenter</text>
 <text class="g-sub" x="1195" y="154.5" style="fill: var(--muted)">corporate network</text>
 </g>
 <g data-id="ergw" data-box="754,287,202,49">
 <rect x="754" y="287" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-virtual-network-gateways" x="766" y="298.5" width="26" height="26"></use>
-<text class="g-label" x="802" y="308">ExpressRoute gateway</text>
+<text class="g-label" x="802" y="309">ExpressRoute gateway</text>
 <text class="g-sub" x="802" y="323.5" style="fill: var(--muted)">on-prem link</text>
 </g>
 <g data-id="fw" data-box="415,287,202,49">
 <rect x="415" y="287" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></rect>
 <use href="#gr1-azure-firewalls" x="427" y="298.5" width="26" height="26"></use>
-<text class="g-label" x="463" y="308" style="fill: var(--woad)">Azure Firewall</text>
+<text class="g-label" x="463" y="309" style="fill: var(--woad)">Azure Firewall</text>
 <text class="g-sub" x="463" y="323.5" style="fill: var(--muted)">all spoke egress</text>
 </g>
 <g data-id="bas" data-box="754,420,202,49">
 <rect x="754" y="420" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-bastions" x="766" y="431.5" width="26" height="26"></use>
-<text class="g-label" x="802" y="441">Azure Bastion</text>
+<text class="g-label" x="802" y="442">Azure Bastion</text>
 <text class="g-sub" x="802" y="456.5" style="fill: var(--muted)">admin access</text>
 </g>
 <g data-id="dnsr" data-box="415,420,202,49">
 <rect x="415" y="420" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-dns-private-resolver" x="427" y="431.5" width="26" height="26"></use>
-<text class="g-label" x="463" y="441">DNS Private Resolver</text>
+<text class="g-label" x="463" y="442">DNS Private Resolver</text>
 <text class="g-sub" x="463" y="456.5" style="fill: var(--muted)">hybrid DNS</text>
 </g>
 <g data-id="agw" data-box="56,287,202,49">
 <rect x="56" y="287" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-application-gateways" x="68" y="298.5" width="26" height="26"></use>
-<text class="g-label" x="104" y="308">Application Gateway</text>
+<text class="g-label" x="104" y="309">Application Gateway</text>
 <text class="g-sub" x="104" y="323.5" style="fill: var(--muted)">WAF v2</text>
 </g>
 <g data-id="app" data-box="56,436,202,49">
 <rect x="56" y="436" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="68" y="447.5" width="26" height="26"></use>
-<text class="g-label" x="104" y="457">App Service</text>
+<text class="g-label" x="104" y="458">App Service</text>
 <text class="g-sub" x="104" y="472.5" style="fill: var(--muted)">VNet integration</text>
 </g>
 <g data-id="pesql" data-box="56,585,202,49">
 <rect x="56" y="585" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-private-endpoint" x="68" y="596.5" width="26" height="26"></use>
-<text class="g-label" x="104" y="606">Private endpoint</text>
+<text class="g-label" x="104" y="607">Private endpoint</text>
 <text class="g-sub" x="104" y="621.5" style="fill: var(--muted)">Azure SQL</text>
 </g>
 <g data-id="pest" data-box="56,652,202,49">
 <rect x="56" y="652" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-private-endpoint" x="68" y="663.5" width="26" height="26"></use>
-<text class="g-label" x="104" y="673">Private endpoint</text>
+<text class="g-label" x="104" y="674">Private endpoint</text>
 <text class="g-sub" x="104" y="688.5" style="fill: var(--muted)">Storage</text>
 </g>
 <g data-id="dbw" data-box="1147,503,202,49">
 <rect x="1147" y="503" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-azure-databricks" x="1159" y="514.5" width="26" height="26"></use>
-<text class="g-label" x="1195" y="524">Azure Databricks</text>
+<text class="g-label" x="1195" y="525">Azure Databricks</text>
 <text class="g-sub" x="1195" y="539.5" style="fill: var(--muted)">workspace</text>
 </g>
 <g data-id="pedl" data-box="1147,652,202,49">
 <rect x="1147" y="652" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-private-endpoint" x="1159" y="663.5" width="26" height="26"></use>
-<text class="g-label" x="1195" y="673">Private endpoint</text>
+<text class="g-label" x="1195" y="674">Private endpoint</text>
 <text class="g-sub" x="1195" y="688.5" style="fill: var(--muted)">Data Lake</text>
 </g>
 <g data-id="sql" data-box="56,801,202,49">
 <rect x="56" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-sql-database" x="68" y="812.5" width="26" height="26"></use>
-<text class="g-label" x="104" y="822">Azure SQL</text>
+<text class="g-label" x="104" y="823">Azure SQL</text>
 <text class="g-sub" x="104" y="837.5" style="fill: var(--muted)">orders DB</text>
 </g>
 <g data-id="stor" data-box="285,801,202,49">
 <rect x="285" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-storage-accounts" x="297" y="812.5" width="26" height="26"></use>
-<text class="g-label" x="333" y="822">Storage</text>
+<text class="g-label" x="333" y="823">Storage</text>
 <text class="g-sub" x="333" y="837.5" style="fill: var(--muted)">blobs</text>
 </g>
 <g data-id="pdns" data-box="514,801,202,49">
 <rect x="514" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-dns-zones" x="526" y="812.5" width="26" height="26"></use>
-<text class="g-label" x="562" y="822">Private DNS zones</text>
+<text class="g-label" x="562" y="823">Private DNS zones</text>
 <text class="g-sub" x="562" y="837.5" style="fill: var(--muted)">privatelink</text>
 </g>
 <g data-id="dls" data-box="1147,801,202,49">
 <rect x="1147" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-storage-accounts" x="1159" y="812.5" width="26" height="26"></use>
-<text class="g-label" x="1195" y="822">Data Lake Storage</text>
+<text class="g-label" x="1195" y="823">Data Lake Storage</text>
 <text class="g-sub" x="1195" y="837.5" style="fill: var(--muted)">Gen2</text>
 </g>
 <g data-edge="agw-&gt;app">

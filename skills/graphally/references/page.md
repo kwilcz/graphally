@@ -3,9 +3,10 @@
 `<diagram layout=html>` draws any figure that is not a plain graph: phase and role charts,
 matrices, step cards, roadmaps, BPMN processes with a layout of your own, one-page
 overviews, several kinds in one figure. You write the figure as a web page; the browser
-places every box and wraps every line; graphally turns the page into SVG. A `<script>` then
-connects and draws by name: lines routed around the boxes, arrows, gates on a column
-boundary. Nothing in the source is a coordinate.
+places every box and wraps every line; graphally turns the page into SVG. The connections
+are data: a JSON list of who connects to whom, routed around the boxes. A `<script>` draws
+anything else by name: arrows, gates on a column boundary, lines computed in a loop.
+Nothing in the source is a coordinate.
 
 ```html
 <diagram layout=html width=1000>
@@ -19,9 +20,12 @@ boundary. Nothing in the source is a coordinate.
   <i shape="gateway exclusive" id=ok></i>
   <div shape=cylinder id=db>Orders DB</div>
 </div>
-<script>
-  connect('in', 'check'); connect('check', 'ok')
-  connect('ok', 'db', { label: 'in stock' })
+<script type="application/json">
+[
+  ["in", "check"],
+  ["check", "ok"],
+  { "from": "ok", "to": "db", "label": "in stock" }
+]
 </script>
 </diagram>
 ```
@@ -70,14 +74,51 @@ Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
 
 ## Classes and icons
 
+`icons=aws` on `<diagram>` makes AWS win names both vendors share, as in the other diagrams.
+
 Shorthand classes, which your own CSS overrides: `card` (white box, light border), `box`
 (white box, dark border), `pill`, `tag`, `banner` (dark band, light text), `muted`, `small`,
 `row` and `col` (flex with a gap), `circle` (a round box). `<icon name="app service" size=32>`
 places an icon inline, from the same names as the other diagrams.
 
+## Connections
+
+`<script type="application/json">` inside the diagram holds the connections: a list whose
+entries are `["from", "to", "label"]` or an object with `from`, `to` and any option of
+`connect` (below), `out`, `in` and `via` included: `{ "from": "api", "to": "db", "label":
+"writes", "dashed": true, "out": "bottom" }`. Each is routed around the boxes. `via` points
+are `"id.anchor"` (`"db.top"`, `"gate.center"`) or `[x, y]`.
+
+A connection is known by its key: its `"id"`, else `from->to`, with `#2` for a second line
+between the same boxes. Give an `id` to lines you want to refer to.
+
+## Moving one thing
+
+`nudge="dx,dy"` on any element moves it from where the layout put it, and the lines follow:
+a box nudged down 20px is `<div class=card id=db nudge="0,20">`. It is a correction on top
+of the layout; to place something properly, change the grid instead.
+
+## Changing a diagram
+
+Edit the file. For moves and connections, the edit command does the same patch in one call
+and keeps the rest of the file as written:
+
+```sh
+node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs diagram.html --move db 0,20 --connect audit db "archives" --unline 'api->queue'
+```
+
+`--connect a b "label" '{"dashed": true}'` adds a connection with options;
+`--line 'a->b' '{"label": "reads", "via": [[420, 160]]}'` merges options into one (`null`
+removes an option); `--lines` prints the connections with their keys. Render again afterwards, without
+`--recompute`: the render reads the previous SVG, and every line keeps the sides it used
+there, whether you set them or the router chose them, so only what changed moves.
+`--recompute` routes everything afresh. In the GitHub Copilot app, the graphally canvas
+makes the same edits from the mouse.
+
 ## The script
 
-It runs after the page is laid out. Every point comes from an element.
+It runs after the page is laid out, for what is not a plain connection. Every point comes
+from an element.
 
 | Call | Gives |
 |---|---|
@@ -147,6 +188,8 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200`, a `head` name) |
 
 The script's `text`, `gate` and arrow labels are not checked for overlap: look at the PNG.
+The render's summary counts crossings: lines crossing lines. A crossing is not a problem,
+but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 
 ## Recipes
 

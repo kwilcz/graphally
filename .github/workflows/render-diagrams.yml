@@ -1,0 +1,84 @@
+# Re-renders every diagram under samples/ and docs/diagrams/, so a pull request always carries
+# SVG and PNG files that match their sources. A branch of this repository gets the new files
+# committed back to it. A fork cannot be pushed to, so there the job only fails when its files
+# are out of date.
+name: Render diagrams
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# A newer run for the same branch replaces an older run that is still going.
+concurrency:
+  group: render-diagrams-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Same-repository PRs and manual runs check out their branch, so the push lands on it.
+      - name: Check out the branch
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch' }}
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+
+      # A fork's branch is not in this repository, so check out its head commit without credentials.
+      - name: Check out the fork's head commit
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # Text is measured with the browser's fonts, and the theme names Inter first. Without Inter
+      # every render shifts. The runner's stock fontconfig prefers DejaVu for the generic
+      # sans-serif, which a few diagrams name, so Inter is made the preference there too.
+      - name: Install Inter
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-inter
+          mkdir -p ~/.config/fontconfig
+          printf '%s\n' '<?xml version="1.0"?>' '<!DOCTYPE fontconfig SYSTEM "fonts.dtd">' \
+            '<fontconfig><alias><family>sans-serif</family><prefer><family>Inter</family></prefer></alias></fontconfig>' > ~/.config/fontconfig/fonts.conf
+          fc-cache -f >/dev/null
+          test "$(fc-match -f '%{family}' sans-serif)" = Inter
+
+      - name: Render every diagram
+        run: bash tools/render-diagrams.sh
+
+      - name: Commit the re-rendered files, or fail when they are out of date
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          CAN_PUSH: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch' }}
+        run: |
+          git add -A -- ':(glob)samples/**/*.svg' ':(glob)samples/**/*.png' ':(glob)docs/diagrams/*.svg' ':(glob)docs/diagrams/*.png'
+          if git diff --cached --quiet; then
+            echo "The diagram files are up to date."
+            exit 0
+          fi
+          git diff --cached --stat
+          # Forks and main never take a push: the job fails and the author re-renders.
+          if [ "$CAN_PUSH" != "true" ] || [ "$BRANCH" = "main" ]; then
+            echo "::error::The diagram files are out of date. Run bash tools/render-diagrams.sh and commit the result."
+            exit 1
+          fi
+          git config user.name "Kamil Wilczynski"
+          git config user.email "25964560+kwilcz@users.noreply.github.com"
+          git commit -m "Re-render diagrams"
+          # A push made with GITHUB_TOKEN starts no workflow runs: this commit does not loop back
+          # here, and the checks on the branch are not run again for it.
+          git push origin "HEAD:refs/heads/$BRANCH"

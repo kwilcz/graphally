@@ -12,6 +12,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
+import { applyEdits, readLines } from '../skills/graphally/scripts/lib/edits.mjs';
+import { launch, openPage } from '../skills/graphally/scripts/lib/browser.mjs';
+import { startServer } from '../.github/extensions/graphally/server.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cli = path.join(root, 'skills/graphally/scripts/graphally.mjs');
@@ -108,13 +111,13 @@ const renders = new Map();
 const table = [];
 let total = 0, failed = 0;
 
-function test(name, fn) {
+async function test(name, fn) {
   total++;
-  try { fn(); console.log(`ok  ${name}`); }
+  try { await fn(); console.log(`ok  ${name}`); }
   catch (e) { failed++; console.log(`FAIL ${name}: ${e.message}`); }
 }
 
-test('samples', () => {
+await test('samples', () => {
   const bad = [];
   for (const p of sources) {
     const out = folder(path.join('out', p.replace(/\.html$/, '').split(/[\\/]/).join('-')));
@@ -125,7 +128,7 @@ test('samples', () => {
   check(!bad.length, bad.join('; '));
 });
 
-test('layout', () => {
+await test('layout', () => {
   const bad = [];
   for (const [p, r] of renders) {
     if (!r.summaries.length) bad.push(`${p}: no diagram in the output`);
@@ -141,7 +144,7 @@ test('layout', () => {
   check(!bad.length, bad.join('; '));
 });
 
-test('nudge', () => {
+await test('nudge', () => {
   const a = folder('nudge-base'), b = folder('nudge-moved');
   const ra = render(write(a, doc()), path.join(a, 'out'), ['--recompute']);
   const rb = render(write(b, doc({ attr: NUDGE })), path.join(b, 'out'), ['--recompute']);
@@ -151,7 +154,7 @@ test('nudge', () => {
   check(Math.abs(y1 - y0 - 24) <= 1 && Math.abs(x1 - x0) <= 1, `b1 moved by (${x1 - x0}, ${y1 - y0}), expected (0, 24)`);
 });
 
-test('sides', () => {
+await test('sides', () => {
   const d = folder('sides'), out = path.join(d, 'out');
   // a2 is the lower node of its stack, so its bottom side is free (a1's is blocked by a2).
   ok0(render(write(d, doc({ links: '<link from=a2 to=b1 out=bottom in=bottom>' })), out));
@@ -159,20 +162,20 @@ test('sides', () => {
   check(e && Object.keys(e).length === 2 && e.out === 'bottom' && e.in === 'bottom', `edge a2->b1 is ${JSON.stringify(e)}`);
 });
 
-test('blocked-side', () => {
+await test('blocked-side', () => {
   const d = folder('blocked-side');
   const r = render(write(d, doc({ links: '<link from=a1 to=b1 out=bottom>' })), path.join(d, 'out'));
   check(r.code === 1 && /override-ignored: id=a1->b1 attr=out/.test(r.text), `expected override-ignored for a1->b1 out: ${tail(r.text)}`);
 });
 
-test('bad-override', () => {
+await test('bad-override', () => {
   const d = folder('bad-override');
   const r = render(write(d, doc({ links: '<link from=a1 to=b1 out=diagonal>' })), path.join(d, 'out'));
   check(r.code === 1, `exit ${r.code}, expected 1`);
   check(/bad-override/.test(r.text), `no bad-override line: ${tail(r.text)}`);
 });
 
-test('dropped', () => {
+await test('dropped', () => {
   const d = folder('dropped'), out = path.join(d, 'out'), f = write(d, doc({ attr: NUDGE }));
   ok0(render(f, out));
   write(d, doc());
@@ -184,7 +187,7 @@ test('dropped', () => {
   check(!fresh.text.includes('override dropped'), 'a --recompute render still reports a dropped override');
 });
 
-test('stability', () => {
+await test('stability', () => {
   const bad = [];
   for (const [name, { id, pairs }] of Object.entries(EDITS)) {
     try {
@@ -210,11 +213,11 @@ test('stability', () => {
 const page = (body, script = '', attrs = 'width=700') => `<diagram layout=html ${attrs}>\n${body}\n<script>\n${script}\n</script>\n</diagram>\n`;
 const svgOf = out => fs.readFileSync(path.join(out, 'diagram.svg'), 'utf8');
 // A routed line's path, and its corners (each bend is drawn as a Q curve).
-const edgePath = (svg, key) => { const m = svg.match(new RegExp(`<g data-edge="${key.replace(/>/g, '&gt;')}"><path d="([^"]+)"`)); check(m, `no edge ${key}`); return m[1]; };
+const edgePath = (svg, key) => { const m = svg.match(new RegExp(`<g data-edge="${key.replace(/>/g, '&gt;')}"[^>]*><path d="([^"]+)"`)); check(m, `no edge ${key}`); return m[1]; };
 const corners = d => (d.match(/Q/g) || []).length;
 const pointsOf = d => [...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: Number(m[1]), y: Number(m[2]) }));
 
-test('page-shapes', () => {
+await test('page-shapes', () => {
   const d = folder('page-shapes'), out = path.join(d, 'out');
   const names = ['cylinder', 'document', 'note', 'cloud', 'hexagon', 'chevron', 'task loop', 'gateway parallel', 'event timer', 'end message', 'start'];
   ok0(render(write(d, page(names.map((n, i) => `<div shape="${n}" id=s${i}></div>`).join('\n'))), out));
@@ -224,7 +227,7 @@ test('page-shapes', () => {
   check(bad.code === 1 && /unknown-shape: shape=cylindr suggest=cylinder/.test(bad.text), `expected unknown-shape with a suggestion: ${tail(bad.text)}`);
 });
 
-test('page-script-errors', () => {
+await test('page-script-errors', () => {
   const d = folder('page-script'), out = path.join(d, 'out'), body = '<div class=card id=a>A</div><div class=card id=b>B</div>';
   const r1 = render(write(d, page(body, "arrow('a', 'b')\narrow('nope', 'b')")), out);
   check(r1.code === 1 && /script-error: message=no element "nope" line=3/.test(r1.text), `expected a script error for "nope" on line 3: ${tail(r1.text)}`);
@@ -232,7 +235,7 @@ test('page-script-errors', () => {
   check(r2.code === 1 && /is not an element or a point line=2/.test(r2.text), `expected a script error for a non-point on line 2: ${tail(r2.text)}`);
 });
 
-test('page-routing', () => {
+await test('page-routing', () => {
   const d = folder('page-routing'), out = path.join(d, 'out');
   // A lane's background, laid in the same grid cells, does not wall in the tasks on it.
   ok0(render(write(d, page(`<style>.l { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 60px } .bg { grid-column: 1 / -1; grid-row: 1; background: var(--wash) } .t { grid-row: 1; margin: 30px 0 }</style>
@@ -251,7 +254,7 @@ test('page-routing', () => {
   check(Math.abs(low - (a[1] + a[3] + 80)) <= 1.5, `the via line's lowest point is ${low}, expected ${a[1] + a[3] + 80}`);
 });
 
-test('page-problems', () => {
+await test('page-problems', () => {
   const d = folder('page-problems'), out = path.join(d, 'out');
   const r1 = render(write(d, page('<div class=card>A</div>', '', 'width=12px')), out);
   check(r1.code === 1 && /bad-attribute: attr=width value=12px/.test(r1.text), `expected bad-attribute for width: ${tail(r1.text)}`);
@@ -272,6 +275,79 @@ test('page-problems', () => {
     "connect('s', 't1'); connect('t1', 't2'); connect('t2', 'g'); connect('g', 't3', { label: 'invalid' }); connect('g', 'e', { label: 'valid' }); connect('t3', 't1', { label: 'resubmit' })")), out));
   const r4 = render(write(d, page('<div style="width: 900px" class=card>wide</div>', '', 'width=600')), out);
   check(r4.code === 1 && /page-overflow: width=600 content=9\d\d/.test(r4.text), `expected page-overflow: ${tail(r4.text)}`);
+});
+
+// Connections as data, nudge, edits, and lines that keep their sides across an edit.
+const DATA = `<diagram layout=html width=760>
+<style>.g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px 80px; align-items: center }</style>
+<div class=g>
+  <div class=card id=web>Web</div><div class=card id=api>API</div><div shape=cylinder id=db>DB</div>
+  <div class=card id=queue nudge="0,20">Queue</div><div class=card id=worker>Worker</div>
+</div>
+<script type="application/json">
+[
+  { "from": "web", "to": "api", "label": "orders" },
+  { "from": "api", "to": "db", "label": "writes" },
+  ["api", "queue", "events"],
+  ["queue", "worker"],
+  { "from": "worker", "to": "db", "label": "updates" }
+]
+</script>
+</diagram>
+`;
+const sidesOf = svg => Object.fromEntries([...svg.matchAll(/data-edge="([^"]+)" data-sides="([^"]+)"/g)].map(m => [m[1].replace(/&gt;/g, '>'), m[2]]));
+
+await test('page-data', () => {
+  const d = folder('page-data'), out = path.join(d, 'out'), f = write(d, DATA);
+  ok0(render(f, out));
+  const svg0 = svgOf(out), lay0 = readLayout(svg0), sides0 = sidesOf(svg0);
+  check(Object.keys(sides0).length === 5, `expected 5 routed connections, got ${Object.keys(sides0).join(', ')}`);
+  check(readLines(DATA).map(l => l.key).join(' ') === 'web->api api->db api->queue queue->worker worker->db', 'connection keys');
+  // nudge: queue sits 20px lower than worker's row would put it
+  check(Math.abs(lay0.nodes.queue[1] - lay0.nodes.worker[1] - 20) <= 1, `queue nudge: ${lay0.nodes.queue} vs ${lay0.nodes.worker}`);
+  // edits: a new box and connection; everything else keeps its place and its sides
+  const r = applyEdits(DATA.replace('<div class=card id=worker>Worker</div>', '<div class=card id=worker>Worker</div><div class=card id=audit>Audit</div>'),
+    [{ op: 'connect', from: 'worker', to: 'audit', label: 'records' }, { op: 'line', key: 'web->api', set: { label: 'orders in' } }, { op: 'move', id: 'queue', dx: 10, dy: 0 }]);
+  check(!r.errors.length, `edits failed: ${JSON.stringify(r.errors)}`);
+  check(/id=queue nudge="10,20"/.test(r.source) && /\{ "from": "worker", "to": "audit", "label": "records" \}/.test(r.source) && /"label": "orders in"/.test(r.source), 'edits not in the source');
+  fs.writeFileSync(f, r.source);
+  ok0(render(f, out));
+  const svg1 = svgOf(out), lay1 = readLayout(svg1), sides1 = sidesOf(svg1);
+  const moved = Object.keys(lay0.nodes).filter(k => k !== 'queue' && JSON.stringify(lay0.nodes[k]) !== JSON.stringify(lay1.nodes[k]));
+  check(!moved.length, `boxes moved by an unrelated edit: ${moved.join(', ')}`);
+  const flipped = Object.keys(sides0).filter(k => !k.startsWith('queue') && !k.endsWith('queue') && sides0[k] !== sides1[k]);
+  check(!flipped.length, `lines changed sides: ${flipped.join(', ')}`);
+  check(sides1['worker->audit'], 'the new connection is not routed');
+  // a broken entry is reported, the rest still renders
+  const bad = render(write(d, DATA.replace('["queue", "worker"],', '["queue"],')), out);
+  check(bad.code === 1 && /bad-line: line=4 message=needs "from" and "to"/.test(bad.text), `expected bad-line: ${tail(bad.text)}`);
+});
+
+// The Copilot canvas: its server and page in headless Chrome, edited with real mouse drags.
+await test('canvas', async () => {
+  const d = folder('canvas'), f = write(d, DATA), svgFile = path.join(d, 'diagram.svg');
+  const srv = await startServer(), browser = await launch();
+  try {
+    const page = await openPage(browser, { width: 1100, height: 700 }), wait = ms => new Promise(r => setTimeout(r, ms));
+    const saved = async since => { for (const end = Date.now() + 15000; Date.now() < end; await wait(50)) if (fs.existsSync(svgFile) && fs.statSync(svgFile).mtimeMs > since) return; throw new Error('the canvas did not render'); };
+    const center = sel => page.evaluate(`(() => { const r = document.querySelector('${sel}').getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })()`);
+    const mouse = (type, [x, y], modifiers = 0) => page.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', buttons: type === 'mouseReleased' ? 0 : 1, clickCount: 1, modifiers });
+    const drag = async (a, b, modifiers = 0) => { await mouse('mousePressed', a, modifiers); for (let i = 1; i <= 6; i++) await mouse('mouseMoved', [a[0] + (b[0] - a[0]) * i / 6, a[1] + (b[1] - a[1]) * i / 6], modifiers); await mouse('mouseReleased', b, modifiers); };
+    let t = Date.now();
+    await page.goto(srv.open('t', f));
+    await saved(t - 1);
+    const sides0 = sidesOf(fs.readFileSync(svgFile, 'utf8'));
+    const db = await center('g[data-id="db"]');
+    t = Date.now(); await drag(db, [db[0] + 40, db[1] + 30]); await saved(t);
+    check(/id=db nudge="40,30"/.test(fs.readFileSync(f, 'utf8')), 'dragging db did not write nudge="40,30"');
+    const sides1 = sidesOf(fs.readFileSync(svgFile, 'utf8')), flipped = Object.keys(sides0).filter(k => !k.includes('db') && sides0[k] !== sides1[k]);
+    check(!flipped.length, `lines changed sides when db moved: ${flipped.join(', ')}`);
+    t = Date.now(); await drag(await center('g[data-id="web"]'), await center('g[data-id="worker"]'), 1); await saved(t);
+    check(/"from": "web", "to": "worker"/.test(fs.readFileSync(f, 'utf8')), 'Alt-drag did not add a connection');
+    const r = await srv.edit('t', [{ op: 'unline', key: 'queue->worker' }]);
+    check(r.applied === 1 && Array.isArray(r.problems) && !/\["queue", "worker"\]/.test(fs.readFileSync(f, 'utf8')), `agent edit: ${JSON.stringify(r)}`);
+    check(!page.errors.length, `page errors: ${page.errors.join(' | ')}`);
+  } finally { await browser.close(); srv.stop(); }
 });
 
 if (table.length) {

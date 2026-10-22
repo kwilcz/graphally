@@ -57,20 +57,27 @@ export function compilePage(el, opts, m) {
   if (title) root.insertAdjacentHTML('beforeend', `<div style="font: 600 15px Inter, 'Segoe UI', system-ui, sans-serif; margin-bottom: 4px">${esc(title)}</div>`);
   if (subtitle) root.insertAdjacentHTML('beforeend', `<div style="font-size: 12.5px; color: var(--muted); margin-bottom: 4px">${esc(subtitle)}</div>`);
   if (title || subtitle) root.insertAdjacentHTML('beforeend', `<div style="height: ${S.titleGap - 4}px"></div>`);
-  const scripts = [];
+  // <script> is drawing code; <script type="application/json"> is the connections, as data.
+  const scripts = [], lines = [];
   for (const c of el.childNodes) {
-    if (c.nodeType === 1 && c.tagName === 'SCRIPT') scripts.push(c.textContent);
+    if (c.nodeType === 1 && c.tagName === 'SCRIPT') ((c.getAttribute('type') || '').toLowerCase() === 'application/json' ? lines : scripts).push(c.textContent);
     else root.appendChild(c.cloneNode(true));
+  }
+  // nudge="dx,dy" moves an element from where the layout put it (a canvas drag writes it).
+  for (const e of root.querySelectorAll('[nudge]')) {
+    const v = e.getAttribute('nudge').split(',').map(Number);
+    if (v.length !== 2 || v.some(n => !Number.isFinite(n))) { problems.push({ rule: 'bad-attribute', attr: 'nudge', value: e.getAttribute('nudge'), ...(e.id ? { id: e.id } : {}), hint: 'two numbers, as in nudge="20,-10"' }); continue; }
+    e.style.translate = `${v[0]}px ${v[1]}px`;
   }
   document.body.appendChild(root);
   try {
-    return build(root, el, id, scripts, opts, m, problems);
+    return build(root, el, id, scripts, lines, opts, m, problems);
   } finally {
     root.remove();
   }
 }
 
-function build(root, el, id, scripts, opts, m, problems) {
+function build(root, el, id, scripts, lines, opts, m, problems) {
   // Icons: <icon name="app service" size=32> becomes a sized box drawn with the icon's symbol.
   const symbols = new Map();
   const order = String(el.getAttribute('icons') || 'azure').toLowerCase() === 'aws' ? ['aws', 'azure'] : ['azure', 'aws'];
@@ -164,6 +171,27 @@ function build(root, el, id, scripts, opts, m, problems) {
       const line = String(e.stack || '').match(/<anonymous>:(\d+):\d+/);
       problems.push({ rule: 'script-error', message: e.message, ...(line ? { line: Number(line[1]) - 2 } : {}) });
     }
+  }
+  // The connections as data: [{ "from": "a", "to": "b", "label": "…", …options of connect }],
+  // or ["a", "b", "label"]. via points are [x, y] or "id.anchor" (anchor: top, right, center …).
+  for (const text of lines) {
+    let list;
+    try { list = JSON.parse(text); } catch (e) { problems.push({ rule: 'bad-lines', message: e.message, hint: 'the connections must be a JSON array' }); continue; }
+    if (!Array.isArray(list)) { problems.push({ rule: 'bad-lines', message: 'not an array', hint: 'the connections must be a JSON array' }); continue; }
+    list.forEach((item, n) => {
+      const o = Array.isArray(item) ? { from: item[0], to: item[1], ...(item[2] ? { label: item[2] } : {}) } : { ...item };
+      try {
+        if (!o.from || !o.to) throw new Error('needs "from" and "to"');
+        const anchor = v => {
+          if (Array.isArray(v)) return pt(Number(v[0]), Number(v[1]));
+          const [ref, side = 'center'] = String(v).split('.'), b = find(ref)[0];
+          if (!b[side]?.x && b[side]?.x !== 0) throw new Error(`"${v}": no anchor "${side}"`);
+          return b[side];
+        };
+        const { from, to, via, ...rest } = o;
+        api.connect(from, to, { ...rest, ...(via ? { via: [].concat(Array.isArray(via[0]) || typeof via[0] === 'string' ? via : [via]).map(anchor) } : {}) });
+      } catch (e) { problems.push({ rule: 'bad-line', line: n + 1, message: e.message }); }
+    });
   }
 
   // ---------- the page as boxes and text ----------
@@ -281,7 +309,7 @@ function build(root, el, id, scripts, opts, m, problems) {
   // ---------- connectors: route.js on the page's boxes ----------
   const W = Math.ceil(Math.max(root.scrollWidth, ...boxes.map(x => x.b.x + x.b.w + S.pad), ...texts.map(t => t.x + t.w + S.pad)));
   const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), 2 * S.pad));
-  const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H);
+  const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H, opts.previous);
   for (const r of routes) if (r.labelCrowded) problems.push({ rule: 'label-crowded', edge: `${r.edge.from} -> ${r.edge.to}`, label: r.edge.label, hint: 'widen the gap the line runs through, or shorten the label' });
   overlaps(routes, problems);
   shortEnds(routes, drawings, problems);
@@ -293,7 +321,8 @@ function build(root, el, id, scripts, opts, m, problems) {
   const markers = new Set(), lineOut = [], labelOut = [], drawOut = [];
   for (const rt of routes) {
     const e = rt.edge, tone = paintOf(toneOf(e.color)) || (e.accent ? 'var(--woad)' : 'var(--ink)');
-    lineOut.push(`<g data-edge="${esc(e.key)}"><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path></g>`);
+    const sides = rt.out != null && rt.in != null ? ` data-sides="${SIDES[rt.out]},${SIDES[rt.in]}"` : '';
+    lineOut.push(`<g data-edge="${esc(e.key)}"${sides}><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path></g>`);
     if (rt.label) {
       const halo = under(boxes, rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) || 'var(--bg)';
       labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
@@ -417,9 +446,10 @@ function under(boxes, x, y) {
 // The page's boxes become route.js nodes and groups: a box that holds other boxes is a group
 // (a line may cross into it), the rest are nodes (lines go round them). Text that sits in no
 // node is an obstacle too, so lines do not run through headings or free text.
-function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
+function connectors(boxes, texts, calls, drawings, problems, m, W, H, previous) {
   if (!calls.length) return [];
-  const keyOf = new Map(), model = { nodes: new Map(), groups: new Map(), edges: [], problems, previous: null, attrs: {} };
+  // previous: the layout of the last render; a line keeps the sides it used there (soft).
+  const keyOf = new Map(), model = { nodes: new Map(), groups: new Map(), edges: [], problems, previous: previous || null, attrs: {} };
   const rootG = { id: '__root', kind: 'group', style: 'root', children: [], parent: null, depth: -1 };
   model.groups.set('__root', rootG);
   // The author set the gaps; a 6px clearance lets lines use any gap wider than 12px.
@@ -511,7 +541,7 @@ function joinLegs(routes) {
   }
   for (const [edge, parts] of legs) {
     if (parts.filter(Boolean).length !== parts.find(Boolean).edge.leg.n) continue;   // a leg failed: reported as unroutable
-    out.push({ edge, points: parts.flatMap((r, i) => (i ? r.points.slice(1) : r.points)), label: parts.find(r => r.label)?.label, labelCrowded: parts.some(r => r.labelCrowded) });
+    out.push({ edge, points: parts.flatMap((r, i) => (i ? r.points.slice(1) : r.points)), label: parts.find(r => r.label)?.label, labelCrowded: parts.some(r => r.labelCrowded), out: parts[0].out, in: parts.at(-1).in });
   }
   return out;
 }
