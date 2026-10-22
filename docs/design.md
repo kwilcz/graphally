@@ -111,8 +111,13 @@ channels between them. A path's cost counts:
 
 Routing runs in two passes. The first picks the side each edge leaves from. The second
 spreads edges that share a side. A few rounds of rip-up and reroute follow, and then
-parallel segments are pulled apart. Edges written in one statement to a shared end bundle
-into a trunk.
+parallel segments are pulled apart.
+
+Edges that share an end and say the same thing bundle: written in one statement
+(`a, b -> c`), or with the same label in the same style. A bundle meets its shared box on
+one side, and routes as a tree: its longest edge first, then each other edge joins the
+lines already drawn and follows them from there. The bundle draws one trunk and carries
+one label. Every arrowhead in a bundle sits at least 36px past the trunk's last bend.
 
 A link from a whole group to a shared service in a `<band>` is drawn as a badge: the
 service's icon in the group's header, instead of a wire across the diagram.

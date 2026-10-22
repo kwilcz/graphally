@@ -159,7 +159,8 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
   the same grid cells), and a full-width header strip without an id, up to 48px tall. The
   script's straight lines count as taken, so `connect` keeps off them.
 - Lines that share a side spread along it; a line whose other end faces it runs straight
-  in when that end lies along the side. Two boxes line up only when they share a grid row
+  in when that end lies along the side. Lines into (or out of) one box with the same label
+  and style merge into one trunk with one label. Two boxes line up only when they share a grid row
   or column: put boxes that a straight line joins in one grid (or a `subgrid`), rather
   than nudging one with margins.
 - It keeps 6px from boxes, so it passes through any gap wider than 12px. A labelled line

@@ -24,9 +24,9 @@ export function findSkill(starts = [process.cwd(), here]) {
   return found.find(d => fs.existsSync(path.join(d, 'SKILL.md')) && fs.existsSync(path.join(d, 'scripts/lib/index.js'))) || null;
 }
 
-export async function startServer({ log = () => {} } = {}) {
-  const skill = findSkill();
-  if (!skill) throw new Error('graphally skill not found: install it, or set GRAPHALLY_SKILL_DIR');
+export async function startServer({ log = () => {}, starts = [] } = {}) {
+  const skill = findSkill([...starts.filter(Boolean), process.cwd(), here]);
+  if (!skill) throw new Error('graphally skill not found: install it in ~/.copilot/skills/graphally, or in .github/skills/graphally of the repository, or set GRAPHALLY_SKILL_DIR to its folder');
   const lib = name => import(pathToFileURL(path.join(skill, 'scripts/lib', name)).href);
   const { applyEdits, readLines } = await lib('edits.mjs');
   const { readLayout } = await lib('snapshot.mjs');

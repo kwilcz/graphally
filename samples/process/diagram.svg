@@ -71,10 +71,10 @@
 <g data-edge="over-&gt;pay" data-sides="right,left"><path d="M1364,673 L1733,673 Q1739,673 1739,679 L1739,681.5 Q1739,687.5 1745,687.5 L1751,687.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="remind-&gt;review" data-sides="left,bottom"><path d="M1053,682.5 L943,682.5 Q937,682.5 937,676.5 L937,402" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="decide-&gt;over" data-sides="bottom,left"><path d="M1147,397 L1147,627 Q1147,633 1153,633 L1251,633 Q1257,633 1257,639 L1257,667 Q1257,673 1263,673 L1318,673" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="finrej-&gt;notice" data-sides="right,left"><path d="M1895,535 L1929,535 Q1935,535 1935,529 L1935,132 Q1935,126 1941,126 L1965,126" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="finrej-&gt;notice" data-sides="right,left"><path d="M1895,535 L1901,535 Q1907,535 1907,529 L1907,380 Q1907,374 1913,374 L1923,374 Q1929,374 1929,368 L1929,132 Q1929,126 1935,126 L1965,126" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="pay-&gt;paidnote" data-sides="right,left"><path d="M1895,673 L1930,673 Q1936,673 1936,667 L1936,224 Q1936,218 1942,218 L1965,218" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="submit-&gt;validate" data-sides="right,left"><path d="M525,182 L551,182 Q557,182 557,188 L557,667 Q557,673 563,673 L569,673" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="reject-&gt;notice" data-sides="right,left"><path d="M1385,374 L1915,374 Q1921,374 1921,368 L1921,132 Q1921,126 1927,126 L1965,126" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="reject-&gt;notice" data-sides="right,left"><path d="M1385,374 L1923,374 Q1929,374 1929,368 L1929,132 Q1929,126 1935,126 L1965,126" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="valid-&gt;correct" data-sides="right,right"><path d="M821,673 L827,673 Q833,673 833,667 L833,248.5 Q833,242.5 827,242.5 L303,242.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-id="s" data-box="213,108,36,36">
 <circle cx="231" cy="126" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
@@ -194,13 +194,10 @@
 <text class="g-edge" x="1154" y="519" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">yes</text>
 </g>
 <g data-edge="finrej-&gt;notice">
-<text class="g-edge" x="1942" y="334.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">rejection</text>
+<text class="g-edge" x="1936" y="194" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">rejection</text>
 </g>
 <g data-edge="pay-&gt;paidnote">
 <text class="g-edge" x="1943" y="449.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">payment</text>
-</g>
-<g data-edge="reject-&gt;notice">
-<text class="g-edge" x="1629.4" y="368" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">rejection</text>
 </g>
 <g data-edge="valid-&gt;correct">
 <text class="g-edge" x="840" y="455.8" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">no</text>

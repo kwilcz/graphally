@@ -83,7 +83,8 @@ sb ~> worker : events
   cells; `.` is empty; `key` places the legend. Without a map, groups are placed in
   columns following the flow of the links.
 - **`<links>`**: one per line, `from -> to : label`. Several ids allowed on each side
-  (`a, b -> c`); chains allowed (`a -> b -> c`). `->` call, `~>` async message or event
+  (`a, b -> c`); chains allowed (`a -> b -> c`). Lines into (or out of) one box with the
+  same label merge into one trunk with one label. `->` call, `~>` async message or event
   (dashed), `<->` two-way, `--` plain line, `=>` highlighted. A group id is a valid end:
   `app -> kv : secrets` instead of one edge per app.
 - **Corrections**: `<link from=api to=db label=writes out=bottom in=left>` is the long form
