@@ -89,6 +89,8 @@ Each kind of diagram uses the layout that suits it:
   templates (`shapes.js`: flowchart, BPMN, stores, block arrows) over the box the browser
   gave it, with its background and border as fill and outline.
 
+  ![Every page-mode shape and marker, drawn by page mode](diagrams/shapes.svg)
+
 ## Routing and labels
 
 Edges are found by A* search over a sparse grid built from the boxes' edges and the
