@@ -35,6 +35,11 @@ aligns and routes everything and writes the SVG. Never write coordinates.
 4. Look at the PNG once at the end: `ok` means nothing collides, not that the story reads
    well.
 
+**Changing an existing diagram:** edit its source file in place with your edit tool, then
+render it again. The SVG is compiled output; the render reads the previous one, so what
+you did not change stays where it was. Keep `nudge`, `out` and `in` attributes: they are
+the user's corrections. `--recompute` lays the whole diagram out afresh.
+
 ## Syntax
 
 ```html
@@ -81,6 +86,9 @@ sb ~> worker : events
   (`a, b -> c`); chains allowed (`a -> b -> c`). `->` call, `~>` async message or event
   (dashed), `<->` two-way, `--` plain line, `=>` highlighted. A group id is a valid end:
   `app -> kv : secrets` instead of one edge per app.
+- **Corrections**: `<link from=api to=db label=writes out=bottom in=left>` is the long form
+  of a link line; `out` and `in` fix the sides it leaves and enters (`right`, `bottom`,
+  `left`, `top`). `nudge="0,24"` on a node moves it by pixels.
 - **Large diagrams**: split them into files with `<include src="parts/app.html">`. A part
   holds one `<group id=app>`; inside it, ids and links are local, and from the main file
   its items are `app.<id>` (`fd -> app.api`).
@@ -126,6 +134,8 @@ sb ~> worker : events
 | `label-crowded` | shorten the label (gaps already widen to fit labels) |
 | `too-wide`, `too-tall` | move groups into another row or column of the map |
 | `text-overlap` | shorten the text involved |
+| `bad-override` | use a side name, or `nudge="dx,dy"` |
+| `override-ignored` | the side is blocked: choose another, or remove `out`/`in` |
 
 ## More diagram types
 
@@ -140,8 +150,9 @@ Read only the one you need:
 
 ## Scripts
 
-- `scripts/graphally.mjs render <file.html> [--png | --png2x] [--dark] [--out dir]`: compiles
-  every `<diagram>` in the file to SVG; `--png` adds a preview, `--png2x` a sharp PNG.
+- `scripts/graphally.mjs render <file.html> [--png | --png2x] [--dark] [--out dir] [--recompute]`:
+  compiles every `<diagram>` in the file to SVG; `--png` adds a preview, `--png2x` a sharp
+  PNG, `--recompute` ignores the previous layout.
 - `scripts/tf2graphally.mjs <terraform dir> [--out file.html] [--title "…"]`: drafts a
   diagram of a Terraform configuration (see `references/terraform.md`).
 - `scripts/fetch-icons.mjs [azure] [aws] [--force]`: downloads the icon packs; the first

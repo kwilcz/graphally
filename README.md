@@ -69,7 +69,8 @@ The source looks like this:
 ```html
 <diagram title="Orders platform">
 <layout>
-edge  app  data
+edge  app
+.     data
 </layout>
 <group id=edge label="Edge"><node id=fd icon="front door">Front Door | WAF</node></group>
 <group id=app label="Application"><node id=api icon="app service">Orders API</node></group>
@@ -86,8 +87,20 @@ The skill's scripts can also be run directly:
 ```sh
 node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG and a preview PNG
 node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG; --dark for the dark theme
+node skills/graphally/scripts/graphally.mjs render diagram.html --recompute  # lay out afresh, ignoring the previous SVG
 node skills/graphally/scripts/tf2graphally.mjs ./infra --out diagram.html  # a Terraform configuration, drafted
 node skills/graphally/scripts/fetch-icons.mjs                            # download or refresh the icon packs
+```
+
+**Source and output.** The `.html` source is the diagram; the SVG next to it is compiled
+output. Edit the source and render again: the render reads the previous SVG's layout, so
+what you did not change stays where it was. Corrections made by hand are attributes in the
+source (`nudge="0,24"` on a node, `out=bottom in=left` on a `<link>`), so they survive
+later edits, and a render that loses one says so. To commit the SVGs for your docs but keep
+them out of pull-request diffs, mark them as generated in `.gitattributes`:
+
+```text
+*.svg linguist-generated=true
 ```
 
 Colours are CSS tokens in `skills/graphally/assets/theme.css`, so a brand theme only
