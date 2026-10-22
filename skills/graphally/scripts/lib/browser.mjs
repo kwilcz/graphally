@@ -56,12 +56,15 @@ export function serve(skillRoot, srcDir, files = {}) {
 export async function launch() {
   const exe = findBrowser();
   if (!exe) throw new Error(HINT);
-  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'graphally-'));
+  // Chrome keeps Unix sockets in its profile and its temporary folder, and socket paths stop at
+  // about 108 characters: a long TMPDIR (deep in a project) makes it exit at start. Use /tmp then.
+  const base = process.platform !== 'win32' && os.tmpdir().length > 60 && fs.existsSync('/tmp') ? '/tmp' : os.tmpdir();
+  const profile = fs.mkdtempSync(path.join(base, 'graphally-'));
   const args = ['--headless=new', '--remote-debugging-pipe', `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check',
     '--disable-gpu', '--hide-scrollbars', '--mute-audio', '--disable-extensions', '--disable-background-networking', '--disable-sync',
     '--disable-component-update', '--password-store=basic', '--use-mock-keychain', 'about:blank'];
   if (process.platform === 'linux' && process.getuid?.() === 0) args.unshift('--no-sandbox');   // Chrome refuses to run as root otherwise
-  const proc = spawn(exe, args, { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'] });
+  const proc = spawn(exe, args, { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'], ...(base !== os.tmpdir() ? { env: { ...process.env, TMPDIR: base } } : {}) });
   let stderr = '';
   proc.stdio[2].on('data', d => { stderr = (stderr + d).slice(-2000); });
   const out = proc.stdio[3], inp = proc.stdio[4];
@@ -78,9 +81,10 @@ export async function launch() {
       else listeners.forEach(l => l(msg));
     }
   });
-  const fail = why => { dead = new Error(`${why}${stderr ? `\n${stderr.trim().split('\n').slice(-3).join('\n')}` : ''}\n${HINT}`); for (const p of pending.values()) p.reject(dead); pending.clear(); };
-  proc.on('error', e => fail(`could not start ${exe}: ${e.message}`));
-  proc.on('exit', () => fail(`the browser (${exe}) exited`));
+  // The install hint helps only when the browser could not be started; an exit is the browser's own error.
+  const fail = (why, hint = '') => { dead = new Error(`${why}${stderr ? `\n${stderr.trim().split('\n').slice(-3).join('\n')}` : ''}${hint ? `\n${hint}` : ''}`); for (const p of pending.values()) p.reject(dead); pending.clear(); };
+  proc.on('error', e => fail(`could not start ${exe}: ${e.message}`, HINT));
+  proc.on('exit', code => fail(`the browser (${exe}) exited (code ${code})`));
   out.on('error', () => {});
   const send = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
     if (dead) return reject(dead);
