@@ -431,6 +431,9 @@ function align(model, geo, m) {
     (neighbours.get(e.to) || neighbours.set(e.to, []).get(e.to)).push(e.from);
   }
   const containers = [...model.groups.values()].filter(g => geo.bodies.has(g.id) && g.children.length);
+  // Groups whose members did not change keep their arrangement from the previous render.
+  const prev = model.previous;
+  const kept = new Set(prev ? containers.filter(g => sameMembers(g, prev)).map(g => g.id) : []);
   for (let pass = 0; pass < 4; pass++) {
     for (const g of containers) {
       const layout = g.layout === 'auto' ? 'stack' : g.layout;
@@ -456,12 +459,18 @@ function align(model, geo, m) {
       const total = items.reduce((s, r) => s + size(r), 0) + gap * (items.length - 1);
       if (hi - lo - total < 1) continue;
       let p;
-      if (desired.every(d => d === null)) {
+      if (!kept.has(g.id) && desired.every(d => d === null)) {
         // No pulls: centre the stack in its space.
         let at = lo + (hi - lo - total) / 2;
         p = items.map(r => { const v = at; at += size(r) + gap; return v; });
       } else {
-        p = items.map((r, i) => desired[i] ?? pos(r));
+        // Kept: each item keeps its previous offset from the group's top-left corner. The
+        // snapshot holds positions after nudges, which are applied again later: take them off.
+        p = kept.has(g.id) ? items.map(r => {
+          const q = prev.nodes[r.node.id], pg = prev.groups[g.id], gr = geo.groups.get(g.id);
+          const [nx, ny] = prev.overrides?.nodes?.[r.node.id]?.nudge || [0, 0];
+          return vertical ? gr.y + q[1] - ny - pg[1] - above(r) : gr.x + q[0] - nx - pg[0] + (r.w - (r.node.fw ?? r.w)) / 2;
+        }) : items.map((r, i) => desired[i] ?? pos(r));
         for (let i = 0; i < p.length; i++) p[i] = Math.max(p[i], i ? p[i - 1] + size(items[i - 1]) + gap : lo);
         for (let i = p.length - 1; i >= 0; i--) p[i] = Math.min(p[i], i < p.length - 1 ? p[i + 1] - size(items[i]) - gap : hi - size(items[i]));
         for (let i = 0; i < p.length; i++) p[i] = Math.max(p[i], i ? p[i - 1] + size(items[i - 1]) + gap : lo);
@@ -503,6 +512,20 @@ function align(model, geo, m) {
       }
     }
   }
+}
+
+// Same members as in the previous render: the group and each child were there, and the previous
+// nodes whose centres lay inside the group's previous rect are exactly its children now.
+function sameMembers(g, prev) {
+  const own = (o, k) => (o && Object.hasOwn(o, k) ? o[k] : null);
+  const pg = own(prev.groups, g.id);
+  if (!pg || g.children.some(c => !own(prev.nodes, c.id))) return false;
+  const [x, y, w, h] = pg;
+  const inside = Object.keys(prev.nodes).filter(id => {
+    const [nx, ny, nw, nh] = prev.nodes[id], cx = nx + nw / 2, cy = ny + nh / 2;
+    return cx >= x && cx <= x + w && cy >= y && cy <= y + h;
+  });
+  return inside.length === g.children.length && g.children.every(c => inside.includes(c.id));
 }
 
 // A box in a wide map column whose content fills little of its width shrinks to its
