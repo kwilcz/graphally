@@ -41,7 +41,7 @@
 <g style="color: var(--ink); fill: var(--ink)">
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Serverless photo sharing</text>
-<text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">AWS, eu-west-1: request path, async processing, shared services</text>
+<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">AWS, eu-west-1: request path, async processing, shared services</text>
 <g data-group="clients" data-box="24,82,217,186">
 <text class="g-group" x="24" y="97.5" style="fill: var(--muted)">Customers</text>
 </g>
@@ -94,111 +94,111 @@
 <g data-edge="web-&gt;cognito" data-sides="bottom,top"><path d="M132,234 L132,336" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="mobile-&gt;cognito" data-sides="left,left"><path d="M40,142.5 L24,142.5 Q18,142.5 18,148.5 L18,354.5 Q18,360.5 24,360.5 L40,360.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="thumb-&gt;s3" data-sides="left,left"><path d="M1278,350.5 L1272,350.5 Q1266,350.5 1266,344.5 L1266,166 Q1266,160 1272,160 L1310,160" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="queue-&gt;thumb" data-sides="right,left"><path d="M1198,369.5 L1278,369.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="queue-&gt;thumb" data-sides="right,left"><path d="M1198,374.5 L1278,374.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="sns-&gt;push" data-sides="left,right"><path d="M1278,441 L1198,441" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="upload-&gt;s3" data-sides="right,left"><path d="M1198,150.5 L1279.8,150.5 Q1284,150.5 1284,146.3 L1284,146.3 Q1284,142 1288.3,142 L1310,142" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="feed-&gt;ddb" data-sides="right,left"><path d="M1198,227.5 L1279.5,227.5 Q1284,227.5 1284,232 L1284,232 Q1284,236.5 1288.5,236.5 L1310,236.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="upload-&gt;s3" data-sides="right,left"><path d="M1198,154 L1278,154 Q1284,154 1284,148 L1284,148 Q1284,142 1290,142 L1310,142" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="feed-&gt;ddb" data-sides="right,left"><path d="M1198,227.5 L1278,227.5 Q1284,227.5 1284,233.5 L1284,235.5 Q1284,241.5 1290,241.5 L1310,241.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="mobile-&gt;cdn" data-sides="right,left"><path d="M225,142.5 L363,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="apigw-&gt;upload" data-sides="right,left"><path d="M871,154.5 L983,154.5 Q987,154.5 987,158.5 L987,158.5 Q987,162.5 991,162.5 L1013,162.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="apigw-&gt;upload" data-sides="right,left"><path d="M871,158 L984.8,158 Q987,158 987,160.3 L987,160.3 Q987,162.5 989.3,162.5 L1013,162.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="cdn-&gt;apigw" data-sides="right,left"><path d="M548,154 L686,154" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="upload-&gt;ddb" data-sides="right,left"><path d="M1198,169.5 L1278,169.5 Q1284,169.5 1284,175.5 L1284,211.5 Q1284,217.5 1290,217.5 L1310,217.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="upload-&gt;ddb" data-sides="right,left"><path d="M1198,178 L1233,178 Q1239,178 1239,184 L1239,211.5 Q1239,217.5 1245,217.5 L1310,217.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="web-&gt;cdn" data-sides="right,left"><path d="M225,209.5 L307,209.5 Q313,209.5 313,203.5 L313,148.5 Q313,142.5 319,142.5 L363,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="apigw-&gt;feed" data-sides="right,left"><path d="M871,173.5 L981,173.5 Q987,173.5 987,179.5 L987,221.5 Q987,227.5 993,227.5 L1013,227.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="s3-&gt;queue" data-sides="left,right"><path d="M1310,178 L1230,178 Q1224,178 1224,184 L1224,344.5 Q1224,350.5 1218,350.5 L1198,350.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="apigw-&gt;feed" data-sides="right,left"><path d="M871,182 L981,182 Q987,182 987,188 L987,221.5 Q987,227.5 993,227.5 L1013,227.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="s3-&gt;queue" data-sides="left,right"><path d="M1310,178 L1260,178 Q1254,178 1254,184 L1254,344.5 Q1254,350.5 1248,350.5 L1198,350.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-id="mobile" data-box="40,118,185,49">
 <rect x="40" y="118" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-mobile" x="52" y="129.5" width="26" height="26" style="color: var(--ink)"></use>
-<text class="g-label" x="88" y="139">Mobile app</text>
+<text class="g-label" x="88" y="140">Mobile app</text>
 <text class="g-sub" x="88" y="154.5" style="fill: var(--muted)">customer phone</text>
 </g>
 <g data-id="web" data-box="40,185,185,49">
 <rect x="40" y="185" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-browser" x="52" y="196.5" width="26" height="26" style="color: var(--ink)"></use>
-<text class="g-label" x="88" y="206">Web app</text>
+<text class="g-label" x="88" y="207">Web app</text>
 <text class="g-sub" x="88" y="221.5" style="fill: var(--muted)">customer browser</text>
 </g>
 <g data-id="cdn" data-box="363,118,185,49">
 <rect x="363" y="118" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-cloud-front" x="375" y="129.5" width="26" height="26"></use>
-<text class="g-label" x="411" y="139">CloudFront</text>
+<text class="g-label" x="411" y="140">CloudFront</text>
 <text class="g-sub" x="411" y="154.5" style="fill: var(--muted)">static content and API</text>
 </g>
 <g data-id="waf" data-box="363,203,185,49">
 <rect x="363" y="203" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-aws-waf" x="375" y="214.5" width="26" height="26"></use>
-<text class="g-label" x="411" y="224">AWS WAF</text>
+<text class="g-label" x="411" y="225">AWS WAF</text>
 <text class="g-sub" x="411" y="239.5" style="fill: var(--muted)">attached to CloudFront</text>
 </g>
 <g data-id="cognito" data-box="40,336,185,49">
 <rect x="40" y="336" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-cognito" x="52" y="347.5" width="26" height="26"></use>
-<text class="g-label" x="88" y="357">Amazon Cognito</text>
+<text class="g-label" x="88" y="358">Amazon Cognito</text>
 <text class="g-sub" x="88" y="372.5" style="fill: var(--muted)">customer sign-in</text>
 </g>
 <g data-id="apigw" data-box="686,140,185,49">
 <rect x="686" y="140" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-api-gateway" x="698" y="151.5" width="26" height="26"></use>
-<text class="g-label" x="734" y="161">API Gateway</text>
+<text class="g-label" x="734" y="162">API Gateway</text>
 <text class="g-sub" x="734" y="176.5" style="fill: var(--muted)">REST API</text>
 </g>
 <g data-id="upload" data-box="1013,136,185,49">
 <rect x="1013" y="136" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-aws-lambda" x="1025" y="147.5" width="26" height="26"></use>
-<text class="g-label" x="1061" y="157">Upload</text>
+<text class="g-label" x="1061" y="158">Upload</text>
 <text class="g-sub" x="1061" y="172.5" style="fill: var(--muted)">Lambda</text>
 </g>
 <g data-id="feed" data-box="1013,203,185,49">
 <rect x="1013" y="203" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-aws-lambda" x="1025" y="214.5" width="26" height="26"></use>
-<text class="g-label" x="1061" y="224">Feed</text>
+<text class="g-label" x="1061" y="225">Feed</text>
 <text class="g-sub" x="1061" y="239.5" style="fill: var(--muted)">Lambda</text>
 </g>
 <g data-id="s3" data-box="1310,136,185,49">
 <rect x="1310" y="136" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-simple-storage-service" x="1322" y="147.5" width="26" height="26"></use>
-<text class="g-label" x="1358" y="157">Photo bucket</text>
+<text class="g-label" x="1358" y="158">Photo bucket</text>
 <text class="g-sub" x="1358" y="172.5" style="fill: var(--muted)">S3</text>
 </g>
 <g data-id="ddb" data-box="1310,203,185,49">
 <rect x="1310" y="203" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-dynamo-db" x="1322" y="214.5" width="26" height="26"></use>
-<text class="g-label" x="1358" y="224">Photo metadata</text>
+<text class="g-label" x="1358" y="225">Photo metadata</text>
 <text class="g-sub" x="1358" y="239.5" style="fill: var(--muted)">DynamoDB</text>
 </g>
 <g data-id="queue" data-box="1013,336,185,49">
 <rect x="1013" y="336" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-simple-queue-service" x="1025" y="347.5" width="26" height="26"></use>
-<text class="g-label" x="1061" y="357">Photo events</text>
+<text class="g-label" x="1061" y="358">Photo events</text>
 <text class="g-sub" x="1061" y="372.5" style="fill: var(--muted)">SQS</text>
 </g>
 <g data-id="thumb" data-box="1278,336,185,49">
 <rect x="1278" y="336" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-aws-lambda" x="1290" y="347.5" width="26" height="26"></use>
-<text class="g-label" x="1326" y="357">Thumbnailer</text>
+<text class="g-label" x="1326" y="358">Thumbnailer</text>
 <text class="g-sub" x="1326" y="372.5" style="fill: var(--muted)">Lambda</text>
 </g>
 <g data-id="sns" data-box="1278,417,185,49">
 <rect x="1278" y="417" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-simple-notification-service" x="1290" y="428.5" width="26" height="26"></use>
-<text class="g-label" x="1326" y="438">Photo ready</text>
+<text class="g-label" x="1326" y="439">Photo ready</text>
 <text class="g-sub" x="1326" y="453.5" style="fill: var(--muted)">SNS</text>
 </g>
 <g data-id="push" data-box="1013,417,185,49">
 <rect x="1013" y="417" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-mobile" x="1025" y="428.5" width="26" height="26" style="color: var(--ink)"></use>
-<text class="g-label" x="1061" y="438">Push</text>
+<text class="g-label" x="1061" y="439">Push</text>
 <text class="g-sub" x="1061" y="453.5" style="fill: var(--muted)">notifications</text>
 </g>
 <g data-id="cw" data-box="569,526,185,49">
 <rect x="569" y="526" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-amazon-cloud-watch" x="581" y="537.5" width="26" height="26"></use>
-<text class="g-label" x="617" y="547">CloudWatch</text>
+<text class="g-label" x="617" y="548">CloudWatch</text>
 <text class="g-sub" x="617" y="562.5" style="fill: var(--muted)">logs and metrics</text>
 </g>
 <g data-id="sm" data-box="781,526,185,49">
 <rect x="781" y="526" width="185" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-aws-aws-secrets-manager" x="793" y="537.5" width="26" height="26"></use>
-<text class="g-label" x="829" y="547">Secrets Manager</text>
+<text class="g-label" x="829" y="548">Secrets Manager</text>
 <text class="g-sub" x="829" y="562.5" style="fill: var(--muted)">secrets</text>
 </g>
 <g data-edge="thumb-&gt;sns">
@@ -211,34 +211,34 @@
 <text class="g-edge" x="1273" y="283.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">thumbnails</text>
 </g>
 <g data-edge="queue-&gt;thumb">
-<text class="g-edge" x="1222.7" y="384.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">reads</text>
+<text class="g-edge" x="1222.7" y="368.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">reads</text>
 </g>
 <g data-edge="sns-&gt;push">
 <text class="g-edge" x="1222.3" y="435" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">notify</text>
 </g>
 <g data-edge="upload-&gt;s3">
-<text class="g-edge" x="1225.3" y="144.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo</text>
+<text class="g-edge" x="1225.3" y="148" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo</text>
 </g>
 <g data-edge="feed-&gt;ddb">
-<text class="g-edge" x="1225" y="221.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">query</text>
+<text class="g-edge" x="1225" y="242.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">query</text>
 </g>
 <g data-edge="mobile-&gt;cdn">
 <text class="g-edge" x="262.9" y="136.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
 </g>
 <g data-edge="apigw-&gt;upload">
-<text class="g-edge" x="894.1" y="148.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">upload request</text>
+<text class="g-edge" x="894.1" y="152" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">upload request</text>
 </g>
 <g data-edge="cdn-&gt;apigw">
 <text class="g-edge" x="607.8" y="148" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API</text>
 </g>
 <g data-edge="upload-&gt;ddb">
-<text class="g-edge" x="1221.6" y="163.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">metadata</text>
+<text class="g-edge" x="1237.1" y="211.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">metadata</text>
 </g>
 <g data-edge="apigw-&gt;feed">
-<text class="g-edge" x="894.5" y="188.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">feed request</text>
+<text class="g-edge" x="894.5" y="176" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">feed request</text>
 </g>
 <g data-edge="s3-&gt;queue">
-<text class="g-edge" x="1153.3" y="286.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo lands</text>
+<text class="g-edge" x="1183.3" y="286.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo lands</text>
 </g>
 <text class="g-key" x="321" y="313" style="fill: var(--muted); font-weight: 600">Key</text>
 <path d="M321,331 H361" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>

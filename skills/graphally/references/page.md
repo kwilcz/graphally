@@ -110,10 +110,16 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 ## Lines
 
 - `connect` finds its own way. Every box with a background, a border or a shape blocks it,
-  and so does text outside boxes; a box that holds other boxes in the HTML lets it in to
-  reach them. A box painted behind boxes it does not hold (a lane's background in the same
-  grid cells) does not block. The script's straight lines count as taken, so `connect`
-  keeps off them.
+  and so does text outside boxes (a heading in the way makes it detour: move or align the
+  heading clear of the line). A box that holds other boxes in the HTML lets it in to reach
+  them, and so does a container it connects to: the line ends on the container's border.
+  These do not block: a box painted behind boxes it does not hold (a lane's background in
+  the same grid cells), and a full-width header strip without an id, up to 48px tall. The
+  script's straight lines count as taken, so `connect` keeps off them.
+- Lines that share a side spread along it; a line whose other end faces it runs straight
+  in when that end lies along the side. Two boxes line up only when they share a grid row
+  or column: put boxes that a straight line joins in one grid (or a `subgrid`), rather
+  than nudging one with margins.
 - It keeps 6px from boxes, so it passes through any gap wider than 12px. A labelled line
   needs a gap wider than its label (about 7px per character at the default size).
 - Where it takes a way you do not want, give it `via` points (from elements: `mid(a.right,
@@ -133,6 +139,8 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 | `unroutable` | the line has no way through: widen a gap, or give it `via` points |
 | `override-ignored … by=x` | the side is blocked by `x`: choose another side |
 | `label-crowded` | widen the gap the line runs through, or shorten the label |
+| `lines-overlap` | two lines share a stretch and read as one: give one `via` points or other sides |
+| `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts of the page collide: give one more room |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200`, a `head` name) |
 
@@ -154,8 +162,13 @@ id=s></i>Order placed</div>` with `.ev { display: flex; flex-direction: column;
 align-items: center; gap: 4px }`. A boundary event is a child of its task, placed on the
 border: `<div shape=task style="position: relative">Review<i shape="event timer"
 style="position: absolute; bottom: -18px; right: 14px" id=late></i></div>`; lines can
-leave from it. Sequence flows are `connect` with labels on the branches; message flows
-between pools are `connect(a, b, { message: true })`.
+leave from it. Gateways take a caption the same way, above or below. Sequence flows are `connect`
+with labels on the branches; message flows between pools are `connect(a, b, { message:
+true })`. A non-interrupting boundary event has `border-style: dashed`.
+
+**Gates that lines connect to.** `gate()` is a drawing, not an element, so lines cannot
+end on it. A gate in a flow is an element: `<i shape=gateway id=g1></i>` (or `shape=diamond`
+with a background and `border: 0` for a filled one).
 
 **Architecture.** Tiers as boxes holding cards with icons (`<div class=card><icon
 name=sql></icon> Orders DB</div>`), placed by a grid; `connect` for the calls, `dashed`

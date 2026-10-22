@@ -130,7 +130,7 @@ test('layout', () => {
   for (const [p, r] of renders) {
     if (!r.summaries.length) bad.push(`${p}: no diagram in the output`);
     for (const s of r.summaries) {
-      if (timeChart(p)) continue;
+      if (timeChart(p) || !s.nodes) continue;   // nothing named, nothing to record
       const name = `${p} (${path.basename(s.svg)})`;
       let snap;
       try { snap = readSnapshot(s.svg); } catch (e) { bad.push(`${name}: ${e.message}`); continue; }
@@ -258,6 +258,13 @@ test('page-problems', () => {
   const r2 = render(write(d, page('<style>.r { display: flex; gap: 14px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>',
     "connect('a', 'b', { label: 'a label far too long for this gap' })")), out);
   check(r2.code === 1 && /label-crowded: edge=a -> b/.test(r2.text), `expected label-crowded: ${tail(r2.text)}`);
+  // Two lines squeezed through one narrow gap share a stretch.
+  const r3 = render(write(d, page(`<style>.g { display: grid; grid-template-columns: 1fr 1fr; gap: 60px 16px } .top { grid-column: 1 / -1; justify-self: center; width: 160px } .h { height: 60px }</style>
+<div class=g><div class="card top" id=a>A</div><div class="card h" id=x>X</div><div class="card h" id=y>Y</div><div class=card id=b>B</div><div class=card id=c>C</div></div>`,
+    "const gap = mid(el('x').right, el('y').left); connect('a', 'b', { via: [gap] }); connect('a', 'c', { via: [gap] })")), out);
+  check(r3.code === 1 && /lines-overlap: a=a->b b=a->c/.test(r3.text), `expected lines-overlap: ${tail(r3.text)}`);
+  const r4 = render(write(d, page('<div style="width: 900px" class=card>wide</div>', '', 'width=600')), out);
+  check(r4.code === 1 && /page-overflow: width=600 content=9\d\d/.test(r4.text), `expected page-overflow: ${tail(r4.text)}`);
 });
 
 if (table.length) {

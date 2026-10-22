@@ -283,6 +283,9 @@ function build(root, el, id, scripts, opts, m, problems) {
   const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), 2 * S.pad));
   const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H);
   for (const r of routes) if (r.labelCrowded) problems.push({ rule: 'label-crowded', edge: `${r.edge.from} -> ${r.edge.to}`, label: r.edge.label, hint: 'widen the gap the line runs through, or shorten the label' });
+  overlaps(routes, problems);
+  const width = parseFloat(root.style.width);
+  if (W > width + 2 * S.pad + 1) problems.push({ rule: 'page-overflow', width, content: W - 2 * S.pad, hint: 'the content is wider than width: widen width, or narrow the columns' });
   if (opts.debug) window.__debug = { log: globalThis.__routeLog, hard: globalThis.__routeHard, routes: routes.map(r => ({ from: r.edge.from, to: r.edge.to, points: r.points.map(p => [Math.round(p.x), Math.round(p.y)]) })) };
 
   // ---------- assemble ----------
@@ -516,6 +519,22 @@ function check(texts, problems) {
     if (a.owner === b.owner) continue;
     const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
     if (ox > 2 && oy > 2) problems.push({ rule: 'text-overlap', a: a.owner.id || a.owner.tagName.toLowerCase(), b: b.owner.id || b.owner.tagName.toLowerCase(), hint: 'give the text more room, or move one of them' });
+  }
+}
+
+// Two routed lines on one stretch of the same track read as one line.
+function overlaps(routes, problems) {
+  const segs = routes.map(r => r.points.slice(1).map((q, i) => [r.points[i], q]).filter(([p, q]) => Math.abs(p.x - q.x) < 0.5 || Math.abs(p.y - q.y) < 0.5));
+  for (let i = 0; i < routes.length; i++) for (let j = i + 1; j < routes.length; j++) {
+    const a = routes[i].edge, b = routes[j].edge;
+    if (a.stmt && a.stmt === b.stmt) continue;            // one statement's lines may share a trunk
+    const shared = segs[i].some(([p, q]) => segs[j].some(([u, v]) => {
+      const flat = Math.abs(p.y - q.y) < 0.5, same = flat ? Math.abs(u.y - v.y) < 0.5 && Math.abs(p.y - u.y) < 2 : Math.abs(u.x - v.x) < 0.5 && Math.abs(p.x - u.x) < 2;
+      if (!same) return false;
+      const [k] = flat ? ['x'] : ['y'], lo = Math.max(Math.min(p[k], q[k]), Math.min(u[k], v[k])), hi = Math.min(Math.max(p[k], q[k]), Math.max(u[k], v[k]));
+      return hi - lo > 12;
+    }));
+    if (shared) problems.push({ rule: 'lines-overlap', a: a.key, b: b.key, hint: 'give one of them via points or other sides' });
   }
 }
 

@@ -34,7 +34,7 @@
 <text class="g-title" x="24" y="40.5">From source to SVG</text>
 <text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">One render, and the agent's fix loop</text>
 <g data-edge="s-&gt;parse" data-sides="right,left"><path d="M78,189 L139,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="parse-&gt;measure" data-sides="right,left"><path d="M251,198.5 L278.3,198.5 Q283,198.5 283,193.8 L283,193.8 Q283,189 287.8,189 L295,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="parse-&gt;measure" data-sides="right,left"><path d="M251,191.5 L281.8,191.5 Q283,191.5 283,190.3 L283,190.3 Q283,189 284.3,189 L295,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="measure-&gt;layout" data-sides="right,left"><path d="M407,189 L451,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="layout-&gt;route" data-sides="right,left"><path d="M563,189 L607,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="route-&gt;labels" data-sides="right,left"><path d="M719,189 L763,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
@@ -43,7 +43,7 @@
 <g data-edge="check-&gt;ok" data-sides="right,left"><path d="M1187,189 L1274,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="ok-&gt;done" data-sides="right,top"><path d="M1320,189 L1431,189 Q1437,189 1437,195 L1437,213" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="ok-&gt;fix" data-sides="top,left"><path d="M1297,166 L1297,138.5 Q1297,132.5 1303,132.5 L1381,132.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="fix-&gt;parse" data-sides="left,right"><path d="M1381,151.5 L1297.3,151.5 Q1293,151.5 1293,147.3 L1293,147.3 Q1293,143 1288.8,143 L269,143 Q263,143 263,149 L263,173.5 Q263,179.5 257,179.5 L251,179.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="fix-&gt;parse" data-sides="left,right"><path d="M1381,166 L1338,166 Q1332,166 1332,160 L1332,149 Q1332,143 1326,143 L269,143 Q263,143 263,149 L263,173.5 Q263,179.5 257,179.5 L251,179.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-id="s" data-box="42,171,36,36">
 <circle cx="60" cy="189" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
 <text class="g-sub" x="59.5" y="224" text-anchor="middle">diagram.html</text>
@@ -111,10 +111,10 @@
 <text class="g-edge" x="1346.8" y="183" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">none</text>
 </g>
 <g data-edge="ok-&gt;fix">
-<text class="g-edge" x="1304" y="141.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">some</text>
+<text class="g-edge" x="1324" y="126.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">some</text>
 </g>
 <g data-edge="fix-&gt;parse">
-<text class="g-edge" x="743.8" y="137" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">render again</text>
+<text class="g-edge" x="763.3" y="137" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">render again</text>
 </g>
 </g>
 </svg>

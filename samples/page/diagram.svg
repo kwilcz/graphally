@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1298 486" width="1298" height="486" role="img" aria-label="Diagram">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1288 486" width="1288" height="486" role="img" aria-label="Diagram">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
@@ -33,9 +33,9 @@
 <rect x="24" y="95.2" width="150" height="40" rx="8" style="fill: var(--wash)"></rect>
 <text x="38" y="110.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; fill: var(--ink)">Phase</text>
 <text x="38" y="127.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">and milestone</text>
-<g data-id="p1" data-box="194,95,260.5,40">
-<path d="M194,95.2 L434.5,95.2 L454.5,115.2 L434.5,135.2 L194,135.2 Z" style="fill: var(--woad); stroke: none" stroke-width="0"></path>
-<text x="309.4" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Plan</text>
+<g data-id="p1" data-box="202,95,252.5,40">
+<path d="M202,95.2 L434.5,95.2 L454.5,115.2 L434.5,135.2 L202,135.2 Z" style="fill: var(--woad); stroke: none" stroke-width="0"></path>
+<text x="313.4" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Plan</text>
 </g>
 <g data-id="p2" data-box="466.5,95,260.5,40">
 <path d="M466.5,95.2 L707,95.2 L727,115.2 L707,135.2 L466.5,135.2 L486.5,115.2 Z" style="fill: rgb(79, 111, 214); stroke: none" stroke-width="0"></path>
@@ -45,19 +45,19 @@
 <path d="M739,95.2 L979.5,95.2 L999.5,115.2 L979.5,135.2 L739,135.2 L759,115.2 Z" style="fill: var(--teal); stroke: none" stroke-width="0"></path>
 <text x="811.3" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Migrate in waves</text>
 </g>
-<g data-id="p4" data-box="1011.5,95,260.5,40">
-<path d="M1011.5,95.2 L1252,95.2 L1272,115.2 L1252,135.2 L1011.5,135.2 L1031.5,115.2 Z" style="fill: var(--ink); stroke: none" stroke-width="0"></path>
-<text x="1114.3" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Operate</text>
+<g data-id="p4" data-box="1011.5,95,252.5,40">
+<path d="M1011.5,95.2 L1244,95.2 L1264,115.2 L1244,135.2 L1011.5,135.2 L1031.5,115.2 Z" style="fill: var(--ink); stroke: none" stroke-width="0"></path>
+<text x="1110.3" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Operate</text>
 </g>
 <rect x="24" y="147.2" width="150" height="96.6" rx="8" style="fill: var(--wash)"></rect>
 <text x="38" y="191" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; fill: var(--ink)">Platform team</text>
 <text x="38" y="207.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">AKS, network, GitOps</text>
-<rect x="192" y="147.2" width="1082" height="96.6" rx="10" style="fill: var(--lane-a)"></rect>
-<g data-id="pl1" data-box="202,157,244.5,76.5">
-<rect x="202" y="157.2" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
-<text x="214" y="179.2" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Size it</text>
-<text x="214" y="200.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Clusters, node pools and the hub-</text>
-<text x="214" y="218.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">and-spoke network</text>
+<rect x="202" y="147.2" width="1062" height="96.6" rx="10" style="fill: var(--lane-a)"></rect>
+<g data-id="pl1" data-box="212,157,234.5,76.5">
+<rect x="212" y="157.2" width="234.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
+<text x="224" y="179.2" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Size it</text>
+<text x="224" y="200.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Clusters, node pools and the hub-</text>
+<text x="224" y="218.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">and-spoke network</text>
 </g>
 <g data-id="pl2" data-box="474.5,157,244.5,76.5">
 <rect x="474.5" y="157.2" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
@@ -71,20 +71,20 @@
 <text x="759" y="200.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Namespaces, quotas and on-call</text>
 <text x="759" y="218.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">during cut-over</text>
 </g>
-<g data-id="pl4" data-box="1019.5,157,244.5,76.5">
-<rect x="1019.5" y="157.2" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
+<g data-id="pl4" data-box="1019.5,157,234.5,76.5">
+<rect x="1019.5" y="157.2" width="234.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
 <text x="1031.5" y="179.2" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Keep it healthy</text>
 <text x="1031.5" y="200.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Patch, scale and keep costs down</text>
 </g>
 <rect x="24" y="255.9" width="150" height="96.6" rx="8" style="fill: var(--wash)"></rect>
 <text x="38" y="299.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; fill: var(--ink)">Application teams</text>
 <text x="38" y="316.2" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">one per service</text>
-<rect x="192" y="255.9" width="1082" height="96.6" rx="10" style="fill: var(--lane-b)"></rect>
-<g data-id="ap1" data-box="202,266,244.5,76.5">
-<rect x="202" y="265.9" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
-<text x="214" y="287.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Choose the order</text>
-<text x="214" y="309.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Pick the services and the waves</text>
-<text x="214" y="327" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">they move in</text>
+<rect x="202" y="255.9" width="1062" height="96.6" rx="10" style="fill: var(--lane-b)"></rect>
+<g data-id="ap1" data-box="212,266,234.5,76.5">
+<rect x="212" y="265.9" width="234.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
+<text x="224" y="287.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Choose the order</text>
+<text x="224" y="309.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Pick the services and the waves</text>
+<text x="224" y="327" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">they move in</text>
 </g>
 <g data-id="ap2" data-box="474.5,266,244.5,76.5">
 <rect x="474.5" y="265.9" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
@@ -97,20 +97,20 @@
 <text x="759" y="309.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Deploy, cut over traffic, retire the</text>
 <text x="759" y="327" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">old hosts</text>
 </g>
-<g data-id="ap4" data-box="1019.5,266,244.5,76.5">
-<rect x="1019.5" y="265.9" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
+<g data-id="ap4" data-box="1019.5,266,234.5,76.5">
+<rect x="1019.5" y="265.9" width="234.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
 <text x="1031.5" y="287.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Own the service</text>
 <text x="1031.5" y="309.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Alerts, releases and capacity</text>
 </g>
 <rect x="24" y="364.5" width="150" height="96.6" rx="8" style="fill: var(--wash)"></rect>
 <text x="38" y="408.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; fill: var(--ink)">Security</text>
 <text x="38" y="424.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">controls and tests</text>
-<rect x="192" y="364.5" width="1082" height="96.6" rx="10" style="fill: var(--lane-d)"></rect>
-<g data-id="se1" data-box="202,374.5,244.5,76.5">
-<rect x="202" y="374.5" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
-<text x="214" y="396.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Agree the controls</text>
-<text x="214" y="418.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Policies, identities and network</text>
-<text x="214" y="435.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">rules</text>
+<rect x="202" y="364.5" width="1062" height="96.6" rx="10" style="fill: var(--lane-d)"></rect>
+<g data-id="se1" data-box="212,374.5,234.5,76.5">
+<rect x="212" y="374.5" width="234.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
+<text x="224" y="396.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Agree the controls</text>
+<text x="224" y="418.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Policies, identities and network</text>
+<text x="224" y="435.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">rules</text>
 </g>
 <g data-id="se2" data-box="474.5,374.5,244.5,76.5">
 <rect x="474.5" y="374.5" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
@@ -122,8 +122,8 @@
 <text x="759" y="396.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Test each wave</text>
 <text x="759" y="418.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Scan, penetration-test, sign off</text>
 </g>
-<g data-id="se4" data-box="1019.5,374.5,244.5,76.5">
-<rect x="1019.5" y="374.5" width="244.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
+<g data-id="se4" data-box="1019.5,374.5,234.5,76.5">
+<rect x="1019.5" y="374.5" width="234.5" height="76.6" rx="8" style="fill: var(--card)"></rect>
 <text x="1031.5" y="396.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Review access</text>
 <text x="1031.5" y="418.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Every quarter</text>
 </g>

@@ -42,7 +42,7 @@
 <g style="color: var(--ink); fill: var(--ink)">
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Fabrikam logistics platform</text>
-<text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Azure, North Europe, production</text>
+<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Azure, North Europe, production</text>
 <g data-group="users" data-box="24,268,210,138">
 <text class="g-group" x="24" y="283.5" style="fill: var(--muted)">Users</text>
 </g>
@@ -96,99 +96,99 @@
 <text class="g-gsub" x="532.2" y="909.5" style="fill: var(--muted)">10.110.9.0/24</text>
 </g>
 <g data-edge="agw_ingress-&gt;aks_main" data-sides="bottom,top"><path d="M615,506 L615,606" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="id_aks-&gt;sb_events" data-sides="top,top"><path d="M479.5,1040 L479.5,1026 Q479.5,1020 485.5,1020 L701.5,1020 Q707.5,1020 707.5,1026 L707.5,1032" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="pe_sb-&gt;sb_events" data-sides="bottom,top"><path d="M641,968 L641,1004 Q641,1010 647,1010 L682.5,1010 Q688.5,1010 688.5,1016 L688.5,1032" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="id_aks-&gt;sb_events" data-sides="top,top"><path d="M484.5,1040 L484.5,1026 Q484.5,1020 490.5,1020 L701.5,1020 Q707.5,1020 707.5,1026 L707.5,1032" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="pe_sb-&gt;sb_events" data-sides="bottom,top"><path d="M641,968 L641,1032" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="id_aks-&gt;kv_kv" data-sides="left,bottom"><path d="M365,1064.5 L345,1064.5 Q339,1064.5 339,1070.5 L339,1183 Q339,1189 345,1189 L692,1189 Q698,1189 698,1183 L698,1163" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="ho-&gt;vgw_vpn" data-sides="right,left"><path d="M234,314.5 L369,314.5 Q375,314.5 375,308.5 L375,228 Q375,222 381,222 L397,222" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path></g>
 <g data-edge="dispatch-&gt;agw_ingress" data-sides="right,left"><path d="M234,381.5 L369,381.5 Q375,381.5 375,387.5 L375,468 Q375,474 381,474 L479,474" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="aks_main-&gt;id_aks" data-sides="left,top"><path d="M479,620.5 L459,620.5 Q453,620.5 453,626.5 L453,1018.3 Q453,1022 456.8,1022 L456.8,1022 Q460.5,1022 460.5,1025.8 L460.5,1040" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="vnet_spoke-&gt;vnet_hub" data-sides="top,bottom"><path d="M543,370 L543,286" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path></g>
 <g data-edge="aks_main-&gt;acr_acr" data-sides="right,bottom"><path d="M689,630.5 L765,630.5 Q771,630.5 771,624.5 L771,227" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="aks_main-&gt;log_law" data-sides="left,left"><path d="M479,639.5 L312.5,639.5 Q306.5,639.5 306.5,645.5 L306.5,1132.5 Q306.5,1138.5 312.5,1138.5 L365,1138.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="aks_main-&gt;log_law" data-sides="left,left"><path d="M479,644.5 L312.5,644.5 Q306.5,644.5 306.5,650.5 L306.5,1132.5 Q306.5,1138.5 312.5,1138.5 L365,1138.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-id="ho" data-box="24,290,210,49">
 <rect x="24" y="290" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-building" x="36" y="301.5" width="26" height="26" style="color: var(--ink)"></use>
-<text class="g-label" x="72" y="311">Head office</text>
+<text class="g-label" x="72" y="312">Head office</text>
 <text class="g-sub" x="72" y="326.5" style="fill: var(--muted)">on-premises network</text>
 </g>
 <g data-id="dispatch" data-box="24,357,210,49">
 <rect x="24" y="357" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-users" x="36" y="368.5" width="26" height="26" style="color: var(--ink)"></use>
-<text class="g-label" x="72" y="378">Dispatchers</text>
+<text class="g-label" x="72" y="379">Dispatchers</text>
 <text class="g-sub" x="72" y="393.5" style="fill: var(--muted)">from the internet</text>
 </g>
 <g data-id="vgw_vpn" data-box="397,190,210,64">
 <rect x="397" y="190" width="210" height="64" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-virtual-network-gateways" x="409" y="209" width="26" height="26"></use>
-<text class="g-label" x="445" y="211">vgw-fab-prod</text>
+<text class="g-label" x="445" y="212">vgw-fab-prod</text>
 <text class="g-sub" x="445" y="226.5" style="fill: var(--muted)">VPN gateway</text>
 <text class="g-sub" x="445" y="241.5" style="fill: var(--muted)">VpnGw2 · public IP</text>
 </g>
 <g data-id="acr_acr" data-box="666,178,210,49">
 <rect x="666" y="178" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-container-registries" x="678" y="189.5" width="26" height="26"></use>
-<text class="g-label" x="714" y="199">acrfabprod</text>
+<text class="g-label" x="714" y="200">acrfabprod</text>
 <text class="g-sub" x="714" y="214.5" style="fill: var(--muted)">Container Registry</text>
 </g>
 <g data-id="agw_ingress" data-box="479,442,210,64">
 <rect x="479" y="442" width="210" height="64" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-application-gateways" x="491" y="461" width="26" height="26"></use>
-<text class="g-label" x="527" y="463">agw-fab-prod</text>
+<text class="g-label" x="527" y="464">agw-fab-prod</text>
 <text class="g-sub" x="527" y="478.5" style="fill: var(--muted)">Application</text>
 <text class="g-sub" x="527" y="493.5" style="fill: var(--muted)">Gateway · WAF_v2</text>
 </g>
 <g data-id="aks_main" data-box="479,606,210,49">
 <rect x="479" y="606" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-kubernetes-services" x="491" y="617.5" width="26" height="26"></use>
-<text class="g-label" x="527" y="627">aks-fab-prod</text>
+<text class="g-label" x="527" y="628">aks-fab-prod</text>
 <text class="g-sub" x="527" y="642.5" style="fill: var(--muted)">AKS · work node pool</text>
 </g>
 <g data-id="psql_db" data-box="479,755,210,64">
 <rect x="479" y="755" width="210" height="64" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-azure-database-postgresql-server" x="491" y="774" width="26" height="26"></use>
-<text class="g-label" x="527" y="776">psql-fab-prod</text>
+<text class="g-label" x="527" y="777">psql-fab-prod</text>
 <text class="g-sub" x="527" y="791.5" style="fill: var(--muted)">PostgreSQL</text>
 <text class="g-sub" x="527" y="806.5" style="fill: var(--muted)">shipments database</text>
 </g>
 <g data-id="pe_sb" data-box="479,919,210,49">
 <rect x="479" y="919" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-private-endpoint" x="491" y="930.5" width="26" height="26"></use>
-<text class="g-label" x="527" y="940">pe-fab-prod-sb</text>
+<text class="g-label" x="527" y="941">pe-fab-prod-sb</text>
 <text class="g-sub" x="527" y="955.5" style="fill: var(--muted)">Private endpoint</text>
 </g>
 <g data-id="id_aks" data-box="365,1040,210,49">
 <rect x="365" y="1040" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-managed-identities" x="377" y="1051.5" width="26" height="26"></use>
-<text class="g-label" x="413" y="1061">id-fab-prod-aks</text>
+<text class="g-label" x="413" y="1062">id-fab-prod-aks</text>
 <text class="g-sub" x="413" y="1076.5" style="fill: var(--muted)">Managed identity</text>
 </g>
 <g data-id="sb_events" data-box="593,1032,210,64">
 <rect x="593" y="1032" width="210" height="64" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-service-bus" x="605" y="1051" width="26" height="26"></use>
-<text class="g-label" x="641" y="1053">sb-fab-prod</text>
+<text class="g-label" x="641" y="1054">sb-fab-prod</text>
 <text class="g-sub" x="641" y="1068.5" style="fill: var(--muted)">Service Bus · shipments</text>
 <text class="g-sub" x="641" y="1083.5" style="fill: var(--muted)">queue · tracking topic</text>
 </g>
 <g data-id="log_law" data-box="365,1114,210,49">
 <rect x="365" y="1114" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-log-analytics-workspaces" x="377" y="1125.5" width="26" height="26"></use>
-<text class="g-label" x="413" y="1135">log-fab-prod</text>
+<text class="g-label" x="413" y="1136">log-fab-prod</text>
 <text class="g-sub" x="413" y="1150.5" style="fill: var(--muted)">Log Analytics</text>
 </g>
 <g data-id="kv_kv" data-box="593,1114,210,49">
 <rect x="593" y="1114" width="210" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-key-vaults" x="605" y="1125.5" width="26" height="26"></use>
-<text class="g-label" x="641" y="1135">kv-fab-prod</text>
+<text class="g-label" x="641" y="1136">kv-fab-prod</text>
 <text class="g-sub" x="641" y="1150.5" style="fill: var(--muted)">Key Vault</text>
 </g>
 <g data-edge="agw_ingress-&gt;aks_main">
 <text class="g-edge" x="622" y="560" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">logistics API</text>
 </g>
 <g data-edge="id_aks-&gt;sb_events">
-<text class="g-edge" x="561" y="1014" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
+<text class="g-edge" x="563.5" y="1014" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
 </g>
 <g data-edge="pe_sb-&gt;sb_events">
-<text class="g-edge" x="648" y="999" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="648" y="1016" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
 </g>
 <g data-edge="id_aks-&gt;kv_kv">
 <text class="g-edge" x="483.1" y="1204" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">Secrets User</text>
@@ -209,7 +209,7 @@
 <text class="g-edge" x="778" y="360.8" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">AcrPull</text>
 </g>
 <g data-edge="aks_main-&gt;log_law">
-<text class="g-edge" x="373.6" y="633.5" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
+<text class="g-edge" x="373.6" y="638.5" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
 </g>
 <text class="g-key" x="24" y="1210" style="fill: var(--muted); font-weight: 600">Key</text>
 <path d="M24,1228 H64" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>

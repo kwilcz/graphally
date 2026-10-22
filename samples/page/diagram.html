@@ -5,10 +5,11 @@
   .lab { background: var(--wash); border-radius: 8px; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; font-weight: 600 }
   .lab span { font-weight: 400; font-size: 11.5px; color: var(--muted) }
   .phase { height: 40px; border: 0; color: #fff; font-weight: 700; font-size: 14px; margin: 0 -8px }
-  .phase:first-of-type { margin-left: 0 }
+  #p1 { margin-left: 0 } #p4 { margin-right: 0 }
   .ms { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; font-size: 11.5px; color: var(--muted) }
   .ms div { grid-column: span 1; text-align: right; margin-right: -64px; padding-right: 0 }
-  .band { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; padding: 10px; margin: 0 -10px; border-radius: 10px }
+  .band { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; padding: 10px 0; border-radius: 10px }
+  .band .card:first-child { margin-left: 10px } .band .card:last-child { margin-right: 10px }
   .band .card { border: 0 }
   .band .card b { display: block; margin-bottom: 4px }
   .plat { background: var(--lane-a) } .apps { background: var(--lane-b) } .sec { background: var(--lane-d) }

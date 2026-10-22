@@ -55,13 +55,13 @@
 </g>
 <g data-edge="drawio-&gt;assets" data-sides="top,bottom"><path d="M720,452 L720,368" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="npm-&gt;assets" data-sides="right,right"><path d="M817,543.5 L837,543.5 Q843,543.5 843,537.5 L843,349.5 Q843,343.5 837,343.5 L817,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="scripts-&gt;browser" data-sides="right,left"><path d="M817,285.5 L896.5,285.5 Q901,285.5 901,281 L901,281 Q901,276.5 905.5,276.5 L913,276.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="scripts-&gt;browser" data-sides="right,left"><path d="M817,290.5 L895,290.5 Q901,290.5 901,284.5 L901,282.5 Q901,276.5 907,276.5 L913,276.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="gh-&gt;npx" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L285.8,266.5 Q289,266.5 289,263.3 L289,263.3 Q289,260 292.3,260 L315,260" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="gh-&gt;ghs" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L287.8,207 Q289,207 289,208.3 L289,208.3 Q289,209.5 290.3,209.5 L315,209.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="ghs-&gt;skill" data-sides="right,left"><path d="M510,209.5 L516,209.5 Q522,209.5 522,215.5 L522,234 Q522,240 528,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="npx-&gt;skill" data-sides="right,left"><path d="M510,276.5 L590,276.5 Q596,276.5 596,270.5 L596,238 Q596,233 601,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="agent-&gt;md" data-sides="left,right"><path d="M913,199.5 L849,199.5 Q843,199.5 843,193.5 L843,148.5 Q843,142.5 837,142.5 L817,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="agent-&gt;scripts" data-sides="left,right"><path d="M913,218.5 L849,218.5 Q843,218.5 843,224.5 L843,260.5 Q843,266.5 837,266.5 L817,266.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="agent-&gt;scripts" data-sides="left,right"><path d="M913,223.5 L849,223.5 Q843,223.5 843,229.5 L843,260.5 Q843,266.5 837,266.5 L817,266.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="gh-&gt;zip" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L283,266.5 Q289,266.5 289,272.5 L289,337.5 Q289,343.5 295,343.5 L315,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="gh-&gt;plugin" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L283,207 Q289,207 289,201 L289,148.5 Q289,142.5 295,142.5 L315,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="plugin-&gt;skill" data-sides="right,left"><path d="M510,142.5 L530,142.5 Q536,142.5 536,148.5 L536,234 Q536,240 542,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
@@ -148,7 +148,7 @@
 <text class="g-edge" x="727" y="408" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">first render</text>
 </g>
 <g data-edge="scripts-&gt;browser">
-<text class="g-edge" x="854.3" y="279.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">drives</text>
+<text class="g-edge" x="842.3" y="284.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">drives</text>
 </g>
 <g data-edge="ghs-&gt;skill">
 <text class="g-edge" x="545.4" y="234" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">copy</text>
@@ -157,7 +157,7 @@
 <text class="g-edge" x="862.7" y="193.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reads</text>
 </g>
 <g data-edge="agent-&gt;scripts">
-<text class="g-edge" x="850" y="246.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">runs</text>
+<text class="g-edge" x="866" y="217.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">runs</text>
 </g>
 </g>
 </svg>

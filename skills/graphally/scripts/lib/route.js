@@ -149,17 +149,22 @@ export function routeEdges(model, geo, m) {
     const free = [];
     for (let c = origin + 6; c <= origin + along - 6; c += 2) if (sideFree(id, side, c)) free.push(c);
     const lo = free.length ? free[0] : origin + 6, hi = free.length ? free.at(-1) : origin + along - 6;
-    // Lines from facing sides keep the other end's coordinate when those are free and far
-    // enough apart: each runs straight in, instead of bending into an evenly spaced slot.
-    const want = list.map(it => it.other[side % 2 === 0 ? 'y' : 'x']);
-    if (list.every(it => it.facing) && want.every((c, i) => c >= lo && c <= hi && (i === 0 || c - want[i - 1] >= S.edge.portGap))) {
-      list.forEach((it, i) => { fixed[it.k][it.which] = { side, coord: want[i] }; });
-      continue;
-    }
     const span = hi - lo, centre = (lo + hi) / 2;
     const step = Math.min(S.edge.portGap * 1.6, list.length > 1 ? span / (list.length - 1) : 0);
     const startAt = centre - (step * (list.length - 1)) / 2;
-    list.forEach((it, i) => { fixed[it.k][it.which] = { side, coord: startAt + i * step }; });
+    // Lines from facing sides whose other end lies along the free stretch aim for its
+    // coordinate, so they run straight in; the rest keep their evenly spaced slot. A forward and a backward pass keep the order and a
+    // port gap between neighbours; when the side is too short for that, even spacing it is.
+    const axis = side % 2 === 0 ? 'y' : 'x', gap = Math.min(S.edge.portGap, step || S.edge.portGap);
+    const straight = it => it.facing && it.other[axis] >= lo && it.other[axis] <= hi;
+    const c = list.map((it, i) => (straight(it) ? it.other[axis] : startAt + i * step));
+    // Two labelled neighbours need room for a label between them.
+    const gapAt = i => (edges[list[i].k].e.label && edges[list[i - 1].k].e.label ? Math.max(gap, 24) : gap);
+    for (let i = 1; i < c.length; i++) c[i] = Math.max(c[i], c[i - 1] + gapAt(i));
+    c[c.length - 1] = Math.min(c.at(-1), hi);
+    for (let i = c.length - 2; i >= 0; i--) c[i] = Math.min(c[i], c[i + 1] - gapAt(i + 1));
+    const fits = c[0] >= lo - 0.5;
+    list.forEach((it, i) => { fixed[it.k][it.which] = { side, coord: fits ? c[i] : startAt + i * step }; });
   }
 
   // ---- straighten: an edge alone on two facing sides gets one shared coordinate ----
