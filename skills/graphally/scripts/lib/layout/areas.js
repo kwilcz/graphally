@@ -29,7 +29,10 @@ export function sizeNodes(model, m) {
   const natural = n => 2 * S.card.padX + (n.icon ? S.card.icon + S.card.iconGap : 0)
     + Math.max(m.width(n.label, T.label), n.sub ? m.width(n.sub, T.sub) : 0);
   const widest = Math.max(0, ...cards.map(natural));
-  const W = Number(model.attrs['node-width']) || Math.ceil(Math.min(S.card.maxW, Math.max(S.card.minW, widest)));
+  // On a re-render cards keep their previous width, so a longer new label wraps instead of
+  // widening every card and shifting the whole diagram.
+  const kept = model.previous && cards.map(n => model.previous.nodes?.[n.id]?.[2]).find(Boolean);
+  const W = Number(model.attrs['node-width']) || kept || Math.ceil(Math.min(S.card.maxW, Math.max(S.card.minW, widest)));
   for (const n of model.nodes.values()) {
     if (n.style === 'card') {
       const textW = W - 2 * S.card.padX - (n.icon ? S.card.icon + S.card.iconGap : 0);
