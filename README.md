@@ -89,6 +89,7 @@ The skill's scripts can also be run directly:
 node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG and a preview PNG
 node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG; --dark for the dark theme
 node skills/graphally/scripts/graphally.mjs render diagram.html --recompute  # lay out afresh, ignoring the previous SVG
+node skills/graphally/scripts/edit.mjs diagram.html --move db 0,20 --connect api cache "reads"  # patch a page-mode diagram
 node skills/graphally/scripts/tf2graphally.mjs ./infra --out diagram.html  # a Terraform configuration, drafted
 node skills/graphally/scripts/fetch-icons.mjs                            # download or refresh the icon packs
 ```
@@ -103,6 +104,21 @@ them out of pull-request diffs, mark them as generated in `.gitattributes`:
 ```text
 *.svg linguist-generated=true
 ```
+
+**Figures in HTML.** `<diagram layout=html>` is a page of HTML and CSS: the browser lays it
+out, shapes come from `shape="cylinder"`, `shape="gateway parallel"` and the like, and the
+connections are data, a JSON list routed around the boxes:
+
+```html
+<script type="application/json">
+[ { "from": "api", "to": "db", "label": "writes" }, ["api", "queue", "events"] ]
+</script>
+```
+
+**GitHub Copilot canvas.** `.github/extensions/graphally` shows a diagram live in the
+Copilot app's side panel. Drag a box, Alt-drag between boxes, drag or label a line: each
+gesture is written into the file (`nudge`, the JSON connections), and the agent's edits
+show up as they land. Its README says how to install it in another repository.
 
 Colours are CSS tokens in `skills/graphally/assets/theme.css`, so a brand theme only
 redefines them. Large diagrams can be split into files with `<include src="parts/app.html">`.

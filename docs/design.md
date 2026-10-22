@@ -91,6 +91,13 @@ Each kind of diagram uses the layout that suits it:
 
   ![Every page-mode shape and marker, drawn by page mode](diagrams/shapes.svg)
 
+  The connections are data, a JSON list in the diagram, so a canvas or an agent changes
+  them as data: `scripts/lib/edits.mjs` patches the source (moves as `nudge`, connections
+  added, changed or removed by key) and keeps the rest of the file as written. Page-mode
+  lines record their sides in the SVG, and the next render prefers them. The Copilot canvas
+  (`.github/extensions/graphally`) runs the same engine in its panel's iframe and turns
+  gestures into those edits.
+
 ## Routing and labels
 
 Edges are found by A* search over a sparse grid built from the boxes' edges and the
