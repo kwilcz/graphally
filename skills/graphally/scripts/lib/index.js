@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
-// compile(<diagram>) -> { svg, width, height, problems, stats }
+// compile(<diagram>) -> { svg, width, height, problems, stats, snapshot }
 import { parseDiagram } from './parse.js';
 import { createMeasurer } from './measure.js';
 import { layoutAreas } from './layout/areas.js';
@@ -8,7 +8,7 @@ import { layoutLanes } from './layout/lanes.js';
 import { layoutSequence } from './layout/sequence.js';
 import { layoutGantt } from './layout/gantt.js';
 import { routeEdges } from './route.js';
-import { renderSvg } from './render.js';
+import { renderSvg, edgeKey } from './render.js';
 import { check } from './check.js';
 export { registerPack } from './icons.js';
 
@@ -17,6 +17,7 @@ let counter = 0;
 export function compile(el, opts = {}) {
   if (opts.debug) globalThis.__routeDebug = true;
   const model = parseDiagram(el);
+  const allEdges = model.edges;   // before badgeSharedLinks drops some: their overrides still belong in the snapshot
   const m = createMeasurer();
   const host = document.createElement('div');
   host.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;';
@@ -30,16 +31,37 @@ export function compile(el, opts = {}) {
     snapToPixels(geo);
     const routes = [...(geo.fixedRoutes || []), ...(['sequence', 'gantt', 'timeline'].includes(kind) ? [] : routeEdges(model, geo, m))];
     const id = el.id || `gr${++counter}`;
-    const { svg, texts } = renderSvg(model, geo, routes, m, { ...opts, id });
+    const snapshot = snapshotOf(el, opts, model, geo, routes, allEdges);
+    const { svg, texts } = renderSvg(model, geo, routes, m, { ...opts, id, snapshot });
     const { problems, crossings } = check(model, geo, routes, texts);
     if (opts.debug) window.__debug = { log: globalThis.__routeLog, hard: globalThis.__routeHard, routes: routes.map(r => ({ from: r.edge.from, to: r.edge.to, points: r.points.map(p => [Math.round(p.x), Math.round(p.y)]) })),
       nodes: [...geo.nodes.entries()].map(([id, r]) => [id, Math.round(r.x), Math.round(r.y), Math.round(r.w), Math.round(r.h)]) };
     return { svg, width: geo.width, height: geo.height, problems,
-      stats: { nodes: model.nodes.size, groups: model.groups.size - 1, edges: routes.length, crossings } };
+      stats: { nodes: model.nodes.size, groups: model.groups.size - 1, edges: routes.length, crossings }, snapshot };
   } finally {
     host.remove();
     m.dispose();
   }
+}
+
+const SIDES = ['right', 'bottom', 'left', 'top'];
+const r2 = v => Math.round(v * 2) / 2;
+
+// The layout snapshot (SPEC "Snapshot format"): where the boxes and routed edges landed, and
+// the overrides the source carries. Edges without sides (sequence and Gantt lines) are left out.
+function snapshotOf(el, opts, model, geo, routes, allEdges) {
+  const rect = r => [r.x, r.y, r.w, r.h].map(r2);
+  const sides = o => Object.fromEntries(['out', 'in'].filter(k => o[k] != null).map(k => [k, SIDES[o[k]]]));
+  return {
+    v: 1, id: el.id || '', source: opts.source || '',
+    nodes: Object.fromEntries([...geo.nodes].map(([id, r]) => [id, rect(r)])),
+    groups: Object.fromEntries([...geo.groups].filter(([id]) => id !== '__root').map(([id, r]) => [id, rect(r)])),
+    edges: Object.fromEntries(routes.filter(rt => rt.out != null && rt.in != null).map(rt => [edgeKey(rt.edge), sides(rt)])),
+    overrides: {
+      nodes: Object.fromEntries([...model.nodes.values()].filter(n => n.nudge).map(n => [n.id, { nudge: [n.nudge.dx, n.nudge.dy] }])),
+      edges: Object.fromEntries(allEdges.filter(e => e.override).map(e => [edgeKey(e), sides(e.override)])),
+    },
+  };
 }
 
 // A link between a whole group and an item of a <band> (shared platform services) becomes

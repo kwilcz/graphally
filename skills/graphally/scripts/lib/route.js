@@ -179,7 +179,7 @@ export function routeEdges(model, geo, m) {
   const routes = edges.map((E, k) => {
     const path = paths[k] || first[k];
     if (!path) { model.problems.push({ rule: 'unroutable', from: E.e.from, to: E.e.to }); return null; }
-    return { edge: E.e, bundle: E.bundle, points: simplify(path.points) };
+    return { edge: E.e, bundle: E.bundle, points: simplify(path.points), out: path.startSide, in: path.goalSide };
   }).filter(Boolean);
 
   nudge(routes);

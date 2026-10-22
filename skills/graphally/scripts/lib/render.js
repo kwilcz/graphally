@@ -6,11 +6,14 @@ import { resolveIcon, symbolFor } from './icons.js';
 
 const fmt = n => String(Math.round(n * 10) / 10);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+export const edgeKey = e => e.key ?? `${e.from}->${e.to}`;
 
 export function renderSvg(model, geo, routes, m, opts) {
   const id = opts.id || 'g';
   const out = [], symbols = new Map(), markers = new Set(), texts = [];
   const W = geo.width, H = geo.height;
+  // Everything `draw` emits goes inside <g attrs>…</g>, so the editor can find it by id.
+  const wrap = (attrs, draw) => { const at = out.length; draw(); out.splice(at, 0, `<g ${attrs}>`); out.push('</g>'); };
 
   const text = (str, x, y, cls, { anchor, tone, halo, weight } = {}) => {
     const t = m.text(str, cls);
@@ -72,7 +75,7 @@ export function renderSvg(model, geo, routes, m, opts) {
 
   // Groups, outermost first
   const groups = [...geo.groups.values()].sort((a, b) => a.group.depth - b.group.depth);
-  for (const r of groups) {
+  for (const r of groups) wrap(`data-id="${esc(r.group.id)}"`, () => {
     const g = r.group, st = g.style;
     if (st === 'plain') {}
     else if (st === 'dashed' || st === 'boundary' || st === 'external' || g.external) rect(r, { fill: 'none', stroke: 'muted', width: 1.2, dash: '6 4', rx: S.group.radius });
@@ -87,7 +90,7 @@ export function renderSvg(model, geo, routes, m, opts) {
       rect(r, { fill: 'card', stroke: 'line', width: 1, rx: 0 });
       out.push(`<rect x="${fmt(r.x)}" y="${fmt(r.y)}" width="${fmt(r.gutter)}" height="${fmt(r.h)}" style="fill: var(--${tint}); stroke: var(--line)" stroke-width="1"></rect>`);
       g.lines.forEach((l, i) => text(l, r.head.x, m.baseline(r.head.y + i * 16, 16, T.group), T.group));
-      continue;
+      return;
     }
     if (r.gutter) {
       // A band with a title gutter: divider line and wrapped title.
@@ -105,7 +108,7 @@ export function renderSvg(model, geo, routes, m, opts) {
       }
     }
     if (r.badges) g.badges.forEach((b, i) => badge(b, r.badges.x + i * (S.group.badge + S.group.badgeGap), r.badges.y, g.id));
-  }
+  });
 
   decor('under');
   // Edges
@@ -113,12 +116,12 @@ export function renderSvg(model, geo, routes, m, opts) {
     const e = rt.edge, tone = e.accent ? 'woad' : 'ink', mk = e.open ? `${tone}-open` : tone;
     if (!e.line) markers.add(mk);
     const d = rounded(rt.points, S.edge.radius);
-    out.push(`<path d="${d}" style="fill: none; stroke: var(--${tone})" stroke-width="${e.accent ? 2 : S.edge.width}"${e.dashed ? ' stroke-dasharray="5 4"' : ''}${!e.line ? ` marker-end="url(#${id}-${mk})"` : ''}${e.both ? ` marker-start="url(#${id}-${mk})"` : ''}></path>`);
+    out.push(`<g data-edge="${esc(edgeKey(e))}"><path d="${d}" style="fill: none; stroke: var(--${tone})" stroke-width="${e.accent ? 2 : S.edge.width}"${e.dashed ? ' stroke-dasharray="5 4"' : ''}${!e.line ? ` marker-end="url(#${id}-${mk})"` : ''}${e.both ? ` marker-start="url(#${id}-${mk})"` : ''}></path></g>`);
   }
   decor('mid');
 
   // Nodes
-  for (const r of geo.nodes.values()) {
+  for (const r of geo.nodes.values()) wrap(`data-id="${esc(r.node.id)}"`, () => {
     const n = r.node;
     const stroke = n.accent ? 'woad' : n.external || n.ghost ? 'muted' : 'ink';
     const dash = n.external || n.ghost ? '5 4' : null;
@@ -156,7 +159,7 @@ export function renderSvg(model, geo, routes, m, opts) {
       rect(r, { fill: 'wash', stroke: n.accent ? 'woad' : 'line', width: 1, rx: r.h / 2, dash });
       text(n.label, r.x + r.w / 2, m.baseline(r.y, r.h, T.sub), T.sub, { anchor: 'middle' });
     }
-  }
+  });
 
   // Process shapes (BPMN conventions): thin circle = start, thick = end, double = event,
   // diamond = gateway (× exclusive, + parallel, ○ inclusive), rounded box = task.
@@ -213,7 +216,7 @@ export function renderSvg(model, geo, routes, m, opts) {
     }
     return opts.standalone ? 'bg' : 'card';
   };
-  for (const rt of routes) if (rt.label) text(rt.label.text, rt.label.x, m.baseline(rt.label.y, rt.label.h, T.edge), T.edge, { halo: under(rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) });
+  for (const rt of routes) if (rt.label) wrap(`data-edge="${esc(edgeKey(rt.edge))}"`, () => text(rt.label.text, rt.label.x, m.baseline(rt.label.y, rt.label.h, T.edge), T.edge, { halo: under(rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) }));
 
   // Legend
   if (geo.legend) {
@@ -237,7 +240,10 @@ export function renderSvg(model, geo, routes, m, opts) {
   const label = opts.label || describe(model);
   const style = opts.standalone ? `<style>${opts.css}</style>\n` : '';
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" class="graphally"${theme} viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">\n${style}<defs>${defs.join('\n')}</defs>\n<g style="color: var(--ink); fill: var(--ink)">\n${out.join('\n')}\n</g>\n</svg>`;
+  // The layout snapshot: JSON in CDATA; < and > are escaped so no "]]>" or "</metadata>" can end it early.
+  const json = JSON.stringify(opts.snapshot).replace(/[<>]/g, c => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`);
+  const meta = `<metadata id="graphally-layout"><![CDATA[${json}]]></metadata>\n`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" class="graphally"${theme} viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">\n${meta}${style}<defs>${defs.join('\n')}</defs>\n<g style="color: var(--ink); fill: var(--ink)">\n${out.join('\n')}\n</g>\n</svg>`;
   return { svg, texts };
 }
 
