@@ -14,7 +14,10 @@ import { parseShape, drawShape, SHAPE_CSS } from './shapes.js';
 const fmt = n => String(Math.round(n * 10) / 10);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const SIDES = ['right', 'bottom', 'left', 'top'];
-const TOKENS = ['ink', 'muted', 'line', 'woad', 'rust', 'wash', 'card', 'bg', 'icon-soft', 'vnet', 'note', 'lane-a', 'lane-b', 'lane-c', 'lane-d'];
+const TOKENS = ['ink', 'muted', 'line', 'woad', 'rust', 'teal', 'green', 'purple', 'amber', 'wash', 'card', 'bg', 'icon-soft', 'vnet', 'note', 'lane-a', 'lane-b', 'lane-c', 'lane-d'];
+const TONE_ALIASES = { blue: 'woad', red: 'rust' };
+// Line ends: head at the end of a line, tail at its start.
+const ENDS = ['arrow', 'open', 'circle', 'dot', 'diamond', 'open-diamond', 'none'];
 
 // Defaults for page mode and a few shorthands; anything else is plain CSS. :where() keeps
 // their specificity at zero, so any rule of the author wins.
@@ -286,8 +289,7 @@ function build(root, el, id, scripts, opts, m, problems) {
   const markers = new Set(), lineOut = [], labelOut = [], drawOut = [];
   for (const rt of routes) {
     const e = rt.edge, tone = paintOf(toneOf(e.color)) || (e.accent ? 'var(--woad)' : 'var(--ink)');
-    const mk = markerId(id, tone, markers);
-    lineOut.push(`<g data-edge="${esc(e.key)}"><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.accent ? 2 : S.edge.width}"${e.dashed ? ' stroke-dasharray="5 4"' : ''}${!e.line ? ` marker-end="url(#${mk})"` : ''}${e.both ? ` marker-start="url(#${mk})"` : ''}></path></g>`);
+    lineOut.push(`<g data-edge="${esc(e.key)}"><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path></g>`);
     if (rt.label) {
       const halo = under(boxes, rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) || 'var(--bg)';
       labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
@@ -296,8 +298,7 @@ function build(root, el, id, scripts, opts, m, problems) {
   for (const d of drawings) {
     const o2 = d.o, color = paintOf(toneOf(o2.color || o2.tone)) || 'var(--ink)';
     if (d.kind === 'path') {
-      const mk = o2.arrow ? markerId(id, color, markers) : null;
-      drawOut.push(`<path d="${d.d}" style="fill: ${paintOf(toneOf(o2.fill)) || 'none'}; stroke: ${color}" stroke-width="${o2.width || S.edge.width}"${o2.dashed ? ' stroke-dasharray="5 4"' : ''}${mk ? ` marker-end="url(#${mk})"` : ''}${mk && o2.both ? ` marker-start="url(#${mk})"` : ''}></path>`);
+      drawOut.push(`<path d="${d.d}" style="fill: ${paintOf(toneOf(o2.fill)) || 'none'}; stroke: ${color}" stroke-width="${o2.width || S.edge.width}"${endAttrs(id, endsOf(o2, false, problems), color, markers)}></path>`);
       // arrow and curve labels: beside the middle of a vertical line, above a horizontal one.
       if (o2.label && d.via) {
         const [p, q] = d.ends, upright = Math.abs(q.x - p.x) < Math.abs(q.y - p.y), x = d.via.x + (upright ? 7 : 0), y = d.via.y - (upright ? 0 : 9);
@@ -325,7 +326,10 @@ function build(root, el, id, scripts, opts, m, problems) {
     }
   }
   check(texts, problems);
-  const defs = [...[...markers].map(k => { const [mid, color] = k.split('|'); return `<marker id="${mid}" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: ${color}"></path></marker>`; }), ...symbols.values()];
+  const defs = [...[...markers].map(k => {
+    const [mid, kind, color] = k.split('|'), [ref, body] = MARKER[kind];
+    return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
+  }), ...symbols.values()];
   const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
   const style = opts.standalone ? `<style>${opts.css}</style>\n` : '';
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
@@ -333,15 +337,36 @@ function build(root, el, id, scripts, opts, m, problems) {
   return { svg, width: W, height: H, problems, stats: { nodes: boxes.filter(x => x.e.id).length, groups: 0, edges: routes.length, crossings: crossings(routes) }, snapshot: null };
 }
 
-// One marker per colour: "<id>-m<n>|<colour>" keys keep the colour for the defs.
-function markerId(id, color, markers) {
-  const existing = [...markers].find(k => k.endsWith(`|${color}`));
+// One marker per kind and colour: "<id>-m<n>|<kind>|<colour>" keys keep both for the defs.
+function markerId(id, kind, color, markers) {
+  const existing = [...markers].find(k => k.endsWith(`|${kind}|${color}`));
   if (existing) return existing.split('|')[0];
   const mid = `${id}-m${markers.size}`;
-  markers.add(`${mid}|${color}`);
+  markers.add(`${mid}|${kind}|${color}`);
   return mid;
 }
-const toneOf = v => (v && TOKENS.includes(v) ? `var(--${v})` : v);
+// marker-start and marker-end attributes for a line's ends.
+const endAttrs = (id, en, color, markers) =>
+  `${en.dash ? ` stroke-dasharray="${en.dash}"` : ''}${en.head !== 'none' ? ` marker-end="url(#${markerId(id, en.head, color, markers)})"` : ''}${en.tail !== 'none' ? ` marker-start="url(#${markerId(id, en.tail, color, markers)})"` : ''}`;
+const toneOf = v => (v && TOKENS.includes(TONE_ALIASES[v] || v) ? `var(--${TONE_ALIASES[v] || v})` : v);
+
+// head, tail and dash of a line from its options. message: a BPMN message flow (dashed, an open
+// circle at the source, an open arrowhead). arrowDefault: whether the line has a head unless told.
+function endsOf(o, arrowDefault, problems) {
+  const head = o.head ?? (o.message ? 'open' : o.arrow === false ? 'none' : o.arrow || arrowDefault ? 'arrow' : 'none');
+  const tail = o.tail ?? (o.message ? 'circle' : o.both ? head : 'none');
+  for (const v of [head, tail]) if (!ENDS.includes(v)) problems.push({ rule: 'bad-option', option: 'head/tail', value: v, hint: ENDS.join(', ') });
+  return { head: ENDS.includes(head) ? head : 'arrow', tail: ENDS.includes(tail) ? tail : 'none',
+    dash: o.message || o.dashed || o.async ? '5 4' : o.dotted ? '1.5 3' : '' };
+}
+const MARKER = {
+  arrow: [9, c => `<path d="M0,0 L10,5 L0,10 z" style="fill: ${c}"></path>`],
+  open: [9, c => `<path d="M1,1 L9,5 L1,9" style="fill: none; stroke: ${c}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"></path>`],
+  circle: [9, c => `<circle cx="5" cy="5" r="3.7" style="fill: var(--card); stroke: ${c}" stroke-width="1.3"></circle>`],
+  dot: [8.5, c => `<circle cx="5" cy="5" r="3.3" style="fill: ${c}"></circle>`],
+  diamond: [10, c => `<path d="M0,5 L5,1.5 L10,5 L5,8.5 z" style="fill: ${c}"></path>`],
+  'open-diamond': [10, c => `<path d="M0.6,5 L5,1.9 L9.4,5 L5,8.1 z" style="fill: var(--card); stroke: ${c}" stroke-width="1.2"></path>`],
+};
 
 const arcPoint = (c, r, deg) => ({ x: c.x + r * Math.cos(deg * Math.PI / 180), y: c.y + r * Math.sin(deg * Math.PI / 180) });
 
@@ -449,8 +474,8 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
     const from = keyOf.get(fb), to = keyOf.get(tb), base = c.o.id || `${from}->${to}`, k = (seen.get(base) || 0) + 1;
     seen.set(base, k);
     const override = Object.fromEntries(['out', 'in'].filter(s => SIDES.includes(c.o[s])).map(s => [s, SIDES.indexOf(c.o[s])]));
-    model.edges.push({ id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', dashed: !!(c.o.dashed || c.o.async), both: !!c.o.both,
-      line: c.o.arrow === false, accent: !!c.o.accent, color: c.o.color, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) });
+    model.edges.push({ id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends: endsOf(c.o, true, problems),
+      accent: !!c.o.accent, color: c.o.color, width: c.o.width, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) });
   });
   return routeEdges(model, geo, m);
 }
