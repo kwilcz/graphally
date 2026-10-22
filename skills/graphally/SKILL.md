@@ -96,7 +96,8 @@ sb ~> worker : events
   (`web, api -> kv`) is drawn as a badge, the item's icon in the group's header, not a
   line. Link a **node** to the band item when the line itself matters (private endpoint
   to its database).
-- **Icons**: loose names work.
+- **Icons**: loose names work, for every service of both packs (`elasticache`, `glue`,
+  `purview`), not only these examples:
   - Azure: `app service`, `functions`, `aks`, `container app`, `acr`, `service bus`,
     `event hubs`, `apim`, `front door`, `app gateway`, `firewall`, `vnet`, `subnet`, `nsg`,
     `private endpoint`, `vpn gateway`, `entra`, `managed identity`, `kv`, `sql`, `cosmos`,

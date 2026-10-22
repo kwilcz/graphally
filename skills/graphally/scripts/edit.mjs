@@ -4,8 +4,9 @@
 //
 //   --move id dx,dy           move an element by dx,dy (adds to its nudge)
 //   --nudge id x,y            set its nudge (0,0 removes it)
-//   --connect from to [label] add a connection
-//   --line 'a->b' '{json}'    change a connection's options, as in '{"label":"reads","via":[[400,80]]}'
+//   --connect from to [label] ['{json}']  add a connection, with options: '{"dashed": true, "out": "right"}'
+//   --line 'a->b' '{json}'    change a connection's options, merged into the ones it has
+//                             ('{"label": "reads", "via": [[400, 80]]}'; null removes one)
 //   --unline 'a->b'           remove a connection (quote keys: > is a shell redirection)
 //   --edits '[{…}]'           several edits as JSON (the canvas's format: see lib/edits.mjs)
 //   --lines                   print the connections, with their keys, as JSON
@@ -32,8 +33,9 @@ for (let i = 1; i < argv.length; i++) {
   else if (a === '--move') { const id = next(), [dx, dy] = pair(next()); edits.push({ op: 'move', id, dx, dy }); }
   else if (a === '--nudge') { const id = next(), [x, y] = pair(next()); edits.push({ op: 'nudge', id, x, y }); }
   else if (a === '--connect') {
-    const from = next(), to = next(), label = argv[i + 1] && !argv[i + 1].startsWith('--') ? next() : '';
-    edits.push({ op: 'connect', from, to, ...(label ? { label } : {}) });
+    const from = next(), to = next(), more = () => argv[i + 1] && !argv[i + 1].startsWith('--');
+    const label = more() && !argv[i + 1].startsWith('{') ? next() : '', options = more() && argv[i + 1].startsWith('{') ? JSON.parse(next()) : {};
+    edits.push({ op: 'connect', from, to, ...(label ? { label } : {}), ...options });
   } else if (a === '--line') { const key = next(); edits.push({ op: 'line', key, set: JSON.parse(next()) }); }
   else if (a === '--unline') edits.push({ op: 'unline', key: next() });
   else if (a === '--edits') edits.push(...[].concat(JSON.parse(next())));

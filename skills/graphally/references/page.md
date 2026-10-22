@@ -107,8 +107,9 @@ and keeps the rest of the file as written:
 node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs diagram.html --move db 0,20 --connect audit db "archives" --unline 'api->queue'
 ```
 
-`--line 'a->b' '{"label": "reads", "via": [[420, 160]]}'` changes a connection's options;
-`--lines` prints the connections with their keys. Render again afterwards, without
+`--connect a b "label" '{"dashed": true}'` adds a connection with options;
+`--line 'a->b' '{"label": "reads", "via": [[420, 160]]}'` merges options into one (`null`
+removes an option); `--lines` prints the connections with their keys. Render again afterwards, without
 `--recompute`: the render reads the previous SVG, and every line keeps the sides it used
 there, whether you set them or the router chose them, so only what changed moves.
 `--recompute` routes everything afresh. In the GitHub Copilot app, the graphally canvas
@@ -187,6 +188,8 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200`, a `head` name) |
 
 The script's `text`, `gate` and arrow labels are not checked for overlap: look at the PNG.
+The render's summary counts crossings: lines crossing lines. A crossing is not a problem,
+but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 
 ## Recipes
 
