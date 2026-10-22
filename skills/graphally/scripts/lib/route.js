@@ -14,7 +14,7 @@ const BEND = 36, CROSS = 70, OVERLAP = 22, FOREIGN = 2.2;
 const DX = [1, 0, -1, 0], DY = [0, 1, 0, -1];   // E S W N
 
 export function routeEdges(model, geo, m) {
-  const P = S.edge.nodePad;
+  const P = geo.nodePad ?? S.edge.nodePad;
   // Lanes and tree bands are rows to cross, not containers to avoid.
   const groupsList = [...geo.groups.entries()].filter(([, r]) => !r.lane && r.group.style !== 'band' || !r.gutter).map(([id, r]) => ({ id, ...r, depth: r.group.depth }));
   const gIndex = new Map(groupsList.map((g, i) => [g.id, i]));
@@ -221,6 +221,7 @@ function buildGrid(geo, hard, groupsList, extraX, extraY) {
   const xsSet = new Set([2, geo.width - 2, ...extraX]), ysSet = new Set([2, geo.height - 2, ...extraY]);
   for (const o of hard) { xsSet.add(o.x); xsSet.add(o.x + o.w); ysSet.add(o.y); ysSet.add(o.y + o.h); }
   for (const g of groupsList) { xsSet.add(g.x - 10); xsSet.add(g.x + g.w + 10); ysSet.add(g.y - 10); ysSet.add(g.y + g.h + 10); }
+  for (const t of geo.taken || []) if (t.x1 === t.x2) xsSet.add(t.x1); else ysSet.add(t.y1);
   const channel = vals => {           // centres of the gaps between consecutive lines
     const v = [...vals].sort((a, b) => a - b);
     for (let i = 0; i + 1 < v.length; i++) if (v[i + 1] - v[i] > 24) vals.add((v[i] + v[i + 1]) / 2);
@@ -261,7 +262,17 @@ function buildGrid(geo, hard, groupsList, extraX, extraY) {
       bV[k] = hugV(ux[i], my) ? 1 : 0;
     }
   }
-  return { xs: ux, ys: uy, nx, ny, okP, okH, okV, gH, gV, bH, bV, useH: new Uint8Array(nx * ny), useV: new Uint8Array(nx * ny),
+  // Lines drawn by other means (page mode's script) are taken: running along one costs as
+  // overlap, crossing one as a crossing.
+  const useH = new Uint8Array(nx * ny), useV = new Uint8Array(nx * ny);
+  // A grid line within 3px of a drawn line counts as on it.
+  const near = (vals, c) => vals.flatMap((v, i) => (Math.abs(v - c) <= 3 ? [i] : []));
+  for (const t of geo.taken || []) {
+    const v = t.x1 === t.x2, [lo, hi] = v ? [Math.min(t.y1, t.y2), Math.max(t.y1, t.y2)] : [Math.min(t.x1, t.x2), Math.max(t.x1, t.x2)];
+    if (v) for (const i of near(ux, t.x1)) for (let j = 0; j + 1 < ny; j++) { if (uy[j] >= lo - 0.5 && uy[j + 1] <= hi + 0.5) useV[j * nx + i] = 1; }
+    else for (const j of near(uy, t.y1)) for (let i = 0; i + 1 < nx; i++) { if (ux[i] >= lo - 0.5 && ux[i + 1] <= hi + 0.5) useH[j * nx + i] = 1; }
+  }
+  return { xs: ux, ys: uy, nx, ny, okP, okH, okV, gH, gV, bH, bV, useH, useV,
     ownH: new Int16Array(nx * ny), ownV: new Int16Array(nx * ny),
     ix: new Map(ux.map((v, i) => [v, i])), iy: new Map(uy.map((v, i) => [v, i])) };
 }
@@ -458,9 +469,10 @@ function nudge(routes) {
 function placeLabels(routes, geo, hard, m) {
   const placed = [];
   // Labels may sit in a node's routing margin, but not on the node itself.
-  const inner = S.edge.nodePad - 3;
+  const inner = (geo.nodePad ?? S.edge.nodePad) - 3;
   const blocks = [...hard.map(o => ({ x: o.x + (o.node ? inner : 0), y: o.y + (o.node ? inner : 0),
     w: o.w - (o.node ? 2 * inner : 0), h: o.h - (o.node ? 2 * inner : 0) }))];
+  for (const t of geo.taken || []) blocks.push({ x: Math.min(t.x1, t.x2) - 3, y: Math.min(t.y1, t.y2) - 3, w: Math.abs(t.x2 - t.x1) + 6, h: Math.abs(t.y2 - t.y1) + 6 });
   // A label straddling a box's border reads as part of the box: the border lines block.
   for (const r of geo.groups.values()) {
     if (r.group.style === 'plain') continue;

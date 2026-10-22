@@ -253,7 +253,7 @@ export function renderSvg(model, geo, routes, m, opts) {
   return { svg, texts };
 }
 
-function rounded(pts, r) {
+export function rounded(pts, r) {
   let d = `M${fmt(pts[0].x)},${fmt(pts[0].y)}`;
   for (let i = 1; i < pts.length - 1; i++) {
     const p0 = pts[i - 1], p1 = pts[i], p2 = pts[i + 1];

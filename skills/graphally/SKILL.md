@@ -147,6 +147,8 @@ Read only the one you need:
 - [references/sequence.md](references/sequence.md): sequence diagrams (calls, replies, loops, alternatives).
 - [references/gantt.md](references/gantt.md): plans and timelines (Gantt charts, milestones, dependencies).
 - [references/terraform.md](references/terraform.md): a diagram of a Terraform repository, generated from the code.
+- [references/page.md](references/page.md): anything else, as HTML and CSS: phase and role charts, matrices,
+  step cards, roadmaps, several kinds in one figure.
 
 ## Scripts
 

@@ -7,7 +7,8 @@ writes an SVG.
 
 It draws architecture (with Azure and AWS icons), network, hierarchy, BPMN process,
 flowchart, sequence, plan (Gantt) and icon diagrams, and drafts diagrams of Terraform
-repositories from the code.
+repositories from the code. Anything else (phase and role charts, matrices, step cards,
+roadmaps) is written as plain HTML and CSS, with a short script for the lines.
 
 > **Licence.** graphally is source-available, not open source. You may install it and let
 > your agents use it for any purpose, including paid work, and the diagrams you make are
@@ -123,6 +124,7 @@ Each sample folder holds the brief an agent was given, the source it wrote
 | [Hierarchy](#hierarchy) | [management groups and subscriptions](samples/hierarchy/brief.md) |
 | [Plan](#plan-gantt) | [six-month migration plan](samples/plan/brief.md) |
 | [Icon diagram](#icon-diagram) | [Microsoft Entra application proxy](samples/icons/brief.md) |
+| [Figure in HTML](#figure-in-html) | [who does what, phase by phase, in a move to AKS](samples/page/brief.md) |
 
 ### Architecture
 
@@ -206,6 +208,13 @@ Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling
 
 [Brief](samples/icons/brief.md) · [source](samples/icons/diagram.html) ·
 [SVG](samples/icons/diagram.svg)
+
+### Figure in HTML
+
+![Who does what in the move to AKS](samples/page/diagram.png)
+
+[Brief](samples/page/brief.md) · [source](samples/page/diagram.html) ·
+[SVG](samples/page/diagram.svg)
 
 ## Repository
 

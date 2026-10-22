@@ -1,0 +1,458 @@
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// <diagram layout=html>: the page is the layout. The author writes ordinary HTML and CSS; the
+// browser places everything. An optional <script> then runs with the geometry of every
+// element and connects and draws by name: el('id').right, mid(a, b), connect(a, b), arrow,
+// curve, draw.moveTo(…).lineTo(…), gate, text, icon, shape. Nobody writes a coordinate.
+// This file turns the laid-out page into SVG: backgrounds, borders, clip-path shapes, text
+// line by line, icons; then the connectors (routed by route.js) and the script's drawings.
+import { S, T } from './style.js';
+import { resolveIcon, symbolFor } from './icons.js';
+import { routeEdges } from './route.js';
+import { rounded } from './render.js';
+
+const fmt = n => String(Math.round(n * 10) / 10);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const SIDES = ['right', 'bottom', 'left', 'top'];
+const TOKENS = ['ink', 'muted', 'line', 'woad', 'rust', 'wash', 'card', 'bg', 'icon-soft', 'vnet', 'note', 'lane-a', 'lane-b', 'lane-c', 'lane-d'];
+
+// Defaults for page mode and a few shorthands; anything else is plain CSS. :where() keeps
+// their specificity at zero, so any rule of the author wins.
+const PAGE_CSS = `
+:where(.graphally-page) { font: 400 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; color: var(--ink); line-height: 1.35; }
+:where(.graphally-page *) { box-sizing: border-box; }
+:where(.graphally-page h1, .graphally-page h2, .graphally-page h3, .graphally-page h4, .graphally-page p, .graphally-page ul) { margin: 0; }
+:where(.graphally-page h1) { font-size: 22px; font-weight: 700; } :where(.graphally-page h2) { font-size: 17px; font-weight: 600; }
+:where(.graphally-page h3) { font-size: 14px; font-weight: 600; } :where(.graphally-page h4) { font-size: 13px; font-weight: 600; }
+:where(.graphally-page ul) { padding-left: 16px; }
+:where(.graphally-page icon) { display: inline-block; width: 24px; height: 24px; flex: none; vertical-align: middle; }
+:where(.graphally-page .card) { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+:where(.graphally-page .box) { border: 1.5px solid var(--ink); border-radius: 6px; padding: 8px 12px; background: var(--card); }
+:where(.graphally-page .pill) { background: var(--wash); border-radius: 999px; padding: 4px 12px; text-align: center; }
+:where(.graphally-page .tag) { display: inline-block; background: var(--wash); border-radius: 4px; padding: 3px 8px; font-size: 11.5px; font-weight: 600; }
+:where(.graphally-page .banner) { background: var(--ink); color: var(--card); border-radius: 6px; padding: 10px 16px; font-weight: 600; }
+:where(.graphally-page .muted) { color: var(--muted); } :where(.graphally-page .small) { font-size: 11.5px; }
+:where(.graphally-page .row) { display: flex; gap: 12px; align-items: center; } :where(.graphally-page .col) { display: flex; flex-direction: column; gap: 8px; }
+:where(.graphally-page .chevron) { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%); padding-left: 28px; padding-right: 24px; }
+:where(.graphally-page .diamond) { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); display: grid; place-items: center; }
+:where(.graphally-page .circle) { border-radius: 50%; display: grid; place-items: center; }
+`;
+
+export function compilePage(el, opts, m) {
+  const problems = [];
+  const id = el.id || 'pg';
+  if (!document.getElementById('graphally-page-css')) {
+    const st = document.createElement('style');
+    st.id = 'graphally-page-css';
+    st.textContent = PAGE_CSS;
+    document.head.appendChild(st);
+  }
+  const width = Number(el.getAttribute('width')) || 1200;
+  const root = document.createElement('div');
+  root.className = 'graphally-page';
+  root.style.cssText = `position:absolute; left:0; top:0; width:${width}px; padding:${S.pad}px;`;
+  const title = el.getAttribute('title'), subtitle = el.getAttribute('subtitle');
+  if (title) root.insertAdjacentHTML('beforeend', `<div style="font: 600 15px Inter, 'Segoe UI', system-ui, sans-serif; margin-bottom: 4px">${esc(title)}</div>`);
+  if (subtitle) root.insertAdjacentHTML('beforeend', `<div style="font-size: 12.5px; color: var(--muted); margin-bottom: 4px">${esc(subtitle)}</div>`);
+  if (title || subtitle) root.insertAdjacentHTML('beforeend', `<div style="height: ${S.titleGap - 4}px"></div>`);
+  const scripts = [];
+  for (const c of el.childNodes) {
+    if (c.nodeType === 1 && c.tagName === 'SCRIPT') scripts.push(c.textContent);
+    else root.appendChild(c.cloneNode(true));
+  }
+  document.body.appendChild(root);
+  try {
+    return build(root, el, id, scripts, opts, m, problems);
+  } finally {
+    root.remove();
+  }
+}
+
+function build(root, el, id, scripts, opts, m, problems) {
+  // Icons: <icon name="app service" size=32> becomes a sized box drawn with the icon's symbol.
+  const symbols = new Map();
+  const order = String(el.getAttribute('icons') || 'azure').toLowerCase() === 'aws' ? ['aws', 'azure'] : ['azure', 'aws'];
+  for (const ic of root.querySelectorAll('icon')) {
+    const size = ic.getAttribute('size');
+    if (size) { ic.style.width = `${size}px`; ic.style.height = `${size}px`; }
+    const r = resolveIcon(ic.getAttribute('name') || '', order);
+    if (!r || r.error) { problems.push({ rule: 'unknown-icon', icon: ic.getAttribute('name'), suggest: r?.suggestions }); continue; }
+    const sym = symbolFor(r, id);
+    symbols.set(sym.id, sym.markup);
+    ic.dataset.symbol = sym.id;
+  }
+
+  const o = root.getBoundingClientRect();
+  const boxOf = e => {
+    const r = e.getBoundingClientRect();
+    return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height };
+  };
+  const colors = tokenColors(root);
+  const paintOf = c => (!c || /rgba\(.*,\s*0\)$/.test(c) || c === 'transparent' ? null : colors.get(c) || c);
+
+  // ---------- the script: geometry by name, connections and drawings ----------
+  const pt = (x, y) => ({ x, y, down: d => pt(x, y + d), up: d => pt(x, y - d), left: d => pt(x - d, y), right: d => pt(x + d, y), move: (dx, dy) => pt(x + dx, y + dy) });
+  const geom = e => {
+    const { x, y, w, h } = boxOf(e), cx = x + w / 2, cy = y + h / 2;
+    return {
+      el: e, id: e.id, x, y, w, h, center: pt(cx, cy), top: pt(cx, y), bottom: pt(cx, y + h), left: pt(x, cy), right: pt(x + w, cy),
+      topLeft: pt(x, y), topRight: pt(x + w, y), bottomLeft: pt(x, y + h), bottomRight: pt(x + w, y + h),
+      at: (side, t = 0.5) => side === 'top' ? pt(x + w * t, y) : side === 'bottom' ? pt(x + w * t, y + h) : side === 'left' ? pt(x, y + h * t) : pt(x + w, y + h * t),
+    };
+  };
+  const ids = () => [...root.querySelectorAll('[id]')].map(e => e.id);
+  const find = ref => {
+    if (ref && ref.el) return [ref];
+    if (Array.isArray(ref)) return ref.flatMap(find);
+    const s = String(ref);
+    const sel = /^[#.[]|[\s>:]/.test(s) ? s : `#${CSS.escape(s)}`;
+    const found = [...root.querySelectorAll(sel)];
+    if (!found.length) throw new Error(`no element "${s}"${closest(s, ids()) ? `; did you mean "${closest(s, ids())}"?` : ''}`);
+    return found.map(geom);
+  };
+  const edges = [], drawings = [];
+  const opt = (v, d) => (v === undefined ? d : v);
+  const api = {
+    el: ref => find(ref)[0],
+    all: sel => find(sel),
+    pt, mid: (a, b) => pt((a.x + b.x) / 2, (a.y + b.y) / 2), lerp: (a, b, t) => pt(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t),
+    connect(a, b, o2 = {}) {
+      const stmt = edges.length + 1;
+      for (const f of find(a)) for (const t of find(b)) edges.push({ from: f.el, to: t.el, o: o2, stmt });
+    },
+    arrow(a, b, o2 = {}) { const [p, q] = ends(a, b); drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} L${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: api.mid(p, q) }); },
+    curve(a, b, o2 = {}) {
+      const [p, q] = ends(a, b), bend = opt(o2.bend, 40), dx = q.x - p.x, dy = q.y - p.y, len = Math.hypot(dx, dy) || 1;
+      const c = { x: (p.x + q.x) / 2 - dy / len * bend, y: (p.y + q.y) / 2 + dx / len * bend };
+      drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: pt((p.x + 2 * c.x + q.x) / 4, (p.y + 2 * c.y + q.y) / 4) });
+    },
+    draw: { moveTo: p => pathBuilder(p, drawings), arc: (c, r, a0, a1) => pathBuilder(arcPoint(c, r, a0), drawings).arc(c, r, a0, a1) },
+    gate(p, label = '', o2 = {}) { drawings.push({ kind: 'gate', p, label, o: o2 }); },
+    text(p, str, o2 = {}) { drawings.push({ kind: 'text', p, str: String(str), o: o2 }); },
+    icon(p, name, o2 = {}) {
+      const r = resolveIcon(name, order);
+      if (!r || r.error) { problems.push({ rule: 'unknown-icon', icon: name, suggest: r?.suggestions }); return; }
+      const sym = symbolFor(r, id);
+      symbols.set(sym.id, sym.markup);
+      drawings.push({ kind: 'icon', p, sym: sym.id, o: o2 });
+    },
+    shape(kind, p, o2 = {}) { drawings.push({ kind: 'shape', shape: kind, p, o: o2 }); },
+  };
+  // Two boxes: the facing sides. Points: as given.
+  const ends = (a, b) => {
+    if (!a.el || !b.el) return [a.el ? a.center : a, b.el ? b.center : b];
+    const dx = b.center.x - a.center.x, dy = b.center.y - a.center.y;
+    return Math.abs(dx) * a.h >= Math.abs(dy) * a.w ? (dx > 0 ? [a.right, b.left] : [a.left, b.right]) : (dy > 0 ? [a.bottom, b.top] : [a.top, b.bottom]);
+  };
+  for (const code of scripts) {
+    try { new Function(...Object.keys(api), code)(...Object.values(api)); }
+    catch (e) {
+      const line = String(e.stack || '').match(/<anonymous>:(\d+):\d+/);
+      problems.push({ rule: 'script-error', message: e.message, ...(line ? { line: Number(line[1]) - 2 } : {}) });
+    }
+  }
+
+  // ---------- the page as boxes and text ----------
+  const out = [], texts = [], boxes = [];
+  const ctx = document.createElement('canvas').getContext('2d');
+  const ascentOf = cs => { ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; return ctx.measureText('Hg').fontBoundingBoxAscent; };
+  const textOf = (node, owner) => {
+    if (!node.textContent.trim()) return;
+    const cs = getComputedStyle(owner);
+    const fill = paintOf(cs.color) || 'var(--ink)', asc = ascentOf(cs);
+    const range = document.createRange(), lines = [];
+    // A word's pieces, one per line: the browser may break a word at a hyphen.
+    const rects = (i, a, b) => { range.setStart(node, i + a); range.setEnd(node, i + b); return [...range.getClientRects()].filter(r => r.width); };
+    const piecesOf = (i, word) => {
+      if (rects(i, 0, word.length).length <= 1) return [[word, rects(i, 0, word.length)[0]]];
+      const cuts = [0];
+      for (let k = 1, top = rects(i, 0, 1)[0]?.top; k < word.length; k++) {
+        const t = rects(i, k, k + 1)[0]?.top;
+        if (t != null && top != null && Math.abs(t - top) > 2) cuts.push(k);
+        if (t != null) top = t;
+      }
+      cuts.push(word.length);
+      return cuts.slice(1).map((end, n) => [word.slice(cuts[n], end), rects(i, cuts[n], end)[0]]);
+    };
+    for (const w of node.textContent.matchAll(/\S+/g)) for (const [word, r] of piecesOf(w.index, w[0])) {
+      if (!r) continue;
+      const top = r.top - o.top;
+      let line = lines.find(l => Math.abs(l.top - top) < 2);
+      if (!line) lines.push(line = { top, left: r.left - o.left, right: 0, words: [], h: r.height });
+      line.words.push(word); line.right = r.right - o.left;
+    }
+    const tt = cs.textTransform, transform = s => tt === 'uppercase' ? s.toUpperCase() : tt === 'lowercase' ? s.toLowerCase() : s;
+    const ls = cs.letterSpacing !== 'normal' ? `; letter-spacing: ${cs.letterSpacing}` : '';
+    for (const l of lines) {
+      const str = transform(l.words.join(' '));
+      texts.push({ x: l.left, y: l.top, w: l.right - l.left, h: l.h, owner });
+      out.push(`<text x="${fmt(l.left)}" y="${fmt(l.top + asc)}" style="font-family: ${esc(cs.fontFamily)}; font-size: ${cs.fontSize}; font-weight: ${cs.fontWeight}${cs.fontStyle !== 'normal' ? `; font-style: ${cs.fontStyle}` : ''}${ls}; fill: ${fill}">${esc(str)}</text>`);
+    }
+  };
+  // clip-path: polygon(…) with %, px and calc(), resolved against the element's own box.
+  const len = (v, full) => {
+    const expr = v.replace(/^calc\((.*)\)$/, '$1').replace(/(-?[\d.]+)%/g, (_, n) => `(${n}*${full}/100)`).replace(/(-?[\d.]+)px/g, '($1)');
+    return /^[\d.\s+\-*/()]+$/.test(expr) ? Function(`return ${expr}`)() : 0;
+  };
+  const polygonOf = (clip, b) => {
+    const mm = /^polygon\((.*)\)$/.exec(clip || '');
+    if (!mm) return null;
+    return mm[1].split(/,(?![^(]*\))/).map(p => {
+      const [xs, ys] = p.trim().match(/calc\([^)]*\)|\S+/g);
+      return { x: b.x + len(xs, b.w), y: b.y + len(ys, b.h) };
+    });
+  };
+  const visit = (e, parentBox) => {
+    const cs = getComputedStyle(e);
+    if (cs.display === 'none' || cs.visibility === 'hidden') return;
+    const b = boxOf(e);
+    if (e.tagName === 'ICON') {
+      if (e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
+      boxes.push({ e, b, painted: true, parent: parentBox });
+      return;
+    }
+    const open = e.id ? out.push(`<g data-id="${esc(e.id)}" data-box="${[b.x, b.y, b.w, b.h].map(v => Math.round(v * 2) / 2).join(',')}">`) : 0;
+    const bg = paintOf(cs.backgroundColor);
+    const bw = ['Top', 'Right', 'Bottom', 'Left'].map(s => (cs[`border${s}Style`] === 'none' ? 0 : parseFloat(cs[`border${s}Width`]) || 0));
+    const bc = paintOf(cs.borderTopColor), dashed = cs.borderTopStyle === 'dashed' ? ' stroke-dasharray="5 4"' : cs.borderTopStyle === 'dotted' ? ' stroke-dasharray="1.5 3"' : '';
+    const poly = polygonOf(cs.clipPath, b);
+    const rr = cs.borderTopLeftRadius;
+    const rx = Math.min(rr.endsWith('%') ? Math.min(b.w, b.h) * parseFloat(rr) / 100 : parseFloat(rr) || 0, b.w / 2, b.h / 2);
+    const uniform = bw.every(w => w === bw[0]) && bw[0] > 0;
+    let me = null;
+    if (bg || uniform || bw.some(Boolean) || poly) {
+      const stroke = uniform ? ` style="fill: ${bg || 'none'}; stroke: ${bc}" stroke-width="${bw[0]}"${dashed}` : ` style="fill: ${bg || 'none'}"`;
+      if (poly) out.push(`<polygon points="${poly.map(p => `${fmt(p.x)},${fmt(p.y)}`).join(' ')}"${stroke}></polygon>`);
+      else if (uniform) { const h = bw[0] / 2; out.push(`<rect x="${fmt(b.x + h)}" y="${fmt(b.y + h)}" width="${fmt(b.w - bw[0])}" height="${fmt(b.h - bw[0])}" rx="${fmt(Math.max(0, rx - h))}"${stroke}></rect>`); }
+      else if (bg) out.push(`<rect x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" rx="${fmt(rx)}"${stroke}></rect>`);
+      if (!uniform && !poly) {
+        const sides = [[b.x, b.y, b.x + b.w, b.y], [b.x + b.w, b.y, b.x + b.w, b.y + b.h], [b.x, b.y + b.h, b.x + b.w, b.y + b.h], [b.x, b.y, b.x, b.y + b.h]];
+        bw.forEach((w, i) => {
+          if (!w) return;
+          const side = ['Top', 'Right', 'Bottom', 'Left'][i], c = paintOf(cs[`border${side}Color`]) || 'var(--ink)', st = cs[`border${side}Style`];
+          const [x1, y1, x2, y2] = sides[i], dx = i === 1 ? -w / 2 : i === 3 ? w / 2 : 0, dy = i === 0 ? w / 2 : i === 2 ? -w / 2 : 0;
+          out.push(`<line x1="${fmt(x1 + dx)}" y1="${fmt(y1 + dy)}" x2="${fmt(x2 + dx)}" y2="${fmt(y2 + dy)}" style="stroke: ${c}" stroke-width="${w}"${st === 'dashed' ? ' stroke-dasharray="5 4"' : st === 'dotted' ? ' stroke-dasharray="1.5 3"' : ''}></line>`);
+        });
+      }
+      me = { e, b, painted: true, parent: parentBox, bg, round: !!poly && poly.length === 4 || (rx >= Math.min(b.w, b.h) / 2 - 0.5 && Math.abs(b.w - b.h) < 2), plain: !bg && !bw.some(Boolean) && !poly };
+      boxes.push(me);
+    } else if (e.id) { me = { e, b, painted: false, parent: parentBox }; boxes.push(me); }
+    if (cs.display === 'list-item' && cs.listStyleType === 'disc') {
+      const first = e.firstChild && document.createRange();
+      if (first) {
+        first.selectNodeContents(e);
+        const r = first.getClientRects()[0];
+        if (r) { const fs = parseFloat(cs.fontSize); out.push(`<circle cx="${fmt(r.left - o.left - fs * 0.7)}" cy="${fmt(r.top - o.top + r.height * 0.55)}" r="${fmt(fs * 0.17)}" style="fill: ${paintOf(cs.color) || 'var(--ink)'}"></circle>`); }
+      }
+    }
+    for (const c of e.childNodes) {
+      if (c.nodeType === 3) textOf(c, e);
+      else if (c.nodeType === 1 && c.tagName !== 'STYLE' && c.tagName !== 'SCRIPT') visit(c, me || parentBox);
+    }
+    if (open) out.push('</g>');
+  };
+  for (const c of root.childNodes) {
+    if (c.nodeType === 3) textOf(c, root);
+    else if (c.nodeType === 1 && c.tagName !== 'STYLE') visit(c, null);
+  }
+
+  // ---------- connectors: route.js on the page's boxes ----------
+  const W = Math.ceil(Math.max(root.scrollWidth, ...boxes.map(x => x.b.x + x.b.w + S.pad), ...texts.map(t => t.x + t.w + S.pad)));
+  const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), 2 * S.pad));
+  const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H);
+  if (opts.debug) window.__debug = { log: globalThis.__routeLog, hard: globalThis.__routeHard, routes: routes.map(r => ({ from: r.edge.from, to: r.edge.to, points: r.points.map(p => [Math.round(p.x), Math.round(p.y)]) })) };
+
+  // ---------- assemble ----------
+  const markers = new Set(), lineOut = [], labelOut = [], drawOut = [];
+  for (const rt of routes) {
+    const e = rt.edge, tone = paintOf(toneOf(e.color)) || (e.accent ? 'var(--woad)' : 'var(--ink)');
+    const mk = markerId(id, tone, markers);
+    lineOut.push(`<g data-edge="${esc(e.key)}"><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.accent ? 2 : S.edge.width}"${e.dashed ? ' stroke-dasharray="5 4"' : ''}${!e.line ? ` marker-end="url(#${mk})"` : ''}${e.both ? ` marker-start="url(#${mk})"` : ''}></path></g>`);
+    if (rt.label) {
+      const halo = under(boxes, rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) || 'var(--bg)';
+      labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
+    }
+  }
+  for (const d of drawings) {
+    const o2 = d.o, color = paintOf(toneOf(o2.color || o2.tone)) || 'var(--ink)';
+    if (d.kind === 'path') {
+      const mk = o2.arrow ? markerId(id, color, markers) : null;
+      drawOut.push(`<path d="${d.d}" style="fill: ${paintOf(toneOf(o2.fill)) || 'none'}; stroke: ${color}" stroke-width="${o2.width || S.edge.width}"${o2.dashed ? ' stroke-dasharray="5 4"' : ''}${mk ? ` marker-end="url(#${mk})"` : ''}${mk && o2.both ? ` marker-start="url(#${mk})"` : ''}></path>`);
+      // arrow and curve labels: beside the middle of a vertical line, above a horizontal one.
+      if (o2.label && d.via) {
+        const [p, q] = d.ends, upright = Math.abs(q.x - p.x) < Math.abs(q.y - p.y), x = d.via.x + (upright ? 7 : 0), y = d.via.y - (upright ? 0 : 9);
+        const halo = under(boxes, x, y) || 'var(--bg)';
+        labelOut.push(`<text class="${T.edge}" x="${fmt(x)}" y="${fmt(y + 4)}" text-anchor="${upright ? 'start' : 'middle'}" style="paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(o2.label)}</text>`);
+      }
+    } else if (d.kind === 'gate') {
+      const s = (o2.size || 30) / 2, { x, y } = d.p, fill = paintOf(toneOf(o2.fill || o2.tone || 'rust')) || 'var(--rust)';
+      drawOut.push(`<polygon points="${fmt(x)},${fmt(y - s)} ${fmt(x + s)},${fmt(y)} ${fmt(x)},${fmt(y + s)} ${fmt(x - s)},${fmt(y)}" style="fill: ${fill}; stroke: var(--card)" stroke-width="2"></polygon>`);
+      if (d.label) drawOut.push(`<text x="${fmt(x)}" y="${fmt(y + 4)}" text-anchor="middle" style="font: 700 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--card)">${esc(d.label)}</text>`);
+    } else if (d.kind === 'text') {
+      const size = o2.size || 12, anchor = o2.anchor || 'middle';
+      drawOut.push(`<text x="${fmt(d.p.x)}" y="${fmt(d.p.y + size * 0.35)}" text-anchor="${anchor}" style="font: ${o2.italic ? 'italic ' : ''}${o2.weight || 400} ${size}px Inter, 'Segoe UI', system-ui, sans-serif; fill: ${color}">${esc(d.str)}</text>`);
+    } else if (d.kind === 'icon') {
+      const s = o2.size || 24;
+      drawOut.push(`<use href="#${d.sym}" x="${fmt(d.p.x - s / 2)}" y="${fmt(d.p.y - s / 2)}" width="${s}" height="${s}"></use>`);
+    } else if (d.kind === 'shape') {
+      const w = o2.w || o2.size || 24, h = o2.h || o2.size || w, { x, y } = d.p, fill = paintOf(toneOf(o2.fill)) || 'none', st = `style="fill: ${fill}; stroke: ${paintOf(toneOf(o2.stroke)) || color}" stroke-width="${o2.width || 1.5}"${o2.dashed ? ' stroke-dasharray="5 4"' : ''}`;
+      if (d.shape === 'circle') drawOut.push(`<ellipse cx="${fmt(x)}" cy="${fmt(y)}" rx="${fmt(w / 2)}" ry="${fmt(h / 2)}" ${st}></ellipse>`);
+      else if (d.shape === 'diamond') drawOut.push(`<polygon points="${fmt(x)},${fmt(y - h / 2)} ${fmt(x + w / 2)},${fmt(y)} ${fmt(x)},${fmt(y + h / 2)} ${fmt(x - w / 2)},${fmt(y)}" ${st}></polygon>`);
+      else drawOut.push(`<rect x="${fmt(x - w / 2)}" y="${fmt(y - h / 2)}" width="${fmt(w)}" height="${fmt(h)}" rx="${o2.r || 6}" ${st}></rect>`);
+    }
+  }
+  check(texts, problems);
+  const defs = [...[...markers].map(k => { const [mid, color] = k.split('|'); return `<marker id="${mid}" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: ${color}"></path></marker>`; }), ...symbols.values()];
+  const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
+  const style = opts.standalone ? `<style>${opts.css}</style>\n` : '';
+  const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" class="graphally"${theme}${opts.source ? ` data-source="${esc(opts.source)}"` : ''} viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">\n${style}<defs>${defs.join('\n')}</defs>\n<g>\n${out.join('\n')}\n${lineOut.join('\n')}\n${drawOut.join('\n')}\n${labelOut.join('\n')}\n</g>\n</svg>`;
+  return { svg, width: W, height: H, problems, stats: { nodes: boxes.filter(x => x.e.id).length, groups: 0, edges: routes.length, crossings: crossings(routes) }, snapshot: null };
+}
+
+// One marker per colour: "<id>-m<n>|<colour>" keys keep the colour for the defs.
+function markerId(id, color, markers) {
+  const existing = [...markers].find(k => k.endsWith(`|${color}`));
+  if (existing) return existing.split('|')[0];
+  const mid = `${id}-m${markers.size}`;
+  markers.add(`${mid}|${color}`);
+  return mid;
+}
+const toneOf = v => (v && TOKENS.includes(v) ? `var(--${v})` : v);
+
+const arcPoint = (c, r, deg) => ({ x: c.x + r * Math.cos(deg * Math.PI / 180), y: c.y + r * Math.sin(deg * Math.PI / 180) });
+
+function pathBuilder(start, drawings) {
+  const d = [`M${fmt(start.x)},${fmt(start.y)}`], item = { kind: 'path', d: '', o: {} };
+  drawings.push(item);
+  const sync = () => { item.d = d.join(' '); return api; };
+  const api = {
+    lineTo: p => { d.push(`L${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    quadraticCurveTo: (c, p) => { d.push(`Q${fmt(c.x)},${fmt(c.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    bezierCurveTo: (c1, c2, p) => { d.push(`C${fmt(c1.x)},${fmt(c1.y)} ${fmt(c2.x)},${fmt(c2.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    // arc(centre, radius, startDeg, endDeg): degrees clockwise from the right, as in canvas.
+    arc: (c, r, a0, a1) => {
+      const p = arcPoint(c, r, a0), q = arcPoint(c, r, a1), sweep = a1 > a0 ? 1 : 0, large = Math.abs(a1 - a0) > 180 ? 1 : 0;
+      d.push(`L${fmt(p.x)},${fmt(p.y)} A${fmt(r)},${fmt(r)} 0 ${large} ${sweep} ${fmt(q.x)},${fmt(q.y)}`);
+      return sync();
+    },
+    closePath: () => { d.push('Z'); return sync(); },
+    style: o => { Object.assign(item.o, o); return api; },
+  };
+  sync();
+  return api;
+}
+
+// The colours of the theme tokens, so a box painted var(--wash) stays var(--wash) in the SVG
+// (and follows the dark theme).
+function tokenColors(root) {
+  const probe = document.createElement('div');
+  root.appendChild(probe);
+  const map = new Map();
+  for (const t of TOKENS) { probe.style.color = `var(--${t})`; const c = getComputedStyle(probe).color; if (!map.has(c)) map.set(c, `var(--${t})`); }
+  probe.remove();
+  return map;
+}
+
+// The innermost painted box under a point: its colour is the halo behind a label there.
+function under(boxes, x, y) {
+  let best = null;
+  for (const b of boxes) if (b.bg && x >= b.b.x && x <= b.b.x + b.b.w && y >= b.b.y && y <= b.b.y + b.b.h && (!best || b.b.w * b.b.h < best.b.w * best.b.h)) best = b;
+  return best?.bg;
+}
+
+// The page's boxes become route.js nodes and groups: a box that holds other boxes is a group
+// (a line may cross into it), the rest are nodes (lines go round them). Text that sits in no
+// node is an obstacle too, so lines do not run through headings or free text.
+function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
+  if (!calls.length) return [];
+  const keyOf = new Map(), model = { nodes: new Map(), groups: new Map(), edges: [], problems, previous: null, attrs: {} };
+  const rootG = { id: '__root', kind: 'group', style: 'root', children: [], parent: null, depth: -1 };
+  model.groups.set('__root', rootG);
+  // The author set the gaps; a 6px clearance lets lines use any gap wider than 12px.
+  const geo = { nodes: new Map(), groups: new Map(), extraObstacles: [], title: null, legend: null, width: W, height: H, nodePad: 6 };
+  // The script's straight lines (gate lines, arrows) are taken: connections avoid running on them.
+  geo.taken = [];
+  for (const d of drawings) {
+    if (d.kind !== 'path') continue;
+    let prev = null;
+    for (const [, cmd, x, y] of d.d.matchAll(/([MLQCAZ])\s*(?:(-?[\d.]+),(-?[\d.]+))?/g)) {
+      const p = cmd === 'M' || cmd === 'L' ? { x: +x, y: +y } : null;   // only M and L end where their first pair says
+      if (p && cmd === 'L' && prev) {
+        if (Math.abs(p.x - prev.x) < 0.5) geo.taken.push({ x1: prev.x, y1: prev.y, x2: prev.x, y2: p.y });
+        else if (Math.abs(p.y - prev.y) < 0.5) geo.taken.push({ x1: prev.x, y1: prev.y, x2: p.x, y2: prev.y });
+      }
+      prev = p;
+    }
+  }
+  const hasChild = new Set(boxes.map(b => b.parent).filter(Boolean));
+  let n = 0;
+  boxes.forEach(b => keyOf.set(b, b.e.id || `@${n++}`));
+  const objOf = new Map();
+  // Whole pixels, as snapToPixels in index.js: the router's grid is rounded, and a fractional
+  // box edge (a 1fr column) rounds inside its own box and blocks every port on that side.
+  const px = r => { const x = Math.round(r.x), y = Math.round(r.y); return { x, y, w: Math.round(r.x + r.w) - x, h: Math.round(r.y + r.h) - y }; };
+  // A full-width strip without an id (a section's header bar, a divider) is decoration: lines
+  // may cross it; its text still blocks them.
+  const strip = b => !b.e.id && !hasChild.has(b) && b.parent && Math.abs(b.b.w - b.parent.b.w) <= 6 && b.b.h <= 48;
+  const ensure = b => {
+    if (!b) return rootG;
+    if (objOf.has(b)) return objOf.get(b);
+    if (strip(b)) { const p = ensure(b.parent); objOf.set(b, p); return p; }
+    const parent = ensure(b.parent), key = keyOf.get(b);
+    const isGroup = hasChild.has(b);
+    const obj = isGroup ? { id: key, kind: 'group', style: b.plain || !b.painted ? 'plain' : 'box', children: [], parent, depth: parent.depth + 1 } : { id: key, kind: 'node', parent, shape: '' };
+    objOf.set(b, obj);
+    (isGroup ? model.groups : model.nodes).set(key, obj);
+    parent.children?.push(obj);
+    (isGroup ? geo.groups : geo.nodes).set(key, isGroup ? { ...px(b.b), group: obj } : { ...px(b.b), node: obj, round: b.round });
+    return obj;
+  };
+  boxes.forEach(ensure);
+  const inNode = t => [...geo.nodes.values()].some(r => t.x >= r.x - 1 && t.y >= r.y - 1 && t.x + t.w <= r.x + r.w + 1 && t.y + t.h <= r.y + r.h + 1);
+  texts.forEach((t, i) => { if (!inNode(t)) geo.extraObstacles.push({ id: `#t${i}`, ...px(t) }); });
+  const boxFor = e => boxes.find(b => b.e === e);
+  const seen = new Map();
+  calls.forEach((c, i) => {
+    const fb = boxFor(c.from), tb = boxFor(c.to);
+    if (!fb || !tb) { problems.push({ rule: 'unknown-id', id: (!fb ? c.from : c.to).id || '(element without id)' }); return; }
+    const from = keyOf.get(fb), to = keyOf.get(tb), base = c.o.id || `${from}->${to}`, k = (seen.get(base) || 0) + 1;
+    seen.set(base, k);
+    const override = Object.fromEntries(['out', 'in'].filter(s => SIDES.includes(c.o[s])).map(s => [s, SIDES.indexOf(c.o[s])]));
+    model.edges.push({ id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', dashed: !!(c.o.dashed || c.o.async), both: !!c.o.both,
+      line: c.o.arrow === false, accent: !!c.o.accent, color: c.o.color, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) });
+  });
+  return routeEdges(model, geo, m);
+}
+
+function check(texts, problems) {
+  for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++) {
+    const a = texts[i], b = texts[j];
+    if (a.owner === b.owner) continue;
+    const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+    if (ox > 2 && oy > 2) problems.push({ rule: 'text-overlap', a: a.owner.id || a.owner.tagName.toLowerCase(), b: b.owner.id || b.owner.tagName.toLowerCase(), hint: 'give the text more room, or move one of them' });
+  }
+}
+
+function crossings(routes) {
+  const segs = routes.map(r => r.points.slice(1).map((q, i) => [r.points[i], q]));
+  let n = 0;
+  for (let i = 0; i < segs.length; i++) for (let j = i + 1; j < segs.length; j++)
+    for (const [a, b] of segs[i]) for (const [c, d] of segs[j]) {
+      const h1 = Math.abs(a.y - b.y) < 0.5, h2 = Math.abs(c.y - d.y) < 0.5;
+      if (h1 === h2) continue;
+      const [hs, vs] = h1 ? [[a, b], [c, d]] : [[c, d], [a, b]];
+      const x = vs[0].x, y = hs[0].y;
+      if (x > Math.min(hs[0].x, hs[1].x) + 1 && x < Math.max(hs[0].x, hs[1].x) - 1 && y > Math.min(vs[0].y, vs[1].y) + 1 && y < Math.max(vs[0].y, vs[1].y) - 1) n++;
+    }
+  return n;
+}
+
+function closest(s, list) {
+  const d = (a, b) => {
+    const mm = Array.from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) { let prev = mm[0]; mm[0] = i; for (let j = 1; j <= b.length; j++) { const t = mm[j]; mm[j] = Math.min(mm[j] + 1, mm[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = t; } }
+    return mm[b.length];
+  };
+  const best = list.map(x => [x, d(s, x)]).sort((a, b) => a[1] - b[1])[0];
+  return best && best[1] <= Math.max(2, s.length / 3) ? best[0] : undefined;
+}

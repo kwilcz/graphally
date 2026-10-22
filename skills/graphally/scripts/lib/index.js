@@ -8,6 +8,7 @@ import { layoutLanes } from './layout/lanes.js';
 import { layoutSequence } from './layout/sequence.js';
 import { layoutGantt } from './layout/gantt.js';
 import { routeEdges } from './route.js';
+import { compilePage } from './page.js';
 import { renderSvg, edgeKey } from './render.js';
 import { check } from './check.js';
 import { S } from './style.js';
@@ -17,6 +18,11 @@ let counter = 0;
 
 export function compile(el, opts = {}) {
   if (opts.debug) globalThis.__routeDebug = true;
+  // <diagram layout=html>: plain HTML and CSS, laid out by the browser (page.js).
+  if ((el.getAttribute('layout') || '').toLowerCase() === 'html') {
+    const m = createMeasurer();
+    try { return compilePage(el, opts, m); } finally { m.dispose(); }
+  }
   const model = parseDiagram(el);
   model.previous = opts.previous || null;
   const allEdges = model.edges;   // before badgeSharedLinks drops some: their overrides still belong in the snapshot

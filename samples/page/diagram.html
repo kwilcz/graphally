@@ -1,0 +1,68 @@
+<diagram layout=html width=1240>
+<style>
+  .fig { display: grid; grid-template-columns: 150px repeat(4, 1fr); gap: 12px 28px }
+  h1 { margin-bottom: 4px } .lede { color: var(--muted); margin-bottom: 20px }
+  .lab { background: var(--wash); border-radius: 8px; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; font-weight: 600 }
+  .lab span { font-weight: 400; font-size: 11.5px; color: var(--muted) }
+  .phase { height: 40px; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 14px; margin: 0 -8px }
+  .phase:first-of-type { margin-left: 0 }
+  .ms { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; font-size: 11.5px; color: var(--muted) }
+  .ms div { grid-column: span 1; text-align: right; margin-right: -64px; padding-right: 0 }
+  .band { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; padding: 10px; margin: 0 -10px; border-radius: 10px }
+  .band .card { border: 0 }
+  .band .card b { display: block; margin-bottom: 4px }
+  .plat { background: var(--lane-a) } .apps { background: var(--lane-b) } .sec { background: var(--lane-d) }
+</style>
+<h1>Who does what in the move to AKS</h1>
+<p class="lede">Four phases, three teams. The platform is built once; services move in waves, each tested before it goes live.</p>
+<div class="fig">
+  <div class="lab">Phase<span>and milestone</span></div>
+  <div class="phase chevron" style="background: var(--woad)" id=p1>Plan</div>
+  <div class="phase chevron" style="background: #4f6fd6" id=p2>Build the platform</div>
+  <div class="phase chevron" style="background: #12807a" id=p3>Migrate in waves</div>
+  <div class="phase chevron" style="background: var(--ink)" id=p4>Operate</div>
+
+  <div class="lab">Platform team<span>AKS, network, GitOps</span></div>
+  <div class="band plat">
+    <div class="card" id=pl1><b>Size it</b>Clusters, node pools and the hub-and-spoke network</div>
+    <div class="card" id=pl2><b>Build it</b>AKS, ingress, GitOps and the delivery pipelines</div>
+    <div class="card" id=pl3><b>Run each wave</b>Namespaces, quotas and on-call during cut-over</div>
+    <div class="card" id=pl4><b>Keep it healthy</b>Patch, scale and keep costs down</div>
+  </div>
+
+  <div class="lab">Application teams<span>one per service</span></div>
+  <div class="band apps">
+    <div class="card" id=ap1><b>Choose the order</b>Pick the services and the waves they move in</div>
+    <div class="card" id=ap2><b>Pilot</b>Containerise the tracking service</div>
+    <div class="card" id=ap3><b>Move wave by wave</b>Deploy, cut over traffic, retire the old hosts</div>
+    <div class="card" id=ap4><b>Own the service</b>Alerts, releases and capacity</div>
+  </div>
+
+  <div class="lab">Security<span>controls and tests</span></div>
+  <div class="band sec">
+    <div class="card" id=se1><b>Agree the controls</b>Policies, identities and network rules</div>
+    <div class="card" id=se2><b>Review the platform</b>Gate for M2</div>
+    <div class="card" id=se3><b>Test each wave</b>Scan, penetration-test, sign off</div>
+    <div class="card" id=se4><b>Review access</b>Every quarter</div>
+  </div>
+</div>
+<script>
+  const phases = all('.phase'), cards = all('.band .card')
+  const bottom = el('se1').bottom.y
+  // Milestones on the phase boundaries, with a dashed line down through the teams
+  ;['M1', 'M2', 'M3'].forEach((m, i) => {
+    const x = mid(phases[i].right, phases[i + 1].left).x
+    draw.moveTo(pt(x, phases[i].bottom.y)).lineTo(pt(x, bottom + 6)).style({ color: 'rust', dashed: true, width: 1.2 })
+    gate(pt(x, phases[i].center.y), m)
+  })
+  // Hand-offs: straight down the column where nothing is in the way, routed where something is
+  arrow(el('pl2').bottom, el('ap2').top, { label: 'cluster and pipelines', color: 'woad', width: 2 })
+  arrow(el('ap3').bottom, el('se3').top, { label: 'each wave', both: true, color: 'rust', width: 2 })
+  connect('se2', 'pl2', { label: 'findings', dashed: true })
+  // Waves repeat until every service has moved
+  const c = el('ap3').topRight.move(-16, 16)
+  shape('circle', c, { size: 22, fill: 'card', stroke: 'woad' })
+  draw.arc(c, 6, 200, 320).style({ color: 'woad', arrow: true, width: 1.6 })
+  draw.arc(c, 6, 20, 140).style({ color: 'woad', arrow: true, width: 1.6 })
+</script>
+</diagram>

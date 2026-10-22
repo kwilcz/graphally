@@ -78,6 +78,15 @@ Each kind of diagram uses the layout that suits it:
 - **Plans** (`layout/gantt.js`): a time axis with day, week or month ticks, one row per
   task, and dependency arrows.
 
+- **Figures in HTML** (`page.js`, `<diagram layout=html>`): the author writes the figure as
+  a web page and the browser lays it out, so a grid of phases and roles needs no layout
+  algorithm of its own. graphally then reads the page back as SVG: backgrounds, borders,
+  `clip-path` polygons, text line by line (each line's words measured in place, with the
+  font's ascent for the baseline), icons. A `<script>` runs after layout with the geometry
+  of every element (`el('id').right`, `mid(a, b)`) and draws by name; its `connect` calls
+  go to the router below, with the page's boxes as obstacles and the script's own straight
+  lines counted as taken.
+
 ## Routing and labels
 
 Edges are found by A* search over a sparse grid built from the boxes' edges and the
