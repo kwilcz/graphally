@@ -130,8 +130,8 @@ function build(root, el, id, scripts, opts, m, problems) {
     mid: (a, b) => { const [p, q] = [point(a), point(b)]; return pt((p.x + q.x) / 2, (p.y + q.y) / 2); },
     lerp: (a, b, t) => { const [p, q] = [point(a), point(b)]; return pt(p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t); },
     connect(a, b, o2 = {}) {
-      const stmt = edges.length + 1;
-      for (const f of find(a)) for (const t of find(b)) edges.push({ from: f.el, to: t.el, o: o2, stmt });
+      const stmt = edges.length + 1, via = [].concat(o2.via || []).map(point);
+      for (const f of find(a)) for (const t of find(b)) edges.push({ from: f.el, to: t.el, o: o2, stmt, via });
     },
     arrow(a, b, o2 = {}) { const [p, q] = ends(a, b); drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} L${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: api.mid(p, q) }); },
     curve(a, b, o2 = {}) {
@@ -474,10 +474,40 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
     const from = keyOf.get(fb), to = keyOf.get(tb), base = c.o.id || `${from}->${to}`, k = (seen.get(base) || 0) + 1;
     seen.set(base, k);
     const override = Object.fromEntries(['out', 'in'].filter(s => SIDES.includes(c.o[s])).map(s => [s, SIDES.indexOf(c.o[s])]));
-    model.edges.push({ id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends: endsOf(c.o, true, problems),
-      accent: !!c.o.accent, color: c.o.color, width: c.o.width, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) });
+    const edge = { id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends: endsOf(c.o, true, problems),
+      accent: !!c.o.accent, color: c.o.color, width: c.o.width, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) };
+    if (!c.via.length) { model.edges.push(edge); return; }
+    // via: each waypoint is a point the router passes through (it blocks nothing), and the line
+    // is routed leg by leg; the legs are joined again below. The label goes on the middle leg.
+    const stops = [from, ...c.via.map((p, j) => {
+      const vid = `${edge.key}~${j + 1}`, obj = { id: vid, kind: 'node', parent: rootG, shape: '' };
+      model.nodes.set(vid, obj);
+      geo.nodes.set(vid, { x: Math.round(p.x), y: Math.round(p.y), w: 0, h: 0, node: obj, round: true, virtual: true });
+      return vid;
+    }), to], n = stops.length - 1;
+    for (let j = 0; j < n; j++) {
+      const ov = { ...(j === 0 && edge.override?.out != null ? { out: edge.override.out } : {}), ...(j === n - 1 && edge.override?.in != null ? { in: edge.override.in } : {}) };
+      const { override, ...rest } = edge;
+      model.edges.push({ ...rest, id: `${edge.id}~${j}`, key: `${edge.key}~${j}`, from: stops[j], to: stops[j + 1], label: j === n >> 1 ? edge.label : '',
+        stmt: 0, leg: { edge, i: j, n }, ...(Object.keys(ov).length ? { override: ov } : {}) });
+    }
   });
-  return routeEdges(model, geo, m);
+  return joinLegs(routeEdges(model, geo, m));
+}
+
+// The legs of a line routed through waypoints, joined back into one route.
+function joinLegs(routes) {
+  const out = [], legs = new Map();
+  for (const rt of routes) {
+    const L = rt.edge.leg;
+    if (!L) { out.push(rt); continue; }
+    (legs.get(L.edge) || legs.set(L.edge, []).get(L.edge))[L.i] = rt;
+  }
+  for (const [edge, parts] of legs) {
+    if (parts.filter(Boolean).length !== parts.find(Boolean).edge.leg.n) continue;   // a leg failed: reported as unroutable
+    out.push({ edge, points: parts.flatMap((r, i) => (i ? r.points.slice(1) : r.points)), label: parts.find(r => r.label)?.label, labelCrowded: parts.some(r => r.labelCrowded) });
+  }
+  return out;
 }
 
 function check(texts, problems) {

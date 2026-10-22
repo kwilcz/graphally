@@ -21,7 +21,7 @@ export function routeEdges(model, geo, m) {
 
   // Hard obstacles: nodes, group titles, the title block, the legend.
   const hard = [];
-  for (const [id, r] of geo.nodes) hard.push({ id, x: r.x - P, y: r.y - P, w: r.w + 2 * P, h: r.h + 2 * P, node: true });
+  for (const [id, r] of geo.nodes) if (!r.virtual) hard.push({ id, x: r.x - P, y: r.y - P, w: r.w + 2 * P, h: r.h + 2 * P, node: true });
   for (const g of groupsList) if (g.head) hard.push({ id: `${g.id}#head`, x: g.head.x - 6, y: g.head.y - 3, w: g.head.w + 14, h: g.head.h + 6 });
   for (const o of geo.extraObstacles || []) hard.push({ ...pad(o, 4), id: o.id });
   if (geo.title) hard.push({ id: '#title', ...pad(geo.title, 6) });
@@ -116,7 +116,7 @@ export function routeEdges(model, geo, m) {
   edges.forEach((E, k) => {
     const p = first[k];
     if (!p) return;
-    for (const [which, side, other] of [['a', p.startSide, p.points.at(-1)], ['b', p.goalSide, p.points[0]]]) {
+    for (const [which, side, other, otherSide] of [['a', p.startSide, p.points.at(-1), p.goalSide], ['b', p.goalSide, p.points[0], p.startSide]]) {
       const id = which === 'a' ? E.e.from : E.e.to;
       const key = `${id}|${side}`;
       // Order edges along a side by where they head: walk away from the port until the path
@@ -125,7 +125,7 @@ export function routeEdges(model, geo, m) {
       const axis = side % 2 === 0 ? 'y' : 'x', base = pts[0][axis];
       const away = pts.find(q => Math.abs(q[axis] - base) > 1);
       const sortBy = away ? away[axis] : base;
-      (ends.get(key) || ends.set(key, []).get(key)).push({ k, which, side, coord: which === 'a' ? p.startCoord : p.goalCoord, sortBy, other });
+      (ends.get(key) || ends.set(key, []).get(key)).push({ k, which, side, coord: which === 'a' ? p.startCoord : p.goalCoord, sortBy, other, facing: (side + 2) % 4 === otherSide });
     }
   });
   const fixed = edges.map(() => ({}));
@@ -149,6 +149,13 @@ export function routeEdges(model, geo, m) {
     const free = [];
     for (let c = origin + 6; c <= origin + along - 6; c += 2) if (sideFree(id, side, c)) free.push(c);
     const lo = free.length ? free[0] : origin + 6, hi = free.length ? free.at(-1) : origin + along - 6;
+    // Lines from facing sides keep the other end's coordinate when those are free and far
+    // enough apart: each runs straight in, instead of bending into an evenly spaced slot.
+    const want = list.map(it => it.other[side % 2 === 0 ? 'y' : 'x']);
+    if (list.every(it => it.facing) && want.every((c, i) => c >= lo && c <= hi && (i === 0 || c - want[i - 1] >= S.edge.portGap))) {
+      list.forEach((it, i) => { fixed[it.k][it.which] = { side, coord: want[i] }; });
+      continue;
+    }
     const span = hi - lo, centre = (lo + hi) / 2;
     const step = Math.min(S.edge.portGap * 1.6, list.length > 1 ? span / (list.length - 1) : 0);
     const startAt = centre - (step * (list.length - 1)) / 2;
