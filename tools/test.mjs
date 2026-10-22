@@ -13,8 +13,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
 import { applyEdits, readLines } from '../skills/graphally/scripts/lib/edits.mjs';
-import { launch, openPage } from '../skills/graphally/scripts/lib/browser.mjs';
-import { startServer } from '../.github/extensions/graphally/server.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cli = path.join(root, 'skills/graphally/scripts/graphally.mjs');
@@ -341,33 +339,6 @@ await test('page-data', () => {
   // a broken entry is reported, the rest still renders
   const bad = render(write(d, DATA.replace('["queue", "worker"],', '["queue"],')), out);
   check(bad.code === 1 && /bad-line: line=4 message=needs "from" and "to"/.test(bad.text), `expected bad-line: ${tail(bad.text)}`);
-});
-
-// The Copilot canvas: its server and page in headless Chrome, edited with real mouse drags.
-await test('canvas', async () => {
-  const d = folder('canvas'), f = write(d, DATA), svgFile = path.join(d, 'diagram.svg');
-  const srv = await startServer(), browser = await launch();
-  try {
-    const page = await openPage(browser, { width: 1100, height: 700 }), wait = ms => new Promise(r => setTimeout(r, ms));
-    const saved = async since => { for (const end = Date.now() + 15000; Date.now() < end; await wait(50)) if (fs.existsSync(svgFile) && fs.statSync(svgFile).mtimeMs > since) return; throw new Error('the canvas did not render'); };
-    const center = sel => page.evaluate(`(() => { const r = document.querySelector('${sel}').getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })()`);
-    const mouse = (type, [x, y], modifiers = 0) => page.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', buttons: type === 'mouseReleased' ? 0 : 1, clickCount: 1, modifiers });
-    const drag = async (a, b, modifiers = 0) => { await mouse('mousePressed', a, modifiers); for (let i = 1; i <= 6; i++) await mouse('mouseMoved', [a[0] + (b[0] - a[0]) * i / 6, a[1] + (b[1] - a[1]) * i / 6], modifiers); await mouse('mouseReleased', b, modifiers); };
-    let t = Date.now();
-    await page.goto(srv.open('t', f));
-    await saved(t - 1);
-    const sides0 = sidesOf(fs.readFileSync(svgFile, 'utf8'));
-    const db = await center('g[data-id="db"]');
-    t = Date.now(); await drag(db, [db[0] + 40, db[1] + 30]); await saved(t);
-    check(/id=db nudge="40,30"/.test(fs.readFileSync(f, 'utf8')), 'dragging db did not write nudge="40,30"');
-    const sides1 = sidesOf(fs.readFileSync(svgFile, 'utf8')), flipped = Object.keys(sides0).filter(k => !k.includes('db') && sides0[k] !== sides1[k]);
-    check(!flipped.length, `lines changed sides when db moved: ${flipped.join(', ')}`);
-    t = Date.now(); await drag(await center('g[data-id="web"]'), await center('g[data-id="worker"]'), 1); await saved(t);
-    check(/"from": "web", "to": "worker"/.test(fs.readFileSync(f, 'utf8')), 'Alt-drag did not add a connection');
-    const r = await srv.edit('t', [{ op: 'unline', key: 'queue->worker' }]);
-    check(r.applied === 1 && Array.isArray(r.problems) && !/\["queue", "worker"\]/.test(fs.readFileSync(f, 'utf8')), `agent edit: ${JSON.stringify(r)}`);
-    check(!page.errors.length, `page errors: ${page.errors.join(' | ')}`);
-  } finally { await browser.close(); srv.stop(); }
 });
 
 if (table.length) {

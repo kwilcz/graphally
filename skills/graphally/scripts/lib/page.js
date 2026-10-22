@@ -63,7 +63,7 @@ export function compilePage(el, opts, m) {
     if (c.nodeType === 1 && c.tagName === 'SCRIPT') ((c.getAttribute('type') || '').toLowerCase() === 'application/json' ? lines : scripts).push(c.textContent);
     else root.appendChild(c.cloneNode(true));
   }
-  // nudge="dx,dy" moves an element from where the layout put it (a canvas drag writes it).
+  // nudge="dx,dy" moves an element from where the layout put it (the edit command writes it).
   for (const e of root.querySelectorAll('[nudge]')) {
     const v = e.getAttribute('nudge').split(',').map(Number);
     if (v.length !== 2 || v.some(n => !Number.isFinite(n))) { problems.push({ rule: 'bad-attribute', attr: 'nudge', value: e.getAttribute('nudge'), ...(e.id ? { id: e.id } : {}), hint: 'two numbers, as in nudge="20,-10"' }); continue; }
