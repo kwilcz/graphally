@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="layouts.html" viewBox="0 0 1248 522" width="1248" height="522" role="img" aria-label="One engine, five layouts">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

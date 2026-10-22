@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="render-timeline.html" viewBox="0 0 1012 362" width="1012" height="362" role="img" aria-label="Where a render's time goes. Browser: Start server and browser, Open a page; Engine: Load, measure, lay out, route, render; Output: PNG preview, Close the browser. Connections: Start server and browser to Open a page; Open a page to Load, measure, lay out, route, render; Load, measure, lay out, route, render to PNG preview; PNG preview to Close the browser">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

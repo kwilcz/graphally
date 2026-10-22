@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Processes: BPMN-style swimlanes and plain flowcharts.
 //
 // Columns come from the order of the flow (longest path over the links, with cycles broken

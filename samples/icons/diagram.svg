@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 713 358" width="713" height="358" role="img" aria-label="Microsoft Entra application proxy. Azure: Microsoft Entra ID, Application Proxy; On-premises network: App Proxy connector, Internal web apps, Active Directory. Connections: Remote users to Microsoft Entra ID (sign in first); Remote users to Application Proxy (HTTPS); Application Proxy to App Proxy connector (outbound connection); App Proxy connector to Internal web apps (HTTP); App Proxy connector to Active Directory (Kerberos SSO)">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

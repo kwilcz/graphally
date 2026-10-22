@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 916 1315" width="916" height="1315" role="img" aria-label="Fabrikam logistics platform. Users: Head office, Dispatchers; rg-fab-prod-hub: acrfabprod; GatewaySubnet: vgw-fab-prod; snet-agw: agw-fab-prod; snet-aks: aks-fab-prod; snet-db: psql-fab-prod; snet-pe: pe-fab-prod-sb; rg_workload_services: id-fab-prod-aks, sb-fab-prod, log-fab-prod, kv-fab-prod. Connections: Head office to vgw-fab-prod (site-to-site VPN); Dispatchers to agw-fab-prod (HTTPS); vnet-fab-prod-logistics to vnet-fab-prod-hub (peering); agw-fab-prod to aks-fab-prod (logistics API); aks-fab-prod to acrfabprod (AcrPull); aks-fab-prod to id-fab-prod-aks (identity); id-fab-prod-aks to kv-fab-prod (Secrets User); id-fab-prod-aks to sb-fab-prod (Data Owner); pe-fab-prod-sb to sb-fab-prod (private link); aks-fab-prod sends events to log-fab-prod (diagnostics)">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

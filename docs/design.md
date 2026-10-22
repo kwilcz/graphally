@@ -57,6 +57,15 @@ Most of a render's time is starting the browser and compiling the diagram:
 
 ![A render's stages on a time axis](diagrams/render-timeline.svg)
 
+The same engine also runs without the script. `tools/build-viewer.mjs` bundles it with the
+theme and an index of the icon packs (names and upstream files, no artwork) into
+`skills/graphally/viewer/graphally.js`, about 230 KB. A diagram file that loads it, from
+jsDelivr or a local copy, renders itself where it stands when a browser opens it, from disk
+too, since it is a classic script rather than a module. The viewer compiles each diagram
+twice when it draws icons: the first pass names them, the viewer fetches just those files
+from the draw.io repository and the aws-icons package, and the second pass draws them. It
+loads Inter from the inter-ui package, so the text measures as it does in a render.
+
 ## Layouts
 
 Each kind of diagram uses the layout that suits it:

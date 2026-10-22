@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1136 540" width="1136" height="540" role="img" aria-label="Logistics move to AKS. Network: Hub VNet and site-to-site VPN, Spoke VNets and peering; Platform: AKS cluster and ingress, PostgreSQL and Service Bus, Monitoring and alerts; Applications: Pilot: tracking service, Move remaining services, Go-live; Security review: External pen test. Connections: Hub VNet and site-to-site VPN to Spoke VNets and peering; Spoke VNets and peering to AKS cluster and ingress; AKS cluster and ingress to Pilot: tracking service; Pilot: tracking service to Move remaining services; Move remaining services to Go-live; PostgreSQL and Service Bus to Pilot: tracking service; AKS cluster and ingress to Monitoring and alerts; External pen test to Go-live">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

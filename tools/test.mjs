@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // node tools/test.mjs [--keep]
 // The regression and v2 suite. Renders every samples/*/diagram.html and docs/diagrams/*.html
 // through the CLI, then small diagrams written here: the layout each SVG carries, nudge, link sides,
@@ -8,11 +8,14 @@
 // end unless --keep, which prints its path. Exits 1 when a test fails.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
 import { applyEdits, readLines } from '../skills/graphally/scripts/lib/edits.mjs';
+import { launch, openPage } from '../skills/graphally/scripts/lib/browser.mjs';
+import { findPack } from '../skills/graphally/scripts/lib/iconpack.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cli = path.join(root, 'skills/graphally/scripts/graphally.mjs');
@@ -119,7 +122,7 @@ await test('samples', () => {
   const bad = [];
   for (const p of sources) {
     const out = folder(path.join('out', p.replace(/\.html$/, '').split(/[\\/]/).join('-')));
-    const r = render(path.join(root, p), out);
+    const r = render(path.join(root, p), out, ['--no-viewer']);
     renders.set(p, { ...r, summaries: summaries(r.text) });
     if (r.code !== 0) bad.push(`${p} exit ${r.code} (${tail(r.text)})`);
   }
@@ -208,7 +211,7 @@ await test('stability', () => {
 });
 
 // Page mode: a figure written as HTML and CSS, with a drawing script.
-const page = (body, script = '', attrs = 'width=700') => `<diagram layout=html ${attrs}>\n${body}\n<script>\n${script}\n</script>\n</diagram>\n`;
+const page = (body, script = '', attrs = 'width=700') => `<diagram layout=html ${attrs}>\n${body}\n<script type="graphally">\n${script}\n</script>\n</diagram>\n`;
 const svgOf = out => fs.readFileSync(path.join(out, 'diagram.svg'), 'utf8');
 // A routed line's path, and its corners (each bend is drawn as a Q curve).
 const edgePath = (svg, key) => { const m = svg.match(new RegExp(`<g data-edge="${key.replace(/>/g, '&gt;')}"[^>]*><path d="([^"]+)"`)); check(m, `no edge ${key}`); return m[1]; };
@@ -339,6 +342,53 @@ await test('page-data', () => {
   // a broken entry is reported, the rest still renders
   const bad = render(write(d, DATA.replace('["queue", "worker"],', '["queue"],')), out);
   check(bad.code === 1 && /bad-line: line=4 message=needs "from" and "to"/.test(bad.text), `expected bad-line: ${tail(bad.text)}`);
+});
+
+// The viewer: a diagram file opened from disk renders itself as the CLI renders it. A local
+// server stands in for the icon CDNs, serving each icon back from the downloaded packs.
+await test('viewer', async () => {
+  const d = folder('viewer'), skill = path.join(root, 'skills/graphally');
+  fs.copyFileSync(path.join(skill, 'viewer/graphally.js'), path.join(d, 'graphally.js'));
+  const packs = Object.fromEntries(['azure', 'aws'].map(v => [v, Object.values(JSON.parse(fs.readFileSync(findPack(skill, v), 'utf8')))]));
+  let fetched = 0;
+  const srv = http.createServer((req, res) => {
+    const [, vendor, ...rest] = decodeURIComponent(req.url).split('/'), file = rest.join('/');
+    const e = packs[vendor]?.find(x => `${x.folder}/${x.file}` === file);
+    res.writeHead(e ? 200 : 404, { 'access-control-allow-origin': '*', 'content-type': 'image/svg+xml' });
+    if (e) fetched++;
+    res.end(e ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${e.viewBox}">${e.body}</svg>` : '');
+  });
+  await new Promise(ok => srv.listen(0, '127.0.0.1', ok));
+  const base = `http://127.0.0.1:${srv.address().port}`;
+  const browser = await launch();
+  try {
+    for (const name of ['architecture', 'aws', 'page']) {
+      const src = fs.readFileSync(path.join(root, 'samples', name, 'diagram.html'), 'utf8').replace(/<script src="[^"]*graphally\.js"><\/script>\n?/, '');
+      const f = path.join(d, `${name}.html`), out = path.join(d, `out-${name}`);
+      fs.writeFileSync(f, `<!doctype html>\n<script>graphallyOptions = { azure: '${base}/azure/', aws: '${base}/aws/', font: '${base}/font/' }</script>\n<script src="graphally.js"></script>\n${src}`);
+      ok0(render(f, out, ['--recompute']));
+      const cli = readLayout(fs.readFileSync(path.join(out, `${name}.svg`), 'utf8'));
+      const page = await openPage(browser, { width: 2000, height: 1400 });
+      await page.goto(pathToFileURL(f).href);
+      await page.waitFor('document.documentElement.dataset.graphally === "ready"', 30000);
+      const svg = await page.evaluate(`document.querySelector('.graphally-view svg')?.outerHTML || ''`);
+      const shown = readLayout(svg), problems = await page.evaluate(`document.querySelector('.graphally-problems')?.textContent || ''`);
+      check(shown, `${name}: the viewer drew no diagram (${problems})`);
+      const moved = Object.keys(cli.nodes).filter(id => !shown.nodes[id] || cli.nodes[id].some((v, i) => Math.abs(v - shown.nodes[id][i]) > 0.5));
+      check(!moved.length, `${name}: the viewer placed ${moved.join(', ')} elsewhere than the render`);
+      check(!problems, `${name}: the viewer reported ${problems}`);
+      check(!page.errors.length, `${name}: page errors: ${page.errors.join(' | ')}`);
+      if (name !== 'page') check(/<symbol id="[^"]+" viewBox="[^"]+"><(?:path|g|defs|rect|circle|ellipse|polygon)/.test(svg), `${name}: icons drawn empty`);
+    }
+    check(fetched > 10, `the viewer fetched only ${fetched} icons`);
+  } finally { await browser.close(); srv.close(); }
+  // The render adds the header once; a plain drawing script is reported.
+  const h = write(folder('viewer-header'), page('<div class=card id=a>A</div>', ''));
+  ok0(render(h, path.join(path.dirname(h), 'out'))); ok0(render(h, path.join(path.dirname(h), 'out')));
+  const text = fs.readFileSync(h, 'utf8');
+  check(text.startsWith('<!doctype html>') && text.split('graphally.js').length === 2, `header: ${text.slice(0, 200)}`);
+  const r = render(write(folder('viewer-plain'), page('<div class=card id=a>A</div>', '').replace('<script type="graphally">', '<script>')), path.join(work, 'viewer-plain', 'out'));
+  check(r.code === 1 && /plain-script/.test(r.text), `expected plain-script: ${tail(r.text)}`);
 });
 
 if (table.length) {

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 655 1128" width="655" height="1128" role="img" aria-label="Fabrikam logistics platform. rg-fab-prod-hub: acrfabprod; GatewaySubnet: vgw-fab-prod; snet-agw: agw-fab-prod; snet-aks: aks-fab-prod; snet-db: psql-fab-prod; snet-pe: pe-fab-prod-sb; rg_workload_services: id-fab-prod-aks, log-fab-prod, sb-fab-prod, kv-fab-prod. Connections: vnet-fab-prod-logistics to vnet-fab-prod-hub (peering); aks-fab-prod to acrfabprod (AcrPull); id-fab-prod-aks to kv-fab-prod (Secrets User); id-fab-prod-aks to sb-fab-prod (Data Owner); aks-fab-prod sends events to log-fab-prod (diagnostics); aks-fab-prod to id-fab-prod-aks (identity); agw-fab-prod to aks-fab-prod (ingress); pe-fab-prod-sb to sb-fab-prod (private link)">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

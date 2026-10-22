@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // The browser graphally lays out and measures in: whatever Chrome, Chromium or Edge is
 // installed, driven over the DevTools protocol through a pipe (no npm packages). Pages
 // are served from 127.0.0.1, so sandboxed browsers (a snap, for example) can read them.

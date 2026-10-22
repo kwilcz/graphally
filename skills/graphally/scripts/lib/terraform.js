@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Terraform to graphally: read a Terraform configuration (root module plus local modules)
 // and write a draft diagram of what it deploys. Resource groups become boxes, VNets and
 // subnets nest inside them, resources sit in the subnet they are deployed into, and

@@ -1,7 +1,7 @@
 ---
 name: graphally
 description: Draws professional diagrams as SVG from a short HTML description - architecture (Azure and AWS icons, tiers, shared services), networks (VNets, subnets, peering, private endpoints), hierarchies (management groups, org charts), BPMN processes and flowcharts, sequence diagrams, Gantt plans, diagrams of Terraform repositories generated from the code, and any other figure (phase and role charts, matrices, step cards, roadmaps, custom BPMN) written as HTML and CSS with a shape library. Use it whenever the user asks for a diagram, architecture picture, flow, process map, sequence, timeline or plan, or wants to visualise infrastructure, even if they do not say "diagram"; never hand-write SVG coordinates instead.
-license: Proprietary. Copyright (c) 2026 Kamil Wilczyński (kwilcz), https://github.com/kwilcz/graphally. Use only; LICENSE.txt has complete terms.
+license: Apache-2.0. Copyright (c) 2026 Kamil Wilczyński (kwilcz), https://github.com/kwilcz/graphally. LICENSE.txt has the terms.
 compatibility: Requires Node.js 18 or later and Chrome, Chromium or Edge (or `npx playwright install chromium`). Internet once, to download the Azure and AWS icon packs.
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/tf2graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/fetch-icons.mjs *)
 metadata:
@@ -34,6 +34,11 @@ aligns and routes everything and writes the SVG. Never write coordinates.
 3. Fix the reported problems the same way (rewrite and render in one command).
 4. Look at the PNG once at the end: `ok` means nothing collides, not that the story reads
    well.
+
+**Opening it in a browser:** the render adds a header to the source (a doctype and a
+`<script src>` that loads graphally's viewer), so the `.html` file itself shows the diagram
+when opened in a browser, with nothing installed. Keep the header; anyone can edit the text
+and reload.
 
 **Changing an existing diagram:** edit its source file in place with your edit tool, then
 render it again. The SVG is compiled output; the render reads the previous one, so what
@@ -172,4 +177,4 @@ set `CHROMIUM_PATH` to a browser executable.
 
 ---
 graphally · Copyright (c) 2026 Kamil Wilczyński (kwilcz) · https://github.com/kwilcz/graphally ·
-use only, under LICENSE.txt. Do not copy, modify, redistribute or incorporate this skill.
+Apache License 2.0 (LICENSE.txt, NOTICE.txt).

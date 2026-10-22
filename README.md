@@ -10,10 +10,7 @@ flowchart, sequence, plan (Gantt) and icon diagrams, and drafts diagrams of Terr
 repositories from the code. Anything else (phase and role charts, matrices, step cards,
 roadmaps) is written as plain HTML and CSS, with a short script for the lines.
 
-> **Licence.** graphally is source-available, not open source. You may install it and let
-> your agents use it for any purpose, including paid work, and the diagrams you make are
-> yours. You may not copy, modify, redistribute or sell it, or build it into other
-> products or systems, without written permission. See [LICENSE](LICENSE).
+> **Licence.** graphally is open source under the [Apache License 2.0](LICENSE).
 > Copyright © 2026 Kamil Wilczyński ([kwilcz](https://github.com/kwilcz)).
 
 ![An Azure architecture diagram](samples/architecture/diagram.png)
@@ -64,6 +61,16 @@ Ask your agent for a diagram as you would ask a colleague: "draw the architectur
 this service", "diagram the Terraform in ./infra", "a sequence diagram of the checkout".
 The agent writes the source, renders it, fixes anything reported, and looks at a preview
 once.
+
+Every diagram source is also a page: open the `.html` file in a browser (a double-click
+will do) and it draws itself. The render adds a three-line header that loads graphally's
+viewer from [jsDelivr](https://www.jsdelivr.com), so a colleague without the skill can
+read the diagram, edit its text and reload. GitHub shows `.html` files as source, so the
+rendered `.svg` stays the file to embed in a README. To work offline or behind a strict
+firewall, commit [`skills/graphally/viewer/graphally.js`](skills/graphally/viewer/graphally.js)
+next to the diagrams and point the header's `src` at it; `graphallyOptions` (see the top of
+[`viewer.js`](skills/graphally/scripts/lib/viewer.js)) points the icons and the typeface at a
+mirror.
 
 The source looks like this:
 
@@ -239,13 +246,9 @@ Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling
 
 ## Licence
 
-graphally is licensed under the [graphally Use-Only License](LICENSE). You may install it,
-run it and let your agents use its skill for any purpose, including commercial work
-inside your organisation, and the diagrams you make are yours. You may not copy,
-redistribute, modify, sell, or incorporate graphally or its skill into other products,
-services or systems, or use it to train models, without written permission from the
-author. For permission or a separate licence, open an issue at
-[github.com/kwilcz/graphally](https://github.com/kwilcz/graphally).
+graphally is licensed under the [Apache License, Version 2.0](LICENSE): you may use,
+copy, modify and redistribute it, commercially included, provided you keep the copyright
+and licence notices ([NOTICE](NOTICE)). The diagrams you make with it are yours.
 
 Cloud icons are not part of graphally and not covered by this licence. The skill
 downloads Microsoft's Azure icons from the draw.io project and the AWS Architecture Icons

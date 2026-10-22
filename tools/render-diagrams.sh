@@ -9,6 +9,9 @@ cd "$(dirname "$0")/.." || exit 2
 # missing and the files committed that way, so the packs are fetched here, where a failure stops.
 node skills/graphally/scripts/fetch-icons.mjs || exit 2
 
+# The viewer bundle carries the engine and the icon index; rebuild it from the same sources.
+node tools/build-viewer.mjs || exit 2
+
 status=0
 for src in samples/*/diagram.html docs/diagrams/*.html; do
   args=(render "$src")

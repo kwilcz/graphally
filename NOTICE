@@ -1,0 +1,10 @@
+graphally
+Copyright (c) 2026 Kamil Wilczyński (GitHub: kwilcz)
+https://github.com/kwilcz/graphally
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Cloud icons are not part of graphally and not covered by its licence. graphally downloads
+Microsoft's Azure icons from the draw.io project and the AWS Architecture Icons from the
+aws-icons package on npm; they remain subject to Microsoft's and Amazon's terms. The viewer
+loads the Inter typeface, which is licensed under the SIL Open Font License 1.1.

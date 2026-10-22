@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // node fetch-icons.mjs [azure] [aws] [--force]
 // Downloads the cloud icon packs (both by default) from their upstream sources into the
 // skill's assets/icons/, or into ~/.cache/graphally/icons when the skill folder is
