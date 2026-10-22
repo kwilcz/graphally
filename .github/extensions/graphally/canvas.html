@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. -->
+<html><head><meta charset="utf-8"><title>graphally</title>
+<style>
+  body { margin: 0; font: 12.5px Inter, "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  #bar { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; padding: 7px 12px; background: var(--card); border-bottom: 1px solid var(--line); }
+  #name { font-weight: 600; }
+  #problems { color: var(--rust); }
+  #status { color: var(--muted); }
+  #hint { margin-left: auto; color: var(--muted); }
+  #label { display: none; font: inherit; padding: 2px 6px; border: 1px solid var(--woad); border-radius: 4px; }
+  #view { padding: 12px; overflow: auto; }
+  #view svg { display: block; user-select: none; touch-action: none; }
+  #view g[data-id] { cursor: grab; }
+  #view g[data-edge] { cursor: pointer; }
+  #view g.sel > path:not(.hit) { stroke: #2b6cff !important; stroke-width: 2.5px !important; }
+  #view .hit { fill: none; stroke: transparent; stroke-width: 12px; }
+  #view .frame { fill: none; stroke: #2b6cff; stroke-width: 1.5px; stroke-dasharray: 4 3; pointer-events: none; }
+</style>
+</head><body>
+<div id="bar"><span id="name">graphally</span><span id="problems"></span><span id="status"></span><input id="label" placeholder="label, Enter to save"><span id="hint"></span></div>
+<div id="view"></div>
+<script type="module" src="canvas.js"></script>
+</body></html>
