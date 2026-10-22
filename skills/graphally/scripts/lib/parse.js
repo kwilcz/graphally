@@ -78,6 +78,12 @@ function walk(el, parent, model) {
         external: !!a.external, accent: !!a.accent, ghost: !!a.ghost, area: a.area || '',
         parent, attrs: a,
       };
+      const nudge = c.getAttribute('nudge');
+      if (nudge !== null) {
+        const d = nudgeOf(nudge);
+        if (d) n.nudge = d;
+        else model.problems.push({ rule: 'bad-override', id: n.id, attr: 'nudge', value: nudge, hint: 'use nudge="dx,dy" in pixels' });
+      }
       if (model.groups.has(n.id) || model.nodes.has(n.id)) model.problems.push({ rule: 'duplicate-id', id: n.id });
       model.nodes.set(n.id, n);
       parent.children.push(n);
@@ -99,11 +105,20 @@ function walk(el, parent, model) {
     } else if (tag === 'LINKS' || tag === 'EDGES') {
       const ns = c.closest('[data-ns]')?.dataset.ns || '';
       parseLinks(c.textContent, ns, model);
-    } else if (tag === 'EDGE') {
-      // Long form, for tools that prefer elements: <edge from=a to=b label=… async>
-      const a = attrs(c);
+    } else if (tag === 'EDGE' || tag === 'LINK') {
+      // Long form, for tools that prefer elements: <edge from=a to=b label=… async>, or <link …> (the same).
+      // id names the edge (its key); out / in fix the side the edge leaves / enters.
+      const a = attrs(c), ns = c.closest('[data-ns]')?.dataset.ns || '';
+      const override = {};
+      for (const end of ['out', 'in']) {
+        const v = c.getAttribute(end);
+        if (v === null) continue;
+        const s = SIDES.indexOf(v.trim().toLowerCase());
+        if (s >= 0) override[end] = s;
+        else model.problems.push({ rule: 'bad-override', id: a.id || `${a.from}->${a.to}`, attr: end, value: v, hint: 'use right, bottom, left or top' });
+      }
       model.edges.push({ from: split(a.from), to: split(a.to), label: a.label || '', dashed: !!(a.async || a.dashed),
-        both: !!a.both, accent: !!a.accent, line: !!a.line, ns: c.closest('[data-ns]')?.dataset.ns || '' });
+        both: !!a.both, accent: !!a.accent, line: !!a.line, ns, linkId: a.id || '', ...(Object.keys(override).length ? { override } : {}) });
     } else if (tag === 'LEVEL') {
       // <level label="Management groups" depth="2-3"> — a labelled band across tree levels
       const a = attrs(c);
@@ -116,6 +131,13 @@ function walk(el, parent, model) {
 }
 
 const split = v => String(v || '').split(/[\s,]+/).filter(Boolean);
+// Side names in router order: 0 right, 1 bottom, 2 left, 3 top.
+const SIDES = ['right', 'bottom', 'left', 'top'];
+// nudge="dx,dy" or "dx dy" (pixels, may be negative or decimal); null when not two numbers.
+const nudgeOf = v => {
+  const t = String(v).trim().split(/[\s,]+/);
+  return t.length === 2 && t.every(x => /^[+-]?(\d+\.?\d*|\.\d+)$/.test(x)) ? { dx: Number(t[0]), dy: Number(t[1]) } : null;
+};
 
 // Process shapes (BPMN-flavoured). <gateway type=parallel>, <event type=timer>…
 const SHAPES = { START: 'start', END: 'end', EVENT: 'event', TASK: 'task', GATEWAY: 'gateway', SUBPROCESS: 'subprocess', DECISION: 'gateway', STEP: 'task', MILESTONE: 'milestone', BAR: 'task' };
@@ -167,6 +189,13 @@ function resolveEdges(model) {
       }
       out.push({ ...e, from, to, id: `e${out.length}` });
     }
+  }
+  // key: the link's id, else from->to; a repeat of the same key gets #2, #3 … in output order.
+  const seen = new Map();
+  for (const e of out) {
+    const base = e.linkId || `${e.from}->${e.to}`, n = (seen.get(base) || 0) + 1;
+    seen.set(base, n);
+    e.key = n > 1 ? `${base}#${n}` : base;
   }
   model.edges = out;
 }
