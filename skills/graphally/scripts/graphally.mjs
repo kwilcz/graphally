@@ -13,9 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { launch, openPage, serve } from './lib/browser.mjs';
 import { readLayout } from './lib/snapshot.mjs';
 import { PACKS, fetchPacks, findPack } from './lib/iconpack.mjs';
-
-// Served by jsDelivr from this repository's release tags; @2 follows the latest 2.x release.
-const VIEWER = 'https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js';
+import { withViewer } from './lib/viewerheader.mjs';
 
 const argv = process.argv.slice(2);
 if (argv[0] === 'render') argv.shift();
@@ -134,14 +132,10 @@ function droppedOverrides(prev, next) {
   return lines;
 }
 
-// The viewer header: a diagram file that loads graphally.js renders itself in a browser,
-// double-clicked from disk included. Added once, at the top; a part file (no <diagram>)
-// is left alone.
+// Adds the viewer header to the file when it lacks one; true when it did.
 function addViewer(f) {
-  const text = fs.readFileSync(f, 'utf8');
-  if (!/<diagram\b/i.test(text) || /graphally\.js["']/.test(text)) return false;
-  const lines = ['<meta charset="utf-8">', '<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->', `<script src="${VIEWER}"></script>`];
-  const doctype = /^\s*<!doctype[^>]*>\s*\n?/i.exec(text);
-  fs.writeFileSync(f, doctype ? doctype[0].trimEnd() + '\n' + lines.join('\n') + '\n' + text.slice(doctype[0].length) : ['<!doctype html>', ...lines].join('\n') + '\n' + text);
+  const text = fs.readFileSync(f, 'utf8'), out = withViewer(text);
+  if (out === text) return false;
+  fs.writeFileSync(f, out);
   return true;
 }

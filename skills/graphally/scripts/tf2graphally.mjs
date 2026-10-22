@@ -2,12 +2,14 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // node tf2graphally.mjs <terraform dir> [--out draft.html] [--title "…"]
 // Writes a draft graphally diagram of what the configuration deploys and prints a summary.
+// The draft carries the viewer header, so it opens in a browser before it is ever rendered.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { terraformToDiagram } from './lib/terraform.js';
 import { registerPack, resolveIcon } from './lib/icons.js';
 import { loadPacks } from './lib/iconpack.mjs';
+import { withViewer } from './lib/viewerheader.mjs';
 
 const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };
@@ -19,7 +21,7 @@ const icons = name => { const r = resolveIcon(name); return r && !r.error; };
 const { html, summary } = terraformToDiagram(dir, { title: opt('--title'), icons });
 const out = opt('--out') || 'draft.html';
 fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
-fs.writeFileSync(out, html);
+fs.writeFileSync(out, withViewer(html));   // opens in a browser, as a rendered diagram file does
 const folded = Object.entries(summary.folded).map(([k, v]) => `${v} ${k}`).join(', ');
 console.log(`${out}  ${summary.resources} resources${summary.modules ? `, ${summary.modules + 1} modules` : ''} -> ${summary.groups} boxes, ${summary.nodes} nodes, ${summary.links} links`);
 if (folded) console.log(`  folded into links and labels: ${folded}`);
