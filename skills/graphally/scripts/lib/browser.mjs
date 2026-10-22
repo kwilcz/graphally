@@ -125,7 +125,7 @@ export async function openPage(browser, { width = 1400, height = 900, scale = 1 
     return r.result.value;
   };
   return {
-    errors, viewport, evaluate, send: s,
+    errors, viewport, evaluate,
     goto: url => s('Page.navigate', { url }),
     async waitFor(expression, timeout = 60000) {
       const end = Date.now() + timeout;

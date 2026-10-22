@@ -115,11 +115,6 @@ connections are data, a JSON list routed around the boxes:
 </script>
 ```
 
-**GitHub Copilot canvas.** `.github/extensions/graphally` shows a diagram live in the
-Copilot app's side panel. Drag a box, Alt-drag between boxes, drag or label a line: each
-gesture is written into the file (`nudge`, the JSON connections), and the agent's edits
-show up as they land. Its README says how to install it in another repository.
-
 Colours are CSS tokens in `skills/graphally/assets/theme.css`, so a brand theme only
 redefines them. Large diagrams can be split into files with `<include src="parts/app.html">`.
 

@@ -112,8 +112,7 @@ node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs diagram.html --move db 0,20 --connect 
 removes an option); `--lines` prints the connections with their keys. Render again afterwards, without
 `--recompute`: the render reads the previous SVG, and every line keeps the sides it used
 there, whether you set them or the router chose them, so only what changed moves.
-`--recompute` routes everything afresh. In the GitHub Copilot app, the graphally canvas
-makes the same edits from the mouse.
+`--recompute` routes everything afresh.
 
 ## The script
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
 // Edits of a page-mode diagram's source, as text patches that keep the rest of the file as
-// written: the canvas, the edit command and agents all change a diagram through these.
+// written: the edit command and agents change a diagram through these.
 //
 //   { op: 'move', id, dx, dy }          adds to the element's nudge="dx,dy"
 //   { op: 'nudge', id, x, y }           sets it (0,0 removes it)
@@ -110,7 +110,7 @@ export function applyEdits(src, edits, { diagram } = {}) {
   return { source: src, applied, errors };
 }
 
-// The connections of a diagram as data (for an agent or a canvas to read).
+// The connections of a diagram as data (for an agent to read).
 export function readLines(src, { diagram } = {}) {
   const b = linesBlock(diagramSpan(src, diagram).text);
   if (!b) return [];

@@ -8,7 +8,7 @@
 //   --line 'a->b' '{json}'    change a connection's options, merged into the ones it has
 //                             ('{"label": "reads", "via": [[400, 80]]}'; null removes one)
 //   --unline 'a->b'           remove a connection (quote keys: > is a shell redirection)
-//   --edits '[{…}]'           several edits as JSON (the canvas's format: see lib/edits.mjs)
+//   --edits '[{…}]'           several edits as JSON (see lib/edits.mjs)
 //   --lines                   print the connections, with their keys, as JSON
 //
 // Edits a page-mode diagram's source in place and keeps the rest of the file as written.
