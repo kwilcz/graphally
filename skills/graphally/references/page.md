@@ -74,6 +74,8 @@ Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
 
 ## Classes and icons
 
+`icons=aws` on `<diagram>` makes AWS win names both vendors share, as in the other diagrams.
+
 Shorthand classes, which your own CSS overrides: `card` (white box, light border), `box`
 (white box, dark border), `pill`, `tag`, `banner` (dark band, light text), `muted`, `small`,
 `row` and `col` (flex with a gap), `circle` (a round box). `<icon name="app service" size=32>`
@@ -82,10 +84,10 @@ places an icon inline, from the same names as the other diagrams.
 ## Connections
 
 `<script type="application/json">` inside the diagram holds the connections: a list whose
-entries are `["from", "to", "label"]` or an object with `from`, `to` and any option of a
-line (below): `{ "from": "api", "to": "db", "label": "writes", "dashed": true }`. Each is
-routed around the boxes, as `connect()` would. `via` points are `"id.anchor"` (`"db.top"`,
-`"gate.center"`) or `[x, y]`.
+entries are `["from", "to", "label"]` or an object with `from`, `to` and any option of
+`connect` (below), `out`, `in` and `via` included: `{ "from": "api", "to": "db", "label":
+"writes", "dashed": true, "out": "bottom" }`. Each is routed around the boxes. `via` points
+are `"id.anchor"` (`"db.top"`, `"gate.center"`) or `[x, y]`.
 
 A connection is known by its key: its `"id"`, else `from->to`, with `#2` for a second line
 between the same boxes. Give an `id` to lines you want to refer to.
@@ -106,9 +108,11 @@ node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs diagram.html --move db 0,20 --connect 
 ```
 
 `--line 'a->b' '{"label": "reads", "via": [[420, 160]]}'` changes a connection's options;
-`--lines` prints the connections with their keys. Render again afterwards: the render
-reuses the previous SVG's layout, so lines keep their sides and only what changed moves. In
-the GitHub Copilot app, the graphally canvas makes the same edits from the mouse.
+`--lines` prints the connections with their keys. Render again afterwards, without
+`--recompute`: the render reads the previous SVG, and every line keeps the sides it used
+there, whether you set them or the router chose them, so only what changed moves.
+`--recompute` routes everything afresh. In the GitHub Copilot app, the graphally canvas
+makes the same edits from the mouse.
 
 ## The script
 
