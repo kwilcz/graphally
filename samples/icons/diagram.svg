@@ -56,9 +56,9 @@
 </g>
 <g data-id="entra" data-box="209,120,48,48">
 <use href="#gr1-azure-entra-identity" x="209" y="120" width="48" height="48"></use>
-<text class="g-tile" x="233" y="186" text-anchor="middle">Microsoft</text>
-<text class="g-tile" x="233" y="201" text-anchor="middle">Entra ID</text>
-<text class="g-sub" x="233" y="215" text-anchor="middle" style="fill: var(--muted)">pre-auth</text>
+<text class="g-tile" x="233.5" y="186" text-anchor="middle">Microsoft</text>
+<text class="g-tile" x="233.5" y="201" text-anchor="middle">Entra ID</text>
+<text class="g-sub" x="233.5" y="215" text-anchor="middle" style="fill: var(--muted)">pre-auth</text>
 </g>
 <g data-id="proxy" data-box="209,236,48,48">
 <use href="#gr1-g-globe" x="209" y="236" width="48" height="48" style="color: var(--ink)"></use>
