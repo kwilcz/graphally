@@ -72,10 +72,28 @@ export function routeEdges(model, geo, m) {
   // of a gateway cannot be told apart, so a side already in use costs extra.
   const sideUse = new Map(), SIDE_TAKEN = 300;
   const useOf = (id, side, dir) => (sideUse.get(`${id}|${side}`) || []).filter(d => !dir || d === dir).length;
+  // Candidate ports of one edge end. An override fixes its side (hard): only ports there; if that
+  // side is blocked, all ports stay and the override is reported once. Without one, the side the
+  // previous render used is preferred (soft): +400 on the ports of every other side.
+  const warned = new Set();
+  const endPorts = (E, which, ports) => {
+    const dir = which === 'a' ? 'out' : 'in', ov = E.e.override?.[dir];
+    if (ov != null) {
+      const on = ports.filter(q => q.side === ov);
+      if (!on.length && !warned.has(`${E.e.key}|${dir}`)) {
+        warned.add(`${E.e.key}|${dir}`);
+        model.problems.push({ rule: 'override-ignored', id: E.e.key, attr: dir, why: 'side blocked' });
+      }
+      return on.length ? on : ports;
+    }
+    const prev = ['right', 'bottom', 'left', 'top'].indexOf(model.previous?.edges?.[E.e.key]?.[dir]);
+    if (prev >= 0) for (const q of ports) if (q.side !== prev) q.pen = (q.pen || 0) + 400;
+    return ports;
+  };
   const first = edges.map(E => {
-    const starts = portsOf(E.a, E, 'a', grid, P), goals = portsOf(E.b, E, 'b', grid, P);
-    if (E.a.round) for (const q of starts) q.pen = SIDE_TAKEN * useOf(E.e.from, q.side);
-    if (E.b.round) for (const q of goals) q.pen = SIDE_TAKEN * useOf(E.e.to, q.side, 'out');
+    const starts = endPorts(E, 'a', portsOf(E.a, E, 'a', grid, P)), goals = endPorts(E, 'b', portsOf(E.b, E, 'b', grid, P));
+    if (E.a.round) for (const q of starts) q.pen = (q.pen || 0) + SIDE_TAKEN * useOf(E.e.from, q.side);
+    if (E.b.round) for (const q of goals) q.pen = (q.pen || 0) + SIDE_TAKEN * useOf(E.e.to, q.side, 'out');
     const path = astar(grid, starts, goals, E.allowed, gIndex, E.bundle);
     if (globalThis.__routeDebug) (globalThis.__routeLog ||= []).push({ e: `${E.e.from}->${E.e.to}`, starts: starts.map(q => [q.side, grid.xs[q.i], grid.ys[q.j]]), goals: goals.map(q => [q.side, grid.xs[q.i], grid.ys[q.j]]), chose: path && [path.startSide, path.goalSide, Math.round(path.cost)] });
     if (path) {
@@ -153,8 +171,8 @@ export function routeEdges(model, geo, m) {
   grid = buildGrid(geo, hard, groupsList, extraX, extraY);
   const endsOf = k => {
     const E = edges[k], f = fixed[k];
-    return [(f.a ? [portAt(E.a, f.a.side, f.a.coord, grid, P)] : portsOf(E.a, E, 'a', grid, P)).filter(Boolean),
-            (f.b ? [portAt(E.b, f.b.side, f.b.coord, grid, P)] : portsOf(E.b, E, 'b', grid, P)).filter(Boolean)];
+    return [(f.a ? [portAt(E.a, f.a.side, f.a.coord, grid, P)] : endPorts(E, 'a', portsOf(E.a, E, 'a', grid, P))).filter(Boolean),
+            (f.b ? [portAt(E.b, f.b.side, f.b.coord, grid, P)] : endPorts(E, 'b', portsOf(E.b, E, 'b', grid, P))).filter(Boolean)];
   };
   const paths = edges.map((E, k) => {
     const [starts, goals] = endsOf(k);

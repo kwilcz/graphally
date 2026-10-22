@@ -10,6 +10,7 @@ import { layoutGantt } from './layout/gantt.js';
 import { routeEdges } from './route.js';
 import { renderSvg, edgeKey } from './render.js';
 import { check } from './check.js';
+import { S } from './style.js';
 export { registerPack } from './icons.js';
 
 let counter = 0;
@@ -17,6 +18,7 @@ let counter = 0;
 export function compile(el, opts = {}) {
   if (opts.debug) globalThis.__routeDebug = true;
   const model = parseDiagram(el);
+  model.previous = opts.previous || null;
   const allEdges = model.edges;   // before badgeSharedLinks drops some: their overrides still belong in the snapshot
   const m = createMeasurer();
   const host = document.createElement('div');
@@ -28,6 +30,7 @@ export function compile(el, opts = {}) {
     if (!own.includes(kind)) badgeSharedLinks(model);
     const geo = kind === 'tree' ? layoutTree(model, m) : kind === 'lanes' || kind === 'flow' ? layoutLanes(model, m)
       : kind === 'sequence' ? layoutSequence(model, m) : kind === 'gantt' || kind === 'timeline' ? layoutGantt(model, m) : layoutAreas(model, m, host);
+    for (const n of model.nodes.values()) if (n.nudge) nudgeNode(geo, n);
     snapToPixels(geo);
     const routes = [...(geo.fixedRoutes || []), ...(['sequence', 'gantt', 'timeline'].includes(kind) ? [] : routeEdges(model, geo, m))];
     const id = el.id || `gr${++counter}`;
@@ -84,6 +87,32 @@ function badgeSharedLinks(model) {
   }
   model.edges = keep;
 }
+
+// A nudge (<node nudge="dx,dy">) moves the box with its outside label and that label's obstacle.
+// The node's groups grow to keep it inside (right, down and left; their titles stay on top),
+// and so does the canvas.
+function nudgeNode(geo, n) {
+  const q = geo.nodes.get(n.id);
+  if (!q) return;
+  const { dx, dy } = n.nudge, move = o => { o.x += dx; o.y += dy; };
+  move(q);
+  if (n.extLabel?.box) move(n.extLabel.box);
+  const o = geo.extraObstacles?.find(o => o.id === `${n.id}#label`);
+  if (o) move(o);
+  let box = union(q, n.extLabel?.box || q);
+  const { padX, padBottom } = S.group;
+  for (let g = n.parent; g && g.id !== '__root'; g = g.parent) {
+    const r = geo.groups.get(g.id);
+    if (!r) continue;
+    const x0 = Math.min(r.x, box.x - padX), x1 = Math.max(r.x + r.w, box.x + box.w + padX);
+    r.h = Math.max(r.y + r.h, box.y + box.h + padBottom) - r.y;
+    r.x = x0; r.w = x1 - x0;
+    box = union(box, r);
+  }
+  geo.width = Math.max(geo.width, Math.ceil(box.x + box.w + S.pad));
+  geo.height = Math.max(geo.height, Math.ceil(box.y + box.h + S.pad));
+}
+const union = (a, b) => { const x = Math.min(a.x, b.x), y = Math.min(a.y, b.y); return { x, y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y }; };
 
 // Whole-pixel geometry: crisp strokes, and the router's grid lines then coincide exactly
 // with box edges (a fractional edge rounded inside its own box once blocked a port).
