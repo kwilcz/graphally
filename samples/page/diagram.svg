@@ -32,20 +32,20 @@
 <text x="38" y="110.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; fill: var(--ink)">Phase</text>
 <text x="38" y="127.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">and milestone</text>
 <g data-id="p1" data-box="194,95,260.5,40">
-<polygon points="194,95.2 436.5,95.2 454.5,115.2 436.5,135.2 194,135.2 212,115.2" style="fill: var(--woad)"></polygon>
-<text x="311.4" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Plan</text>
+<path d="M194,95.2 L434.5,95.2 L454.5,115.2 L434.5,135.2 L194,135.2 Z" style="fill: var(--woad); stroke: none" stroke-width="0"></path>
+<text x="309.4" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Plan</text>
 </g>
 <g data-id="p2" data-box="466.5,95,260.5,40">
-<polygon points="466.5,95.2 709,95.2 727,115.2 709,135.2 466.5,135.2 484.5,115.2" style="fill: rgb(79, 111, 214)"></polygon>
-<text x="538.2" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Build the platform</text>
+<path d="M466.5,95.2 L707,95.2 L727,115.2 L707,135.2 L466.5,135.2 L486.5,115.2 Z" style="fill: rgb(79, 111, 214); stroke: none" stroke-width="0"></path>
+<text x="536.2" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Build the platform</text>
 </g>
 <g data-id="p3" data-box="739,95,260.5,40">
-<polygon points="739,95.2 981.5,95.2 999.5,115.2 981.5,135.2 739,135.2 757,115.2" style="fill: rgb(18, 128, 122)"></polygon>
-<text x="813.3" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Migrate in waves</text>
+<path d="M739,95.2 L979.5,95.2 L999.5,115.2 L979.5,135.2 L739,135.2 L759,115.2 Z" style="fill: rgb(18, 128, 122); stroke: none" stroke-width="0"></path>
+<text x="811.3" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Migrate in waves</text>
 </g>
 <g data-id="p4" data-box="1011.5,95,260.5,40">
-<polygon points="1011.5,95.2 1254,95.2 1272,115.2 1254,135.2 1011.5,135.2 1029.5,115.2" style="fill: var(--ink)"></polygon>
-<text x="1116.3" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Operate</text>
+<path d="M1011.5,95.2 L1252,95.2 L1272,115.2 L1252,135.2 L1011.5,135.2 L1031.5,115.2 Z" style="fill: var(--ink); stroke: none" stroke-width="0"></path>
+<text x="1114.3" y="118.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Operate</text>
 </g>
 <rect x="24" y="147.2" width="150" height="96.6" rx="8" style="fill: var(--wash)"></rect>
 <text x="38" y="191" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; fill: var(--ink)">Platform team</text>
@@ -137,7 +137,7 @@
 <text x="1005.5" y="119.2" text-anchor="middle" style="font: 700 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--card)">M3</text>
 <path d="M596.8,233.9 L596.8,265.9" style="fill: none; stroke: var(--woad)" stroke-width="2" marker-end="url(#pg-m1)"></path>
 <path d="M869.3,342.5 L869.3,374.5" style="fill: none; stroke: var(--rust)" stroke-width="2" marker-end="url(#pg-m2)" marker-start="url(#pg-m2)"></path>
-<ellipse cx="975.5" cy="281.9" rx="11" ry="11" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.5"></ellipse>
+<path d="M965.3,281.9 A10.3,10.3 0 1 1 985.8,281.9 A10.3,10.3 0 1 1 965.3,281.9 Z" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.5"></path>
 <path d="M969.9,279.8 L969.9,279.8 A6,6 0 0 1 980.1,278" style="fill: none; stroke: var(--woad)" stroke-width="1.6" marker-end="url(#pg-m1)"></path>
 <path d="M981.1,283.9 L981.1,283.9 A6,6 0 0 1 970.9,285.7" style="fill: none; stroke: var(--woad)" stroke-width="1.6" marker-end="url(#pg-m1)"></path>
 <text class="g-edge" x="674.4" y="362.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">findings</text>

@@ -9,6 +9,7 @@ import { S, T } from './style.js';
 import { resolveIcon, symbolFor } from './icons.js';
 import { routeEdges } from './route.js';
 import { rounded } from './render.js';
+import { parseShape, drawShape, SHAPE_CSS } from './shapes.js';
 
 const fmt = n => String(Math.round(n * 10) / 10);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -32,8 +33,6 @@ const PAGE_CSS = `
 :where(.graphally-page .banner) { background: var(--ink); color: var(--card); border-radius: 6px; padding: 10px 16px; font-weight: 600; }
 :where(.graphally-page .muted) { color: var(--muted); } :where(.graphally-page .small) { font-size: 11.5px; }
 :where(.graphally-page .row) { display: flex; gap: 12px; align-items: center; } :where(.graphally-page .col) { display: flex; flex-direction: column; gap: 8px; }
-:where(.graphally-page .chevron) { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%); padding-left: 28px; padding-right: 24px; }
-:where(.graphally-page .diamond) { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); display: grid; place-items: center; }
 :where(.graphally-page .circle) { border-radius: 50%; display: grid; place-items: center; }
 `;
 
@@ -43,7 +42,7 @@ export function compilePage(el, opts, m) {
   if (!document.getElementById('graphally-page-css')) {
     const st = document.createElement('style');
     st.id = 'graphally-page-css';
-    st.textContent = PAGE_CSS;
+    st.textContent = PAGE_CSS + SHAPE_CSS;
     document.head.appendChild(st);
   }
   const wAttr = el.getAttribute('width'), width = Number(wAttr) || 1200;
@@ -232,7 +231,15 @@ function build(root, el, id, scripts, opts, m, problems) {
     const rx = Math.min(rr.endsWith('%') ? Math.min(b.w, b.h) * parseFloat(rr) / 100 : parseFloat(rr) || 0, b.w / 2, b.h / 2);
     const uniform = bw.every(w => w === bw[0]) && bw[0] > 0;
     let me = null;
-    if (bg || uniform || bw.some(Boolean) || poly) {
+    // shape="…": the library draws the element's background and border as that shape.
+    const spec = e.hasAttribute('shape') ? parseShape(e.getAttribute('shape')) : null;
+    if (spec?.error) problems.push({ rule: 'unknown-shape', shape: spec.error, ...(closest(spec.error, spec.options) ? { suggest: closest(spec.error, spec.options) } : {}) });
+    if (spec && !spec.error) {
+      const st = cs.borderTopStyle;
+      out.push(...drawShape(spec, b, { fill: bg || 'none', stroke: bw[0] ? bc || 'var(--ink)' : 'none', width: bw[0], dash: st === 'dashed' ? '5 4' : st === 'dotted' ? '1.5 3' : '' }));
+      me = { e, b, painted: true, parent: parentBox, bg, round: spec.round, plain: false };
+      boxes.push(me);
+    } else if (bg || uniform || bw.some(Boolean) || poly) {
       const stroke = uniform ? ` style="fill: ${bg || 'none'}; stroke: ${bc}" stroke-width="${bw[0]}"${dashed}` : ` style="fill: ${bg || 'none'}"`;
       if (poly) out.push(`<polygon points="${poly.map(p => `${fmt(p.x)},${fmt(p.y)}`).join(' ')}"${stroke}></polygon>`);
       else if (uniform) { const h = bw[0] / 2; out.push(`<rect x="${fmt(b.x + h)}" y="${fmt(b.y + h)}" width="${fmt(b.w - bw[0])}" height="${fmt(b.h - bw[0])}" rx="${fmt(Math.max(0, rx - h))}"${stroke}></rect>`); }
@@ -308,10 +315,13 @@ function build(root, el, id, scripts, opts, m, problems) {
       const s = o2.size || 24;
       drawOut.push(`<use href="#${d.sym}" x="${fmt(d.p.x - s / 2)}" y="${fmt(d.p.y - s / 2)}" width="${s}" height="${s}"></use>`);
     } else if (d.kind === 'shape') {
-      const w = o2.w || o2.size || 24, h = o2.h || o2.size || w, { x, y } = d.p, fill = paintOf(toneOf(o2.fill)) || 'none', st = `style="fill: ${fill}; stroke: ${paintOf(toneOf(o2.stroke)) || color}" stroke-width="${o2.width || 1.5}"${o2.dashed ? ' stroke-dasharray="5 4"' : ''}`;
-      if (d.shape === 'circle') drawOut.push(`<ellipse cx="${fmt(x)}" cy="${fmt(y)}" rx="${fmt(w / 2)}" ry="${fmt(h / 2)}" ${st}></ellipse>`);
-      else if (d.shape === 'diamond') drawOut.push(`<polygon points="${fmt(x)},${fmt(y - h / 2)} ${fmt(x + w / 2)},${fmt(y)} ${fmt(x)},${fmt(y + h / 2)} ${fmt(x - w / 2)},${fmt(y)}" ${st}></polygon>`);
-      else drawOut.push(`<rect x="${fmt(x - w / 2)}" y="${fmt(y - h / 2)}" width="${fmt(w)}" height="${fmt(h)}" rx="${o2.r || 6}" ${st}></rect>`);
+      // The same library as shape="…"; BPMN events and gateways default to their sizes.
+      const spec = parseShape(d.shape);
+      if (spec.error) { problems.push({ rule: 'unknown-shape', shape: spec.error, ...(closest(spec.error, spec.options) ? { suggest: closest(spec.error, spec.options) } : {}) }); continue; }
+      const size = o2.size || (['start', 'event', 'end'].includes(spec.base) ? 36 : spec.base === 'gateway' ? 44 : 24);
+      const w = o2.w || size, h = o2.h || (o2.w ? w : size);
+      drawOut.push(...drawShape(spec, { x: d.p.x - w / 2, y: d.p.y - h / 2, w, h },
+        { fill: paintOf(toneOf(o2.fill || 'card')), stroke: paintOf(toneOf(o2.stroke || o2.color)) || 'var(--ink)', width: o2.width || (spec.base === 'end' ? 3 : 1.5), dash: o2.dashed ? '5 4' : '' }));
     }
   }
   check(texts, problems);
