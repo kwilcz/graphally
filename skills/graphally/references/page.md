@@ -61,6 +61,7 @@ a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a
 | `document`, `documents`, `note` (`data-object`), `callout`, `cloud` | documents and notes |
 | `manual-input`, `predefined`, `delay`, `off-page` | flowchart |
 | `task`, `subprocess`, `start`, `event`, `end`, `gateway` | BPMN |
+| `cycle` (`repeat`, `loop`) | a repeat badge: a ring with two chasing arrows, 28px |
 
 Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
 `gateway inclusive` (○); `start`, `event` or `end` with `timer`, `message`, `signal` or
@@ -139,6 +140,7 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 | `unroutable` | the line has no way through: widen a gap, or give it `via` points |
 | `override-ignored … by=x` | the side is blocked by `x`: choose another side |
 | `label-crowded` | widen the gap the line runs through, or shorten the label |
+| `short-end` | an arrowhead sits on a bend right before its box: give the line room there (a wider gap, other sides, `via`) |
 | `lines-overlap` | two lines share a stretch and read as one: give one `via` points or other sides |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts of the page collide: give one more room |

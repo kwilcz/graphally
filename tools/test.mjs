@@ -263,6 +263,13 @@ test('page-problems', () => {
 <div class=g><div class="card top" id=a>A</div><div class="card h" id=x>X</div><div class="card h" id=y>Y</div><div class=card id=b>B</div><div class=card id=c>C</div></div>`,
     "const gap = mid(el('x').right, el('y').left); connect('a', 'b', { via: [gap] }); connect('a', 'c', { via: [gap] })")), out);
   check(r3.code === 1 && /lines-overlap: a=a->b b=a->c/.test(r3.text), `expected lines-overlap: ${tail(r3.text)}`);
+  // An arrowhead on a too-short end is reported; a BPMN fragment routes with full-length ends.
+  const r5 = render(write(d, page('<div class=card id=a>A</div>', "arrow(el('a').bottom.down(20), el('a').bottom.down(28))")), out);
+  check(r5.code === 1 && /short-end: line=a drawn line end=head/.test(r5.text), `expected short-end: ${tail(r5.text)}`);
+  ok0(render(write(d, page(`<style>.p { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 110px 110px; gap: 0 50px; align-items: center; justify-items: center }</style>
+<div class=p><i shape=start id=s style="grid-area: 1 / 1"></i><div shape=task id=t1 style="grid-area: 1 / 2">Submit</div><div shape=task id=t2 style="grid-area: 2 / 2">Validate</div>
+<i shape="gateway exclusive" id=g style="grid-area: 2 / 3"></i><div shape="task loop" id=t3 style="grid-area: 1 / 4">Correct</div><i shape=end id=e style="grid-area: 2 / 4"></i></div>`,
+    "connect('s', 't1'); connect('t1', 't2'); connect('t2', 'g'); connect('g', 't3', { label: 'invalid' }); connect('g', 'e', { label: 'valid' }); connect('t3', 't1', { label: 'resubmit' })")), out));
   const r4 = render(write(d, page('<div style="width: 900px" class=card>wide</div>', '', 'width=600')), out);
   check(r4.code === 1 && /page-overflow: width=600 content=9\d\d/.test(r4.text), `expected page-overflow: ${tail(r4.text)}`);
 });

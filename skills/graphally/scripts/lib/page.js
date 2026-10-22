@@ -284,6 +284,7 @@ function build(root, el, id, scripts, opts, m, problems) {
   const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H);
   for (const r of routes) if (r.labelCrowded) problems.push({ rule: 'label-crowded', edge: `${r.edge.from} -> ${r.edge.to}`, label: r.edge.label, hint: 'widen the gap the line runs through, or shorten the label' });
   overlaps(routes, problems);
+  shortEnds(routes, drawings, problems);
   const width = parseFloat(root.style.width);
   if (W > width + 2 * S.pad + 1) problems.push({ rule: 'page-overflow', width, content: W - 2 * S.pad, hint: 'the content is wider than width: widen width, or narrow the columns' });
   if (opts.debug) window.__debug = { log: globalThis.__routeLog, hard: globalThis.__routeHard, routes: routes.map(r => ({ from: r.edge.from, to: r.edge.to, points: r.points.map(p => [Math.round(p.x), Math.round(p.y)]) })) };
@@ -322,7 +323,7 @@ function build(root, el, id, scripts, opts, m, problems) {
       // The same library as shape="…"; BPMN events and gateways default to their sizes.
       const spec = parseShape(d.shape);
       if (spec.error) { problems.push({ rule: 'unknown-shape', shape: spec.error, ...(closest(spec.error, spec.options) ? { suggest: closest(spec.error, spec.options) } : {}) }); continue; }
-      const size = o2.size || (['start', 'event', 'end'].includes(spec.base) ? 36 : spec.base === 'gateway' ? 44 : 24);
+      const size = o2.size || (['start', 'event', 'end'].includes(spec.base) ? 36 : spec.base === 'gateway' ? 44 : spec.base === 'cycle' ? 28 : 24);
       const w = o2.w || size, h = o2.h || (o2.w ? w : size);
       drawOut.push(...drawShape(spec, { x: d.p.x - w / 2, y: d.p.y - h / 2, w, h },
         { fill: paintOf(toneOf(o2.fill || 'card')), stroke: paintOf(toneOf(o2.stroke || o2.color)) || 'var(--ink)', width: o2.width || (spec.base === 'end' ? 3 : 1.5), dash: o2.dashed ? '5 4' : '' }));
@@ -437,7 +438,9 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
       prev = p;
     }
   }
-  const hasChild = new Set(boxes.map(b => b.parent).filter(Boolean));
+  // An icon without an id is part of the box it sits in: that box stays one solid card.
+  const decor = b => b.e.tagName === 'ICON' && !b.e.id;
+  const hasChild = new Set(boxes.filter(b => !decor(b)).map(b => b.parent).filter(Boolean));
   let n = 0;
   // Boxes without an id are named by tag and class in problems: div.lane@2.
   boxes.forEach(b => keyOf.set(b, b.e.id || `${b.e.tagName.toLowerCase()}${[...b.e.classList].map(c => `.${c}`).join('')}@${n++}`));
@@ -456,7 +459,7 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
   const ensure = b => {
     if (!b) return rootG;
     if (objOf.has(b)) return objOf.get(b);
-    if (strip(b) || behind(b)) { const p = ensure(b.parent); objOf.set(b, p); return p; }
+    if (strip(b) || behind(b) || (decor(b) && b.parent && !hasChild.has(b.parent))) { const p = ensure(b.parent); objOf.set(b, p); return p; }
     const parent = ensure(b.parent), key = keyOf.get(b);
     const isGroup = hasChild.has(b);
     const obj = isGroup ? { id: key, kind: 'group', style: b.plain || !b.painted ? 'plain' : 'box', children: [], parent, depth: parent.depth + 1 } : { id: key, kind: 'node', parent, shape: '' };
@@ -519,6 +522,25 @@ function check(texts, problems) {
     if (a.owner === b.owner) continue;
     const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
     if (ox > 2 && oy > 2) problems.push({ rule: 'text-overlap', a: a.owner.id || a.owner.tagName.toLowerCase(), b: b.owner.id || b.owner.tagName.toLowerCase(), hint: 'give the text more room, or move one of them' });
+  }
+}
+
+// An arrowhead or tail mark on an end segment shorter than 12px sits on the bend before it.
+function shortEnds(routes, drawings, problems) {
+  const len = (p, q) => Math.hypot(q.x - p.x, q.y - p.y), MIN = 12;
+  const report = (line, end) => problems.push({ rule: 'short-end', line, end, hint: 'the mark sits on a bend: give the line more room before the box, or other sides or via points' });
+  for (const r of routes) {
+    const p = r.points, en = r.edge.ends;
+    if (en.head !== 'none' && len(p.at(-2), p.at(-1)) < MIN) report(r.edge.key, 'head');
+    if (en.tail !== 'none' && len(p[0], p[1]) < MIN) report(r.edge.key, 'tail');
+  }
+  for (const d of drawings) {
+    if (d.kind !== 'path' || /[QCA]/.test(d.d)) continue;              // curves and arcs: their own shape
+    const p = [...d.d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: +m[1], y: +m[2] })), en = endsOf(d.o, false, []);
+    if (p.length < 2) continue;
+    const name = d.o.label || 'a drawn line';
+    if (en.head !== 'none' && len(p.at(-2), p.at(-1)) < MIN) report(name, 'head');
+    if (en.tail !== 'none' && len(p[0], p[1]) < MIN) report(name, 'tail');
   }
 }
 

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="shapes.html" viewBox="0 0 1088 979" width="1088" height="979" role="img" aria-label="Page-mode shapes. shape=&quot;…&quot; on any element; markers follow the name">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="shapes.html" viewBox="0 0 1088 1046" width="1088" height="1046" role="img" aria-label="Page-mode shapes. shape=&quot;…&quot; on any element; markers follow the name">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
@@ -163,6 +163,12 @@
 <path d="M1005.1,891.4 L1026.6,912.9 L1005.1,934.4 L983.6,912.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M997.5,912.9 A7.6,7.6 0 1 1 1012.7,912.9 A7.6,7.6 0 1 1 997.5,912.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="958.9" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">gateway inclusive</text>
+<path d="M69.4,987.8 A13.5,13.5 0 1 1 96.4,987.8 A13.5,13.5 0 1 1 69.4,987.8 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M76,985.3 A7.3,7.3 0 0 1 88.1,982.7" style="fill: none; stroke: var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M90.6,986.5 L90.2,980.9 L85.9,983.4 Z" style="fill: var(--ink); stroke: none"></path>
+<path d="M89.7,990.2 A7.3,7.3 0 0 1 77.6,992.8" style="fill: none; stroke: var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M75.2,989 L75.5,994.6 L79.9,992.1 Z" style="fill: var(--ink); stroke: none"></path>
+<text x="69.2" y="1018.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">cycle</text>
 
 
 

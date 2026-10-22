@@ -11,6 +11,10 @@
 import { S, T } from './style.js';
 
 const BEND = 36, CROSS = 70, OVERLAP = 22, FOREIGN = 2.2;
+// An end segment shorter than MIN_END puts the arrowhead on the bend before it. Page mode's small
+// clearance allows such ends: its ports sit MIN_END + 2 out where there is room (portAt), and
+// where there is not, turning near the box costs STUB, so the bend moves out where it can.
+const MIN_END = 12, STUB = 60;
 const DX = [1, 0, -1, 0], DY = [0, 1, 0, -1];   // E S W N
 
 export function routeEdges(model, geo, m) {
@@ -69,6 +73,9 @@ export function routeEdges(model, geo, m) {
   // ---- pass 1: free sides ----
   const extraX = new Set(), extraY = new Set();
   for (const r of [...geo.nodes.values(), ...geo.groups.values()]) { extraX.add(r.x + r.w / 2); extraY.add(r.y + r.h / 2); }
+  // Page mode's small clearance: grid lines where a full-length end would turn (see portAt).
+  const END = P < MIN_END ? MIN_END + 2 : 0;
+  if (END) for (const r of [...geo.nodes.values(), ...geo.groups.values()]) if (!r.virtual) { extraX.add(r.x - END); extraX.add(r.x + r.w + END); extraY.add(r.y - END); extraY.add(r.y + r.h + END); }
   for (const E of edges) {
     const oy = overlap(E.a.y, E.a.h, E.b.y, E.b.h), ox = overlap(E.a.x, E.a.w, E.b.x, E.b.w);
     if (oy) extraY.add(oy.mid);
@@ -102,7 +109,7 @@ export function routeEdges(model, geo, m) {
     const starts = endPorts(E, 'a', portsOf(E.a, E, 'a', grid, P)), goals = endPorts(E, 'b', portsOf(E.b, E, 'b', grid, P));
     if (E.a.round) for (const q of starts) q.pen = (q.pen || 0) + SIDE_TAKEN * useOf(E.e.from, q.side);
     if (E.b.round) for (const q of goals) q.pen = (q.pen || 0) + SIDE_TAKEN * useOf(E.e.to, q.side, 'out');
-    const path = astar(grid, starts, goals, E.allowed, gIndex, E.bundle);
+    const path = astar(grid, starts, goals, E.allowed, gIndex, E.bundle, marksOf(E.e));
     if (globalThis.__routeDebug) (globalThis.__routeLog ||= []).push({ e: `${E.e.from}->${E.e.to}`, starts: starts.map(q => [q.side, grid.xs[q.i], grid.ys[q.j]]), goals: goals.map(q => [q.side, grid.xs[q.i], grid.ys[q.j]]), chose: path && [path.startSide, path.goalSide, Math.round(path.cost)] });
     if (path) {
       markUse(grid, path.cells, 1, E.bundle);
@@ -196,7 +203,7 @@ export function routeEdges(model, geo, m) {
   };
   const paths = edges.map((E, k) => {
     const [starts, goals] = endsOf(k);
-    const path = astar(grid, starts, goals, E.allowed, gIndex, E.bundle);
+    const path = astar(grid, starts, goals, E.allowed, gIndex, E.bundle, marksOf(E.e));
     if (path) markUse(grid, path.cells, 1, E.bundle);
     return path;
   });
@@ -208,7 +215,7 @@ export function routeEdges(model, geo, m) {
       if (!paths[k]) return;
       markUse(grid, paths[k].cells, -1, E.bundle);
       const [starts, goals] = endsOf(k);
-      const again = astar(grid, starts, goals, E.allowed, gIndex, E.bundle);
+      const again = astar(grid, starts, goals, E.allowed, gIndex, E.bundle, marksOf(E.e));
       if (again) { changed ||= again.cells.join() !== paths[k].cells.join(); paths[k] = again; }
       markUse(grid, paths[k].cells, 1, E.bundle);
     });
@@ -292,7 +299,8 @@ function buildGrid(geo, hard, groupsList, extraX, extraY) {
     if (v) for (const i of near(ux, t.x1)) for (let j = 0; j + 1 < ny; j++) { if (uy[j] >= lo - 0.5 && uy[j + 1] <= hi + 0.5) useV[j * nx + i] = 1; }
     else for (const j of near(uy, t.y1)) for (let i = 0; i + 1 < nx; i++) { if (ux[i] >= lo - 0.5 && ux[i + 1] <= hi + 0.5) useH[j * nx + i] = 1; }
   }
-  return { xs: ux, ys: uy, nx, ny, okP, okH, okV, gH, gV, bH, bV, useH, useV,
+  const pad = geo.nodePad ?? S.edge.nodePad;
+  return { xs: ux, ys: uy, nx, ny, okP, okH, okV, gH, gV, bH, bV, useH, useV, pad, end: pad < MIN_END ? MIN_END + 2 : 0,
     ownH: new Int16Array(nx * ny), ownV: new Int16Array(nx * ny),
     ix: new Map(ux.map((v, i) => [v, i])), iy: new Map(uy.map((v, i) => [v, i])) };
 }
@@ -307,19 +315,33 @@ const snap = (map, arr, v) => {
 
 // A port: the point on the box edge, and the grid point just outside it.
 function portAt(r, side, coord, grid, P, isGroup) {
-  const out = isGroup ? 10 : P;
-  let bx, by, ox, oy;
-  // An icon node's label hangs below it; a connection downwards starts under the label.
-  const below = r.node?.style === 'icon' && r.node.extLabel?.box ? r.node.extLabel.box.y + r.node.extLabel.box.h + 3 : null;
-  if (side === 0) { bx = r.x + r.w; by = coord; ox = bx + out; oy = by; }
-  else if (side === 2) { bx = r.x; by = coord; ox = bx - out; oy = by; }
-  else if (side === 1) { bx = coord; by = below ?? r.y + r.h; ox = bx; oy = by + out; }
-  else { bx = coord; by = r.y; ox = bx; oy = by - out; }
-  const i = snap(grid.ix, grid.xs, ox), j = snap(grid.iy, grid.ys, oy);
-  if (!grid.okP[j * grid.nx + i]) return null;
-  // Keep the first segment perpendicular: the snapped grid point defines the port.
-  if (side % 2 === 0) by = grid.ys[j]; else bx = grid.xs[i];
-  return { i, j, side, coord: side % 2 === 0 ? grid.ys[j] : grid.xs[i], boundary: { x: bx, y: by }, dir: side };
+  // With page mode's small clearance the port sits a full end's length out (grid.end) when the
+  // way there is free, so the line runs that far before it may turn; else at the clearance.
+  const near = isGroup ? 10 : P;
+  for (const out of grid.end > near ? [grid.end, near] : [near]) {
+    let bx, by, ox, oy;
+    // An icon node's label hangs below it; a connection downwards starts under the label.
+    const below = r.node?.style === 'icon' && r.node.extLabel?.box ? r.node.extLabel.box.y + r.node.extLabel.box.h + 3 : null;
+    if (side === 0) { bx = r.x + r.w; by = coord; ox = bx + out; oy = by; }
+    else if (side === 2) { bx = r.x; by = coord; ox = bx - out; oy = by; }
+    else if (side === 1) { bx = coord; by = below ?? r.y + r.h; ox = bx; oy = by + out; }
+    else { bx = coord; by = r.y; ox = bx; oy = by - out; }
+    const i = snap(grid.ix, grid.xs, ox), j = snap(grid.iy, grid.ys, oy);
+    if (!grid.okP[j * grid.nx + i] || (out !== near && !clearTo(grid, side, i, j, side % 2 === 0 ? bx : by))) continue;
+    // Keep the first segment perpendicular: the snapped grid point defines the port.
+    if (side % 2 === 0) by = grid.ys[j]; else bx = grid.xs[i];
+    return { i, j, side, coord: side % 2 === 0 ? grid.ys[j] : grid.xs[i], boundary: { x: bx, y: by }, dir: side, out };
+  }
+  return null;
+}
+// Every grid point between a port and its box's side is free (nothing thin stands in between).
+function clearTo(grid, side, i, j, edge) {
+  const horiz = side % 2 === 0, step = side === 0 || side === 1 ? -1 : 1;
+  for (let a = horiz ? i : j; ; a += step) {
+    const v = horiz ? grid.xs[a] : grid.ys[a];
+    if (v === undefined || (step < 0 ? v <= edge : v >= edge)) return true;
+    if (!grid.okP[(horiz ? j : a) * grid.nx + (horiz ? a : i)]) return false;
+  }
 }
 
 function portsOf(r, E, which, grid, P) {
@@ -347,7 +369,10 @@ function portsOf(r, E, which, grid, P) {
 
 // ---------- search ----------
 
-function astar(grid, starts, goals, allowed, gIndex, bundle = 0) {
+// Which ends of an edge carry a mark (page mode sets ends; classic edges have an arrowhead).
+const marksOf = e => (e.ends ? { head: e.ends.head !== 'none', tail: e.ends.tail !== 'none' } : { head: true, tail: false });
+
+function astar(grid, starts, goals, allowed, gIndex, bundle = 0, marks = { head: true, tail: false }) {
   if (!starts.length || !goals.length) return null;
   const { nx, ny, xs, ys } = grid, N = nx * ny;
   const dist = new Float64Array(N * 4).fill(Infinity), prev = new Int32Array(N * 4).fill(-1);
@@ -371,7 +396,7 @@ function astar(grid, starts, goals, allowed, gIndex, bundle = 0) {
     const goal = goalAt.get(k);
     if (goal) {
       const inward = (goal.dir + 2) % 4;              // arriving means moving into the box
-      const total = g0 + (d === inward ? 0 : BEND) + (goal.pen || 0);
+      const total = g0 + (d === inward ? 0 : BEND + (grid.end && goal.out < MIN_END && marks.head ? STUB : 0)) + (goal.pen || 0);
       if (total < best) { best = total; bestState = st; bestGoal = goal; }
     }
     for (let nd = 0; nd < 4; nd++) {
@@ -385,7 +410,13 @@ function astar(grid, starts, goals, allowed, gIndex, bundle = 0) {
       const len = horizontal ? Math.abs(xs[ni] - xs[i]) : Math.abs(ys[nj] - ys[j]);
       const grp = horizontal ? grid.gH[seg] : grid.gV[seg];
       let c = len * ((grp >= 0 && !allowed.has(grp) ? 1 + FOREIGN : 1) + ((horizontal ? grid.bH[seg] : grid.bV[seg]) ? 2 : 0));
-      if (nd !== d) c += BEND;
+      if (nd !== d) {
+        c += BEND;
+        // A turn one short step before the box leaves too short an end.
+        const g = goalAt.get(nk);
+        if (grid.end && g && marks.head && nd === (g.dir + 2) % 4 && len + g.out < MIN_END) c += STUB;
+        if (grid.end && prev[st] < -1 && starts[-2 - prev[st]].out < MIN_END) c += marks.tail ? 3 * STUB : STUB / 2;   // a turn right at the start
+      }
       const own = bundle && (horizontal ? grid.ownH[seg] : grid.ownV[seg]) === bundle;
       if (own) c = len * 0.35;                              // ride the bundle's trunk
       else c += (horizontal ? grid.useH[seg] : grid.useV[seg]) * OVERLAP;

@@ -61,9 +61,6 @@
   arrow(el('ap3').bottom, el('se3').top, { label: 'each wave', both: true, color: 'rust', width: 2 })
   connect('se2', 'pl2', { label: 'findings', dashed: true })
   // Waves repeat until every service has moved
-  const c = el('ap3').topRight.move(-16, 16)
-  shape('circle', c, { size: 22, fill: 'card', stroke: 'woad' })
-  draw.arc(c, 6, 200, 320).style({ color: 'woad', arrow: true, width: 1.6 })
-  draw.arc(c, 6, 20, 140).style({ color: 'woad', arrow: true, width: 1.6 })
+  shape('cycle', el('ap3').topRight.move(-20, 20), { size: 24, color: 'woad' })
 </script>
 </diagram>

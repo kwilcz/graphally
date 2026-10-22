@@ -96,6 +96,8 @@ const BASES = {
   event: { path: ({ x, y, w, h }) => circle(x + w / 2, y + h / 2, Math.min(w, h) / 2), round: true, event: 'event' },
   end: { path: ({ x, y, w, h }) => circle(x + w / 2, y + h / 2, Math.min(w, h) / 2), round: true, event: 'end' },
   gateway: { path: ({ x, y, w, h }) => poly([[x + w / 2, y], [x + w, y + h / 2], [x + w / 2, y + h], [x, y + h / 2]]), round: true, gateway: true },
+  // A repeat badge: a ring holding two arrows chasing each other round.
+  cycle: { path: ({ x, y, w, h }) => circle(x + w / 2, y + h / 2, Math.min(w, h) / 2), round: true, cycle: true },
 };
 const ALIASES = {
   box: 'rect', process: 'rect', square: 'rect', pill: 'stadium', terminator: 'stadium', oval: 'ellipse',
@@ -103,7 +105,7 @@ const ALIASES = {
   database: 'cylinder', db: 'cylinder', 'data-store': 'cylinder', queue: 'cylinder-h',
   'data-object': 'note', 'folded': 'note', subroutine: 'predefined', 'multi-document': 'documents',
   'start-event': 'start', 'end-event': 'end', 'intermediate': 'event', 'intermediate-event': 'event', activity: 'task',
-  'sub-process': 'subprocess', arrow: 'arrow-right', step: 'chevron-start',
+  'sub-process': 'subprocess', arrow: 'arrow-right', step: 'chevron-start', repeat: 'cycle', refresh: 'cycle', loop: 'cycle',
 };
 const MARKS = ['exclusive', 'parallel', 'inclusive', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess'];
 
@@ -131,6 +133,17 @@ export function drawShape(spec, b, st) {
   const out = [...(def.under?.(box) || []).map(d => paint(d)), paint(def.path(box)), ...(def.lines?.(box) || []).map(d => line(d, Math.max(1, st.width || 1.5)))];
   const cx = b.x + b.w / 2, cy = b.y + b.h / 2, r = Math.min(b.w, b.h) / 2;
   if (def.event === 'event') out.push(line(circle(cx, cy, r - h - 3.5), Math.min(st.width || 1.5, 1.5)));
+  if (def.cycle) {
+    // Two arcs, each ending in a solid head drawn to scale (a line marker would swamp them).
+    const a = r * 0.52, w = Math.max(1.3, r * 0.13), head = r * 0.36, pt = deg => [cx + a * Math.cos(deg * Math.PI / 180), cy + a * Math.sin(deg * Math.PI / 180)];
+    for (const [from, to] of [[200, 330], [20, 150]]) {
+      const [x0, y0] = pt(from), [x1, y1] = pt(to - 14), [ex, ey] = pt(to);
+      out.push(line(`M${f(x0)},${f(y0)} A${f(a)},${f(a)} 0 0 1 ${f(x1)},${f(y1)}`, w));
+      // The head points along the turning direction (clockwise): tangent (-sin, cos).
+      const t = to * Math.PI / 180, tx = -Math.sin(t), ty = Math.cos(t), nx = Math.cos(t), ny = Math.sin(t);
+      out.push(`<path d="${poly([[ex + tx * head * 0.55, ey + ty * head * 0.55], [ex - tx * head * 0.45 + nx * head * 0.5, ey - ty * head * 0.45 + ny * head * 0.5], [ex - tx * head * 0.45 - nx * head * 0.5, ey - ty * head * 0.45 - ny * head * 0.5]])}" style="fill: ${ink}; stroke: none"></path>`);
+    }
+  }
   for (const k of spec.marks) {
     if (def.gateway) {
       const s = r * 0.3;
@@ -172,6 +185,7 @@ export const SHAPE_CSS = `
 :where(.graphally-page :is(${any(['start', 'start-event', 'event', 'intermediate', 'intermediate-event', 'end', 'end-event'])})) { width: 36px; height: 36px; padding: 0; }
 :where(.graphally-page :is(${any(['end', 'end-event'])})) { border-width: 3px; }
 :where(.graphally-page :is(${any(['gateway'])})) { width: 44px; height: 44px; padding: 0; }
+:where(.graphally-page :is(${any(['cycle', 'repeat', 'refresh', 'loop'])})) { width: 28px; height: 28px; padding: 0; }
 :where(.graphally-page :is(${any(['task', 'activity', 'subprocess', 'sub-process'])})) { padding: 10px 14px; min-height: 52px; }
 :where(.graphally-page :is(${any(['subprocess', 'sub-process'])})) { padding-bottom: 22px; }
 :where(.graphally-page :is(${any(['diamond', 'decision', 'rhombus'])})) { padding: 22px 30px; min-height: 64px; }
