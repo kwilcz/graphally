@@ -116,17 +116,17 @@
 <g data-edge="notify-&gt;twilio" data-sides="left,left"><path d="M1659,182 L1639,182 Q1633,182 1633,188 L1633,366.5 Q1633,372.5 1639,372.5 L1659,372.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="billing-&gt;sap" data-sides="right,right"><path d="M1836,231.5 L1856,231.5 Q1862,231.5 1862,237.5 L1862,433.5 Q1862,439.5 1856,439.5 L1836,439.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="appi-&gt;law" data-sides="right,left"><path d="M1365,615 L1453,615" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="sb-&gt;notify" data-sides="right,left"><path d="M1547,158 L1659,158" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="sb-&gt;notify" data-sides="right,left"><path d="M1547,164.5 L1619.8,164.5 Q1623,164.5 1623,161.3 L1623,161.3 Q1623,158 1626.3,158 L1659,158" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="fd-&gt;web" data-sides="right,left"><path d="M566,146 L683.3,146 Q684,146 684,146.8 L684,146.8 Q684,147.5 684.8,147.5 L696,147.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="api-&gt;blob" data-sides="right,right"><path d="M1216,190 L1249,190 Q1255,190 1255,196 L1255,500.5 Q1255,506.5 1249,506.5 L1216,506.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="api-&gt;sb" data-sides="right,left"><path d="M1216,154 L1338,154 Q1344,154 1344,160 L1344,162.5 Q1344,168.5 1350,168.5 L1370,168.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="dispatch-&gt;fd" data-sides="right,left"><path d="M247,178.5 L371,178.5 Q377,178.5 377,172.5 L377,158.5 Q377,152.5 383,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="sb-&gt;billing" data-sides="right,left"><path d="M1547,182 L1597,182 Q1603,182 1603,188 L1603,225.5 Q1603,231.5 1609,231.5 L1659,231.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="tech-&gt;fd" data-sides="right,left"><path d="M247,245.5 L295,245.5 Q301,245.5 301,239.5 L301,184.5 Q301,178.5 307,178.5 L371,178.5 Q377,178.5 377,172.5 L377,158.5 Q377,152.5 383,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="dispatch-&gt;fd" data-sides="right,left"><path d="M247,178.5 L347,178.5 Q353,178.5 353,172.5 L353,158.5 Q353,152.5 359,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="sb-&gt;billing" data-sides="right,left"><path d="M1547,164.5 L1617,164.5 Q1623,164.5 1623,170.5 L1623,225.5 Q1623,231.5 1629,231.5 L1659,231.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="tech-&gt;fd" data-sides="right,left"><path d="M247,245.5 L347,245.5 Q353,245.5 353,239.5 L353,158.5 Q353,152.5 359,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="fd-&gt;api" data-sides="right,left"><path d="M566,170 L646,170 Q652,170 652,164 L652,78 Q652,72 658,72 L991,72 Q997,72 997,78 L997,156.5 Q997,162.5 1003,162.5 L1039,162.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="tech-&gt;entra" data-sides="right,left"><path d="M247,269.5 L375,269.5 Q381,269.5 381,275.5 L381,609.5 Q381,615.5 387,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="dispatch-&gt;entra" data-sides="right,left"><path d="M247,202.5 L253,202.5 Q259,202.5 259,208.5 L259,263.5 Q259,269.5 265,269.5 L371,269.5 Q377,269.5 377,275.5 L377,609.5 Q377,615.5 383,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="engine-&gt;maps" data-sides="right,left"><path d="M1216,253.5 L1597,253.5 Q1603,253.5 1603,259.5 L1603,500.5 Q1603,506.5 1609,506.5 L1659,506.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="tech-&gt;entra" data-sides="right,left"><path d="M247,269.5 L322,269.5 Q328,269.5 328,275.5 L328,609.5 Q328,615.5 334,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="dispatch-&gt;entra" data-sides="right,left"><path d="M247,202.5 L322,202.5 Q328,202.5 328,208.5 L328,609.5 Q328,615.5 334,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="engine-&gt;maps" data-sides="right,left"><path d="M1216,253.5 L1617,253.5 Q1623,253.5 1623,259.5 L1623,500.5 Q1623,506.5 1629,506.5 L1659,506.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="api-&gt;entra" data-sides="left,right"><path d="M1039,186.5 L923,186.5 Q917,186.5 917,192.5 L917,563 Q917,569 911,569 L588,569 Q582,569 582,575 L582,609.5 Q582,615.5 576,615.5 L570,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-id="dispatch" data-box="70,164,177,49">
 <rect x="70" y="164" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
@@ -273,7 +273,7 @@
 <text class="g-edge" x="1379.2" y="609" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">stores logs</text>
 </g>
 <g data-edge="sb-&gt;notify">
-<text class="g-edge" x="1585" y="152" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">events</text>
+<text class="g-edge" x="1567" y="158.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">events</text>
 </g>
 <g data-edge="fd-&gt;web">
 <text class="g-edge" x="595.6" y="140" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">web app</text>
@@ -285,19 +285,16 @@
 <text class="g-edge" x="1274.5" y="148" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">job-events</text>
 </g>
 <g data-edge="dispatch-&gt;fd">
-<text class="g-edge" x="250.9" y="172.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
-</g>
-<g data-edge="sb-&gt;billing">
-<text class="g-edge" x="1569" y="176" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">events</text>
+<text class="g-edge" x="280.9" y="172.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
 </g>
 <g data-edge="fd-&gt;api">
 <text class="g-edge" x="801.3" y="66" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API calls</text>
 </g>
 <g data-edge="tech-&gt;entra">
-<text class="g-edge" x="388" y="446.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in (OIDC)</text>
+<text class="g-edge" x="335" y="446.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in (OIDC)</text>
 </g>
 <g data-edge="engine-&gt;maps">
-<text class="g-edge" x="1379.2" y="247.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">route plans</text>
+<text class="g-edge" x="1389.2" y="247.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">route plans</text>
 </g>
 <g data-edge="api-&gt;entra">
 <text class="g-edge" x="705.6" y="563" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">validates tokens</text>

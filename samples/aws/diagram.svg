@@ -91,8 +91,8 @@
 </g>
 <g data-edge="thumb-&gt;sns" data-sides="bottom,top"><path d="M1370,385 L1370,417" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="cdn-&gt;waf" data-sides="bottom,top"><path d="M455,167 L455,203" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="web-&gt;cognito" data-sides="bottom,top"><path d="M132,234 L132,336" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="mobile-&gt;cognito" data-sides="left,left"><path d="M40,142.5 L24,142.5 Q18,142.5 18,148.5 L18,354.5 Q18,360.5 24,360.5 L40,360.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="web-&gt;cognito" data-sides="bottom,left"><path d="M132.5,234 L132.5,240 Q132.5,246 126.5,246 L10,246 Q4,246 4,252 L4,354.5 Q4,360.5 10,360.5 L40,360.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="mobile-&gt;cognito" data-sides="left,left"><path d="M40,142.5 L10,142.5 Q4,142.5 4,148.5 L4,354.5 Q4,360.5 10,360.5 L40,360.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="thumb-&gt;s3" data-sides="left,left"><path d="M1278,350.5 L1272,350.5 Q1266,350.5 1266,344.5 L1266,166 Q1266,160 1272,160 L1310,160" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="queue-&gt;thumb" data-sides="right,left"><path d="M1198,374.5 L1278,374.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="sns-&gt;push" data-sides="left,right"><path d="M1278,441 L1198,441" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
@@ -102,7 +102,7 @@
 <g data-edge="apigw-&gt;upload" data-sides="right,left"><path d="M871,158 L984.8,158 Q987,158 987,160.3 L987,160.3 Q987,162.5 989.3,162.5 L1013,162.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="cdn-&gt;apigw" data-sides="right,left"><path d="M548,154 L686,154" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="upload-&gt;ddb" data-sides="right,left"><path d="M1198,178 L1233,178 Q1239,178 1239,184 L1239,211.5 Q1239,217.5 1245,217.5 L1310,217.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="web-&gt;cdn" data-sides="right,left"><path d="M225,209.5 L307,209.5 Q313,209.5 313,203.5 L313,148.5 Q313,142.5 319,142.5 L363,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="web-&gt;cdn" data-sides="right,left"><path d="M225,209.5 L321,209.5 Q327,209.5 327,203.5 L327,148.5 Q327,142.5 333,142.5 L363,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="apigw-&gt;feed" data-sides="right,left"><path d="M871,182 L981,182 Q987,182 987,188 L987,221.5 Q987,227.5 993,227.5 L1013,227.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <g data-edge="s3-&gt;queue" data-sides="left,right"><path d="M1310,178 L1260,178 Q1254,178 1254,184 L1254,344.5 Q1254,350.5 1248,350.5 L1198,350.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
 <g data-id="mobile" data-box="40,118,185,49">
@@ -205,7 +205,7 @@
 <text class="g-edge" x="1377" y="405" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">photo ready</text>
 </g>
 <g data-edge="web-&gt;cognito">
-<text class="g-edge" x="139" y="289" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in</text>
+<text class="g-edge" x="50.5" y="261" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in</text>
 </g>
 <g data-edge="thumb-&gt;s3">
 <text class="g-edge" x="1273" y="283.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">thumbnails</text>
@@ -223,7 +223,7 @@
 <text class="g-edge" x="1225" y="242.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">query</text>
 </g>
 <g data-edge="mobile-&gt;cdn">
-<text class="g-edge" x="262.9" y="136.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+<text class="g-edge" x="274.9" y="136.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
 </g>
 <g data-edge="apigw-&gt;upload">
 <text class="g-edge" x="894.1" y="152" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">upload request</text>

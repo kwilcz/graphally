@@ -15,6 +15,8 @@ const BEND = 36, CROSS = 70, OVERLAP = 22, FOREIGN = 2.2;
 // clearance allows such ends: its ports sit MIN_END + 2 out where there is room (portAt), and
 // where there is not, turning near the box costs STUB, so the bend moves out where it can.
 const MIN_END = 12, STUB = 60;
+// A bundle's lines turn this far out from a box they point at, so the arrowheads have room.
+const TRUNK = 36;
 const DX = [1, 0, -1, 0], DY = [0, 1, 0, -1];   // E S W N
 
 export function routeEdges(model, geo, m) {
@@ -54,13 +56,15 @@ export function routeEdges(model, geo, m) {
     return out;
   };
 
+  // Lines that share an end and mean the same thing bundle into one tree: written in one
+  // statement (a, b -> c), or labelled alike in the same style. Unlabelled lines from separate
+  // statements stay apart: nothing says they carry the same thing.
   const bundleOf = new Map();
-  for (const e of model.edges) {
-    if (!e.stmt) continue;
-    const sameTo = model.edges.filter(q => q.stmt === e.stmt && q.to === e.to).length > 1;
-    const sameFrom = model.edges.filter(q => q.stmt === e.stmt && q.from === e.from).length > 1;
-    if (sameTo) bundleOf.set(e, `${e.stmt}>${e.to}`); else if (sameFrom) bundleOf.set(e, `${e.stmt}<${e.from}`);
-  }
+  const kind = e => (e.label ? `"${e.label}"${JSON.stringify([!!e.dashed, !!e.both, !!e.accent, !!e.line, e.color || '', e.ends ? [e.ends.head, e.ends.tail, e.ends.dash] : 0])}` : e.stmt ? `#${e.stmt}` : null);
+  const groupBy = key => { const g = new Map(); for (const e of model.edges) { const k = key(e); if (k) (g.get(k) || g.set(k, []).get(k)).push(e); } return g; };
+  const fanIns = groupBy(e => kind(e) && `>${e.to}|${kind(e)}`), fanOuts = groupBy(e => kind(e) && `<${e.from}|${kind(e)}`);
+  for (const [k, list] of fanIns) if (new Set(list.map(e => e.from)).size > 1) for (const e of list) bundleOf.set(e, k);
+  for (const [k, list] of fanOuts) if (new Set(list.map(e => e.to)).size > 1) for (const e of list) if (!bundleOf.has(e)) bundleOf.set(e, k);
   const bundleIds = new Map([...new Set(bundleOf.values())].map((k, i) => [k, i + 1]));
   const edges = model.edges.filter(e => e.from !== e.to && rectOf(e.from) && rectOf(e.to)).map(e => ({
     bundle: bundleIds.get(bundleOf.get(e)) || 0,
@@ -117,6 +121,29 @@ export function routeEdges(model, geo, m) {
     }
     return path;
   });
+
+  // A bundle meets its shared box on one side, the side its longest line chose: a line that came
+  // in on another side is routed again to that one, so the lines can merge, unless that costs it
+  // a long detour or the side is set by hand.
+  const fanIn = E => (bundleOf.get(E.e) || '').startsWith('>');
+  const span = k => manhattan(center(edges[k].a), center(edges[k].b));
+  const weigh = path => path.points.reduce((t, q, i, ps) => t + (i ? manhattan(q, ps[i - 1]) : 0), 0) + BEND * Math.max(0, simplify(path.points).length - 2);
+  const byBundle = new Map();
+  edges.forEach((E, k) => { if (E.bundle && first[k]) (byBundle.get(E.bundle) || byBundle.set(E.bundle, []).get(E.bundle)).push(k); });
+  for (const list of byBundle.values()) {
+    const sideOf = k => (fanIn(edges[k]) ? first[k].goalSide : first[k].startSide), lead = list.reduce((a, b) => (span(b) > span(a) ? b : a));
+    for (const k of list) {
+      const E = edges[k], w = fanIn(E) ? 'b' : 'a', o = w === 'a' ? 'b' : 'a';
+      if (sideOf(k) === sideOf(lead) || E.e.override?.[w === 'a' ? 'out' : 'in'] != null) continue;
+      const here = portsOf(E[w], E, w, grid, P).filter(q => q && q.side === sideOf(lead)), there = endPorts(E, o, portsOf(E[o], E, o, grid, P));
+      if (!here.length) continue;
+      markUse(grid, first[k].cells, -1, E.bundle);
+      const path = astar(grid, w === 'a' ? here : there, w === 'a' ? there : here, E.allowed, gIndex, E.bundle, marksOf(E.e));
+      const better = path && weigh(path) <= weigh(first[k]) + 3 * BEND + 300;
+      if (better) first[k] = path;
+      markUse(grid, first[k].cells, 1, E.bundle);
+    }
+  }
 
   // ---- spread ports that share a side ----
   const ends = new Map();
@@ -195,24 +222,70 @@ export function routeEdges(model, geo, m) {
 
   // ---- pass 2: fixed ports ----
   for (const f of fixed) for (const w of ['a', 'b']) if (f[w]) (f[w].side % 2 === 0 ? extraY : extraX).add(f[w].coord);
+  // A bundle's lines merge and split away from its boxes: an end with a mark (the one arrowhead
+  // of a fan-in, each arrowhead of a fan-out) gets grid lines a full trunk's length out.
+  const roomy = (E, w) => E.bundle && marksOf(E.e)[w === 'b' ? 'head' : 'tail'];
+  // Two such lines a few pixels apart would draw two trunks side by side: the later one is left
+  // out, and its port snaps to the first.
+  const trunkAt = { x: [], y: [] }, addTrunk = (axis, v) => { if (trunkAt[axis].some(u => Math.abs(u - v) < 12)) return; trunkAt[axis].push(v); (axis === 'x' ? extraX : extraY).add(v); };
+  edges.forEach((E, k) => { for (const w of ['a', 'b']) { const f = fixed[k][w]; if (!f || !roomy(E, w)) continue; const r = E[w];
+    if (f.side === 0) addTrunk('x', r.x + r.w + TRUNK); else if (f.side === 2) addTrunk('x', r.x - TRUNK); else if (f.side === 1) addTrunk('y', r.y + r.h + TRUNK); else addTrunk('y', r.y - TRUNK); } });
   grid = buildGrid(geo, hard, groupsList, extraX, extraY);
   const endsOf = k => {
     const E = edges[k], f = fixed[k];
-    return [(f.a ? [portAt(E.a, f.a.side, f.a.coord, grid, P)] : endPorts(E, 'a', portsOf(E.a, E, 'a', grid, P))).filter(Boolean),
-            (f.b ? [portAt(E.b, f.b.side, f.b.coord, grid, P)] : endPorts(E, 'b', portsOf(E.b, E, 'b', grid, P))).filter(Boolean)];
+    return [(f.a ? [portAt(E.a, f.a.side, f.a.coord, grid, P, E.aGroup, roomy(E, 'a') ? TRUNK : 0)] : endPorts(E, 'a', portsOf(E.a, E, 'a', grid, P))).filter(Boolean),
+            (f.b ? [portAt(E.b, f.b.side, f.b.coord, grid, P, E.bGroup, roomy(E, 'b') ? TRUNK : 0)] : endPorts(E, 'b', portsOf(E.b, E, 'b', grid, P))).filter(Boolean)];
   };
-  const paths = edges.map((E, k) => {
-    const [starts, goals] = endsOf(k);
-    const path = astar(grid, starts, goals, E.allowed, gIndex, E.bundle, marksOf(E.e));
-    if (path) markUse(grid, path.cells, 1, E.bundle);
-    return path;
+  // A bundle routes as a tree: its longest line first, then each other line may end (fan-in)
+  // or start (fan-out) on any cell of the lines already routed, and takes that line's way from
+  // there. The lines meet on one trunk, drawn once, instead of running side by side.
+  const dirAt = (cells, t) => { const a = cells[t], b = cells[t + 1]; return b === a + 1 ? 0 : b === a - 1 ? 2 : b > a ? 1 : 3; };
+  const treeEnds = (k, starts, goals) => {
+    const E = edges[k];
+    for (const [j, T] of paths.entries()) {
+      if (j === k || !T || !E.bundle || edges[j].bundle !== E.bundle) continue;
+      // Not a trunk's first or last cell: those are its own ports.
+      for (let t = 1; t < T.cells.length - 1; t++) {
+        const c = T.cells[t], i = c % grid.nx, jj = (c / grid.nx) | 0, d = dirAt(T.cells, t), p = { x: grid.xs[i], y: grid.ys[jj] };
+        if (fanIn(E)) goals.push({ i, j: jj, dir: (d + 2) % 4, side: T.goalSide, coord: T.goalCoord, boundary: p, trunk: { T, t } });
+        else starts.push({ i, j: jj, dir: d, side: T.startSide, coord: T.startCoord, boundary: p, trunk: { T, t } });
+      }
+    }
+    return [starts, goals];
+  };
+  // A path that reached a trunk takes the trunk's remainder (or, from a trunk, its beginning).
+  const join = path => {
+    if (!path) return path;
+    let { points, cells } = path;
+    const out = { ...path }, g = path.goal?.trunk, s = path.start?.trunk;
+    if (g) { points = [...points, ...g.T.points.slice(g.t + 2)]; cells = [...cells, ...g.T.cells.slice(g.t + 1)]; Object.assign(out, { goalSide: g.T.goalSide, goalCoord: g.T.goalCoord }); }
+    if (s) { points = [...s.T.points.slice(0, s.t + 1), ...points]; cells = [...s.T.cells.slice(0, s.t), ...cells]; Object.assign(out, { startSide: s.T.startSide, startCoord: s.T.startCoord }); }
+    if (g || s) out.tree = (g || s).T.tree;                 // the tree it joined
+    return { ...out, points, cells };
+  };
+  const paths = new Array(edges.length).fill(null), routed = new Set();
+  edges.forEach((E, k) => {
+    if (routed.has(k)) return;
+    const members = E.bundle ? edges.map((F, j) => (F.bundle === E.bundle ? j : -1)).filter(j => j >= 0).sort((a, b) => span(b) - span(a)) : [k];
+    for (const m of members) {
+      const [starts, goals] = treeEnds(m, ...endsOf(m));
+      const path = join(astar(grid, starts, goals, edges[m].allowed, gIndex, edges[m].bundle, marksOf(edges[m].e)));
+      if (path) {
+        // A line that reached the shared end's port on its own still meets the others there.
+        const endOf = P => (fanIn(edges[m]) ? P.cells.at(-1) : P.cells[0]), twin = members.find(j => paths[j] && endOf(paths[j]) === endOf(path));
+        path.tree ??= twin !== undefined ? paths[twin].tree : m;
+        markUse(grid, path.cells, 1, edges[m].bundle);
+      }
+      paths[m] = path;
+      routed.add(m);
+    }
   });
   // Rip up and reroute: each edge is routed again with every other edge in place, so
-  // early edges stop blocking the good routes of later ones.
+  // early edges stop blocking the good routes of later ones. A bundle keeps its tree.
   for (let round = 0; round < 3; round++) {
     let changed = false;
     edges.forEach((E, k) => {
-      if (!paths[k]) return;
+      if (!paths[k] || E.bundle) return;
       markUse(grid, paths[k].cells, -1, E.bundle);
       const [starts, goals] = endsOf(k);
       const again = astar(grid, starts, goals, E.allowed, gIndex, E.bundle, marksOf(E.e));
@@ -224,7 +297,7 @@ export function routeEdges(model, geo, m) {
   const routes = edges.map((E, k) => {
     const path = paths[k] || first[k];
     if (!path) { model.problems.push({ rule: 'unroutable', from: E.e.from, to: E.e.to }); return null; }
-    return { edge: E.e, bundle: E.bundle, points: simplify(path.points), out: path.startSide, in: path.goalSide };
+    return { edge: E.e, bundle: E.bundle, tree: E.bundle ? `${E.bundle}.${path.tree ?? k}` : 0, points: simplify(path.points), out: path.startSide, in: path.goalSide };
   }).filter(Boolean);
 
   nudge(routes);
@@ -314,11 +387,12 @@ const snap = (map, arr, v) => {
 };
 
 // A port: the point on the box edge, and the grid point just outside it.
-function portAt(r, side, coord, grid, P, isGroup) {
+function portAt(r, side, coord, grid, P, isGroup, want = 0) {
   // With page mode's small clearance the port sits a full end's length out (grid.end) when the
   // way there is free, so the line runs that far before it may turn; else at the clearance.
+  // want: a longer first choice (a bundle's marked end, so its trunk turns away from the box).
   const near = isGroup ? 10 : P;
-  for (const out of grid.end > near ? [grid.end, near] : [near]) {
+  for (const out of [...new Set([want, grid.end, near])].filter(o => o >= near).sort((a, b) => b - a)) {
     let bx, by, ox, oy;
     // An icon node's label hangs below it; a connection downwards starts under the label.
     const below = r.node?.style === 'icon' && r.node.extLabel?.box ? r.node.extLabel.box.y + r.node.extLabel.box.h + 3 : null;
@@ -327,14 +401,16 @@ function portAt(r, side, coord, grid, P, isGroup) {
     else if (side === 1) { bx = coord; by = below ?? r.y + r.h; ox = bx; oy = by + out; }
     else { bx = coord; by = r.y; ox = bx; oy = by - out; }
     const i = snap(grid.ix, grid.xs, ox), j = snap(grid.iy, grid.ys, oy);
-    if (!grid.okP[j * grid.nx + i] || (out !== near && !clearTo(grid, side, i, j, side % 2 === 0 ? bx : by))) continue;
+    // The way back to the clearance must be free; inside it, every point is blocked by the box itself.
+    const edge = (side % 2 === 0 ? bx : by) + (side === 0 || side === 1 ? near : -near);
+    if (!grid.okP[j * grid.nx + i] || (out !== near && !clearTo(grid, side, i, j, edge))) continue;
     // Keep the first segment perpendicular: the snapped grid point defines the port.
     if (side % 2 === 0) by = grid.ys[j]; else bx = grid.xs[i];
     return { i, j, side, coord: side % 2 === 0 ? grid.ys[j] : grid.xs[i], boundary: { x: bx, y: by }, dir: side, out };
   }
   return null;
 }
-// Every grid point between a port and its box's side is free (nothing thin stands in between).
+// Every grid point between a port and its box's clearance is free (nothing thin stands in between).
 function clearTo(grid, side, i, j, edge) {
   const horiz = side % 2 === 0, step = side === 0 || side === 1 ? -1 : 1;
   for (let a = horiz ? i : j; ; a += step) {
@@ -437,7 +513,7 @@ function astar(grid, starts, goals, allowed, gIndex, bundle = 0, marks = { head:
   const start = starts[startIdx];
   const pts = [start.boundary, ...cells.map(s => { const k = (s / 4) | 0; return { x: xs[k % nx], y: ys[(k / nx) | 0] }; }), bestGoal.boundary];
   return { points: pts, cells: cells.map(s => (s / 4) | 0), startSide: start.side, goalSide: bestGoal.side,
-    startCoord: start.coord, goalCoord: bestGoal.coord, cost: best };
+    startCoord: start.coord, goalCoord: bestGoal.coord, cost: best, start, goal: bestGoal };
 }
 
 function markUse(grid, cells, delta = 1, bundle = 0) {
@@ -542,11 +618,11 @@ function placeLabels(routes, geo, hard, m) {
   const labelled = new Set();
   for (const ri of order) {
     const r = routes[ri], text = r.edge.label;
-    // a, b -> c : label   draws the label once, on the first of its edges to be placed,
-    // when the edges share an end (fan-in or fan-out).
-    const fan = r.edge.stmt && routes.some(q => q !== r && q.edge.stmt === r.edge.stmt && (q.edge.to === r.edge.to || q.edge.from === r.edge.from));
-    if (fan && labelled.has(r.edge.stmt)) continue;
-    if (fan) labelled.add(r.edge.stmt);
+    // The lines of a bundle that merged into one tree carry one label, drawn on the first of
+    // them to be placed; a line of the bundle that runs on its own keeps its label.
+    const fan = r.tree;
+    if (fan && labelled.has(fan)) continue;
+    if (fan) labelled.add(fan);
     const w = m.width(text, T.edge), h = 14;
     const p = r.points, cands = [];
     const total = p.reduce((s, q, i) => s + (i ? Math.abs(q.x - p[i - 1].x) + Math.abs(q.y - p[i - 1].y) : 0), 0);

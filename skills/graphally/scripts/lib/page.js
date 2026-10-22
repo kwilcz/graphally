@@ -579,7 +579,7 @@ function overlaps(routes, problems) {
   const segs = routes.map(r => r.points.slice(1).map((q, i) => [r.points[i], q]).filter(([p, q]) => Math.abs(p.x - q.x) < 0.5 || Math.abs(p.y - q.y) < 0.5));
   for (let i = 0; i < routes.length; i++) for (let j = i + 1; j < routes.length; j++) {
     const a = routes[i].edge, b = routes[j].edge;
-    if (a.stmt && a.stmt === b.stmt) continue;            // one statement's lines may share a trunk
+    if (routes[i].tree && routes[i].tree === routes[j].tree) continue;   // a bundle's lines merged into one trunk
     const shared = segs[i].some(([p, q]) => segs[j].some(([u, v]) => {
       const flat = Math.abs(p.y - q.y) < 0.5, same = flat ? Math.abs(u.y - v.y) < 0.5 && Math.abs(p.y - u.y) < 2 : Math.abs(u.x - v.x) < 0.5 && Math.abs(p.x - u.x) < 2;
       if (!same) return false;

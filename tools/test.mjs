@@ -254,6 +254,26 @@ await test('page-routing', () => {
   check(Math.abs(low - (a[1] + a[3] + 80)) <= 1.5, `the via line's lowest point is ${low}, expected ${a[1] + a[3] + 80}`);
 });
 
+await test('bundles', () => {
+  // Lines into one box with the same label merge into one trunk, written in one statement or
+  // not, and end on one long straight stretch with one label; unlabelled ones stay apart.
+  const merged = (svg, keys) => {
+    const ends = keys.map(k => pointsOf(edgePath(svg, k)).slice(-2).map(p => `${p.x},${p.y}`).join(' '));
+    const [a, b] = pointsOf(edgePath(svg, keys[0])).slice(-2);
+    check(new Set(ends).size === 1, `the lines end apart: ${ends.join(' | ')}`);
+    check(Math.hypot(b.x - a.x, b.y - a.y) >= 30, `the shared end is ${Math.hypot(b.x - a.x, b.y - a.y)} px long`);
+    check(svg.split('>copy</text>').length === 2, `${svg.split('>copy</text>').length - 1} copy labels`);
+  };
+  const c = folder('bundles-classic'), cOut = path.join(c, 'out');
+  ok0(render(write(c, doc({ links: '<links>\na1 -> b1 : copy\na2 -> b1 : copy\n</links>' })), cOut, ['--recompute']));
+  merged(svgOf(cOut), ['a1->b1', 'a2->b1']);
+  const d = folder('bundles-page'), out = path.join(d, 'out');
+  const grid = `<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
+<div class=g><div class=card id=a style="grid-row: 1">A</div><div class=card id=b style="grid-row: 2">B</div><div class=card id=c style="grid-row: 3">C</div><div class="card tall" id=t>T</div></div>`;
+  ok0(render(write(d, page(grid, "for (const k of ['a', 'b', 'c']) connect(k, 't', { label: 'copy' })")), out));
+  merged(svgOf(out), ['a->t', 'b->t', 'c->t']);
+});
+
 await test('page-problems', () => {
   const d = folder('page-problems'), out = path.join(d, 'out');
   const r1 = render(write(d, page('<div class=card>A</div>', '', 'width=12px')), out);
