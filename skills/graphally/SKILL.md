@@ -1,6 +1,6 @@
 ---
 name: graphally
-description: Draws professional diagrams as SVG from a short HTML description - architecture (Azure and AWS icons, tiers, shared services), networks (VNets, subnets, peering, private endpoints), hierarchies (management groups, org charts), BPMN processes and flowcharts, sequence diagrams, Gantt plans, and diagrams of Terraform repositories generated from the code. Use it whenever the user asks for a diagram, architecture picture, flow, process map, sequence, timeline or plan, or wants to visualise infrastructure, even if they do not say "diagram"; never hand-write SVG coordinates instead.
+description: Draws professional diagrams as SVG from a short HTML description - architecture (Azure and AWS icons, tiers, shared services), networks (VNets, subnets, peering, private endpoints), hierarchies (management groups, org charts), BPMN processes and flowcharts, sequence diagrams, Gantt plans, diagrams of Terraform repositories generated from the code, and any other figure (phase and role charts, matrices, step cards, roadmaps, custom BPMN) written as HTML and CSS with a shape library. Use it whenever the user asks for a diagram, architecture picture, flow, process map, sequence, timeline or plan, or wants to visualise infrastructure, even if they do not say "diagram"; never hand-write SVG coordinates instead.
 license: Proprietary. Copyright (c) 2026 Kamil Wilczyński (kwilcz), https://github.com/kwilcz/graphally. Use only; LICENSE.txt has complete terms.
 compatibility: Requires Node.js 18 or later and Chrome, Chromium or Edge (or `npx playwright install chromium`). Internet once, to download the Azure and AWS icon packs.
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/tf2graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/fetch-icons.mjs *)
@@ -147,8 +147,9 @@ Read only the one you need:
 - [references/sequence.md](references/sequence.md): sequence diagrams (calls, replies, loops, alternatives).
 - [references/gantt.md](references/gantt.md): plans and timelines (Gantt charts, milestones, dependencies).
 - [references/terraform.md](references/terraform.md): a diagram of a Terraform repository, generated from the code.
-- [references/page.md](references/page.md): anything else, as HTML and CSS: phase and role charts, matrices,
-  step cards, roadmaps, several kinds in one figure.
+- [references/page.md](references/page.md): anything else, as HTML and CSS with shapes (BPMN, flowchart,
+  stores) and a drawing script: phase and role charts, matrices, step cards, roadmaps, a
+  layout of your own for a process or an architecture, several kinds in one figure.
 
 ## Scripts
 

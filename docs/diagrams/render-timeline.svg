@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1012 362" width="1012" height="362" role="img" aria-label="Where a render's time goes. Browser: Start server and browser, Open a page; Engine: Load, measure, lay out, route, render; Output: PNG preview, Close the browser. Connections: Start server and browser to Open a page; Open a page to Load, measure, lay out, route, render; Load, measure, lay out, route, render to PNG preview; PNG preview to Close the browser">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="render-timeline.html" viewBox="0 0 1012 362" width="1012" height="362" role="img" aria-label="Where a render's time goes. Browser: Start server and browser, Open a page; Engine: Load, measure, lay out, route, render; Output: PNG preview, Close the browser. Connections: Start server and browser to Open a page; Open a page to Load, measure, lay out, route, render; Load, measure, lay out, route, render to PNG preview; PNG preview to Close the browser">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -27,18 +29,24 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Where a render's time goes</text>
 <text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Median of five renders of a 21-node architecture diagram, icon packs already downloaded</text>
+<g data-group="g1" data-box="24,116,963,86">
 <rect x="24" y="116" width="963" height="86" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="116" width="963" height="86" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="116" width="90" height="86" style="fill: var(--lane-a); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="38" y="163.5">Browser</text>
+</g>
+<g data-group="g2" data-box="24,202,963,50">
 <rect x="24" y="202" width="963" height="50" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="202" width="963" height="50" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="202" width="90" height="50" style="fill: var(--lane-b); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="38" y="231.5">Engine</text>
+</g>
+<g data-group="g3" data-box="24,252,963,86">
 <rect x="24" y="252" width="963" height="86" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="252" width="963" height="86" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="252" width="90" height="86" style="fill: var(--lane-c); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="38" y="299.5">Output</text>
+</g>
 <line x1="114" y1="110" x2="987.1" y2="110" style="fill: none; stroke: var(--line)" stroke-width="1"></line>
 <line x1="126" y1="106" x2="126" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
 <line x1="257.8" y1="106" x2="257.8" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
@@ -47,10 +55,10 @@
 <line x1="653.4" y1="106" x2="653.4" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
 <line x1="785.2" y1="106" x2="785.2" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
 <line x1="917" y1="106" x2="917" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<path d="M376.4,152 L376.4,158 Q376.4,159 375.4,159 L375.4,159 Q374.4,159 374.4,160 L374.4,172 Q374.4,177 379.4,177 L384.4,177" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M453.5,188 L453.5,208 Q453.5,209 452.5,209 L452.5,209 Q451.5,209 451.5,210 L451.5,222 Q451.5,227 456.5,227 L461.5,227" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M723.8,238 L723.8,258 Q723.8,259 722.8,259 L722.8,259 Q721.8,259 721.8,260 L721.8,272 Q721.8,277 726.8,277 L731.8,277" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M835.2,288 L835.2,294 Q835.2,295 834.2,295 L834.2,295 Q833.2,295 833.2,296 L833.2,308 Q833.2,313 838.2,313 L843.2,313" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<g data-edge="launch-&gt;page"><path d="M376.4,152 L376.4,158 Q376.4,159 375.4,159 L375.4,159 Q374.4,159 374.4,160 L374.4,172 Q374.4,177 379.4,177 L384.4,177" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="page-&gt;compile"><path d="M453.5,188 L453.5,208 Q453.5,209 452.5,209 L452.5,209 Q451.5,209 451.5,210 L451.5,222 Q451.5,227 456.5,227 L461.5,227" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="compile-&gt;shot"><path d="M723.8,238 L723.8,258 Q723.8,259 722.8,259 L722.8,259 Q721.8,259 721.8,260 L721.8,272 Q721.8,277 726.8,277 L731.8,277" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="shot-&gt;close"><path d="M835.2,288 L835.2,294 Q835.2,295 834.2,295 L834.2,295 Q833.2,295 833.2,296 L833.2,308 Q833.2,313 838.2,313 L843.2,313" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <rect x="126" y="130" width="258.4" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
 <rect x="384.4" y="166" width="77.1" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
 <rect x="461.5" y="216" width="270.3" height="22" rx="5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1.2"></rect>

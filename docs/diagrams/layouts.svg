@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1248 522" width="1248" height="522" role="img" aria-label="One engine, five layouts">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="layouts.html" viewBox="0 0 1248 522" width="1248" height="522" role="img" aria-label="One engine, five layouts">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -35,70 +37,104 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">One engine, five layouts</text>
 <text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Each kind of diagram uses the layout that suits it</text>
+<g data-group="#level0" data-box="24,82,1200,85">
 <rect x="24" y="82" width="1200" height="85" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="111.6" y1="92" x2="111.6" y2="157" style="stroke: var(--line)" stroke-width="1"></line>
 <text class="g-group" x="40" y="108.5" style="fill: var(--muted)">Engine</text>
+</g>
+<g data-group="#level1" data-box="24,179,1200,85">
 <rect x="24" y="179" width="1200" height="85" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="111.6" y1="189" x2="111.6" y2="254" style="stroke: var(--line)" stroke-width="1"></line>
 <text class="g-group" x="40" y="205.5" style="fill: var(--muted)">Layouts</text>
+</g>
+<g data-group="#level2" data-box="24,276,1200,204">
 <rect x="24" y="276" width="1200" height="204" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="111.6" y1="286" x2="111.6" y2="470" style="stroke: var(--line)" stroke-width="1"></line>
 <text class="g-group" x="40" y="302.5" style="fill: var(--muted)">Diagrams</text>
-<path d="M667.6,153 L667.6,169 Q667.6,175 661.6,175 L209.6,175 Q203.6,175 203.6,181 L203.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M667.6,153 L667.6,169 Q667.6,175 661.6,175 L493.6,175 Q487.6,175 487.6,181 L487.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M667.6,153 L667.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M667.6,153 L667.6,169 Q667.6,175 673.6,175 L945.6,175 Q951.6,175 951.6,181 L951.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M667.6,153 L667.6,169 Q667.6,175 673.6,175 L1125.6,175 Q1131.6,175 1131.6,181 L1131.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M203.6,250 L203.6,312 Q203.6,318 209.6,318 L231.6,318" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M203.6,250 L203.6,372 Q203.6,378 209.6,378 L231.6,378" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M203.6,250 L203.6,432 Q203.6,438 209.6,438 L231.6,438" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M487.6,250 L487.6,294" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M667.6,250 L667.6,312 Q667.6,318 673.6,318 L695.6,318" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M667.6,250 L667.6,372 Q667.6,378 673.6,378 L695.6,378" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M951.6,250 L951.6,294" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M1131.6,250 L1131.6,294" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
+</g>
+<g data-edge="g-&gt;areas"><path d="M667.6,153 L667.6,169 Q667.6,175 661.6,175 L209.6,175 Q203.6,175 203.6,181 L203.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="g-&gt;tree"><path d="M667.6,153 L667.6,169 Q667.6,175 661.6,175 L493.6,175 Q487.6,175 487.6,181 L487.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="g-&gt;lanes"><path d="M667.6,153 L667.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="g-&gt;seq"><path d="M667.6,153 L667.6,169 Q667.6,175 673.6,175 L945.6,175 Q951.6,175 951.6,181 L951.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="g-&gt;gantt"><path d="M667.6,153 L667.6,169 Q667.6,175 673.6,175 L1125.6,175 Q1131.6,175 1131.6,181 L1131.6,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="areas-&gt;a1"><path d="M203.6,250 L203.6,312 Q203.6,318 209.6,318 L231.6,318" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="areas-&gt;a2"><path d="M203.6,250 L203.6,372 Q203.6,378 209.6,378 L231.6,378" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="areas-&gt;a3"><path d="M203.6,250 L203.6,432 Q203.6,438 209.6,438 L231.6,438" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="tree-&gt;t1"><path d="M487.6,250 L487.6,294" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="lanes-&gt;l1"><path d="M667.6,250 L667.6,312 Q667.6,318 673.6,318 L695.6,318" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="lanes-&gt;l2"><path d="M667.6,250 L667.6,372 Q667.6,378 673.6,378 L695.6,378" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="seq-&gt;s1"><path d="M951.6,250 L951.6,294" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="gantt-&gt;p1"><path d="M1131.6,250 L1131.6,294" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-id="areas" data-box="128,197,152,49">
 <rect x="128" y="197" width="152" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="140" y="219">Areas</text>
 <text class="g-sub" x="140" y="233.5" style="fill: var(--muted)">CSS grid from a map</text>
+</g>
+<g data-id="a1" data-box="232,294,152,48">
 <rect x="232" y="294" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-cloud" x="244" y="305" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="280" y="323">Architecture</text>
+</g>
+<g data-id="a2" data-box="232,354,152,48">
 <rect x="232" y="354" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-virtual-networks" x="244" y="365" width="26" height="26"></use>
 <text class="g-label" x="280" y="383">Network</text>
+</g>
+<g data-id="a3" data-box="232,414,152,48">
 <rect x="232" y="414" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-globe" x="244" y="425" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="280" y="443">Icon diagram</text>
+</g>
+<g data-id="t1" data-box="412,294,152,48">
 <rect x="412" y="294" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-management-groups" x="424" y="305" width="26" height="26"></use>
 <text class="g-label" x="460" y="323">Hierarchy</text>
+</g>
+<g data-id="tree" data-box="412,197,152,49">
 <rect x="412" y="197" width="152" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="424" y="219">Tree</text>
 <text class="g-sub" x="424" y="233.5" style="fill: var(--muted)">tidy tree, bands</text>
+</g>
+<g data-id="lanes" data-box="592,197,152,49">
 <rect x="592" y="197" width="152" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="604" y="219">Lanes</text>
 <text class="g-sub" x="604" y="233.5" style="fill: var(--muted)">flow order in columns</text>
+</g>
+<g data-id="l1" data-box="696,294,152,48">
 <rect x="696" y="294" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-users" x="708" y="305" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="744" y="323">BPMN process</text>
+</g>
+<g data-id="l2" data-box="696,354,152,48">
 <rect x="696" y="354" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-gear" x="708" y="365" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="744" y="383">Flowchart</text>
+</g>
+<g data-id="s1" data-box="876,294,152,48">
 <rect x="876" y="294" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-message" x="888" y="305" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="924" y="323">Sequence</text>
+</g>
+<g data-id="seq" data-box="876,197,152,49">
 <rect x="876" y="197" width="152" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="888" y="219">Sequence</text>
 <text class="g-sub" x="888" y="233.5" style="fill: var(--muted)">lifelines, bars</text>
+</g>
+<g data-id="p1" data-box="1056,294,152,48">
 <rect x="1056" y="294" width="152" height="48" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-timer" x="1068" y="305" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="1104" y="323">Plan</text>
+</g>
+<g data-id="gantt" data-box="1056,197,152,49">
 <rect x="1056" y="197" width="152" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="1068" y="219">Gantt</text>
 <text class="g-sub" x="1068" y="233.5" style="fill: var(--muted)">time axis</text>
+</g>
+<g data-id="g" data-box="592,100,152,49">
 <rect x="592" y="100" width="152" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-code" x="604" y="111.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="640" y="122">graphally</text>
 <text class="g-sub" x="640" y="136.5" style="fill: var(--muted)">compile()</text>
+</g>
 </g>
 </svg>

@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1452 890" width="1452" height="890" role="img" aria-label="Fabrikam Retail network topology. Internet: Customers; On-premises: Fabrikam datacenter; GatewaySubnet: ExpressRoute gateway; AzureFirewallSubnet: Azure Firewall; AzureBastionSubnet: Azure Bastion; snet-dns: DNS Private Resolver; snet-agw: Application Gateway; snet-app: App Service; snet-pe: Private endpoint, Private endpoint; snet-dbw-public, -private: Azure Databricks; snet-pe: Private endpoint; Azure PaaS and shared DNS: Azure SQL, Storage, Private DNS zones, Data Lake Storage. Connections: Customers to Application Gateway (HTTPS); Application Gateway to App Service (HTTPS); Fabrikam datacenter to ExpressRoute gateway (ExpressRoute); ExpressRoute gateway to Azure Firewall (UDR 0.0.0.0/0); vnet-ecommerce-prod to Azure Firewall (egress UDR); vnet-hub-weu to vnet-ecommerce-prod (peering); vnet-hub-weu to vnet-analytics-prod (peering); App Service to Private endpoint (SQL); Private endpoint to Azure SQL (private link); Private endpoint to Storage (private link); Azure Databricks to Private endpoint (ABFS); Private endpoint to Data Lake Storage (private link)">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1452 890" width="1452" height="890" role="img" aria-label="Fabrikam Retail network topology. Internet: Customers; On-premises: Fabrikam datacenter; GatewaySubnet: ExpressRoute gateway; AzureFirewallSubnet: Azure Firewall; AzureBastionSubnet: Azure Bastion; snet-dns: DNS Private Resolver; snet-agw: Application Gateway; snet-app: App Service; snet-pe: Private endpoint, Private endpoint; snet-dbw-public, -private: Azure Databricks; snet-pe: Private endpoint; Azure PaaS and shared DNS: Azure SQL, Storage, Private DNS zones, Data Lake Storage. Connections: Customers to Application Gateway (HTTPS); Application Gateway to App Service (HTTPS); Fabrikam datacenter to ExpressRoute gateway (ExpressRoute); ExpressRoute gateway to Azure Firewall (UDR 0.0.0.0/0); vnet-ecommerce-prod to Azure Firewall (egress UDR); vnet-hub-weu to vnet-ecommerce-prod (peering); vnet-hub-weu to vnet-analytics-prod (peering); App Service to Private endpoint (SQL); Private endpoint to Azure SQL (private link); Private endpoint to Storage (private link); Azure Databricks to Private endpoint (ABFS); Private endpoint to Data Lake Storage (private link)">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -42,10 +44,15 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Fabrikam Retail network topology</text>
 <text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Hub and spoke, West Europe</text>
+<g data-group="inet" data-box="24,82,266,101">
 <text class="g-group" x="24" y="97.5" style="fill: var(--muted)">Internet</text>
+</g>
+<g data-group="onprem" data-box="1068,82,360,101">
 <rect x="1068" y="82" width="360" height="101" rx="10" style="fill: none; stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="6 4"></rect>
 <text class="g-group" x="1084" y="108.5" style="fill: var(--muted)">On-premises</text>
 <text class="g-gsub" x="1167.9" y="108.5" style="fill: var(--muted)">10.200.0.0/16</text>
+</g>
+<g data-group="hub" data-box="383,215,605,286">
 <rect x="383" y="215" width="605" height="286" rx="8" style="fill: var(--vnet); stroke: var(--woad)" stroke-width="1.4"></rect>
 <use href="#gr1-azure-virtual-networks" x="399" y="228" width="18" height="18"></use>
 <text class="g-group" x="423" y="241.5" style="fill: var(--woad)">vnet-hub-weu</text>
@@ -54,131 +61,212 @@
 <rect x="952" y="227" width="20" height="20" rx="4" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <use href="#gr1-azure-dns-zones" x="955" y="230" width="14" height="14"></use>
 </g>
+</g>
+<g data-group="ecom" data-box="24,215,266,518">
 <rect x="24" y="215" width="266" height="518" rx="8" style="fill: var(--vnet); stroke: var(--woad)" stroke-width="1.4"></rect>
 <use href="#gr1-azure-virtual-networks" x="40" y="228" width="18" height="18"></use>
 <text class="g-group" x="64" y="241.5" style="fill: var(--woad)">vnet-ecommerce-prod</text>
 <text class="g-gsub" x="204.1" y="241.5" style="fill: var(--muted)">10.10.0.0/16</text>
+</g>
+<g data-group="analytics" data-box="1068,431,360,302">
 <rect x="1068" y="431" width="360" height="302" rx="8" style="fill: var(--vnet); stroke: var(--woad)" stroke-width="1.4"></rect>
 <use href="#gr1-azure-virtual-networks" x="1084" y="444" width="18" height="18"></use>
 <text class="g-group" x="1108" y="457.5" style="fill: var(--woad)">vnet-analytics-prod</text>
 <text class="g-gsub" x="1232" y="457.5" style="fill: var(--muted)">10.20.0.0/16</text>
+</g>
+<g data-group="paas" data-box="24,765,1404,101">
 <rect x="24" y="765" width="1404" height="101" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="40" y="791.5" style="fill: var(--muted)">Azure PaaS and shared DNS</text>
+</g>
+<g data-group="gwsn" data-box="738,251,234,101">
 <rect x="738" y="251" width="234" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="754" y="277.5" style="fill: var(--woad)">GatewaySubnet</text>
 <text class="g-gsub" x="854.8" y="277.5" style="fill: var(--muted)">10.0.0.0/27</text>
+</g>
+<g data-group="fwsn" data-box="399,251,234,101">
 <rect x="399" y="251" width="234" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="415" y="277.5" style="fill: var(--woad)">AzureFirewallSubnet</text>
 <text class="g-gsub" x="544.4" y="277.5" style="fill: var(--muted)">10.0.1.0/26</text>
+</g>
+<g data-group="bassn" data-box="738,384,234,101">
 <rect x="738" y="384" width="234" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="754" y="410.5" style="fill: var(--woad)">AzureBastionSubnet</text>
 <text class="g-gsub" x="882" y="410.5" style="fill: var(--muted)">10.0.2.0/26</text>
+</g>
+<g data-group="dnssn" data-box="399,384,234,101">
 <rect x="399" y="384" width="234" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="415" y="410.5" style="fill: var(--woad)">snet-dns</text>
 <text class="g-gsub" x="475.5" y="410.5" style="fill: var(--muted)">10.0.3.0/28</text>
+</g>
+<g data-group="agwsn" data-box="40,251,234,101">
 <rect x="40" y="251" width="234" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="56" y="277.5" style="fill: var(--woad)">snet-agw</text>
 <text class="g-gsub" x="119.1" y="277.5" style="fill: var(--muted)">10.10.0.0/24</text>
+</g>
+<g data-group="appsn" data-box="40,400,234,101">
 <rect x="40" y="400" width="234" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="56" y="426.5" style="fill: var(--woad)">snet-app</text>
 <text class="g-gsub" x="116.5" y="426.5" style="fill: var(--muted)">10.10.1.0/24</text>
+</g>
+<g data-group="pesn" data-box="40,549,234,168">
 <rect x="40" y="549" width="234" height="168" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="56" y="575.5" style="fill: var(--woad)">snet-pe</text>
 <text class="g-gsub" x="109.2" y="575.5" style="fill: var(--muted)">10.10.2.0/24</text>
+</g>
+<g data-group="dbwsn" data-box="1084,467,328,101">
 <rect x="1084" y="467" width="328" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="1100" y="493.5" style="fill: var(--woad)">snet-dbw-public, -private</text>
 <text class="g-gsub" x="1257.4" y="493.5" style="fill: var(--muted)">10.20.0.0/24, 10.20.1.0/24</text>
+</g>
+<g data-group="anpe" data-box="1131,616,234,101">
 <rect x="1131" y="616" width="234" height="101" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.1" stroke-dasharray="5 4"></rect>
 <text class="g-group" x="1147" y="642.5" style="fill: var(--woad)">snet-pe</text>
 <text class="g-gsub" x="1200.2" y="642.5" style="fill: var(--muted)">10.20.2.0/24</text>
-<path d="M186,336 L186,436" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M184,485 L184,585" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1277,552 L1277,652" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1247,701 L1247,801" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M56,143.5 L40,143.5 Q34,143.5 34,149.5 L34,305.5 Q34,311.5 40,311.5 L56,311.5" style="fill: none; stroke: var(--woad)" stroke-width="2" marker-end="url(#gr1-woad)"></path>
-<path d="M56,609.5 L40,609.5 Q34,609.5 34,615.5 L34,819.5 Q34,825.5 40,825.5 L56,825.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M754,311 L617,311" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M258,676.5 L380,676.5 Q386,676.5 386,682.5 L386,801" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M290,464.5 L387,464.5 Q393,464.5 393,458.5 L393,317.5 Q393,311.5 399,311.5 L415,311.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1147,142.5 L928,142.5 Q922,142.5 922,148.5 L922,287" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M383,358 L306,358 Q300,358 300,364 L300,478.5 Q300,483.5 295,483.5 L290,483.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path>
-<path d="M988,465 L1068,465" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path>
+</g>
+<g data-edge="agw-&gt;app" data-sides="bottom,top"><path d="M186,336 L186,436" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="app-&gt;pesql" data-sides="bottom,top"><path d="M184,485 L184,585" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="dbw-&gt;pedl" data-sides="bottom,top"><path d="M1277,552 L1277,652" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="pedl-&gt;dls" data-sides="bottom,top"><path d="M1247,701 L1247,801" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="shopper-&gt;agw" data-sides="left,left"><path d="M56,143.5 L40,143.5 Q34,143.5 34,149.5 L34,305.5 Q34,311.5 40,311.5 L56,311.5" style="fill: none; stroke: var(--woad)" stroke-width="2" marker-end="url(#gr1-woad)"></path></g>
+<g data-edge="pesql-&gt;sql" data-sides="left,left"><path d="M56,609.5 L40,609.5 Q34,609.5 34,615.5 L34,819.5 Q34,825.5 40,825.5 L56,825.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="ergw-&gt;fw" data-sides="left,right"><path d="M754,311 L617,311" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="pest-&gt;stor" data-sides="right,top"><path d="M258,676.5 L380,676.5 Q386,676.5 386,682.5 L386,801" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="ecom-&gt;fw" data-sides="right,left"><path d="M290,311.5 L415,311.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="dc-&gt;ergw" data-sides="left,top"><path d="M1147,142.5 L928,142.5 Q922,142.5 922,148.5 L922,287" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="hub-&gt;ecom" data-sides="left,right"><path d="M383,358 L290,358" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path></g>
+<g data-edge="hub-&gt;analytics" data-sides="right,left"><path d="M988,465 L1068,465" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path></g>
+<g data-id="shopper" data-box="56,119,202,49">
 <rect x="56" y="119" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-browser" x="68" y="130.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="104" y="140">Customers</text>
 <text class="g-sub" x="104" y="155.5" style="fill: var(--muted)">web browser</text>
+</g>
+<g data-id="dc" data-box="1147,118,202,49">
 <rect x="1147" y="118" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-building" x="1159" y="129.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="1195" y="139">Fabrikam datacenter</text>
 <text class="g-sub" x="1195" y="154.5" style="fill: var(--muted)">corporate network</text>
+</g>
+<g data-id="ergw" data-box="754,287,202,49">
 <rect x="754" y="287" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-virtual-network-gateways" x="766" y="298.5" width="26" height="26"></use>
 <text class="g-label" x="802" y="308">ExpressRoute gateway</text>
 <text class="g-sub" x="802" y="323.5" style="fill: var(--muted)">on-prem link</text>
+</g>
+<g data-id="fw" data-box="415,287,202,49">
 <rect x="415" y="287" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></rect>
 <use href="#gr1-azure-firewalls" x="427" y="298.5" width="26" height="26"></use>
 <text class="g-label" x="463" y="308" style="fill: var(--woad)">Azure Firewall</text>
 <text class="g-sub" x="463" y="323.5" style="fill: var(--muted)">all spoke egress</text>
+</g>
+<g data-id="bas" data-box="754,420,202,49">
 <rect x="754" y="420" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-bastions" x="766" y="431.5" width="26" height="26"></use>
 <text class="g-label" x="802" y="441">Azure Bastion</text>
 <text class="g-sub" x="802" y="456.5" style="fill: var(--muted)">admin access</text>
+</g>
+<g data-id="dnsr" data-box="415,420,202,49">
 <rect x="415" y="420" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-dns-private-resolver" x="427" y="431.5" width="26" height="26"></use>
 <text class="g-label" x="463" y="441">DNS Private Resolver</text>
 <text class="g-sub" x="463" y="456.5" style="fill: var(--muted)">hybrid DNS</text>
+</g>
+<g data-id="agw" data-box="56,287,202,49">
 <rect x="56" y="287" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-application-gateways" x="68" y="298.5" width="26" height="26"></use>
 <text class="g-label" x="104" y="308">Application Gateway</text>
 <text class="g-sub" x="104" y="323.5" style="fill: var(--muted)">WAF v2</text>
+</g>
+<g data-id="app" data-box="56,436,202,49">
 <rect x="56" y="436" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="68" y="447.5" width="26" height="26"></use>
 <text class="g-label" x="104" y="457">App Service</text>
 <text class="g-sub" x="104" y="472.5" style="fill: var(--muted)">VNet integration</text>
+</g>
+<g data-id="pesql" data-box="56,585,202,49">
 <rect x="56" y="585" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-private-endpoint" x="68" y="596.5" width="26" height="26"></use>
 <text class="g-label" x="104" y="606">Private endpoint</text>
 <text class="g-sub" x="104" y="621.5" style="fill: var(--muted)">Azure SQL</text>
+</g>
+<g data-id="pest" data-box="56,652,202,49">
 <rect x="56" y="652" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-private-endpoint" x="68" y="663.5" width="26" height="26"></use>
 <text class="g-label" x="104" y="673">Private endpoint</text>
 <text class="g-sub" x="104" y="688.5" style="fill: var(--muted)">Storage</text>
+</g>
+<g data-id="dbw" data-box="1147,503,202,49">
 <rect x="1147" y="503" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-azure-databricks" x="1159" y="514.5" width="26" height="26"></use>
 <text class="g-label" x="1195" y="524">Azure Databricks</text>
 <text class="g-sub" x="1195" y="539.5" style="fill: var(--muted)">workspace</text>
+</g>
+<g data-id="pedl" data-box="1147,652,202,49">
 <rect x="1147" y="652" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-private-endpoint" x="1159" y="663.5" width="26" height="26"></use>
 <text class="g-label" x="1195" y="673">Private endpoint</text>
 <text class="g-sub" x="1195" y="688.5" style="fill: var(--muted)">Data Lake</text>
+</g>
+<g data-id="sql" data-box="56,801,202,49">
 <rect x="56" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-sql-database" x="68" y="812.5" width="26" height="26"></use>
 <text class="g-label" x="104" y="822">Azure SQL</text>
 <text class="g-sub" x="104" y="837.5" style="fill: var(--muted)">orders DB</text>
+</g>
+<g data-id="stor" data-box="285,801,202,49">
 <rect x="285" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-storage-accounts" x="297" y="812.5" width="26" height="26"></use>
 <text class="g-label" x="333" y="822">Storage</text>
 <text class="g-sub" x="333" y="837.5" style="fill: var(--muted)">blobs</text>
+</g>
+<g data-id="pdns" data-box="514,801,202,49">
 <rect x="514" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-dns-zones" x="526" y="812.5" width="26" height="26"></use>
 <text class="g-label" x="562" y="822">Private DNS zones</text>
 <text class="g-sub" x="562" y="837.5" style="fill: var(--muted)">privatelink</text>
+</g>
+<g data-id="dls" data-box="1147,801,202,49">
 <rect x="1147" y="801" width="202" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-storage-accounts" x="1159" y="812.5" width="26" height="26"></use>
 <text class="g-label" x="1195" y="822">Data Lake Storage</text>
 <text class="g-sub" x="1195" y="837.5" style="fill: var(--muted)">Gen2</text>
+</g>
+<g data-edge="agw-&gt;app">
 <text class="g-edge" x="193" y="390" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+</g>
+<g data-edge="app-&gt;pesql">
 <text class="g-edge" x="191" y="539" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">SQL</text>
+</g>
+<g data-edge="dbw-&gt;pedl">
 <text class="g-edge" x="1284" y="606" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">ABFS</text>
+</g>
+<g data-edge="pedl-&gt;dls">
 <text class="g-edge" x="1254" y="755" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
+</g>
+<g data-edge="shopper-&gt;agw">
 <text class="g-edge" x="41" y="207.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+</g>
+<g data-edge="pesql-&gt;sql">
 <text class="g-edge" x="41" y="751.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
+</g>
+<g data-edge="ergw-&gt;fw">
 <text class="g-edge" x="647.4" y="305" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">UDR 0.0.0.0/0</text>
+</g>
+<g data-edge="pest-&gt;stor">
 <text class="g-edge" x="297.9" y="670.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="309.1" y="458.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">egress UDR</text>
+</g>
+<g data-edge="ecom-&gt;fw">
+<text class="g-edge" x="314.1" y="305.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">egress UDR</text>
+</g>
+<g data-edge="dc-&gt;ergw">
 <text class="g-edge" x="985.1" y="136.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">ExpressRoute</text>
-<text class="g-edge" x="320.7" y="352" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
+</g>
+<g data-edge="hub-&gt;ecom">
+<text class="g-edge" x="315.7" y="352" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
+</g>
+<g data-edge="hub-&gt;analytics">
 <text class="g-edge" x="1007.2" y="459" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
+</g>
 <text class="g-key" x="383" y="95" style="fill: var(--muted); font-weight: 600">Key</text>
 <path d="M383,113 H423" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
 <text class="g-key" x="435" y="117">synchronous call</text>

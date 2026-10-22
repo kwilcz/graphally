@@ -1,31 +1,27 @@
 # Figures in HTML and CSS
 
-`<diagram layout=html>` draws anything that is not a graph for the engine to lay out:
-phase and role charts, matrices, step cards, roadmaps, one-page overviews, or several kinds
-in one figure. You write the figure as a web page; the browser places every box and wraps
-every line; graphally turns the page into SVG. An optional `<script>` then draws by name:
-lines from one card to another, gates on a column boundary, arrows, curves.
+`<diagram layout=html>` draws any figure that is not a plain graph: phase and role charts,
+matrices, step cards, roadmaps, BPMN processes with a layout of your own, one-page
+overviews, several kinds in one figure. You write the figure as a web page; the browser
+places every box and wraps every line; graphally turns the page into SVG. A `<script>` then
+connects and draws by name: lines routed around the boxes, arrows, gates on a column
+boundary. Nothing in the source is a coordinate.
 
 ```html
-<diagram layout=html width=1100>
+<diagram layout=html width=1000>
 <style>
-  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px }
-  h1 { margin-bottom: 20px }
-  .step { text-align: center }
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; align-items: center; justify-items: center }
+  .ev { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11.5px }
 </style>
-<h1>From pilot to production</h1>
-<div class="steps">
-  <div class="card step" id=plan><icon name=people size=32></icon><h3>Plan</h3><p>Agree the goal</p></div>
-  <div class="card step" id=build><icon name=server size=32></icon><h3>Build</h3><p>Ship the pilot</p></div>
-  <div class="card step" id=prove><icon name=shield size=32></icon><h3>Prove</h3><p>Test with users</p></div>
-  <div class="card step" id=scale><icon name=globe size=32></icon><h3>Scale</h3><p>Roll out</p></div>
+<div class="flow">
+  <div class="ev"><i shape=start id=in></i>Order placed</div>
+  <div shape=task id=check>Check stock</div>
+  <i shape="gateway exclusive" id=ok></i>
+  <div shape=cylinder id=db>Orders DB</div>
 </div>
 <script>
-  const s = all('.step')
-  s.slice(1).forEach((step, i) => {
-    arrow(s[i].right.right(4), step.left.left(4), { color: 'rust' })
-    gate(mid(s[i].right, step.left).up(28), `G${i + 1}`)
-  })
+  connect('in', 'check'); connect('check', 'ok')
+  connect('ok', 'db', { label: 'in stock' })
 </script>
 </diagram>
 ```
@@ -37,73 +33,130 @@ lines from one card to another, gates on a column boundary, arrows, curves.
 - Any CSS for layout works: grid (with `grid-column: span 2`, `subgrid`), flexbox,
   `position: absolute` inside a `position: relative` box, margins, padding.
 - What is drawn: background colours, borders (solid, dashed, dotted, per side),
-  `border-radius`, `clip-path: polygon(…)`, text with its font, size, weight, style,
-  colour, `text-transform` and `letter-spacing`, list bullets, and `<icon>`.
-- What is not drawn: shadows, gradients, transforms, images, `::before` and `::after`. Draw
-  such marks in the script instead.
-- Colours: any CSS colour, or the theme tokens `var(--ink)`, `--muted`, `--line`, `--woad`
-  (blue), `--rust` (red), `--wash`, `--card`, `--bg`, which follow the dark theme.
+  `border-radius`, `clip-path: polygon(…)`, shapes, text with its font, size, weight,
+  style, colour, `text-transform` and `letter-spacing`, list bullets, and `<icon>`.
+- What is not drawn: shadows, gradients, transforms, rotated or vertical text, images,
+  `::before` and `::after`. Draw such marks in the script instead.
+- Colours: any CSS colour, or the theme tokens, which follow the dark theme: `var(--ink)`
+  (text), `--muted`, `--line`, `--card` (white), `--wash`, `--bg`; strong `--woad` (blue),
+  `--rust` (red), `--teal`, `--green`, `--purple`, `--amber`; pale `--lane-a` (blue),
+  `--lane-b` (green), `--lane-c` (purple), `--lane-d` (orange). Literal colours stay as
+  written in both themes.
 - `title` and `subtitle` on `<diagram>` add the standard heading; or write your own `<h1>`.
 
-Shorthand classes (your own CSS overrides them):
+## Shapes
 
-| Class | Draws |
+`shape="…"` on any element draws it as that shape. The element is still a box in the
+layout, sized by its content and your CSS; its background is the shape's fill and its
+border the outline (`border-style: dashed` dashes it). By default a shape has a white fill,
+a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a background.
+
+| Shapes | |
 |---|---|
-| `card` | white box with a light border |
-| `box` | white box with a dark border |
-| `pill`, `tag` | rounded label, small tag |
-| `banner` | dark band with light text |
-| `muted`, `small` | grey text, small text |
-| `row`, `col` | flex row or column with a gap |
-| `chevron` | arrow-shaped box, for phases |
-| `diamond`, `circle` | diamond or round box, content centred |
+| `rect`, `rounded`, `stadium` (`pill`, `terminator`), `ellipse`, `circle` | basic |
+| `diamond` (`decision`), `hexagon`, `triangle`, `parallelogram` (`io`), `trapezoid` | geometric |
+| `chevron`, `chevron-start` | phase bars: a notch and a point; a flat start and a point |
+| `arrow-right`, `arrow-left`, `arrow-up`, `arrow-down` | block arrows |
+| `cylinder` (`database`, `data-store`), `cylinder-h` (`queue`) | stores |
+| `document`, `documents`, `note` (`data-object`), `callout`, `cloud` | documents and notes |
+| `manual-input`, `predefined`, `delay`, `off-page` | flowchart |
+| `task`, `subprocess`, `start`, `event`, `end`, `gateway` | BPMN |
 
-`<icon name="app service" size=32>` places an icon inline, from the same icon names as the
-other diagrams.
+Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
+`gateway inclusive` (○); `start`, `event` or `end` with `timer`, `message`, `signal` or
+`error`, and `end terminate`; `task loop`, `task multi`, `subprocess loop`. Events are 36px
+(`end` has a 3px outline), gateways 44px; set `width` and `height` to change them.
+
+## Classes and icons
+
+Shorthand classes, which your own CSS overrides: `card` (white box, light border), `box`
+(white box, dark border), `pill`, `tag`, `banner` (dark band, light text), `muted`, `small`,
+`row` and `col` (flex with a gap), `circle` (a round box). `<icon name="app service" size=32>`
+places an icon inline, from the same names as the other diagrams.
 
 ## The script
 
-It runs after the page is laid out. Nothing in it is a coordinate: every point comes from an
-element.
+It runs after the page is laid out. Every point comes from an element.
 
 | Call | Gives |
 |---|---|
 | `el('id')`, `el('.css selector')` | an element's box |
 | `all('.selector')` | every match, in page order |
-| box `.x .y .w .h`, `.center`, `.top`, `.right`, `.bottom`, `.left` | points on the box |
+| box `.x .y .w .h`, `.center`, `.top`, `.right`, `.bottom`, `.left` | numbers; points on the box |
 | box `.topLeft`, `.topRight`, `.bottomLeft`, `.bottomRight`, `.at('top', 0.25)` | corners; a point a fraction along a side |
-| point `.up(d)`, `.down(d)`, `.left(d)`, `.right(d)`, `.move(dx, dy)` | a point moved |
-| `pt(x, y)`, `mid(a, b)`, `lerp(a, b, t)` | a point; midpoint; a point a fraction of the way |
-| `connect(a, b, { label, dashed, both, accent, color, out, in, arrow: false })` | a line **routed** around every box, from the side facing `b` (or `out`/`in`: `top`, `right`, `bottom`, `left`) |
-| `arrow(a, b, { label, color, width, dashed, both, arrow: false })` | a straight arrow; boxes connect at their facing sides; the label sits beside its middle |
-| `curve(a, b, { bend, label, … })` | a curved arrow, same options |
+| point `.x`, `.y`, `.up(d)`, `.down(d)`, `.left(d)`, `.right(d)`, `.move(dx, dy)` | its numbers; the point moved |
+| `pt(x, y)`, `mid(a, b)`, `lerp(a, b, t)` | a point; the midpoint; a point a fraction of the way |
+| `connect(a, b, { label, via, out, in, … })` | a line **routed** around the boxes |
+| `arrow(a, b, { label, … })` | a straight arrow; boxes connect at their facing sides; the label sits beside its middle |
+| `curve(a, b, { bend, label, … })` | a curved arrow |
 | `draw.moveTo(p).lineTo(p).quadraticCurveTo(c, p).bezierCurveTo(c1, c2, p).closePath()` | any path, as on a canvas |
 | `draw.arc(centre, r, fromDeg, toDeg)` | an arc; degrees clockwise from the right |
-| `.style({ color, width, dashed, fill, arrow, both })` | styles a `draw` path |
-| `gate(p, 'G1', { fill, size })` | a decision diamond with a label |
-| `text(p, 'str', { size, weight, italic, color, anchor })`, `icon(p, 'name', { size })` | text or an icon at a point |
-| `shape('circle' \| 'diamond' \| 'rect', p, { size, w, h, fill, stroke, dashed })` | a shape centred on a point |
+| `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path |
+| `shape('gateway parallel', p, { size, w, h, fill, stroke, width, dashed })` | a shape centred on a point, from the list above |
+| `gate(p, 'G1', { fill, size })` | a red decision diamond with a label, for phase charts |
+| `text(p, 'str', { size, weight, italic, color, anchor })` | text centred on a point; `anchor`: `start`, `middle`, `end` |
+| `icon(p, 'name', { size })` | an icon centred on a point |
 
-`a` and `b` take an element, an id, a selector, or a point. `color` takes a CSS colour or a
-token name (`'rust'`, `'woad'`). Use `connect` when the line must find its own way; it
-keeps clear of the lines the script draws. Use `arrow` and `draw` when you know where the
-line goes.
+`a`, `b` and `p` take an element, an id, a selector, or a point.
 
-The script's drawings paint above the page. A line that must pass behind boxes (a spine
-through a row of cards) belongs in the page: an absolutely positioned `div` placed before
-the cards, which are `position: relative`.
+Options of lines (`connect`, `arrow`, `curve`): `color` (a CSS colour or a token name:
+`'teal'`, `'rust'`), `width`, `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
+`circle`, `dot`, `diamond`, `open-diamond`, `none`; `head` defaults to `arrow`, `tail` to
+none), `both` (a head at each end), `arrow: false` (no head), and `message: true` for a BPMN
+message flow (dashed, an open circle at the source, an open arrowhead). `connect` also
+takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and enters) and
+`via: [points]` (waypoints it passes through).
 
-## Advice
+## Lines
 
-- Build the structure with the grid: one column per phase or stage, `grid-column: span n`
-  for anything that covers several, `grid-template-columns: subgrid` for a band whose cards
-  must line up with the columns above. Equal heights in a row come free.
-- Give an `id` or a class to everything the script refers to.
-- Points between columns: `mid(a.right, b.left)`. Points on a line through a band:
-  `pt(mid(a.right, b.left).x, el('spine').center.y)`.
-- Loops: `forEach` over `all(…)`, with the index to pair a card with the card below it.
+- `connect` finds its own way. Every box with a background, a border or a shape blocks it,
+  and so does text outside boxes; a box that holds other boxes in the HTML lets it in to
+  reach them. A box painted behind boxes it does not hold (a lane's background in the same
+  grid cells) does not block. The script's straight lines count as taken, so `connect`
+  keeps off them.
+- It keeps 6px from boxes, so it passes through any gap wider than 12px. A labelled line
+  needs a gap wider than its label (about 7px per character at the default size).
+- Where it takes a way you do not want, give it `via` points (from elements: `mid(a.right,
+  b.left)`) or `out`/`in` sides; do not fall back to `draw` with offsets.
+- `arrow` and `draw` go exactly where you say: use them when the way is obvious (straight
+  down a column, along a band).
+- The script's drawings paint above the page. A line that must pass behind boxes (a spine
+  through a row of cards) belongs in the page: an absolutely positioned `div` placed before
+  the cards, which are `position: relative`.
 
-Text that belongs to the layout (labels under arrows, notes in a row) is best written as
-page text in a grid cell: the browser wraps it and the overlap check sees it. The render
-reports `text-overlap` when two page texts collide (it does not check the script's
-`text` and `gate` labels), and `script-error` with the line of the script that failed.
+## Problems
+
+| Problem | Fix |
+|---|---|
+| `script-error` | the message and the script's line say what failed (an unknown id, a value that is not a point) |
+| `unknown-shape`, `unknown-icon` | use the suggested name |
+| `unroutable` | the line has no way through: widen a gap, or give it `via` points |
+| `override-ignored … by=x` | the side is blocked by `x`: choose another side |
+| `label-crowded` | widen the gap the line runs through, or shorten the label |
+| `text-overlap` | two texts of the page collide: give one more room |
+| `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200`, a `head` name) |
+
+The script's `text`, `gate` and arrow labels are not checked for overlap: look at the PNG.
+
+## Recipes
+
+**Phase and role chart.** A grid with a label column and one column per stage:
+`grid-template-columns: 160px repeat(7, 1fr)`. Phase bars span their stages
+(`grid-column: span 2`, `shape=chevron`, `border: 0`, a background); a band whose cards
+line up with the stages is `grid-column: 2 / -1; display: grid; grid-template-columns:
+subgrid`. Gates on a boundary: `gate(pt(mid(a.right, b.left).x, bar.center.y), 'G1')`.
+Arrows from each card to the card below: `all('.top .card').forEach((c, i) => arrow(c,
+below[i]))`.
+
+**BPMN.** A grid with one row per lane and a label column; lane backgrounds may sit in the
+same cells as the tasks. Events with a caption: `<div class=ev><i shape=start
+id=s></i>Order placed</div>` with `.ev { display: flex; flex-direction: column;
+align-items: center; gap: 4px }`. A boundary event is a child of its task, placed on the
+border: `<div shape=task style="position: relative">Review<i shape="event timer"
+style="position: absolute; bottom: -18px; right: 14px" id=late></i></div>`; lines can
+leave from it. Sequence flows are `connect` with labels on the branches; message flows
+between pools are `connect(a, b, { message: true })`.
+
+**Architecture.** Tiers as boxes holding cards with icons (`<div class=card><icon
+name=sql></icon> Orders DB</div>`), placed by a grid; `connect` for the calls, `dashed`
+for asynchronous ones. Leave 50px or more between tiers where lines and labels run.

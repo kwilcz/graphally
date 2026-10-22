@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1053 885" width="1053" height="885" role="img" aria-label="Fabrikam management group hierarchy">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1053 885" width="1053" height="885" role="img" aria-label="Fabrikam management group hierarchy">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -28,84 +30,134 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Fabrikam management group hierarchy</text>
 <text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Azure tenant, governance board</text>
+<g data-group="#level0" data-box="24,82,1005,120">
 <rect x="24" y="82" width="1005" height="120" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="176.4" y1="92" x2="176.4" y2="192" style="stroke: var(--line)" stroke-width="1"></line>
 <text class="g-group" x="40" y="108.5" style="fill: var(--muted)">Tenant root group</text>
+</g>
+<g data-group="#level1" data-box="24,214,1005,105">
 <rect x="24" y="214" width="1005" height="105" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="176.4" y1="224" x2="176.4" y2="309" style="stroke: var(--line)" stroke-width="1"></line>
 <text class="g-group" x="40" y="240.5" style="fill: var(--muted)">Top-level</text>
 <text class="g-group" x="40" y="256.5" style="fill: var(--muted)">management group</text>
+</g>
+<g data-group="#level2" data-box="24,331,1005,218">
 <rect x="24" y="331" width="1005" height="218" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="176.4" y1="341" x2="176.4" y2="539" style="stroke: var(--line)" stroke-width="1"></line>
 <text class="g-group" x="40" y="357.5" style="fill: var(--muted)">Management groups</text>
+</g>
+<g data-group="#level4" data-box="24,561,1005,282">
 <rect x="24" y="561" width="1005" height="282" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <line x1="176.4" y1="571" x2="176.4" y2="833" style="stroke: var(--line)" stroke-width="1"></line>
 <text class="g-group" x="40" y="587.5" style="fill: var(--muted)">Subscriptions</text>
-<path d="M645.7,188 L645.7,232" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M645.7,305 L645.7,321 Q645.7,327 639.7,327 L336.4,327 Q330.4,327 330.4,333 L330.4,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M645.7,305 L645.7,321 Q645.7,327 639.7,327 L578.4,327 Q572.4,327 572.4,333 L572.4,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M645.7,305 L645.7,321 Q645.7,327 651.7,327 L793.9,327 Q799.9,327 799.9,333 L799.9,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M645.7,305 L645.7,321 Q645.7,327 651.7,327 L954.9,327 Q960.9,327 960.9,333 L960.9,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M330.4,422 L330.4,436 Q330.4,442 324.4,442 L238.4,442 Q232.4,442 232.4,448 L232.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M330.4,422 L330.4,438 Q330.4,442 334.4,442 L334.4,442 Q338.4,442 338.4,446 L338.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M330.4,422 L330.4,436 Q330.4,442 336.4,442 L422.4,442 Q428.4,442 428.4,448 L428.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M232.4,535 L232.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M338.4,535 L338.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M428.4,535 L428.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M572.4,422 L572.4,436 Q572.4,442 566.4,442 L510.4,442 Q504.4,442 504.4,448 L504.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M572.4,422 L572.4,436 Q572.4,442 578.4,442 L634.4,442 Q640.4,442 640.4,448 L640.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M504.4,535 L504.4,597 Q504.4,603 510.4,603 L532.4,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M504.4,535 L504.4,678 Q504.4,684 510.4,684 L532.4,684" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M504.4,535 L504.4,759 Q504.4,765 510.4,765 L532.4,765" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M640.4,535 L640.4,597 Q640.4,603 646.4,603 L668.4,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M640.4,535 L640.4,678 Q640.4,684 646.4,684 L668.4,684" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M799.9,422 L799.9,597 Q799.9,603 805.9,603 L827.9,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M799.9,422 L799.9,693 Q799.9,699 805.9,699 L827.9,699" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
+</g>
+<g data-edge="root-&gt;fab"><path d="M645.7,188 L645.7,232" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="fab-&gt;platform"><path d="M645.7,305 L645.7,321 Q645.7,327 639.7,327 L336.4,327 Q330.4,327 330.4,333 L330.4,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="fab-&gt;lz"><path d="M645.7,305 L645.7,321 Q645.7,327 639.7,327 L578.4,327 Q572.4,327 572.4,333 L572.4,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="fab-&gt;sandbox"><path d="M645.7,305 L645.7,321 Q645.7,327 651.7,327 L793.9,327 Q799.9,327 799.9,333 L799.9,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="fab-&gt;decom"><path d="M645.7,305 L645.7,321 Q645.7,327 651.7,327 L954.9,327 Q960.9,327 960.9,333 L960.9,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="platform-&gt;mgmt"><path d="M330.4,422 L330.4,436 Q330.4,442 324.4,442 L238.4,442 Q232.4,442 232.4,448 L232.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="platform-&gt;conn"><path d="M330.4,422 L330.4,438 Q330.4,442 334.4,442 L334.4,442 Q338.4,442 338.4,446 L338.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="platform-&gt;ident"><path d="M330.4,422 L330.4,436 Q330.4,442 336.4,442 L422.4,442 Q428.4,442 428.4,448 L428.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="mgmt-&gt;n4"><path d="M232.4,535 L232.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="conn-&gt;n6"><path d="M338.4,535 L338.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="ident-&gt;n8"><path d="M428.4,535 L428.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="lz-&gt;corp"><path d="M572.4,422 L572.4,436 Q572.4,442 566.4,442 L510.4,442 Q504.4,442 504.4,448 L504.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="lz-&gt;online"><path d="M572.4,422 L572.4,436 Q572.4,442 578.4,442 L634.4,442 Q640.4,442 640.4,448 L640.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="corp-&gt;n11"><path d="M504.4,535 L504.4,597 Q504.4,603 510.4,603 L532.4,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="corp-&gt;n12"><path d="M504.4,535 L504.4,678 Q504.4,684 510.4,684 L532.4,684" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="corp-&gt;n13"><path d="M504.4,535 L504.4,759 Q504.4,765 510.4,765 L532.4,765" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="online-&gt;n15"><path d="M640.4,535 L640.4,597 Q640.4,603 646.4,603 L668.4,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="online-&gt;n16"><path d="M640.4,535 L640.4,678 Q640.4,684 646.4,684 L668.4,684" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="sandbox-&gt;n18"><path d="M799.9,422 L799.9,597 Q799.9,603 805.9,603 L827.9,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="sandbox-&gt;n19"><path d="M799.9,422 L799.9,693 Q799.9,699 805.9,699 L827.9,699" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-id="n4" data-box="208,579,48,48">
 <use href="#gr1-azure-subscriptions" x="208" y="579" width="48" height="48"></use>
 <text class="g-tile" x="232" y="644" text-anchor="middle">Management</text>
+</g>
+<g data-id="mgmt" data-box="208,462,48,48">
 <use href="#gr1-azure-management-groups" x="208" y="462" width="48" height="48"></use>
 <text class="g-tile" x="232" y="527" text-anchor="middle">Management</text>
+</g>
+<g data-id="n6" data-box="314,579,48,48">
 <use href="#gr1-azure-subscriptions" x="314" y="579" width="48" height="48"></use>
 <text class="g-tile" x="338" y="644" text-anchor="middle">Connectivity</text>
+</g>
+<g data-id="conn" data-box="314,462,48,48">
 <use href="#gr1-azure-management-groups" x="314" y="462" width="48" height="48"></use>
 <text class="g-tile" x="338" y="527" text-anchor="middle">Connectivity</text>
+</g>
+<g data-id="n8" data-box="404,579,48,48">
 <use href="#gr1-azure-subscriptions" x="404" y="579" width="48" height="48"></use>
 <text class="g-tile" x="428" y="644" text-anchor="middle">Identity</text>
+</g>
+<g data-id="ident" data-box="404,462,48,48">
 <use href="#gr1-azure-management-groups" x="404" y="462" width="48" height="48"></use>
 <text class="g-tile" x="428" y="527" text-anchor="middle">Identity</text>
+</g>
+<g data-id="platform" data-box="306,349,48,48">
 <use href="#gr1-azure-management-groups" x="306" y="349" width="48" height="48"></use>
 <text class="g-tile" x="330.5" y="414" text-anchor="middle">Platform</text>
+</g>
+<g data-id="corp" data-box="480,462,48,48">
 <use href="#gr1-azure-management-groups" x="480" y="462" width="48" height="48"></use>
 <text class="g-tile" x="504" y="527" text-anchor="middle">Corp</text>
+</g>
+<g data-id="n11" data-box="532,579,48,48">
 <use href="#gr1-azure-subscriptions" x="532" y="579" width="48" height="48"></use>
 <text class="g-tile" x="556.5" y="644" text-anchor="middle">Payroll</text>
+</g>
+<g data-id="n12" data-box="532,660,48,48">
 <use href="#gr1-azure-subscriptions" x="532" y="660" width="48" height="48"></use>
 <text class="g-tile" x="556" y="725" text-anchor="middle">HR portal</text>
+</g>
+<g data-id="n13" data-box="532,741,48,48">
 <use href="#gr1-azure-subscriptions" x="532" y="741" width="48" height="48"></use>
 <text class="g-tile" x="556.5" y="806" text-anchor="middle">Finance</text>
 <text class="g-tile" x="556.5" y="821" text-anchor="middle">reporting</text>
+</g>
+<g data-id="online" data-box="616,462,48,48">
 <use href="#gr1-azure-management-groups" x="616" y="462" width="48" height="48"></use>
 <text class="g-tile" x="640.5" y="527" text-anchor="middle">Online</text>
+</g>
+<g data-id="n15" data-box="668,579,48,48">
 <use href="#gr1-azure-subscriptions" x="668" y="579" width="48" height="48"></use>
 <text class="g-tile" x="692.5" y="644" text-anchor="middle">E-commerce</text>
+</g>
+<g data-id="n16" data-box="668,660,48,48">
 <use href="#gr1-azure-subscriptions" x="668" y="660" width="48" height="48"></use>
 <text class="g-tile" x="692" y="725" text-anchor="middle">Loyalty app</text>
+</g>
+<g data-id="lz" data-box="548,349,48,48">
 <use href="#gr1-azure-management-groups" x="548" y="349" width="48" height="48"></use>
 <text class="g-tile" x="572" y="414" text-anchor="middle">Landing zones</text>
+</g>
+<g data-id="sandbox" data-box="776,349,48,48">
 <use href="#gr1-azure-management-groups" x="776" y="349" width="48" height="48"></use>
 <text class="g-tile" x="799.5" y="414" text-anchor="middle">Sandbox</text>
+</g>
+<g data-id="n18" data-box="828,579,48,48">
 <use href="#gr1-azure-subscriptions" x="828" y="579" width="48" height="48"></use>
 <text class="g-tile" x="851.5" y="644" text-anchor="middle">Sandbox</text>
 <text class="g-tile" x="851.5" y="659" text-anchor="middle">Team A</text>
+</g>
+<g data-id="n19" data-box="828,675,48,48">
 <use href="#gr1-azure-subscriptions" x="828" y="675" width="48" height="48"></use>
 <text class="g-tile" x="851.5" y="740" text-anchor="middle">Sandbox</text>
 <text class="g-tile" x="851.5" y="755" text-anchor="middle">Team B</text>
+</g>
+<g data-id="decom" data-box="937,349,48,48">
 <use href="#gr1-azure-management-groups" x="937" y="349" width="48" height="48"></use>
 <text class="g-tile" x="961" y="414" text-anchor="middle">Decommissioned</text>
+</g>
+<g data-id="fab" data-box="622,232,48,48">
 <use href="#gr1-azure-management-groups" x="622" y="232" width="48" height="48"></use>
 <text class="g-tile" x="646" y="297" text-anchor="middle">Fabrikam</text>
+</g>
+<g data-id="root" data-box="622,100,48,48">
 <use href="#gr1-azure-management-groups" x="622" y="100" width="48" height="48"></use>
 <text class="g-tile" x="646" y="165" text-anchor="middle">Tenant</text>
 <text class="g-tile" x="646" y="180" text-anchor="middle">Root Group</text>
+</g>
 </g>
 </svg>

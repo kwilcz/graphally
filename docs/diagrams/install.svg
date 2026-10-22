@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1132 608" width="1132" height="608" role="img" aria-label="Getting graphally into an agent. Source: kwilcz/graphally; Installers: Claude Code, GitHub CLI, skills CLI, Claude.ai; skills/graphally: SKILL.md, references/, scripts/, assets/; At work: Agent, Chrome, Chromium; Icon sources: draw.io repository, npm registry. Connections: kwilcz/graphally to Claude Code; kwilcz/graphally to GitHub CLI; kwilcz/graphally to skills CLI; kwilcz/graphally to Claude.ai; Claude Code to skills/graphally (copy); GitHub CLI to skills/graphally (copy); skills CLI to skills/graphally (copy); Claude.ai to skills/graphally (copy); Agent to SKILL.md (reads); Agent to scripts/ (runs); scripts/ to Chrome, Chromium (drives); draw.io repository sends events to assets/ (first render); npm registry sends events to assets/ (first render)">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="install.html" viewBox="0 0 1132 608" width="1132" height="608" role="img" aria-label="Getting graphally into an agent. Source: kwilcz/graphally; Installers: Claude Code, GitHub CLI, skills CLI, Claude.ai; skills/graphally: SKILL.md, references/, scripts/, assets/; At work: Agent, Chrome, Chromium; Icon sources: draw.io repository, npm registry. Connections: kwilcz/graphally to Claude Code; kwilcz/graphally to GitHub CLI; kwilcz/graphally to skills CLI; kwilcz/graphally to Claude.ai; Claude Code to skills/graphally (copy); GitHub CLI to skills/graphally (copy); skills CLI to skills/graphally (copy); Claude.ai to skills/graphally (copy); Agent to SKILL.md (reads); Agent to scripts/ (runs); scripts/ to Chrome, Chromium (drives); draw.io repository sends events to assets/ (first render); npm registry sends events to assets/ (first render)">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -33,83 +35,129 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Getting graphally into an agent</text>
 <text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Every installer copies the same skill folder; icons arrive on the first render</text>
+<g data-group="src" data-box="24,197,195,71">
 <text class="g-group" x="24" y="212.5" style="fill: var(--muted)">Source</text>
+</g>
+<g data-group="inst" data-box="299,82,227,302">
 <rect x="299" y="82" width="227" height="302" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="315" y="108.5" style="fill: var(--muted)">Installers</text>
+</g>
+<g data-group="skill" data-box="606,82,227,302">
 <rect x="606" y="82" width="227" height="302" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="622" y="108.5" style="fill: var(--muted)">skills/graphally</text>
+</g>
+<g data-group="run" data-box="913,163,195,138">
 <text class="g-group" x="913" y="178.5" style="fill: var(--muted)">At work</text>
+</g>
+<g data-group="icons" data-box="606,416,227,168">
 <rect x="606" y="416" width="227" height="168" rx="10" style="fill: none; stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="6 4"></rect>
 <text class="g-group" x="622" y="442.5" style="fill: var(--muted)">Icon sources</text>
-<path d="M720,452 L720,368" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M817,543.5 L837,543.5 Q843,543.5 843,537.5 L843,349.5 Q843,343.5 837,343.5 L817,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M817,285.5 L896.5,285.5 Q901,285.5 901,281 L901,281 Q901,276.5 905.5,276.5 L913,276.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L285.8,266.5 Q289,266.5 289,263.3 L289,263.3 Q289,260 292.3,260 L315,260" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L287.8,207 Q289,207 289,208.3 L289,208.3 Q289,209.5 290.3,209.5 L315,209.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M510,209.5 L516,209.5 Q522,209.5 522,215.5 L522,234 Q522,240 528,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M510,276.5 L590,276.5 Q596,276.5 596,270.5 L596,238 Q596,233 601,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M913,199.5 L849,199.5 Q843,199.5 843,193.5 L843,148.5 Q843,142.5 837,142.5 L817,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M913,218.5 L849,218.5 Q843,218.5 843,224.5 L843,260.5 Q843,266.5 837,266.5 L817,266.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L283,266.5 Q289,266.5 289,272.5 L289,337.5 Q289,343.5 295,343.5 L315,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L283,207 Q289,207 289,201 L289,148.5 Q289,142.5 295,142.5 L315,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M510,142.5 L530,142.5 Q536,142.5 536,148.5 L536,234 Q536,240 542,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M510,343.5 L530,343.5 Q536,343.5 536,337.5 L536,246 Q536,240 542,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+</g>
+<g data-edge="drawio-&gt;assets" data-sides="top,bottom"><path d="M720,452 L720,368" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="npm-&gt;assets" data-sides="right,right"><path d="M817,543.5 L837,543.5 Q843,543.5 843,537.5 L843,349.5 Q843,343.5 837,343.5 L817,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="scripts-&gt;browser" data-sides="right,left"><path d="M817,285.5 L896.5,285.5 Q901,285.5 901,281 L901,281 Q901,276.5 905.5,276.5 L913,276.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="gh-&gt;npx" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L285.8,266.5 Q289,266.5 289,263.3 L289,263.3 Q289,260 292.3,260 L315,260" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="gh-&gt;ghs" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L287.8,207 Q289,207 289,208.3 L289,208.3 Q289,209.5 290.3,209.5 L315,209.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="ghs-&gt;skill" data-sides="right,left"><path d="M510,209.5 L516,209.5 Q522,209.5 522,215.5 L522,234 Q522,240 528,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="npx-&gt;skill" data-sides="right,left"><path d="M510,276.5 L590,276.5 Q596,276.5 596,270.5 L596,238 Q596,233 601,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="agent-&gt;md" data-sides="left,right"><path d="M913,199.5 L849,199.5 Q843,199.5 843,193.5 L843,148.5 Q843,142.5 837,142.5 L817,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="agent-&gt;scripts" data-sides="left,right"><path d="M913,218.5 L849,218.5 Q843,218.5 843,224.5 L843,260.5 Q843,266.5 837,266.5 L817,266.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="gh-&gt;zip" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,249.5 L231,260.5 Q231,266.5 237,266.5 L283,266.5 Q289,266.5 289,272.5 L289,337.5 Q289,343.5 295,343.5 L315,343.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="gh-&gt;plugin" data-sides="right,left"><path d="M219,243.5 L225,243.5 Q231,243.5 231,237.5 L231,213 Q231,207 237,207 L283,207 Q289,207 289,201 L289,148.5 Q289,142.5 295,142.5 L315,142.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="plugin-&gt;skill" data-sides="right,left"><path d="M510,142.5 L530,142.5 Q536,142.5 536,148.5 L536,234 Q536,240 542,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="zip-&gt;skill" data-sides="right,left"><path d="M510,343.5 L530,343.5 Q536,343.5 536,337.5 L536,246 Q536,240 542,240 L592.5,240 Q596,240 596,236.5 L596,236.5 Q596,233 599.5,233 L606,233" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-id="gh" data-box="24,219,195,49">
 <rect x="24" y="219" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-repo" x="36" y="230.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="72" y="241">kwilcz/graphally</text>
 <text class="g-sub" x="72" y="255.5" style="fill: var(--muted)">GitHub</text>
+</g>
+<g data-id="plugin" data-box="315,118,195,49">
 <rect x="315" y="118" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-code" x="327" y="129.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="363" y="140">Claude Code</text>
 <text class="g-sub" x="363" y="154.5" style="fill: var(--muted)">/plugin install</text>
+</g>
+<g data-id="ghs" data-box="315,185,195,49">
 <rect x="315" y="185" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-code" x="327" y="196.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="363" y="207">GitHub CLI</text>
 <text class="g-sub" x="363" y="221.5" style="fill: var(--muted)">gh skill install</text>
+</g>
+<g data-id="npx" data-box="315,252,195,49">
 <rect x="315" y="252" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-code" x="327" y="263.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="363" y="274">skills CLI</text>
 <text class="g-sub" x="363" y="288.5" style="fill: var(--muted)">npx skills add</text>
+</g>
+<g data-id="zip" data-box="315,319,195,49">
 <rect x="315" y="319" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-file" x="327" y="330.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="363" y="341">Claude.ai</text>
 <text class="g-sub" x="363" y="355.5" style="fill: var(--muted)">release zip</text>
+</g>
+<g data-id="md" data-box="622,118,195,49">
 <rect x="622" y="118" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-file" x="634" y="129.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="670" y="140">SKILL.md</text>
 <text class="g-sub" x="670" y="154.5" style="fill: var(--muted)">instructions</text>
+</g>
+<g data-id="refs" data-box="622,185,195,49">
 <rect x="622" y="185" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-file" x="634" y="196.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="670" y="207">references/</text>
 <text class="g-sub" x="670" y="221.5" style="fill: var(--muted)">one page per kind</text>
+</g>
+<g data-id="scripts" data-box="622,252,195,49">
 <rect x="622" y="252" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-code" x="634" y="263.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="670" y="274">scripts/</text>
 <text class="g-sub" x="670" y="288.5" style="fill: var(--muted)">engine and CLIs</text>
+</g>
+<g data-id="assets" data-box="622,319,195,49">
 <rect x="622" y="319" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-file" x="634" y="330.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="670" y="341">assets/</text>
 <text class="g-sub" x="670" y="355.5" style="fill: var(--muted)">theme, icon packs</text>
+</g>
+<g data-id="agent" data-box="913,185,195,49">
 <rect x="913" y="185" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="925" y="196.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="961" y="207">Agent</text>
 <text class="g-sub" x="961" y="221.5" style="fill: var(--muted)">Claude, Copilot, Codex…</text>
+</g>
+<g data-id="browser" data-box="913,252,195,49">
 <rect x="913" y="252" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-browser" x="925" y="263.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="961" y="274">Chrome, Chromium</text>
 <text class="g-sub" x="961" y="288.5" style="fill: var(--muted)">or Edge</text>
+</g>
+<g data-id="drawio" data-box="622,452,195,49">
 <rect x="622" y="452" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-globe" x="634" y="463.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="670" y="474">draw.io repository</text>
 <text class="g-sub" x="670" y="488.5" style="fill: var(--muted)">Azure icons</text>
+</g>
+<g data-id="npm" data-box="622,519,195,49">
 <rect x="622" y="519" width="195" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-globe" x="634" y="530.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="670" y="541">npm registry</text>
 <text class="g-sub" x="670" y="555.5" style="fill: var(--muted)">AWS icons</text>
+</g>
+<g data-edge="drawio-&gt;assets">
 <text class="g-edge" x="727" y="408" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">first render</text>
+</g>
+<g data-edge="scripts-&gt;browser">
 <text class="g-edge" x="854.3" y="279.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">drives</text>
+</g>
+<g data-edge="ghs-&gt;skill">
 <text class="g-edge" x="545.4" y="234" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">copy</text>
+</g>
+<g data-edge="agent-&gt;md">
 <text class="g-edge" x="862.7" y="193.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reads</text>
+</g>
+<g data-edge="agent-&gt;scripts">
 <text class="g-edge" x="850" y="246.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">runs</text>
+</g>
 </g>
 </svg>

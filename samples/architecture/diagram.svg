@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1876 680" width="1876" height="680" role="img" aria-label="Contoso Field Service on Azure. Users: Dispatcher, Technician; Edge: Front Door; Web front end: Web app, Web app; Container Apps environment: jobs-api, scheduling-engine; Messaging: Service Bus; Functions: notify, billing-sync; Data: Jobs, Locations, Job photos; External services: Twilio, SAP ERP, Google Maps; g9: Entra ID, Container Registry, Key Vault, App Insights, Log Analytics. Connections: Dispatcher to Entra ID (sign in (OIDC)); Technician to Entra ID (sign in (OIDC)); Dispatcher to Front Door (HTTPS); Technician to Front Door (HTTPS); Front Door to Web app (web app); Front Door to jobs-api (API calls); Web app to Web app (swap); jobs-api to Entra ID (validates tokens); jobs-api to Jobs (jobs); jobs-api to Job photos (photos); jobs-api sends events to Service Bus (job-events); Service Bus sends events to notify (events); Service Bus sends events to billing-sync (events); notify sends events to Twilio (SMS, push); billing-sync sends events to SAP ERP (completed jobs); scheduling-engine to Google Maps (route plans); scheduling-engine to Locations (locations); App Insights to Log Analytics (stores logs)">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1876 680" width="1876" height="680" role="img" aria-label="Contoso Field Service on Azure. Users: Dispatcher, Technician; Edge: Front Door; Web front end: Web app, Web app; Container Apps environment: jobs-api, scheduling-engine; Messaging: Service Bus; Functions: notify, billing-sync; Data: Jobs, Locations, Job photos; External services: Twilio, SAP ERP, Google Maps; g9: Entra ID, Container Registry, Key Vault, App Insights, Log Analytics. Connections: Dispatcher to Entra ID (sign in (OIDC)); Technician to Entra ID (sign in (OIDC)); Dispatcher to Front Door (HTTPS); Technician to Front Door (HTTPS); Front Door to Web app (web app); Front Door to jobs-api (API calls); Web app to Web app (swap); jobs-api to Entra ID (validates tokens); jobs-api to Jobs (jobs); jobs-api to Job photos (photos); jobs-api sends events to Service Bus (job-events); Service Bus sends events to notify (events); Service Bus sends events to billing-sync (events); notify sends events to Twilio (SMS, push); billing-sync sends events to SAP ERP (completed jobs); scheduling-engine to Google Maps (route plans); scheduling-engine to Locations (locations); App Insights to Log Analytics (stores logs)">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -44,10 +46,15 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Contoso Field Service on Azure</text>
 <text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Production architecture: request path, event path, external systems</text>
+<g data-group="users" data-box="24,82,269,198">
 <text class="g-group" x="24" y="97.5" style="fill: var(--muted)">Users</text>
+</g>
+<g data-group="edge" data-box="373,92,209,101">
 <rect x="373" y="92" width="209" height="101" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <use href="#gr1-azure-front-doors" x="389" y="105" width="18" height="18"></use>
 <text class="g-group" x="413" y="118.5" style="fill: var(--muted)">Edge</text>
+</g>
+<g data-group="frontend" data-box="662,82,245,198">
 <rect x="662" y="82" width="245" height="198" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="678" y="108.5" style="fill: var(--muted)">Web front end</text>
 <text class="g-gsub" x="768.3" y="108.5" style="fill: var(--muted)">App Service</text>
@@ -59,6 +66,8 @@
 <rect x="871" y="94" width="20" height="20" rx="4" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <use href="#gr1-azure-application-insights" x="874" y="97" width="14" height="14"></use>
 </g>
+</g>
+<g data-group="apps" data-box="987,82,280,198">
 <rect x="987" y="82" width="280" height="198" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="1003" y="108.5" style="fill: var(--muted)">Container Apps environment</text>
 <g><title>uses Container Registry (pulls images)</title>
@@ -73,8 +82,12 @@
 <rect x="1231" y="94" width="20" height="20" rx="4" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <use href="#gr1-azure-application-insights" x="1234" y="97" width="14" height="14"></use>
 </g>
+</g>
+<g data-group="msg" data-box="1354,104,209,101">
 <rect x="1354" y="104" width="209" height="101" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="1370" y="130.5" style="fill: var(--muted)">Messaging</text>
+</g>
+<g data-group="fns" data-box="1643,82,209,198">
 <rect x="1643" y="82" width="209" height="198" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="1659" y="108.5" style="fill: var(--muted)">Functions</text>
 <g><title>uses Key Vault (secrets)</title>
@@ -85,129 +98,210 @@
 <rect x="1816" y="94" width="20" height="20" rx="4" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <use href="#gr1-azure-application-insights" x="1819" y="97" width="14" height="14"></use>
 </g>
+</g>
+<g data-group="data" data-box="987,312,280,235">
 <rect x="987" y="312" width="280" height="235" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="1003" y="338.5" style="fill: var(--muted)">Data</text>
+</g>
+<g data-group="ext" data-box="1643,312,209,235">
 <rect x="1643" y="312" width="209" height="235" rx="10" style="fill: none; stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="6 4"></rect>
 <text class="g-group" x="1659" y="338.5" style="fill: var(--muted)">External services</text>
+</g>
+<g data-group="g9" data-box="24,579,1828,77">
 <rect x="24" y="579" width="1828" height="77" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<path d="M784,215 L784,167" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M1216,172 L1222,172 Q1228,172 1228,178 L1228,366.5 Q1228,372.5 1222,372.5 L1216,372.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1216,229.5 L1235.5,229.5 Q1241.5,229.5 1241.5,235.5 L1241.5,433.5 Q1241.5,439.5 1235.5,439.5 L1216,439.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1659,173.5 L1639,173.5 Q1633,173.5 1633,179.5 L1633,366.5 Q1633,372.5 1639,372.5 L1659,372.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M1836,231.5 L1856,231.5 Q1862,231.5 1862,237.5 L1862,433.5 Q1862,439.5 1856,439.5 L1836,439.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M1365,615 L1453,615" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1547,154.5 L1659,154.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M566,142.5 L681.5,142.5 Q684,142.5 684,145 L684,145 Q684,147.5 686.5,147.5 L696,147.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1216,190 L1249,190 Q1255,190 1255,196 L1255,500.5 Q1255,506.5 1249,506.5 L1216,506.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1216,154 L1338,154 Q1344,154 1344,160 L1344,162.5 Q1344,168.5 1350,168.5 L1370,168.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M247,178.5 L371,178.5 Q377,178.5 377,172.5 L377,158.5 Q377,152.5 383,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1547,173.5 L1597,173.5 Q1603,173.5 1603,179.5 L1603,225.5 Q1603,231.5 1609,231.5 L1659,231.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M247,245.5 L295,245.5 Q301,245.5 301,239.5 L301,184.5 Q301,178.5 307,178.5 L371,178.5 Q377,178.5 377,172.5 L377,158.5 Q377,152.5 383,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M566,161.5 L646,161.5 Q652,161.5 652,155.5 L652,78 Q652,72 658,72 L991,72 Q997,72 997,78 L997,156.5 Q997,162.5 1003,162.5 L1039,162.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M247,264.5 L297,264.5 Q303,264.5 303,270.5 L303,609.5 Q303,615.5 309,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M247,197.5 L253,197.5 Q259,197.5 259,203.5 L259,258.5 Q259,264.5 265,264.5 L297,264.5 Q303,264.5 303,270.5 L303,609.5 Q303,615.5 309,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1216,248.5 L1597,248.5 Q1603,248.5 1603,254.5 L1603,500.5 Q1603,506.5 1609,506.5 L1659,506.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1039,181.5 L923,181.5 Q917,181.5 917,187.5 L917,563 Q917,569 911,569 L588,569 Q582,569 582,575 L582,609.5 Q582,615.5 576,615.5 L570,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+</g>
+<g data-edge="stg-&gt;web" data-sides="top,bottom"><path d="M784,215 L784,167" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
+<g data-edge="api-&gt;sql" data-sides="right,right"><path d="M1216,172 L1222,172 Q1228,172 1228,178 L1228,366.5 Q1228,372.5 1222,372.5 L1216,372.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="engine-&gt;cosmos" data-sides="right,right"><path d="M1216,229.5 L1235.5,229.5 Q1241.5,229.5 1241.5,235.5 L1241.5,433.5 Q1241.5,439.5 1235.5,439.5 L1216,439.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="notify-&gt;twilio" data-sides="left,left"><path d="M1659,173.5 L1639,173.5 Q1633,173.5 1633,179.5 L1633,366.5 Q1633,372.5 1639,372.5 L1659,372.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="billing-&gt;sap" data-sides="right,right"><path d="M1836,231.5 L1856,231.5 Q1862,231.5 1862,237.5 L1862,433.5 Q1862,439.5 1856,439.5 L1836,439.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="appi-&gt;law" data-sides="right,left"><path d="M1365,615 L1453,615" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="sb-&gt;notify" data-sides="right,left"><path d="M1547,154.5 L1659,154.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="fd-&gt;web" data-sides="right,left"><path d="M566,147.5 L696,147.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="api-&gt;blob" data-sides="right,right"><path d="M1216,190 L1249,190 Q1255,190 1255,196 L1255,500.5 Q1255,506.5 1249,506.5 L1216,506.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="api-&gt;sb" data-sides="right,left"><path d="M1216,154 L1338,154 Q1344,154 1344,160 L1344,162.5 Q1344,168.5 1350,168.5 L1370,168.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="dispatch-&gt;fd" data-sides="right,left"><path d="M247,178.5 L371,178.5 Q377,178.5 377,172.5 L377,158.5 Q377,152.5 383,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="sb-&gt;billing" data-sides="right,left"><path d="M1547,173.5 L1597,173.5 Q1603,173.5 1603,179.5 L1603,225.5 Q1603,231.5 1609,231.5 L1659,231.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="tech-&gt;fd" data-sides="right,left"><path d="M247,245.5 L295,245.5 Q301,245.5 301,239.5 L301,184.5 Q301,178.5 307,178.5 L371,178.5 Q377,178.5 377,172.5 L377,158.5 Q377,152.5 383,152.5 L389,152.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="fd-&gt;api" data-sides="right,left"><path d="M566,162.5 L646,162.5 Q652,162.5 652,156.5 L652,78 Q652,72 658,72 L991,72 Q997,72 997,78 L997,156.5 Q997,162.5 1003,162.5 L1039,162.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="tech-&gt;entra" data-sides="right,left"><path d="M247,264.5 L297,264.5 Q303,264.5 303,270.5 L303,609.5 Q303,615.5 309,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="dispatch-&gt;entra" data-sides="right,left"><path d="M247,197.5 L253,197.5 Q259,197.5 259,203.5 L259,258.5 Q259,264.5 265,264.5 L297,264.5 Q303,264.5 303,270.5 L303,609.5 Q303,615.5 309,615.5 L393,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="engine-&gt;maps" data-sides="right,left"><path d="M1216,248.5 L1597,248.5 Q1603,248.5 1603,254.5 L1603,500.5 Q1603,506.5 1609,506.5 L1659,506.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="api-&gt;entra" data-sides="left,right"><path d="M1039,181.5 L923,181.5 Q917,181.5 917,187.5 L917,563 Q917,569 911,569 L588,569 Q582,569 582,575 L582,609.5 Q582,615.5 576,615.5 L570,615.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-id="dispatch" data-box="70,164,177,49">
 <rect x="70" y="164" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-browser" x="82" y="175.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="118" y="185">Dispatcher</text>
 <text class="g-sub" x="118" y="200.5" style="fill: var(--muted)">web browser</text>
+</g>
+<g data-id="tech" data-box="70,231,177,49">
 <rect x="70" y="231" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-mobile" x="82" y="242.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="118" y="252">Technician</text>
 <text class="g-sub" x="118" y="267.5" style="fill: var(--muted)">mobile app</text>
+</g>
+<g data-id="fd" data-box="389,128,177,49">
 <rect x="389" y="128" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-front-doors" x="401" y="139.5" width="26" height="26"></use>
 <text class="g-label" x="437" y="149">Front Door</text>
 <text class="g-sub" x="437" y="164.5" style="fill: var(--muted)">WAF</text>
+</g>
+<g data-id="web" data-box="696,118,177,49">
 <rect x="696" y="118" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="708" y="129.5" width="26" height="26"></use>
 <text class="g-label" x="744" y="139">Web app</text>
 <text class="g-sub" x="744" y="154.5" style="fill: var(--muted)">production slot</text>
+</g>
+<g data-id="stg" data-box="696,215,177,49">
 <rect x="696" y="215" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="708" y="226.5" width="26" height="26"></use>
 <text class="g-label" x="744" y="236">Web app</text>
 <text class="g-sub" x="744" y="251.5" style="fill: var(--muted)">staging slot</text>
+</g>
+<g data-id="api" data-box="1039,148,177,49">
 <rect x="1039" y="148" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-worker-container-app" x="1051" y="159.5" width="26" height="26"></use>
 <text class="g-label" x="1087" y="169">jobs-api</text>
 <text class="g-sub" x="1087" y="184.5" style="fill: var(--muted)">public API</text>
+</g>
+<g data-id="engine" data-box="1039,215,177,49">
 <rect x="1039" y="215" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-worker-container-app" x="1051" y="226.5" width="26" height="26"></use>
 <text class="g-label" x="1087" y="236">scheduling-engine</text>
 <text class="g-sub" x="1087" y="251.5" style="fill: var(--muted)">internal</text>
+</g>
+<g data-id="sb" data-box="1370,140,177,49">
 <rect x="1370" y="140" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></rect>
 <use href="#gr1-azure-service-bus" x="1382" y="151.5" width="26" height="26"></use>
 <text class="g-label" x="1418" y="161" style="fill: var(--woad)">Service Bus</text>
 <text class="g-sub" x="1418" y="176.5" style="fill: var(--muted)">job-events topic</text>
+</g>
+<g data-id="notify" data-box="1659,140,177,49">
 <rect x="1659" y="140" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-function-apps" x="1671" y="151.5" width="26" height="26"></use>
 <text class="g-label" x="1707" y="161">notify</text>
 <text class="g-sub" x="1707" y="176.5" style="fill: var(--muted)">SMS and push</text>
+</g>
+<g data-id="billing" data-box="1659,207,177,49">
 <rect x="1659" y="207" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-function-apps" x="1671" y="218.5" width="26" height="26"></use>
 <text class="g-label" x="1707" y="228">billing-sync</text>
 <text class="g-sub" x="1707" y="243.5" style="fill: var(--muted)">completed jobs</text>
+</g>
+<g data-id="sql" data-box="1039,348,177,49">
 <rect x="1039" y="348" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-sql-database" x="1051" y="359.5" width="26" height="26"></use>
 <text class="g-label" x="1087" y="369">Jobs</text>
 <text class="g-sub" x="1087" y="384.5" style="fill: var(--muted)">Azure SQL Database</text>
+</g>
+<g data-id="cosmos" data-box="1039,415,177,49">
 <rect x="1039" y="415" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-azure-cosmos-db" x="1051" y="426.5" width="26" height="26"></use>
 <text class="g-label" x="1087" y="436">Locations</text>
 <text class="g-sub" x="1087" y="451.5" style="fill: var(--muted)">Cosmos DB</text>
+</g>
+<g data-id="blob" data-box="1039,482,177,49">
 <rect x="1039" y="482" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-storage-accounts" x="1051" y="493.5" width="26" height="26"></use>
 <text class="g-label" x="1087" y="503">Job photos</text>
 <text class="g-sub" x="1087" y="518.5" style="fill: var(--muted)">Storage account</text>
+</g>
+<g data-id="twilio" data-box="1659,348,177,49">
 <rect x="1659" y="348" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-mobile" x="1671" y="359.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="1707" y="369">Twilio</text>
 <text class="g-sub" x="1707" y="384.5" style="fill: var(--muted)">SMS and push</text>
+</g>
+<g data-id="sap" data-box="1659,415,177,49">
 <rect x="1659" y="415" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-building" x="1671" y="426.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="1707" y="436">SAP ERP</text>
 <text class="g-sub" x="1707" y="451.5" style="fill: var(--muted)">customer ERP</text>
+</g>
+<g data-id="maps" data-box="1659,482,177,49">
 <rect x="1659" y="482" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-globe" x="1671" y="493.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="1707" y="503">Google Maps</text>
 <text class="g-sub" x="1707" y="518.5" style="fill: var(--muted)">Routes API</text>
+</g>
+<g data-id="entra" data-box="393,591,177,49">
 <rect x="393" y="591" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-entra-identity" x="405" y="602.5" width="26" height="26"></use>
 <text class="g-label" x="441" y="612">Entra ID</text>
 <text class="g-sub" x="441" y="627.5" style="fill: var(--muted)">sign-in, tokens</text>
+</g>
+<g data-id="acr" data-box="658,591,177,49">
 <rect x="658" y="591" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-container-registries" x="670" y="602.5" width="26" height="26"></use>
 <text class="g-label" x="706" y="612">Container Registry</text>
 <text class="g-sub" x="706" y="627.5" style="fill: var(--muted)">images</text>
+</g>
+<g data-id="kv" data-box="923,591,177,49">
 <rect x="923" y="591" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-key-vaults" x="935" y="602.5" width="26" height="26"></use>
 <text class="g-label" x="971" y="612">Key Vault</text>
 <text class="g-sub" x="971" y="627.5" style="fill: var(--muted)">secrets</text>
+</g>
+<g data-id="appi" data-box="1188,591,177,49">
 <rect x="1188" y="591" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-application-insights" x="1200" y="602.5" width="26" height="26"></use>
 <text class="g-label" x="1236" y="612">App Insights</text>
 <text class="g-sub" x="1236" y="627.5" style="fill: var(--muted)">telemetry</text>
+</g>
+<g data-id="law" data-box="1453,591,177,49">
 <rect x="1453" y="591" width="177" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-log-analytics-workspaces" x="1465" y="602.5" width="26" height="26"></use>
 <text class="g-label" x="1501" y="612">Log Analytics</text>
 <text class="g-sub" x="1501" y="627.5" style="fill: var(--muted)">logs</text>
+</g>
+<g data-edge="stg-&gt;web">
 <text class="g-edge" x="791" y="195" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">swap</text>
+</g>
+<g data-edge="api-&gt;sql">
 <text class="g-edge" x="1197.2" y="294.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">jobs</text>
+</g>
+<g data-edge="engine-&gt;cosmos">
 <text class="g-edge" x="1248.5" y="302.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">locations</text>
+</g>
+<g data-edge="notify-&gt;twilio">
 <text class="g-edge" x="1640" y="295" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">SMS, push</text>
+</g>
+<g data-edge="billing-&gt;sap">
 <text class="g-edge" x="1771.5" y="303.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">completed jobs</text>
+</g>
+<g data-edge="appi-&gt;law">
 <text class="g-edge" x="1379.2" y="609" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">stores logs</text>
+</g>
+<g data-edge="sb-&gt;notify">
 <text class="g-edge" x="1585" y="148.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">events</text>
-<text class="g-edge" x="595.6" y="136.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">web app</text>
+</g>
+<g data-edge="fd-&gt;web">
+<text class="g-edge" x="595.6" y="141.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">web app</text>
+</g>
+<g data-edge="api-&gt;blob">
 <text class="g-edge" x="1210.6" y="340.3" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">photos</text>
+</g>
+<g data-edge="api-&gt;sb">
 <text class="g-edge" x="1274.5" y="148" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">job-events</text>
+</g>
+<g data-edge="dispatch-&gt;fd">
 <text class="g-edge" x="250.9" y="172.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+</g>
+<g data-edge="sb-&gt;billing">
 <text class="g-edge" x="1560.1" y="224.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">events</text>
+</g>
+<g data-edge="fd-&gt;api">
 <text class="g-edge" x="801.3" y="66" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API calls</text>
+</g>
+<g data-edge="tech-&gt;entra">
 <text class="g-edge" x="310" y="444" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in (OIDC)</text>
+</g>
+<g data-edge="engine-&gt;maps">
 <text class="g-edge" x="1379.2" y="242.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">route plans</text>
+</g>
+<g data-edge="api-&gt;entra">
 <text class="g-edge" x="705.6" y="563" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">validates tokens</text>
+</g>
 <text class="g-key" x="24" y="325" style="fill: var(--muted); font-weight: 600">Key</text>
 <path d="M24,343 H64" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
 <text class="g-key" x="76" y="347">synchronous call</text>

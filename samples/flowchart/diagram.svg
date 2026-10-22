@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 2556 428" width="2556" height="428" role="img" aria-label="Orders service release pipeline. Connections: Merge to main to Build image; Build image to Unit tests pass?; Unit tests pass? to Push image (yes); Unit tests pass? to Notify author (no); Notify author to Stopped; Push image to Deploy to staging; Deploy to staging to Run smoke tests; Run smoke tests to Smoke tests pass?; Smoke tests pass? to Roll back staging (no); Roll back staging to Page on-call engineer; Page on-call engineer to Rolled back; Smoke tests pass? to Manual approval (yes); Manual approval to Swap staging and production slots (approved); 24 h to Expired, stopped; Swap staging and production slots to Watch error rate; Watch error rate to Error rate above 2%?; Error rate above 2%? to Swap back to previous (above 2%); Swap back to previous to Page on-call engineer; Page on-call engineer to Rolled back in production; Error rate above 2%? to Release done (no)">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 2556 428" width="2556" height="428" role="img" aria-label="Orders service release pipeline. Connections: Merge to main to Build image; Build image to Unit tests pass?; Unit tests pass? to Push image (yes); Unit tests pass? to Notify author (no); Notify author to Stopped; Push image to Deploy to staging; Deploy to staging to Run smoke tests; Run smoke tests to Smoke tests pass?; Smoke tests pass? to Roll back staging (no); Roll back staging to Page on-call engineer; Page on-call engineer to Rolled back; Smoke tests pass? to Manual approval (yes); Manual approval to Swap staging and production slots (approved); 24 h to Expired, stopped; Swap staging and production slots to Watch error rate; Watch error rate to Error rate above 2%?; Error rate above 2%? to Swap back to previous (above 2%); Swap back to previous to Page on-call engineer; Page on-call engineer to Rolled back in production; Error rate above 2%? to Release done (no)">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -31,108 +33,166 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Orders service release pipeline</text>
 <text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">From merge to main to production</text>
-<path d="M2416,243 L2478,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M82,243 L147,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M647,289 L691,289" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M430,266 L430,283 Q430,289 436,289 L503,289" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M430,220 L430,203 Q430,197 436,197 L503,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1177,220 L1177,196.5 Q1177,190.5 1183,190.5 L1250,190.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1177,266 L1177,289.5 Q1177,295.5 1183,295.5 L1250,295.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M647,181 L745,181" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M291,243 L407,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1976,266 L1976,273 Q1976,279 1982,279 L2138,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1023,243 L1154,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1976,220 L1976,203 Q1976,197 1982,197 L2084,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1620,304.5 L1664,304.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M2228,197 L2254,197 Q2260,197 2260,203 L2260,237 Q2260,243 2266,243 L2272,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M835,263 L879,263" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1620,136 L1730,136 Q1736,136 1736,142 L1736,169" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1394,311 L1476,311" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1394,190.5 L1458,190.5 Q1464,190.5 1464,184.5 L1464,142 Q1464,136 1470,136 L1476,136" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1808,289 L1935,289 Q1941,289 1941,283 L1941,249 Q1941,243 1947,243 L1953,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1368,348 L1368,354 Q1368,360 1374,360 L1458,360 Q1464,360 1464,354 L1464,224 Q1464,218 1470,218 L1530,218" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<g data-edge="page2-&gt;rolledprod" data-sides="right,left"><path d="M2416,243 L2478,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="merge-&gt;build" data-sides="right,left"><path d="M82,243 L147,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="push-&gt;deploy" data-sides="right,left"><path d="M647,289 L691,289" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="unit-&gt;push" data-sides="bottom,left"><path d="M430,266 L430,283 Q430,289 436,289 L503,289" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="unit-&gt;notify" data-sides="top,left"><path d="M430,220 L430,203 Q430,197 436,197 L503,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="smokeok-&gt;rollback" data-sides="top,left"><path d="M1177,220 L1177,196.5 Q1177,190.5 1183,190.5 L1250,190.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="smokeok-&gt;approve" data-sides="bottom,left"><path d="M1177,266 L1177,289.5 Q1177,295.5 1183,295.5 L1250,295.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="notify-&gt;stopped" data-sides="right,left"><path d="M647,181 L745,181" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="build-&gt;unit" data-sides="right,left"><path d="M291,243 L407,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="err-&gt;done" data-sides="bottom,left"><path d="M1976,266 L1976,273 Q1976,279 1982,279 L2138,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="smoke-&gt;smokeok" data-sides="right,left"><path d="M1023,243 L1154,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="err-&gt;swapback" data-sides="top,left"><path d="M1976,220 L1976,203 Q1976,197 1982,197 L2084,197" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="swap-&gt;watch" data-sides="right,left"><path d="M1620,304.5 L1664,304.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="swapback-&gt;page2" data-sides="right,left"><path d="M2228,197 L2254,197 Q2260,197 2260,203 L2260,237 Q2260,243 2266,243 L2272,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="deploy-&gt;smoke" data-sides="right,left"><path d="M835,263 L879,263" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="page1-&gt;rolledback" data-sides="right,top"><path d="M1620,136 L1730,136 Q1736,136 1736,142 L1736,169" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="approve-&gt;swap" data-sides="right,left"><path d="M1394,311 L1476,311" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="rollback-&gt;page1" data-sides="right,left"><path d="M1394,190.5 L1458,190.5 Q1464,190.5 1464,184.5 L1464,142 Q1464,136 1470,136 L1476,136" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="watch-&gt;err" data-sides="right,left"><path d="M1808,289 L1935,289 Q1941,289 1941,283 L1941,249 Q1941,243 1947,243 L1953,243" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="expire-&gt;expired" data-sides="bottom,left"><path d="M1368,348 L1368,354 Q1368,360 1374,360 L1458,360 Q1464,360 1464,354 L1464,224 Q1464,218 1470,218 L1530,218" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-id="merge" data-box="46,225,36,36">
 <circle cx="64" cy="243" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
 <text class="g-sub" x="63.5" y="278" text-anchor="middle">Merge to main</text>
+</g>
+<g data-id="build" data-box="147,215,144,56">
 <rect x="147" y="215" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="219" y="239.5" text-anchor="middle">Build image</text>
 <text class="g-sub" x="219" y="255" text-anchor="middle" style="fill: var(--muted)">unit tests</text>
+</g>
+<g data-id="unit" data-box="407,220,46,46">
 <path d="M430,220 L453,243 L430,266 L407,243 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
 <path d="M424,237 L436,249 M436,237 L424,249" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
 <text class="g-sub" x="422" y="213" text-anchor="end">Unit tests pass?</text>
+</g>
+<g data-id="notify" data-box="503,169,144,56">
 <rect x="503" y="169" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="512" y="177" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="584" y="193.5" text-anchor="middle">Notify author</text>
 <text class="g-sub" x="584" y="209" text-anchor="middle" style="fill: var(--muted)">pipeline stops</text>
+</g>
+<g data-id="push" data-box="503,261,144,56">
 <rect x="503" y="261" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-container-registries" x="512" y="269" width="18" height="18"></use>
 <text class="g-label" x="584" y="285.5" text-anchor="middle">Push image</text>
 <text class="g-sub" x="584" y="301" text-anchor="middle" style="fill: var(--muted)">registry</text>
+</g>
+<g data-id="stopped" data-box="745,163,36,36">
 <circle cx="763" cy="181" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
 <text class="g-sub" x="763" y="216" text-anchor="middle">Stopped</text>
+</g>
+<g data-id="deploy" data-box="691,255,144,69">
 <rect x="691" y="255" width="144" height="69" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="700" y="263" width="18" height="18"></use>
 <text class="g-label" x="772" y="278" text-anchor="middle">Deploy to</text>
 <text class="g-label" x="772" y="294" text-anchor="middle">staging</text>
 <text class="g-sub" x="772" y="309.5" text-anchor="middle" style="fill: var(--muted)">App Service slot</text>
+</g>
+<g data-id="smoke" data-box="879,215,144,56">
 <rect x="879" y="215" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="951" y="239.5" text-anchor="middle">Run smoke tests</text>
 <text class="g-sub" x="951" y="255" text-anchor="middle" style="fill: var(--muted)">against staging</text>
+</g>
+<g data-id="smokeok" data-box="1154,220,46,46">
 <path d="M1177,220 L1200,243 L1177,266 L1154,243 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
 <path d="M1171,237 L1183,249 M1183,237 L1171,249" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
 <text class="g-sub" x="1169" y="213" text-anchor="end">Smoke tests pass?</text>
+</g>
+<g data-id="rollback" data-box="1250,156,144,69">
 <rect x="1250" y="156" width="144" height="69" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="1259" y="164" width="18" height="18"></use>
 <text class="g-label" x="1331" y="179" text-anchor="middle">Roll back</text>
 <text class="g-label" x="1331" y="195" text-anchor="middle">staging</text>
 <text class="g-sub" x="1331" y="210.5" text-anchor="middle" style="fill: var(--muted)">previous image</text>
+</g>
+<g data-id="approve" data-box="1250,261,144,69">
 <rect x="1250" y="261" width="144" height="69" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="1259" y="269" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="1331" y="284" text-anchor="middle">Manual</text>
 <text class="g-label" x="1331" y="300" text-anchor="middle">approval</text>
 <text class="g-sub" x="1331" y="315.5" text-anchor="middle" style="fill: var(--muted)">sign-off</text>
+</g>
+<g data-id="page1" data-box="1476,108,144,56">
 <rect x="1476" y="108" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="1485" y="116" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="1557" y="132" text-anchor="middle">Page on-call</text>
 <text class="g-label" x="1557" y="148" text-anchor="middle">engineer</text>
+</g>
+<g data-id="expired" data-box="1530,200,36,36">
 <circle cx="1548" cy="218" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
 <text class="g-sub" x="1548" y="253" text-anchor="middle">Expired, stopped</text>
+</g>
+<g data-id="swap" data-box="1476,292,144,86">
 <rect x="1476" y="292" width="144" height="86" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="1485" y="300" width="18" height="18"></use>
 <text class="g-label" x="1557" y="315" text-anchor="middle">Swap</text>
 <text class="g-label" x="1557" y="331" text-anchor="middle">staging and</text>
 <text class="g-label" x="1557" y="347" text-anchor="middle">production</text>
 <text class="g-label" x="1557" y="363" text-anchor="middle">slots</text>
+</g>
+<g data-id="rolledback" data-box="1718,169,36,36">
 <circle cx="1736" cy="187" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
 <text class="g-sub" x="1736" y="222" text-anchor="middle">Rolled back</text>
+</g>
+<g data-id="watch" data-box="1664,261,144,56">
 <rect x="1664" y="261" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="1736" y="285.5" text-anchor="middle">Watch error rate</text>
 <text class="g-sub" x="1736" y="301" text-anchor="middle" style="fill: var(--muted)">15 minutes</text>
+</g>
+<g data-id="err" data-box="1953,220,46,46">
 <path d="M1976,220 L1999,243 L1976,266 L1953,243 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
 <path d="M1970,237 L1982,249 M1982,237 L1970,249" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
 <text class="g-sub" x="1968" y="213" text-anchor="end">Error rate above 2%?</text>
+</g>
+<g data-id="swapback" data-box="2084,169,144,56">
 <rect x="2084" y="169" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="2093" y="177" width="18" height="18"></use>
 <text class="g-label" x="2165" y="193" text-anchor="middle">Swap back</text>
 <text class="g-label" x="2165" y="209" text-anchor="middle">to previous</text>
+</g>
+<g data-id="done" data-box="2138,261,36,36">
 <circle cx="2156" cy="279" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
 <text class="g-sub" x="2156" y="314" text-anchor="middle">Release done</text>
+</g>
+<g data-id="page2" data-box="2272,215,144,56">
 <rect x="2272" y="215" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="2281" y="223" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="2353" y="239" text-anchor="middle">Page on-call</text>
 <text class="g-label" x="2353" y="255" text-anchor="middle">engineer</text>
+</g>
+<g data-id="rolledprod" data-box="2478,225,36,36">
 <circle cx="2496" cy="243" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
 <text class="g-sub" x="2496" y="278" text-anchor="middle">Rolled back</text>
 <text class="g-sub" x="2496" y="292" text-anchor="middle">in production</text>
+</g>
+<g data-id="expire" data-box="1350,312,36,36">
 <circle cx="1368" cy="330" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
 <circle cx="1368" cy="330" r="13.5" style="fill: none; stroke: var(--ink)" stroke-width="1.2"></circle>
 <use href="#gr1-g-timer" x="1360" y="322" width="16" height="16" style="color: var(--ink)"></use>
 <text class="g-sub" x="1402.5" y="345" text-anchor="middle">24 h</text>
+</g>
+<g data-edge="unit-&gt;push">
 <text class="g-edge" x="457" y="283" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+</g>
+<g data-edge="unit-&gt;notify">
 <text class="g-edge" x="459.6" y="191" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+</g>
+<g data-edge="smokeok-&gt;rollback">
 <text class="g-edge" x="1206.6" y="184.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+</g>
+<g data-edge="smokeok-&gt;approve">
 <text class="g-edge" x="1204" y="289.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+</g>
+<g data-edge="err-&gt;done">
 <text class="g-edge" x="2050.1" y="273" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+</g>
+<g data-edge="err-&gt;swapback">
 <text class="g-edge" x="2002.7" y="191" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">above 2%</text>
+</g>
+<g data-edge="approve-&gt;swap">
 <text class="g-edge" x="1403.3" y="305" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">approved</text>
+</g>
 </g>
 </svg>

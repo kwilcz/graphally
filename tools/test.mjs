@@ -3,8 +3,8 @@
 // node tools/test.mjs [--keep]
 // The regression and v2 suite. Renders every samples/*/diagram.html and docs/diagrams/*.html
 // through the CLI, then small diagrams written here: the layout each SVG carries, nudge, link sides,
-// bad and dropped overrides, and how far a layout moves when a node is added (a stable
-// re-render against --recompute). Works in a fresh folder under os.tmpdir(), removed at the
+// bad and dropped overrides, how far a layout moves when a node is added (a stable
+// re-render against --recompute), and page mode (shapes, script errors, routing, problems). Works in a fresh folder under os.tmpdir(), removed at the
 // end unless --keep, which prints its path. Exits 1 when a test fails.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -204,6 +204,60 @@ test('stability', () => {
     } catch (e) { bad.push(`${name}: ${e.message}`); }
   }
   check(!bad.length, bad.join('; '));
+});
+
+// Page mode: a figure written as HTML and CSS, with a drawing script.
+const page = (body, script = '', attrs = 'width=700') => `<diagram layout=html ${attrs}>\n${body}\n<script>\n${script}\n</script>\n</diagram>\n`;
+const svgOf = out => fs.readFileSync(path.join(out, 'diagram.svg'), 'utf8');
+// A routed line's path, and its corners (each bend is drawn as a Q curve).
+const edgePath = (svg, key) => { const m = svg.match(new RegExp(`<g data-edge="${key.replace(/>/g, '&gt;')}"><path d="([^"]+)"`)); check(m, `no edge ${key}`); return m[1]; };
+const corners = d => (d.match(/Q/g) || []).length;
+const pointsOf = d => [...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: Number(m[1]), y: Number(m[2]) }));
+
+test('page-shapes', () => {
+  const d = folder('page-shapes'), out = path.join(d, 'out');
+  const names = ['cylinder', 'document', 'note', 'cloud', 'hexagon', 'chevron', 'task loop', 'gateway parallel', 'event timer', 'end message', 'start'];
+  ok0(render(write(d, page(names.map((n, i) => `<div shape="${n}" id=s${i}></div>`).join('\n'))), out));
+  const svg = svgOf(out);
+  check(names.every((_, i) => svg.includes(`data-id="s${i}"`)), 'a shape is missing from the SVG');
+  const bad = render(write(d, page('<div shape=cylindr>x</div>')), out);
+  check(bad.code === 1 && /unknown-shape: shape=cylindr suggest=cylinder/.test(bad.text), `expected unknown-shape with a suggestion: ${tail(bad.text)}`);
+});
+
+test('page-script-errors', () => {
+  const d = folder('page-script'), out = path.join(d, 'out'), body = '<div class=card id=a>A</div><div class=card id=b>B</div>';
+  const r1 = render(write(d, page(body, "arrow('a', 'b')\narrow('nope', 'b')")), out);
+  check(r1.code === 1 && /script-error: message=no element "nope" line=3/.test(r1.text), `expected a script error for "nope" on line 3: ${tail(r1.text)}`);
+  const r2 = render(write(d, page(body, "arrow({ x: 3 }, 'b')")), out);
+  check(r2.code === 1 && /is not an element or a point line=2/.test(r2.text), `expected a script error for a non-point on line 2: ${tail(r2.text)}`);
+});
+
+test('page-routing', () => {
+  const d = folder('page-routing'), out = path.join(d, 'out');
+  // A lane's background, laid in the same grid cells, does not wall in the tasks on it.
+  ok0(render(write(d, page(`<style>.l { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 60px } .bg { grid-column: 1 / -1; grid-row: 1; background: var(--wash) } .t { grid-row: 1; margin: 30px 0 }</style>
+<div class=l><div class=bg></div><div class="card t" id=a style="grid-column: 1">A</div><div class="card t" id=b style="grid-column: 3">B</div></div>`, "connect('a', 'b')")), out));
+  check(corners(edgePath(svgOf(out), 'a->b')) === 0, 'the line from a to b bends round the lane background');
+  // Lines from facing sides keep their own heights on a shared side.
+  ok0(render(write(d, page(`<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
+<div class=g><div class=card id=a style="grid-row: 1">A</div><div class=card id=b style="grid-row: 2">B</div><div class=card id=c style="grid-row: 3">C</div><div class="card tall" id=t>T</div></div>`,
+    "connect('a', 't'); connect('b', 't'); connect('c', 't')")), out));
+  const svg = svgOf(out), bent = ['a', 'b', 'c'].filter(k => corners(edgePath(svg, `${k}->t`)));
+  check(!bent.length, `lines into t bend: ${bent.join(', ')}`);
+  // A via line passes through its waypoint, far below the straight path.
+  ok0(render(write(d, page(`<style>.r { display: flex; gap: 200px; padding-bottom: 120px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>`,
+    "connect('a', 'b', { via: [mid(el('a').bottom, el('b').bottom).down(80)] })")), out));
+  const low = Math.max(...pointsOf(edgePath(svgOf(out), 'a->b')).map(p => p.y)), a = readLayout(svgOf(out)).nodes.a;
+  check(Math.abs(low - (a[1] + a[3] + 80)) <= 1.5, `the via line's lowest point is ${low}, expected ${a[1] + a[3] + 80}`);
+});
+
+test('page-problems', () => {
+  const d = folder('page-problems'), out = path.join(d, 'out');
+  const r1 = render(write(d, page('<div class=card>A</div>', '', 'width=12px')), out);
+  check(r1.code === 1 && /bad-attribute: attr=width value=12px/.test(r1.text), `expected bad-attribute for width: ${tail(r1.text)}`);
+  const r2 = render(write(d, page('<style>.r { display: flex; gap: 14px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>',
+    "connect('a', 'b', { label: 'a label far too long for this gap' })")), out);
+  check(r2.code === 1 && /label-crowded: edge=a -> b/.test(r2.text), `expected label-crowded: ${tail(r2.text)}`);
 });
 
 if (table.length) {

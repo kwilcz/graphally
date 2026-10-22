@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1416 1335" width="1416" height="1335" role="img" aria-label="Checkout payment. Third parties: Stripe, Bank">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1416 1335" width="1416" height="1335" role="img" aria-label="Checkout payment. Third parties: Stripe, Bank">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -35,8 +37,10 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Checkout payment</text>
 <text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Payments runbook</text>
+<g data-group="ext" data-box="630,82,374,1225">
 <rect x="630" y="82" width="374" height="1225" rx="10" style="fill: none; stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="6 4"></rect>
 <text class="g-group" x="642" y="98.5" style="fill: var(--muted)">Third parties</text>
+</g>
 <line x1="116.5" y1="157" x2="116.5" y2="1299" style="fill: none; stroke: var(--line)" stroke-width="1.2" stroke-dasharray="4 4"></line>
 <line x1="309.5" y1="157" x2="309.5" y2="1299" style="fill: none; stroke: var(--line)" stroke-width="1.2" stroke-dasharray="4 4"></line>
 <line x1="502.5" y1="157" x2="502.5" y2="1299" style="fill: none; stroke: var(--line)" stroke-width="1.2" stroke-dasharray="4 4"></line>
@@ -49,25 +53,25 @@
 <rect x="90.5" y="837" width="1234.7" height="444" rx="2" style="fill: none; stroke: var(--muted)" stroke-width="1.1"></rect>
 <line x1="90.5" y1="1061" x2="1325.2" y2="1061" style="fill: none; stroke: var(--muted)" stroke-width="1.1" stroke-dasharray="5 4"></line>
 <rect x="98.5" y="1089" width="229" height="130" rx="2" style="fill: none; stroke: var(--muted)" stroke-width="1.1"></rect>
-<path d="M116.5,205 L304.5,205" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M314.5,253 L497.5,253" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M507.5,301 L715.2,301" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M715.2,349 L507.5,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M497.5,397 L314.5,397" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M304.5,445 L116.5,445" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M116.5,493 L715.2,493" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M715.2,571 L116.5,571" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M116.5,619 L908.2,619" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M908.2,667 L116.5,667" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M116.5,715 L309.5,715" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink-open)"></path>
-<path d="M720.2,793 L116.5,793" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M720.2,887 L502.5,887" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink-open)"></path>
-<path d="M502.5,935 L1101.2,935" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M502.5,983 L1299.2,983" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink-open)"></path>
-<path d="M502.5,1031 L720.2,1031" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M116.5,1139 L304.5,1139" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M304.5,1187 L116.5,1187" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path>
-<path d="M116.5,1237 L144.5,1237 Q150.5,1237 150.5,1243 L150.5,1253 Q150.5,1259 144.5,1259 L116.5,1259" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<g data-edge="browser-&gt;shop"><path d="M116.5,205 L304.5,205" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="shop-&gt;pay"><path d="M314.5,253 L497.5,253" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="pay-&gt;stripe"><path d="M507.5,301 L715.2,301" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="stripe-&gt;pay"><path d="M715.2,349 L507.5,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="pay-&gt;shop"><path d="M497.5,397 L314.5,397" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="shop-&gt;browser"><path d="M304.5,445 L116.5,445" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="browser-&gt;stripe"><path d="M116.5,493 L715.2,493" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="stripe-&gt;browser"><path d="M715.2,571 L116.5,571" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="browser-&gt;bank"><path d="M116.5,619 L908.2,619" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="bank-&gt;browser"><path d="M908.2,667 L116.5,667" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="browser-&gt;shop"><path d="M116.5,715 L309.5,715" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink-open)"></path></g>
+<g data-edge="stripe-&gt;browser"><path d="M720.2,793 L116.5,793" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="stripe-&gt;pay"><path d="M720.2,887 L502.5,887" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink-open)"></path></g>
+<g data-edge="pay-&gt;db"><path d="M502.5,935 L1101.2,935" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="pay-&gt;sb"><path d="M502.5,983 L1299.2,983" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink-open)"></path></g>
+<g data-edge="pay-&gt;stripe"><path d="M502.5,1031 L720.2,1031" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="browser-&gt;shop"><path d="M116.5,1139 L304.5,1139" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="shop-&gt;browser"><path d="M304.5,1187 L116.5,1187" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="browser-&gt;browser"><path d="M116.5,1237 L144.5,1237 Q150.5,1237 150.5,1243 L150.5,1253 Q150.5,1259 144.5,1259 L116.5,1259" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
 <rect x="715.2" y="301" width="10" height="48" rx="1" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.2"></rect>
 <rect x="497.5" y="253" width="10" height="144" rx="1" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.2"></rect>
 <rect x="304.5" y="205" width="10" height="240" rx="1" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.2"></rect>
@@ -75,34 +79,48 @@
 <rect x="908.2" y="619" width="10" height="48" rx="1" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.2"></rect>
 <rect x="304.5" y="1139" width="10" height="48" rx="1" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.2"></rect>
 <rect x="1101.2" y="935" width="10" height="20" rx="1" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.2"></rect>
+<g data-id="browser" data-box="38,108,157,49">
 <rect x="38" y="108" width="157" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-browser" x="50" y="119.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="86" y="129">Shopper</text>
 <text class="g-sub" x="86" y="144.5" style="fill: var(--muted)">browser</text>
+</g>
+<g data-id="shop" data-box="231,108,157,49">
 <rect x="231" y="108" width="157" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-app-services" x="243" y="119.5" width="26" height="26"></use>
 <text class="g-label" x="279" y="129">Web shop</text>
 <text class="g-sub" x="279" y="144.5" style="fill: var(--muted)">App Service</text>
+</g>
+<g data-id="pay" data-box="424,108,157,49">
 <rect x="424" y="108" width="157" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-worker-container-app" x="436" y="119.5" width="26" height="26"></use>
 <text class="g-label" x="472" y="129">Payments API</text>
 <text class="g-sub" x="472" y="144.5" style="fill: var(--muted)">Container App</text>
+</g>
+<g data-id="stripe" data-box="642,108,157,49">
 <rect x="642" y="108" width="157" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-cloud" x="654" y="119.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="690" y="129">Stripe</text>
 <text class="g-sub" x="690" y="144.5" style="fill: var(--muted)">payment provider</text>
+</g>
+<g data-id="bank" data-box="835,108,157,49">
 <rect x="835" y="108" width="157" height="49" rx="6" style="fill: var(--card); stroke: var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"></rect>
 <use href="#gr1-g-shield" x="847" y="119.5" width="26" height="26" style="color: var(--ink)"></use>
 <text class="g-label" x="883" y="129">Bank</text>
 <text class="g-sub" x="883" y="144.5" style="fill: var(--muted)">3-D Secure page</text>
+</g>
+<g data-id="db" data-box="1028,108,157,49">
 <rect x="1028" y="108" width="157" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-sql-database" x="1040" y="119.5" width="26" height="26"></use>
 <text class="g-label" x="1076" y="129">Orders DB</text>
 <text class="g-sub" x="1076" y="144.5" style="fill: var(--muted)">Azure SQL</text>
+</g>
+<g data-id="sb" data-box="1221,108,157,49">
 <rect x="1221" y="108" width="157" height="49" rx="6" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-azure-service-bus" x="1233" y="119.5" width="26" height="26"></use>
 <text class="g-label" x="1269" y="129">Service Bus</text>
 <text class="g-sub" x="1269" y="144.5" style="fill: var(--muted)">order events</text>
+</g>
 <circle cx="161.7" cy="193" r="8" style="fill: var(--ink); stroke: none"></circle>
 <text class="g-num" x="161.7" y="196" text-anchor="middle" style="fill: var(--card)">1</text>
 <text class="g-msg" x="175.7" y="196.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">POST checkout</text>

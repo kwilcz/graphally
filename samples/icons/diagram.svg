@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 713 358" width="713" height="358" role="img" aria-label="Microsoft Entra application proxy. Azure: Microsoft Entra ID, Application Proxy; On-premises network: App Proxy connector, Internal web apps, Active Directory. Connections: Remote users to Microsoft Entra ID (sign in first); Remote users to Application Proxy (HTTPS); Application Proxy to App Proxy connector (outbound connection); App Proxy connector to Internal web apps (HTTP); App Proxy connector to Active Directory (Kerberos SSO)">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 713 358" width="713" height="358" role="img" aria-label="Microsoft Entra application proxy. Azure: Microsoft Entra ID, Application Proxy; On-premises network: App Proxy connector, Internal web apps, Active Directory. Connections: Remote users to Microsoft Entra ID (sign in first); Remote users to Application Proxy (HTTPS); Application Proxy to App Proxy connector (outbound connection); App Proxy connector to Internal web apps (HTTP); App Proxy connector to Active Directory (Kerberos SSO)">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -34,40 +36,66 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">Microsoft Entra application proxy</text>
 <text class="g-subtitle" x="24" y="58.5" style="fill: var(--muted)">Remote access to on-premises web apps without opening inbound ports</text>
+<g data-group="azure" data-box="196,82,74,252">
 <use href="#gr1-g-cloud" x="196" y="84" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-group" x="220" y="97.5" style="fill: var(--muted)">Azure</text>
+</g>
+<g data-group="onprem" data-box="414,82,275,252">
 <rect x="414" y="82" width="275" height="252" rx="10" style="fill: none; stroke: var(--muted)" stroke-width="1.2" stroke-dasharray="6 4"></rect>
 <text class="g-group" x="430" y="108.5" style="fill: var(--muted)">On-premises network</text>
-<path d="M66,167 L66,150 Q66,144 72,144 L209,144" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M470,169 L470,148 Q470,142 476,142 L620,142" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M66,253 L66,256.5 Q66,260 69.5,260 L209,260" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M494,193 L602,193 Q608,193 608,199 L608,252 Q608,258 614,258 L620,258" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M257,260 L420,260 Q426,260 426,254 L426,199 Q426,193 432,193 L446,193" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path>
+</g>
+<g data-edge="users-&gt;entra" data-sides="top,left"><path d="M66,167 L66,150 Q66,144 72,144 L209,144" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="connector-&gt;web" data-sides="top,left"><path d="M470,169 L470,148 Q470,142 476,142 L620,142" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="users-&gt;proxy" data-sides="bottom,left"><path d="M66,253 L66,256.5 Q66,260 69.5,260 L209,260" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="connector-&gt;ad" data-sides="right,left"><path d="M494,193 L602,193 Q608,193 608,199 L608,252 Q608,258 614,258 L620,258" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="proxy-&gt;connector" data-sides="right,left"><path d="M257,260 L420,260 Q426,260 426,254 L426,199 Q426,193 432,193 L446,193" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)" marker-start="url(#gr1-ink)"></path></g>
+<g data-id="users" data-box="42,167,48,48">
 <use href="#gr1-g-users" x="42" y="167" width="48" height="48" style="color: var(--ink)"></use>
 <text class="g-tile" x="65.5" y="232" text-anchor="middle">Remote users</text>
 <text class="g-sub" x="65.5" y="247" text-anchor="middle" style="fill: var(--muted)">on laptops</text>
+</g>
+<g data-id="entra" data-box="209,120,48,48">
 <use href="#gr1-azure-entra-identity" x="209" y="120" width="48" height="48"></use>
 <text class="g-tile" x="233" y="185" text-anchor="middle">Microsoft</text>
 <text class="g-tile" x="233" y="200" text-anchor="middle">Entra ID</text>
 <text class="g-sub" x="233" y="215" text-anchor="middle" style="fill: var(--muted)">pre-auth</text>
+</g>
+<g data-id="proxy" data-box="209,236,48,48">
 <use href="#gr1-g-globe" x="209" y="236" width="48" height="48" style="color: var(--ink)"></use>
 <text class="g-tile" x="233" y="301" text-anchor="middle">Application</text>
 <text class="g-tile" x="233" y="316" text-anchor="middle">Proxy</text>
 <text class="g-sub" x="233" y="331" text-anchor="middle" style="fill: var(--muted)">cloud service</text>
+</g>
+<g data-id="connector" data-box="446,169,48,48">
 <use href="#gr1-g-server" x="446" y="169" width="48" height="48" style="color: var(--ink)"></use>
 <text class="g-tile" x="469.5" y="234" text-anchor="middle">App Proxy</text>
 <text class="g-tile" x="469.5" y="249" text-anchor="middle">connector</text>
 <text class="g-sub" x="469.5" y="264" text-anchor="middle" style="fill: var(--muted)">outbound only</text>
+</g>
+<g data-id="web" data-box="620,118,48,48">
 <use href="#gr1-g-browser" x="620" y="118" width="48" height="48" style="color: var(--ink)"></use>
 <text class="g-tile" x="643.5" y="183" text-anchor="middle">Internal</text>
 <text class="g-tile" x="643.5" y="198" text-anchor="middle">web apps</text>
+</g>
+<g data-id="ad" data-box="620,234,48,48">
 <use href="#gr1-azure-azure-active-directory" x="620" y="234" width="48" height="48"></use>
 <text class="g-tile" x="644" y="299" text-anchor="middle">Active</text>
 <text class="g-tile" x="644" y="314" text-anchor="middle">Directory</text>
+</g>
+<g data-edge="users-&gt;entra">
 <text class="g-edge" x="107.4" y="138" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in first</text>
+</g>
+<g data-edge="connector-&gt;web">
 <text class="g-edge" x="529.6" y="136" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTP</text>
+</g>
+<g data-edge="users-&gt;proxy">
 <text class="g-edge" x="118.4" y="254" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+</g>
+<g data-edge="connector-&gt;ad">
 <text class="g-edge" x="512.8" y="187" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">Kerberos SSO</text>
+</g>
+<g data-edge="proxy-&gt;connector">
 <text class="g-edge" x="283.6" y="254" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">outbound connection</text>
+</g>
 </g>
 </svg>

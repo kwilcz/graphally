@@ -85,7 +85,9 @@ Each kind of diagram uses the layout that suits it:
   font's ascent for the baseline), icons. A `<script>` runs after layout with the geometry
   of every element (`el('id').right`, `mid(a, b)`) and draws by name; its `connect` calls
   go to the router below, with the page's boxes as obstacles and the script's own straight
-  lines counted as taken.
+  lines counted as taken. `shape="…"` on an element draws it from a library of path
+  templates (`shapes.js`: flowchart, BPMN, stores, block arrows) over the box the browser
+  gave it, with its background and border as fill and outline.
 
 ## Routing and labels
 

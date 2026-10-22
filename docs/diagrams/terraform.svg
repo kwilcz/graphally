@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1672 371" width="1672" height="371" role="img" aria-label="From Terraform to a diagram. tf2graphally: *.tf files, Parse HCL, Resolve references, Place resources, Fold plumbing, draft.html; Agent: Render and look, Add what code cannot know, diagram.svg. Connections: *.tf files to Parse HCL; Parse HCL to Resolve references; Resolve references to Place resources; Place resources to Fold plumbing; Fold plumbing to draft.html; draft.html to Render and look; Render and look to Add what code cannot know; Add what code cannot know to diagram.svg">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="terraform.html" viewBox="0 0 1672 371" width="1672" height="371" role="img" aria-label="From Terraform to a diagram. tf2graphally: *.tf files, Parse HCL, Resolve references, Place resources, Fold plumbing, draft.html; Agent: Render and look, Add what code cannot know, diagram.svg. Connections: *.tf files to Parse HCL; Parse HCL to Resolve references; Resolve references to Place resources; Place resources to Fold plumbing; Fold plumbing to draft.html; draft.html to Render and look; Render and look to Add what code cannot know; Add what code cannot know to diagram.svg">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -31,52 +33,74 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">From Terraform to a diagram</text>
 <text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">tf2graphally drafts; the agent tells the story</text>
+<g data-group="tool" data-box="24,82,1623,128">
 <rect x="24" y="82" width="1623" height="128" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="82" width="1623" height="128" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="82" width="98.3" height="128" style="fill: var(--lane-a); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="38" y="150.5">tf2graphally</text>
+</g>
+<g data-group="agent" data-box="24,210,1623,137">
 <rect x="24" y="210" width="1623" height="137" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="210" width="1623" height="137" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="24" y="210" width="98.3" height="137" style="fill: var(--lane-b); stroke: var(--line)" stroke-width="1"></rect>
 <text class="g-group" x="38" y="283.5">Agent</text>
-<path d="M189,146 L236,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1508,279 L1568,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M380,146 L424,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M568,146 L612,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M756,146 L800,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M944,146 L988,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1320,279 L1364,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1132,146 L1158,146 Q1164,146 1164,152 L1164,273 Q1164,279 1170,279 L1176,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+</g>
+<g data-edge="s-&gt;parse" data-sides="right,left"><path d="M189,146 L236,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="edit-&gt;e" data-sides="right,left"><path d="M1508,279 L1568,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="parse-&gt;refs" data-sides="right,left"><path d="M380,146 L424,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="refs-&gt;place" data-sides="right,left"><path d="M568,146 L612,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="place-&gt;fold" data-sides="right,left"><path d="M756,146 L800,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="fold-&gt;draft" data-sides="right,left"><path d="M944,146 L988,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="look-&gt;edit" data-sides="right,left"><path d="M1320,279 L1364,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="draft-&gt;look" data-sides="right,left"><path d="M1132,146 L1158,146 Q1164,146 1164,152 L1164,273 Q1164,279 1170,279 L1176,279" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-id="s" data-box="153,128,36,36">
 <circle cx="171" cy="146" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
 <text class="g-sub" x="171" y="181" text-anchor="middle">*.tf files</text>
+</g>
+<g data-id="parse" data-box="236,112,144,68">
 <rect x="236" y="112" width="144" height="68" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-code" x="245" y="120" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="317" y="136" text-anchor="middle">Parse HCL</text>
 <text class="g-sub" x="317" y="150.5" text-anchor="middle" style="fill: var(--muted)">root and local</text>
 <text class="g-sub" x="317" y="165.5" text-anchor="middle" style="fill: var(--muted)">modules</text>
+</g>
+<g data-id="refs" data-box="424,118,144,56">
 <rect x="424" y="118" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="496" y="143.5" text-anchor="middle">Resolve references</text>
 <text class="g-sub" x="496" y="158" text-anchor="middle" style="fill: var(--muted)">var, local, outputs</text>
+</g>
+<g data-id="place" data-box="612,118,144,56">
 <rect x="612" y="118" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="684" y="143.5" text-anchor="middle">Place resources</text>
 <text class="g-sub" x="684" y="158" text-anchor="middle" style="fill: var(--muted)">RG, VNet, subnet</text>
+</g>
+<g data-id="fold" data-box="800,118,144,56">
 <rect x="800" y="118" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="872" y="143.5" text-anchor="middle">Fold plumbing</text>
 <text class="g-sub" x="872" y="158" text-anchor="middle" style="fill: var(--muted)">roles, links, children</text>
+</g>
+<g data-id="draft" data-box="988,118,144,56">
 <rect x="988" y="118" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-file" x="997" y="126" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="1069" y="151" text-anchor="middle">draft.html</text>
+</g>
+<g data-id="look" data-box="1176,251,144,56">
 <rect x="1176" y="251" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-browser" x="1185" y="259" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="1257" y="276" text-anchor="middle">Render</text>
 <text class="g-label" x="1257" y="292" text-anchor="middle">and look</text>
+</g>
+<g data-id="edit" data-box="1364,236,144,85">
 <rect x="1364" y="236" width="144" height="85" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="1373" y="244" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="1445" y="260" text-anchor="middle">Add what</text>
 <text class="g-label" x="1445" y="276" text-anchor="middle">code cannot</text>
 <text class="g-label" x="1445" y="292" text-anchor="middle">know</text>
 <text class="g-sub" x="1445" y="306.5" text-anchor="middle" style="fill: var(--muted)">users, story</text>
+</g>
+<g data-id="e" data-box="1568,261,36,36">
 <circle cx="1586" cy="279" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
 <text class="g-sub" x="1585.5" y="314" text-anchor="middle">diagram.svg</text>
+</g>
 </g>
 </svg>

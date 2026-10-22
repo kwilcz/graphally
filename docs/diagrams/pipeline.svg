@@ -1,14 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" viewBox="0 0 1517 319" width="1517" height="319" role="img" aria-label="From source to SVG. Connections: diagram.html to Parse; Parse to Measure; Measure to Lay out; Lay out to Route; Route to Place labels; Place labels to Render; Render to Check; Check to Problems?; Problems? to diagram.svg (none); Problems? to Agent edits (some); Agent edits to Parse (render again)">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="pipeline.html" viewBox="0 0 1517 319" width="1517" height="319" role="img" aria-label="From source to SVG. Connections: diagram.html to Parse; Parse to Measure; Measure to Lay out; Lay out to Route; Route to Place labels; Place labels to Render; Render to Check; Check to Problems?; Problems? to diagram.svg (none); Problems? to Agent edits (some); Agent edits to Parse (render again)">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {
   --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
   --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
   --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
 }
 :root[data-theme="dark"], svg.graphally[data-theme="dark"] {
   --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
   --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
   --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
 }
@@ -31,60 +33,88 @@
 <rect width="100%" height="100%" style="fill: var(--bg)"></rect>
 <text class="g-title" x="24" y="40.5">From source to SVG</text>
 <text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">One render, and the agent's fix loop</text>
-<path d="M78,189 L139,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M251,198.5 L278.3,198.5 Q283,198.5 283,193.8 L283,193.8 Q283,189 287.8,189 L295,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M407,189 L451,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M563,189 L607,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M719,189 L763,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M875,189 L919,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1031,189 L1075,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1187,189 L1274,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1320,189 L1431,189 Q1437,189 1437,195 L1437,213" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1297,166 L1297,138.5 Q1297,132.5 1303,132.5 L1381,132.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
-<path d="M1381,151.5 L1297.3,151.5 Q1293,151.5 1293,147.3 L1293,147.3 Q1293,143 1288.8,143 L269,143 Q263,143 263,149 L263,173.5 Q263,179.5 257,179.5 L251,179.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path>
+<g data-edge="s-&gt;parse" data-sides="right,left"><path d="M78,189 L139,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="parse-&gt;measure" data-sides="right,left"><path d="M251,198.5 L278.3,198.5 Q283,198.5 283,193.8 L283,193.8 Q283,189 287.8,189 L295,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="measure-&gt;layout" data-sides="right,left"><path d="M407,189 L451,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="layout-&gt;route" data-sides="right,left"><path d="M563,189 L607,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="route-&gt;labels" data-sides="right,left"><path d="M719,189 L763,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="labels-&gt;render" data-sides="right,left"><path d="M875,189 L919,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="render-&gt;check" data-sides="right,left"><path d="M1031,189 L1075,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="check-&gt;ok" data-sides="right,left"><path d="M1187,189 L1274,189" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="ok-&gt;done" data-sides="right,top"><path d="M1320,189 L1431,189 Q1437,189 1437,195 L1437,213" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="ok-&gt;fix" data-sides="top,left"><path d="M1297,166 L1297,138.5 Q1297,132.5 1303,132.5 L1381,132.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-edge="fix-&gt;parse" data-sides="left,right"><path d="M1381,151.5 L1297.3,151.5 Q1293,151.5 1293,147.3 L1293,147.3 Q1293,143 1288.8,143 L269,143 Q263,143 263,149 L263,173.5 Q263,179.5 257,179.5 L251,179.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
+<g data-id="s" data-box="42,171,36,36">
 <circle cx="60" cy="189" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
 <text class="g-sub" x="59.5" y="224" text-anchor="middle">diagram.html</text>
+</g>
+<g data-id="parse" data-box="139,155,112,68">
 <rect x="139" y="155" width="112" height="68" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-code" x="148" y="163" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="204" y="179" text-anchor="middle">Parse</text>
 <text class="g-sub" x="204" y="193.5" text-anchor="middle" style="fill: var(--muted)">groups,</text>
 <text class="g-sub" x="204" y="208.5" text-anchor="middle" style="fill: var(--muted)">nodes, links</text>
+</g>
+<g data-id="measure" data-box="295,155,112,68">
 <rect x="295" y="155" width="112" height="68" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-browser" x="304" y="163" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="360" y="179" text-anchor="middle">Measure</text>
 <text class="g-sub" x="360" y="193.5" text-anchor="middle" style="fill: var(--muted)">text in the</text>
 <text class="g-sub" x="360" y="208.5" text-anchor="middle" style="fill: var(--muted)">browser</text>
+</g>
+<g data-id="layout" data-box="451,155,112,68">
 <rect x="451" y="155" width="112" height="68" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="507" y="179" text-anchor="middle">Lay out</text>
 <text class="g-sub" x="507" y="193.5" text-anchor="middle" style="fill: var(--muted)">grid, tree,</text>
 <text class="g-sub" x="507" y="208.5" text-anchor="middle" style="fill: var(--muted)">lanes, time</text>
+</g>
+<g data-id="route" data-box="607,155,112,68">
 <rect x="607" y="155" width="112" height="68" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="663" y="179" text-anchor="middle">Route</text>
 <text class="g-sub" x="663" y="193.5" text-anchor="middle" style="fill: var(--muted)">orthogonal</text>
 <text class="g-sub" x="663" y="208.5" text-anchor="middle" style="fill: var(--muted)">edges</text>
+</g>
+<g data-id="labels" data-box="763,161,112,56">
 <rect x="763" y="161" width="112" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="819" y="194" text-anchor="middle">Place labels</text>
+</g>
+<g data-id="render" data-box="919,155,112,68">
 <rect x="919" y="155" width="112" height="68" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-file" x="928" y="163" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="984" y="179" text-anchor="middle">Render</text>
 <text class="g-sub" x="984" y="193.5" text-anchor="middle" style="fill: var(--muted)">SVG with</text>
 <text class="g-sub" x="984" y="208.5" text-anchor="middle" style="fill: var(--muted)">tokens</text>
+</g>
+<g data-id="check" data-box="1075,155,112,68">
 <rect x="1075" y="155" width="112" height="68" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <text class="g-label" x="1131" y="179" text-anchor="middle">Check</text>
 <text class="g-sub" x="1131" y="193.5" text-anchor="middle" style="fill: var(--muted)">overlaps,</text>
 <text class="g-sub" x="1131" y="208.5" text-anchor="middle" style="fill: var(--muted)">ids, icons</text>
+</g>
+<g data-id="ok" data-box="1274,166,46,46">
 <path d="M1297,166 L1320,189 L1297,212 L1274,189 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
 <path d="M1291,183 L1303,195 M1303,183 L1291,195" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
 <text class="g-sub" x="1289" y="159" text-anchor="end">Problems?</text>
+</g>
+<g data-id="fix" data-box="1381,108,112,69">
 <rect x="1381" y="108" width="112" height="69" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
 <use href="#gr1-g-user" x="1390" y="116" width="18" height="18" style="color: var(--ink)"></use>
 <text class="g-label" x="1446" y="132" text-anchor="middle">Agent</text>
 <text class="g-label" x="1446" y="148" text-anchor="middle">edits</text>
 <text class="g-sub" x="1446" y="162.5" text-anchor="middle" style="fill: var(--muted)">the source</text>
+</g>
+<g data-id="done" data-box="1419,213,36,36">
 <circle cx="1437" cy="231" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
 <text class="g-sub" x="1437.5" y="266" text-anchor="middle">diagram.svg</text>
+</g>
+<g data-edge="ok-&gt;done">
 <text class="g-edge" x="1346.8" y="183" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">none</text>
+</g>
+<g data-edge="ok-&gt;fix">
 <text class="g-edge" x="1304" y="141.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">some</text>
+</g>
+<g data-edge="fix-&gt;parse">
 <text class="g-edge" x="743.8" y="137" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">render again</text>
+</g>
 </g>
 </svg>
