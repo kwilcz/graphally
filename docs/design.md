@@ -140,23 +140,24 @@ devices, servers, documents) covers what has no vendor icon.
 
 ## Stable layout and overrides
 
-The source is the diagram; the SVG is compiled output. Each SVG carries a snapshot of its
-layout in `<metadata id="graphally-layout">`: the box of every node and group, the sides
-every edge leaves and enters, and the overrides the source holds. Nodes and groups are
-wrapped in `<g data-id>` and edges in `<g data-edge>`, so tools can find them.
+The source is the diagram; the SVG is compiled output, and its elements record where
+they landed. Every node is wrapped in `<g data-id data-box="x,y,w,h">`, every group in
+`<g data-group data-box>`, and every edge in `<g data-edge data-sides="out,in">`; overrides
+add `data-nudge`, `data-out` and `data-in`. Tools can find any element by its id.
 
-When a diagram is rendered again, the CLI reads the previous snapshot, and the engine
-treats it as soft constraints:
+When a diagram is rendered again, the CLI reads that layout back from the previous SVG, and
+the engine treats it as soft constraints:
 
 - an edge that existed before prefers the sides it used;
-- a group whose members did not change keeps its internal arrangement.
+- a group whose members did not change keeps its internal arrangement;
+- cards keep their width, so a longer new label wraps.
 
-New and changed parts are laid out as usual. `--recompute` ignores the snapshot.
+New and changed parts are laid out as usual. `--recompute` ignores the previous SVG.
 
 Overrides are hard constraints, written as attributes in the source: `nudge="dx,dy"` on a
 node moves it after layout, and `out` and `in` on a `<link>` fix the sides the edge leaves
 and enters. Because they live in the source, an agent's edit keeps them, and a render that
-finds one missing compared with the previous snapshot reports it. Edges are identified by
+finds one missing compared with the previous SVG reports it. Edges are identified by
 key: the link's `id`, else `from->to`, with `#2`, `#3` for repeats.
 
 ## Theming and output

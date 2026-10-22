@@ -14,6 +14,15 @@ export function renderSvg(model, geo, routes, m, opts) {
   const W = geo.width, H = geo.height;
   // Everything `draw` emits goes inside <g attrs>…</g>, so the editor can find it by id.
   const wrap = (attrs, draw) => { const at = out.length; draw(); out.splice(at, 0, `<g ${attrs}>`); out.push('</g>'); };
+  // The layout, written onto the elements it describes (read back by snapshot.mjs): boxes,
+  // the sides each edge uses, and the overrides of the source.
+  const L = opts.snapshot || { nodes: {}, groups: {}, edges: {}, overrides: { nodes: {}, edges: {} } };
+  const attr = (k, v) => (v == null || v === '' ? '' : ` ${k}="${esc(v)}"`);
+  const box = v => v && v.join(',');
+  const edgeAttrs = key => {
+    const s = L.edges[key], o = L.overrides.edges[key] || {};
+    return `data-edge="${esc(key)}"${attr('data-sides', s && `${s.out},${s.in}`)}${attr('data-out', o.out)}${attr('data-in', o.in)}`;
+  };
 
   const text = (str, x, y, cls, { anchor, tone, halo, weight } = {}) => {
     const t = m.text(str, cls);
@@ -75,7 +84,7 @@ export function renderSvg(model, geo, routes, m, opts) {
 
   // Groups, outermost first
   const groups = [...geo.groups.values()].sort((a, b) => a.group.depth - b.group.depth);
-  for (const r of groups) wrap(`data-id="${esc(r.group.id)}"`, () => {
+  for (const r of groups) wrap(`data-group="${esc(r.group.id)}"${attr('data-box', box(L.groups[r.group.id]))}`, () => {
     const g = r.group, st = g.style;
     if (st === 'plain') {}
     else if (st === 'dashed' || st === 'boundary' || st === 'external' || g.external) rect(r, { fill: 'none', stroke: 'muted', width: 1.2, dash: '6 4', rx: S.group.radius });
@@ -116,12 +125,12 @@ export function renderSvg(model, geo, routes, m, opts) {
     const e = rt.edge, tone = e.accent ? 'woad' : 'ink', mk = e.open ? `${tone}-open` : tone;
     if (!e.line) markers.add(mk);
     const d = rounded(rt.points, S.edge.radius);
-    out.push(`<g data-edge="${esc(edgeKey(e))}"><path d="${d}" style="fill: none; stroke: var(--${tone})" stroke-width="${e.accent ? 2 : S.edge.width}"${e.dashed ? ' stroke-dasharray="5 4"' : ''}${!e.line ? ` marker-end="url(#${id}-${mk})"` : ''}${e.both ? ` marker-start="url(#${id}-${mk})"` : ''}></path></g>`);
+    out.push(`<g ${edgeAttrs(edgeKey(e))}><path d="${d}" style="fill: none; stroke: var(--${tone})" stroke-width="${e.accent ? 2 : S.edge.width}"${e.dashed ? ' stroke-dasharray="5 4"' : ''}${!e.line ? ` marker-end="url(#${id}-${mk})"` : ''}${e.both ? ` marker-start="url(#${id}-${mk})"` : ''}></path></g>`);
   }
   decor('mid');
 
   // Nodes
-  for (const r of geo.nodes.values()) wrap(`data-id="${esc(r.node.id)}"`, () => {
+  for (const r of geo.nodes.values()) wrap(`data-id="${esc(r.node.id)}"${attr('data-box', box(L.nodes[r.node.id]))}${attr('data-nudge', box(L.overrides.nodes[r.node.id]?.nudge))}`, () => {
     const n = r.node;
     const stroke = n.accent ? 'woad' : n.external || n.ghost ? 'muted' : 'ink';
     const dash = n.external || n.ghost ? '5 4' : null;
@@ -240,10 +249,7 @@ export function renderSvg(model, geo, routes, m, opts) {
   const label = opts.label || describe(model);
   const style = opts.standalone ? `<style>${opts.css}</style>\n` : '';
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
-  // The layout snapshot: JSON in CDATA; < and > are escaped so no "]]>" or "</metadata>" can end it early.
-  const json = JSON.stringify(opts.snapshot).replace(/[<>]/g, c => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`);
-  const meta = `<metadata id="graphally-layout"><![CDATA[${json}]]></metadata>\n`;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" class="graphally"${theme} viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">\n${meta}${style}<defs>${defs.join('\n')}</defs>\n<g style="color: var(--ink); fill: var(--ink)">\n${out.join('\n')}\n</g>\n</svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" class="graphally"${theme}${attr('data-diagram', L.id)}${attr('data-source', L.source)} viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">\n${style}<defs>${defs.join('\n')}</defs>\n<g style="color: var(--ink); fill: var(--ink)">\n${out.join('\n')}\n</g>\n</svg>`;
   return { svg, texts };
 }
 

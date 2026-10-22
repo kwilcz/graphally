@@ -50,13 +50,14 @@ export function compile(el, opts = {}) {
 const SIDES = ['right', 'bottom', 'left', 'top'];
 const r2 = v => Math.round(v * 2) / 2;
 
-// The layout snapshot (SPEC "Snapshot format"): where the boxes and routed edges landed, and
-// the overrides the source carries. Edges without sides (sequence and Gantt lines) are left out.
+// The layout: where the boxes and routed edges landed, and the overrides of the source.
+// render.js writes it onto the SVG's elements as data attributes; snapshot.mjs reads it back.
+// Edges without sides (sequence and Gantt lines) are left out.
 function snapshotOf(el, opts, model, geo, routes, allEdges) {
   const rect = r => [r.x, r.y, r.w, r.h].map(r2);
   const sides = o => Object.fromEntries(['out', 'in'].filter(k => o[k] != null).map(k => [k, SIDES[o[k]]]));
   return {
-    v: 1, id: el.id || '', source: opts.source || '',
+    id: el.id || '', source: opts.source || '',
     nodes: Object.fromEntries([...geo.nodes].map(([id, r]) => [id, rect(r)])),
     groups: Object.fromEntries([...geo.groups].filter(([id]) => id !== '__root').map(([id, r]) => [id, rect(r)])),
     edges: Object.fromEntries(routes.filter(rt => rt.out != null && rt.in != null).map(rt => [edgeKey(rt.edge), sides(rt)])),

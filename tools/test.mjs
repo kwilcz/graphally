@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
 // node tools/test.mjs [--keep]
 // The regression and v2 suite. Renders every samples/*/diagram.html and docs/diagrams/*.html
-// through the CLI, then small diagrams written here: the layout snapshot, nudge, link sides,
+// through the CLI, then small diagrams written here: the layout each SVG carries, nudge, link sides,
 // bad and dropped overrides, and how far a layout moves when a node is added (a stable
 // re-render against --recompute). Works in a fresh folder under os.tmpdir(), removed at the
 // end unless --keep, which prints its path. Exits 1 when a test fails.
@@ -11,6 +11,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cli = path.join(root, 'skills/graphally/scripts/graphally.mjs');
@@ -31,11 +32,11 @@ function render(file, out, flags = []) {
 }
 // The summary line of each diagram in a render: "<svg path>  WxH  N nodes, …".
 const summaries = text => [...text.matchAll(/^(.+?\.svg)\s+[\d.]+×[\d.]+\s+(\d+) nodes,/gm)].map(m => ({ svg: m[1], nodes: Number(m[2]) }));
-// The layout snapshot written into an SVG. Throws when there is none.
+// The layout an SVG carries on its elements (data-box, data-sides …). Throws when there is none.
 function readSnapshot(svg) {
-  const m = fs.readFileSync(svg, 'utf8').match(/<metadata id="graphally-layout"><!\[CDATA\[([\s\S]*?)\]\]><\/metadata>/);
-  check(m, `no snapshot in ${path.basename(svg)}`);
-  return JSON.parse(m[1]);
+  const l = readLayout(fs.readFileSync(svg, 'utf8'));
+  check(l, `no layout in ${path.basename(svg)}`);
+  return l;
 }
 const rect = (svg, id) => { const r = readSnapshot(svg).nodes?.[id]; check(r, `no node ${id} in the snapshot`); return r; };
 // The source with the one occurrence of a replaced by b. Throws when a is not there exactly once.
@@ -96,7 +97,7 @@ function shares(a, b) {
     edges: share(edges.filter(k => a.edges[k].out === b.edges[k].out && a.edges[k].in === b.edges[k].in).length, edges.length),
   };
 }
-// Gantt plans and timelines place bars by date and keep no node boxes in the snapshot.
+// Gantt plans and timelines place bars by date and carry no node boxes.
 const timeChart = p => /layout=["']?(gantt|timeline)\b/.test(fs.readFileSync(path.join(root, p), 'utf8'));
 
 const sources = [
@@ -124,17 +125,17 @@ test('samples', () => {
   check(!bad.length, bad.join('; '));
 });
 
-test('snapshot', () => {
+test('layout', () => {
   const bad = [];
   for (const [p, r] of renders) {
     if (!r.summaries.length) bad.push(`${p}: no diagram in the output`);
     for (const s of r.summaries) {
+      if (timeChart(p)) continue;
       const name = `${p} (${path.basename(s.svg)})`;
       let snap;
       try { snap = readSnapshot(s.svg); } catch (e) { bad.push(`${name}: ${e.message}`); continue; }
       const n = Object.keys(snap.nodes || {}).length;
-      if (snap.v !== 1) bad.push(`${name}: snapshot v is ${snap.v}`);
-      else if (n !== s.nodes && !timeChart(p)) bad.push(`${name}: ${n} nodes in the snapshot, ${s.nodes} in the summary`);
+      if (n !== s.nodes) bad.push(`${name}: ${n} nodes in the layout, ${s.nodes} in the summary`);
     }
   }
   check(!bad.length, bad.join('; '));

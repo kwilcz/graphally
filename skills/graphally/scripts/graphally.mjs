@@ -10,6 +10,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launch, openPage, serve } from './lib/browser.mjs';
+import { readLayout } from './lib/snapshot.mjs';
 import { PACKS, fetchPacks, findPack } from './lib/iconpack.mjs';
 
 const argv = process.argv.slice(2);
@@ -97,16 +98,15 @@ try {
   if (prevFile) fs.rmSync(prevFile, { force: true });
 }
 
-// The layout snapshots of the earlier renders: <base>.svg and <base>.<id>.svg in dir, in
-// name order. A snapshot that names another source file is skipped.
+// The layouts of the earlier renders, read from <base>.svg and <base>.<id>.svg in dir, in
+// name order. A layout recorded for another source file is skipped.
 function readPrevious(dir, base, source) {
   let names = [];
   try { names = fs.readdirSync(dir).filter(n => n.startsWith(`${base}.`) && n.endsWith('.svg')).sort((a, b) => a.localeCompare(b, 'en', { numeric: true })); } catch {}
   const snaps = [];
   for (const n of names) {
     try {
-      const m = fs.readFileSync(path.join(dir, n), 'utf8').match(/<metadata id="graphally-layout"><!\[CDATA\[([\s\S]*?)\]\]><\/metadata>/);
-      const s = m && JSON.parse(m[1]);
+      const s = readLayout(fs.readFileSync(path.join(dir, n), 'utf8'));
       if (s && (!s.source || s.source === source)) snaps.push(s);
     } catch {}
   }
