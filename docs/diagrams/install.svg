@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="install.html" viewBox="0 0 1132 608" width="1132" height="608" role="img" aria-label="Getting graphally into an agent. Source: kwilcz/graphally; Installers: Claude Code, GitHub CLI, skills CLI, Claude.ai; skills/graphally: SKILL.md, references/, scripts/, assets/; At work: Agent, Chrome, Chromium; Icon sources: draw.io repository, npm registry. Connections: kwilcz/graphally to Claude Code; kwilcz/graphally to GitHub CLI; kwilcz/graphally to skills CLI; kwilcz/graphally to Claude.ai; Claude Code to skills/graphally (copy); GitHub CLI to skills/graphally (copy); skills CLI to skills/graphally (copy); Claude.ai to skills/graphally (copy); Agent to SKILL.md (reads); Agent to scripts/ (runs); scripts/ to Chrome, Chromium (drives); draw.io repository sends events to assets/ (first render); npm registry sends events to assets/ (first render)">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

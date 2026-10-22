@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Emit the SVG. Paint order is fixed: groups, edges, nodes, edge labels, legend.
 // Colours are tokens (var(--ink) …) so the host page or the embedded theme decides them.
 import { S, T } from './style.js';

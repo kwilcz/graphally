@@ -4,7 +4,7 @@
 matrices, step cards, roadmaps, BPMN processes with a layout of your own, one-page
 overviews, several kinds in one figure. You write the figure as a web page; the browser
 places every box and wraps every line; graphally turns the page into SVG. The connections
-are data: a JSON list of who connects to whom, routed around the boxes. A `<script>` draws
+are data: a JSON list of who connects to whom, routed around the boxes. A `<script type="graphally">` draws
 anything else by name: arrows, gates on a column boundary, lines computed in a loop.
 Nothing in the source is a coordinate.
 
@@ -116,8 +116,9 @@ there, whether you set them or the router chose them, so only what changed moves
 
 ## The script
 
-It runs after the page is laid out, for what is not a plain connection. Every point comes
-from an element.
+`<script type="graphally">` runs after the page is laid out, for what is not a plain
+connection. Every point comes from an element. Give it that type: a plain `<script>` would
+also run as a page script when the file is opened in a browser (reported as `plain-script`).
 
 | Call | Gives |
 |---|---|

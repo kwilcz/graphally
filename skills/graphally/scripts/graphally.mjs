@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
-// graphally render <file.html> [--png | --png2x] [--dark] [--inline] [--out dir] [--json] [--recompute]
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
+// graphally render <file.html> [--png | --png2x] [--dark] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]
 //
 // Writes <name>.svg next to the source (or in --out). Prints one short line per
 // diagram, then one line per problem. --png also writes a preview image. The layout of
-// the earlier renders is reused unless --recompute is given.
+// the earlier renders is reused unless --recompute is given. A diagram file without the
+// viewer header gets it (unless --no-viewer), so it opens in any browser.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -13,13 +14,17 @@ import { launch, openPage, serve } from './lib/browser.mjs';
 import { readLayout } from './lib/snapshot.mjs';
 import { PACKS, fetchPacks, findPack } from './lib/iconpack.mjs';
 
+// Served by jsDelivr from this repository's release tags; @2 follows the latest 2.x release.
+const VIEWER = 'https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js';
+
 const argv = process.argv.slice(2);
 if (argv[0] === 'render') argv.shift();
 const flag = f => argv.includes(f);
 const opt = f => (argv.includes(f) ? argv[argv.indexOf(f) + 1] : null);
 const file = argv.find((a, i) => !a.startsWith('--') && argv[i - 1] !== '--out');
-if (!file) { console.error('usage: node graphally.mjs render <file.html> [--png | --png2x] [--dark] [--inline] [--out dir] [--json] [--recompute]'); process.exit(2); }
+if (!file) { console.error('usage: node graphally.mjs render <file.html> [--png | --png2x] [--dark] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]'); process.exit(2); }
 if (!fs.existsSync(file)) { console.log(`error: no such file: ${file}`); process.exit(2); }
+if (!flag('--no-viewer') && addViewer(file)) console.log(`${file}: added the viewer header; the file now opens in a browser`);
 const outDir = opt('--out') || path.dirname(file);
 const base = path.basename(file).replace(/\.html?$/, '');
 const skillRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -127,4 +132,16 @@ function droppedOverrides(prev, next) {
     else for (const end of ['out', 'in']) if (was[end] && !now[end]) lines.push(`  note: override dropped: ${end} side of ${key} (attribute removed)`);
   }
   return lines;
+}
+
+// The viewer header: a diagram file that loads graphally.js renders itself in a browser,
+// double-clicked from disk included. Added once, at the top; a part file (no <diagram>)
+// is left alone.
+function addViewer(f) {
+  const text = fs.readFileSync(f, 'utf8');
+  if (!/<diagram\b/i.test(text) || /graphally\.js["']/.test(text)) return false;
+  const lines = ['<meta charset="utf-8">', '<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->', `<script src="${VIEWER}"></script>`];
+  const doctype = /^\s*<!doctype[^>]*>\s*\n?/i.exec(text);
+  fs.writeFileSync(f, doctype ? doctype[0].trimEnd() + '\n' + lines.join('\n') + '\n' + text.slice(doctype[0].length) : ['<!doctype html>', ...lines].join('\n') + '\n' + text);
+  return true;
 }

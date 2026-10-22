@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Icon resolution. Authors write what they mean ("app service", "lambda", "kv", "user");
 // we find the icon. Azure and AWS names come from the vendors' official packs (downloaded
 // by scripts/fetch-icons.mjs); generic concepts that have no vendor icon (people, devices,

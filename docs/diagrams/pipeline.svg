@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="pipeline.html" viewBox="0 0 1517 319" width="1517" height="319" role="img" aria-label="From source to SVG. Connections: diagram.html to Parse; Parse to Measure; Measure to Lay out; Lay out to Route; Route to Place labels; Place labels to Render; Render to Check; Check to Problems?; Problems? to diagram.svg (none); Problems? to Agent edits (some); Agent edits to Parse (render again)">
-<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE. */
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
 :root, svg.graphally {

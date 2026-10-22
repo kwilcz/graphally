@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Cloud icon packs. The skill ships no vendor artwork: packs are downloaded from their
 // upstream sources into the skill's assets/icons/ (or a user cache when the skill folder
 // is read-only) and turned into one JSON file per vendor: name -> { viewBox, body, folder }.
@@ -11,6 +11,7 @@ import { gunzipSync } from 'node:zlib';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { svgEntry, kebab } from './iconsvg.js';
 
 export const PACKS = ['azure', 'aws'];
 const AWS_PACKAGE = 'aws-icons', AWS_VERSION = '3.3.0';
@@ -76,38 +77,8 @@ async function download(pairs, onProgress) {
 
 // ---------- turning SVG files into a pack ----------
 
-// One icon's SVG reduced to its viewBox and inner markup, with every internal id made
-// unique per figure: {{P}} is replaced with a prefix when the icon is drawn.
-export function svgEntry(svg) {
-  if (/<style|class=/.test(svg)) return null;                 // needs a stylesheet we cannot scope
-  const viewBox = (svg.match(/<svg[^>]*\sviewBox="([^"]+)"/) || [])[1]
-    || ((m => m && `0 0 ${parseFloat(m[1])} ${parseFloat(m[2])}`)(svg.match(/<svg[^>]*\swidth="([\d.]+)[a-z]*"[^>]*\sheight="([\d.]+)[a-z]*"/)));
-  if (!viewBox) return null;
-  let body = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
-    .replace(/<sodipodi:namedview[\s\S]*?(\/>|<\/sodipodi:namedview>)/g, '')
-    .replace(/<metadata[\s\S]*?<\/metadata>/g, '')
-    .replace(/<title[\s\S]*?<\/title>/g, '')
-    .replace(/\s(inkscape|sodipodi):[\w-]+="[^"]*"/g, '')
-    .replace(/xlink:href=/g, 'href=')
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/\n\s*/g, ' ').trim();
-  const ids = [...body.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]);
-  ids.forEach((id, i) => {
-    const esc = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    body = body.replace(new RegExp(`\\sid="${esc}"`, 'g'), ` id="{{P}}-${i}"`)
-      .replace(new RegExp(`url\\(#${esc}\\)`, 'g'), `url(#{{P}}-${i})`)
-      .replace(new RegExp(`href="#${esc}"`, 'g'), `href="#{{P}}-${i}"`);
-  });
-  return { viewBox, body };
-}
-
-// "AmazonSimpleStorageService" -> "amazon-simple-storage-service", "AWSIAMIdentityCenter" ->
-// "aws-iam-identity-center": known acronyms are split off first, then camel case.
-const ACRONYMS = ['AWS', 'IAM', 'VPC', 'NAT', 'EC2', 'ECS', 'EKS', 'ECR', 'EBS', 'EFS', 'RDS', 'SQS', 'SNS', 'SES', 'KMS', 'WAF', 'API', 'SDK', 'CLI', 'IoT', 'HPC', 'VPN', 'DNS', 'MSK', 'MQ', 'EMR', 'ACM', 'HSM', 'SSO', 'S3', 'IDE', 'DB'];
-export const kebab = s => s.replace(/\.svg$/i, '').replace(/_/g, '-')
-  .replace(new RegExp(`(${ACRONYMS.join('|')})(?=[A-Z])`, 'g'), '$1-')
-  .replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-  .replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+// svgEntry and kebab live in iconsvg.js, which the browser viewer shares.
+export { svgEntry, kebab };
 
 // ---------- the two vendors ----------
 
@@ -123,7 +94,7 @@ async function fetchAzure(skillRoot, tmp, log) {
     const name = file.replace(/\.svg$/, '').replace(/_/g, '-').toLowerCase();
     if (pack[name]) continue;                                   // the same icon appears in several folders
     const e = svgEntry(fs.readFileSync(path.join(tmp, 'azure', p), 'utf8'));
-    if (e) pack[name] = { ...e, folder };
+    if (e) pack[name] = { ...e, folder, file };
   }
   return pack;
 }
@@ -142,7 +113,7 @@ async function fetchAws(skillRoot, tmp, log) {
     const folder = f.name.split('/')[2], name = kebab(path.basename(f.name));
     if (pack[name]) continue;
     const e = svgEntry(f.data.toString('utf8'));
-    if (e) pack[name] = { ...e, folder };
+    if (e) pack[name] = { ...e, folder, file: path.basename(f.name) };
   }
   return pack;
 }

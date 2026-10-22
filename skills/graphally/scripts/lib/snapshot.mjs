@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // The layout of a compiled SVG, read back from its elements: every group and node wrapper
 // carries data-box="x,y,w,h", every edge line data-sides="out,in", and overrides appear as
 // data-nudge, data-out and data-in. The next render keeps the layout stable with it.

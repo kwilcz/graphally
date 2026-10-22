@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // node tools/update-azure-icon-list.mjs <draw.io checkout>
 // Rewrites skills/graphally/assets/icon-sources/azure.txt: the draw.io commit and the
 // paths of its Azure icons, which scripts/fetch-icons.mjs downloads. A blob-less clone is

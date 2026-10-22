@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Sequence diagrams: participants across the top, time running down.
 //
 //   <diagram layout=sequence numbered>

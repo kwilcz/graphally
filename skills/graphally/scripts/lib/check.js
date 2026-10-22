@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Diagnostics an agent can act on. Model problems (unknown ids, icons, areas) come from
 // parsing and rendering; geometric problems are measured on the result.
 export function check(model, geo, routes, texts) {

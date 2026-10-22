@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // graphally edit <file.html> [--diagram id] <edits…>
 //
 //   --move id dx,dy           move an element by dx,dy (adds to its nudge)

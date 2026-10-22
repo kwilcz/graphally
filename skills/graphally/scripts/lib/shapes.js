@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Shapes for page mode: <div shape="cylinder">, <i shape="gateway parallel">, and the
 // script's shape(). A shape is a base and optional markers. The base is a path over the
 // element's box; the browser lays the element out as a box, and the element's background

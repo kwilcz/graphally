@@ -1,7 +1,7 @@
 # Re-renders every diagram under samples/ and docs/diagrams/, so a pull request always carries
-# SVG and PNG files that match their sources. A branch of this repository gets the new files
-# committed back to it. A fork cannot be pushed to, so there the job only fails when its files
-# are out of date.
+# SVG and PNG files that match their sources, and rebuilds the viewer bundle (graphally.js).
+# A branch of this repository gets the new files committed back to it. A fork cannot be
+# pushed to, so there the job only fails when its files are out of date.
 name: Render diagrams
 
 on:
@@ -65,7 +65,7 @@ jobs:
           BRANCH: ${{ github.head_ref || github.ref_name }}
           CAN_PUSH: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch' }}
         run: |
-          git add -A -- ':(glob)samples/**/*.svg' ':(glob)samples/**/*.png' ':(glob)docs/diagrams/*.svg' ':(glob)docs/diagrams/*.png'
+          git add -A -- ':(glob)samples/**/*.svg' ':(glob)samples/**/*.png' ':(glob)samples/**/*.html' ':(glob)docs/diagrams/*.svg' ':(glob)docs/diagrams/*.png' ':(glob)docs/diagrams/*.html' skills/graphally/viewer/graphally.js
           if git diff --cached --quiet; then
             echo "The diagram files are up to date."
             exit 0
@@ -78,7 +78,7 @@ jobs:
           fi
           git config user.name "Kamil Wilczynski"
           git config user.email "25964560+kwilcz@users.noreply.github.com"
-          git commit -m "Re-render diagrams"
+          git commit -m "Re-render diagrams and the viewer"
           # A push made with GITHUB_TOKEN starts no workflow runs: this commit does not loop back
           # here, and the checks on the branch are not run again for it.
           git push origin "HEAD:refs/heads/$BRANCH"

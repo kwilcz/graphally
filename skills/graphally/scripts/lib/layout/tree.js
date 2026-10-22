@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Hierarchies: management groups, org charts, module trees. Nesting in the source is the
 // hierarchy. Children sit side by side under their parent, centred (a simple tidy tree in
 // the spirit of Reingold & Tilford 1981); a node with stack=true lists its children

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // node tf2graphally.mjs <terraform dir> [--out draft.html] [--title "…"]
 // Writes a draft graphally diagram of what the configuration deploys and prints a summary.
 import fs from 'node:fs';

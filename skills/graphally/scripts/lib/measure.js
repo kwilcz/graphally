@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Text measurement with the same SVG text classes the output uses, so what we measure is
 // what renders.
 const NS = 'http://www.w3.org/2000/svg';

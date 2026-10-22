@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Kamil Wilczyński (kwilcz). graphally Use-Only License: see LICENSE.
+// Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // <diagram layout=html>: the page is the layout. The author writes ordinary HTML and CSS; the
 // browser places everything. An optional <script> then runs with the geometry of every
 // element and connects and draws by name: el('id').right, mid(a, b), connect(a, b), arrow,
@@ -59,9 +59,14 @@ export function compilePage(el, opts, m) {
   if (title || subtitle) root.insertAdjacentHTML('beforeend', `<div style="height: ${S.titleGap - 4}px"></div>`);
   // <script> is drawing code; <script type="application/json"> is the connections, as data.
   const scripts = [], lines = [];
+  // A drawing script without a type of its own also runs as a page script when the file is
+  // opened in a browser (the viewer), before graphally has laid anything out.
   for (const c of el.childNodes) {
-    if (c.nodeType === 1 && c.tagName === 'SCRIPT') ((c.getAttribute('type') || '').toLowerCase() === 'application/json' ? lines : scripts).push(c.textContent);
-    else root.appendChild(c.cloneNode(true));
+    if (c.nodeType === 1 && c.tagName === 'SCRIPT') {
+      const type = (c.getAttribute('type') || '').toLowerCase();
+      if (!type || /javascript|module/.test(type)) problems.push({ rule: 'plain-script', hint: 'a browser runs it on its own when the file is opened: write <script type="graphally">' });
+      (type === 'application/json' ? lines : scripts).push(c.textContent);
+    } else root.appendChild(c.cloneNode(true));
   }
   // nudge="dx,dy" moves an element from where the layout put it (the edit command writes it).
   for (const e of root.querySelectorAll('[nudge]')) {
