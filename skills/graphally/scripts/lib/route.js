@@ -35,6 +35,14 @@ export function routeEdges(model, geo, m) {
     const y = side === 1 ? r.y + r.h + out : side === 3 ? r.y - out : c;
     return !hard.some(o => x > o.x + 0.01 && x < o.x + o.w - 0.01 && y > o.y + 0.01 && y < o.y + o.h - 0.01);
   };
+  // What stands just outside the middle of a side, for the problem that reports the side blocked.
+  const blockerOf = (id, side) => {
+    const r = rectOf(id), out = model.groups.has(id) ? 10 : P;
+    const x = side === 0 ? r.x + r.w + out : side === 2 ? r.x - out : r.x + r.w / 2;
+    const y = side === 1 ? r.y + r.h + out : side === 3 ? r.y - out : r.y + r.h / 2;
+    const o = hard.find(o => o.id !== id && x > o.x && x < o.x + o.w && y > o.y && y < o.y + o.h);
+    return o ? { by: o.id } : {};
+  };
   const ancestors = id => {
     const out = new Set();
     let n = model.nodes.get(id) || model.groups.get(id);
@@ -82,7 +90,7 @@ export function routeEdges(model, geo, m) {
       const on = ports.filter(q => q.side === ov);
       if (!on.length && !warned.has(`${E.e.key}|${dir}`)) {
         warned.add(`${E.e.key}|${dir}`);
-        model.problems.push({ rule: 'override-ignored', id: E.e.key, attr: dir, why: 'side blocked' });
+        model.problems.push({ rule: 'override-ignored', id: E.e.key, attr: dir, why: 'side blocked', ...blockerOf(which === 'a' ? E.e.from : E.e.to, ov) });
       }
       return on.length ? on : ports;
     }

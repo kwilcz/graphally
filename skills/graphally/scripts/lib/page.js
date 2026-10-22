@@ -46,7 +46,8 @@ export function compilePage(el, opts, m) {
     st.textContent = PAGE_CSS;
     document.head.appendChild(st);
   }
-  const width = Number(el.getAttribute('width')) || 1200;
+  const wAttr = el.getAttribute('width'), width = Number(wAttr) || 1200;
+  if (wAttr != null && !(Number(wAttr) > 0)) problems.push({ rule: 'bad-attribute', attr: 'width', value: wAttr, hint: 'a number of pixels, as in width=1200' });
   const root = document.createElement('div');
   root.className = 'graphally-page';
   root.style.cssText = `position:absolute; left:0; top:0; width:${width}px; padding:${S.pad}px;`;
@@ -111,10 +112,21 @@ function build(root, el, id, scripts, opts, m, problems) {
   };
   const edges = [], drawings = [];
   const opt = (v, d) => (v === undefined ? d : v);
+  // What the script names: a box (element, id or selector) or a point. Anything else is an
+  // error with the script's line, not a line drawn to NaN.
+  const spot = ref => {
+    if (ref && ref.el) return ref;
+    if (typeof ref === 'string' || Array.isArray(ref)) return find(ref)[0];
+    if (ref && Number.isFinite(ref.x) && Number.isFinite(ref.y)) return ref;
+    throw new Error(`${typeof ref === 'object' ? JSON.stringify(ref) : String(ref)} is not an element or a point`);
+  };
+  const point = ref => { const s = spot(ref); return s.el ? s.center : s; };
   const api = {
     el: ref => find(ref)[0],
     all: sel => find(sel),
-    pt, mid: (a, b) => pt((a.x + b.x) / 2, (a.y + b.y) / 2), lerp: (a, b, t) => pt(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t),
+    pt,
+    mid: (a, b) => { const [p, q] = [point(a), point(b)]; return pt((p.x + q.x) / 2, (p.y + q.y) / 2); },
+    lerp: (a, b, t) => { const [p, q] = [point(a), point(b)]; return pt(p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t); },
     connect(a, b, o2 = {}) {
       const stmt = edges.length + 1;
       for (const f of find(a)) for (const t of find(b)) edges.push({ from: f.el, to: t.el, o: o2, stmt });
@@ -125,20 +137,21 @@ function build(root, el, id, scripts, opts, m, problems) {
       const c = { x: (p.x + q.x) / 2 - dy / len * bend, y: (p.y + q.y) / 2 + dx / len * bend };
       drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: pt((p.x + 2 * c.x + q.x) / 4, (p.y + 2 * c.y + q.y) / 4) });
     },
-    draw: { moveTo: p => pathBuilder(p, drawings), arc: (c, r, a0, a1) => pathBuilder(arcPoint(c, r, a0), drawings).arc(c, r, a0, a1) },
-    gate(p, label = '', o2 = {}) { drawings.push({ kind: 'gate', p, label, o: o2 }); },
-    text(p, str, o2 = {}) { drawings.push({ kind: 'text', p, str: String(str), o: o2 }); },
+    draw: { moveTo: p => pathBuilder(point(p), drawings, point), arc: (c, r, a0, a1) => pathBuilder(arcPoint(point(c), r, a0), drawings, point).arc(c, r, a0, a1) },
+    gate(p, label = '', o2 = {}) { drawings.push({ kind: 'gate', p: point(p), label, o: o2 }); },
+    text(p, str, o2 = {}) { drawings.push({ kind: 'text', p: point(p), str: String(str), o: o2 }); },
     icon(p, name, o2 = {}) {
       const r = resolveIcon(name, order);
       if (!r || r.error) { problems.push({ rule: 'unknown-icon', icon: name, suggest: r?.suggestions }); return; }
       const sym = symbolFor(r, id);
       symbols.set(sym.id, sym.markup);
-      drawings.push({ kind: 'icon', p, sym: sym.id, o: o2 });
+      drawings.push({ kind: 'icon', p: point(p), sym: sym.id, o: o2 });
     },
-    shape(kind, p, o2 = {}) { drawings.push({ kind: 'shape', shape: kind, p, o: o2 }); },
+    shape(kind, p, o2 = {}) { drawings.push({ kind: 'shape', shape: kind, p: point(p), o: o2 }); },
   };
   // Two boxes: the facing sides. Points: as given.
-  const ends = (a, b) => {
+  const ends = (ra, rb) => {
+    const a = spot(ra), b = spot(rb);
     if (!a.el || !b.el) return [a.el ? a.center : a, b.el ? b.center : b];
     const dx = b.center.x - a.center.x, dy = b.center.y - a.center.y;
     return Math.abs(dx) * a.h >= Math.abs(dy) * a.w ? (dx > 0 ? [a.right, b.left] : [a.left, b.right]) : (dy > 0 ? [a.bottom, b.top] : [a.top, b.bottom]);
@@ -184,7 +197,7 @@ function build(root, el, id, scripts, opts, m, problems) {
     const ls = cs.letterSpacing !== 'normal' ? `; letter-spacing: ${cs.letterSpacing}` : '';
     for (const l of lines) {
       const str = transform(l.words.join(' '));
-      texts.push({ x: l.left, y: l.top, w: l.right - l.left, h: l.h, owner });
+      texts.push({ x: l.left, y: l.top, w: l.right - l.left, h: l.h, owner, str });
       out.push(`<text x="${fmt(l.left)}" y="${fmt(l.top + asc)}" style="font-family: ${esc(cs.fontFamily)}; font-size: ${cs.fontSize}; font-weight: ${cs.fontWeight}${cs.fontStyle !== 'normal' ? `; font-style: ${cs.fontStyle}` : ''}${ls}; fill: ${fill}">${esc(str)}</text>`);
     }
   };
@@ -259,6 +272,7 @@ function build(root, el, id, scripts, opts, m, problems) {
   const W = Math.ceil(Math.max(root.scrollWidth, ...boxes.map(x => x.b.x + x.b.w + S.pad), ...texts.map(t => t.x + t.w + S.pad)));
   const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), 2 * S.pad));
   const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H);
+  for (const r of routes) if (r.labelCrowded) problems.push({ rule: 'label-crowded', edge: `${r.edge.from} -> ${r.edge.to}`, label: r.edge.label, hint: 'widen the gap the line runs through, or shorten the label' });
   if (opts.debug) window.__debug = { log: globalThis.__routeLog, hard: globalThis.__routeHard, routes: routes.map(r => ({ from: r.edge.from, to: r.edge.to, points: r.points.map(p => [Math.round(p.x), Math.round(p.y)]) })) };
 
   // ---------- assemble ----------
@@ -321,16 +335,17 @@ const toneOf = v => (v && TOKENS.includes(v) ? `var(--${v})` : v);
 
 const arcPoint = (c, r, deg) => ({ x: c.x + r * Math.cos(deg * Math.PI / 180), y: c.y + r * Math.sin(deg * Math.PI / 180) });
 
-function pathBuilder(start, drawings) {
+function pathBuilder(start, drawings, point) {
   const d = [`M${fmt(start.x)},${fmt(start.y)}`], item = { kind: 'path', d: '', o: {} };
   drawings.push(item);
   const sync = () => { item.d = d.join(' '); return api; };
   const api = {
-    lineTo: p => { d.push(`L${fmt(p.x)},${fmt(p.y)}`); return sync(); },
-    quadraticCurveTo: (c, p) => { d.push(`Q${fmt(c.x)},${fmt(c.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
-    bezierCurveTo: (c1, c2, p) => { d.push(`C${fmt(c1.x)},${fmt(c1.y)} ${fmt(c2.x)},${fmt(c2.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    lineTo: p => { p = point(p); d.push(`L${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    quadraticCurveTo: (c, p) => { [c, p] = [point(c), point(p)]; d.push(`Q${fmt(c.x)},${fmt(c.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    bezierCurveTo: (c1, c2, p) => { [c1, c2, p] = [point(c1), point(c2), point(p)]; d.push(`C${fmt(c1.x)},${fmt(c1.y)} ${fmt(c2.x)},${fmt(c2.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
     // arc(centre, radius, startDeg, endDeg): degrees clockwise from the right, as in canvas.
     arc: (c, r, a0, a1) => {
+      c = point(c);
       const p = arcPoint(c, r, a0), q = arcPoint(c, r, a1), sweep = a1 > a0 ? 1 : 0, large = Math.abs(a1 - a0) > 180 ? 1 : 0;
       d.push(`L${fmt(p.x)},${fmt(p.y)} A${fmt(r)},${fmt(r)} 0 ${large} ${sweep} ${fmt(q.x)},${fmt(q.y)}`);
       return sync();
@@ -386,7 +401,8 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
   }
   const hasChild = new Set(boxes.map(b => b.parent).filter(Boolean));
   let n = 0;
-  boxes.forEach(b => keyOf.set(b, b.e.id || `@${n++}`));
+  // Boxes without an id are named by tag and class in problems: div.lane@2.
+  boxes.forEach(b => keyOf.set(b, b.e.id || `${b.e.tagName.toLowerCase()}${[...b.e.classList].map(c => `.${c}`).join('')}@${n++}`));
   const objOf = new Map();
   // Whole pixels, as snapToPixels in index.js: the router's grid is rounded, and a fractional
   // box edge (a 1fr column) rounds inside its own box and blocks every port on that side.
@@ -394,10 +410,15 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
   // A full-width strip without an id (a section's header bar, a divider) is decoration: lines
   // may cross it; its text still blocks them.
   const strip = b => !b.e.id && !hasChild.has(b) && b.parent && Math.abs(b.b.w - b.parent.b.w) <= 6 && b.b.h <= 48;
+  // So is a box painted behind boxes it does not hold in the HTML (a lane's or a band's
+  // background in the same grid cells): it would otherwise wall in everything on top of it.
+  const ends = new Set(calls.flatMap(c => [c.from, c.to]));
+  const holds = (a, q) => q.x >= a.x - 0.5 && q.y >= a.y - 0.5 && q.x + q.w <= a.x + a.w + 0.5 && q.y + q.h <= a.y + a.h + 0.5;
+  const behind = b => !hasChild.has(b) && !ends.has(b.e) && boxes.some((o, i) => i > boxes.indexOf(b) && holds(b.b, o.b));
   const ensure = b => {
     if (!b) return rootG;
     if (objOf.has(b)) return objOf.get(b);
-    if (strip(b)) { const p = ensure(b.parent); objOf.set(b, p); return p; }
+    if (strip(b) || behind(b)) { const p = ensure(b.parent); objOf.set(b, p); return p; }
     const parent = ensure(b.parent), key = keyOf.get(b);
     const isGroup = hasChild.has(b);
     const obj = isGroup ? { id: key, kind: 'group', style: b.plain || !b.painted ? 'plain' : 'box', children: [], parent, depth: parent.depth + 1 } : { id: key, kind: 'node', parent, shape: '' };
@@ -409,7 +430,7 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H) {
   };
   boxes.forEach(ensure);
   const inNode = t => [...geo.nodes.values()].some(r => t.x >= r.x - 1 && t.y >= r.y - 1 && t.x + t.w <= r.x + r.w + 1 && t.y + t.h <= r.y + r.h + 1);
-  texts.forEach((t, i) => { if (!inNode(t)) geo.extraObstacles.push({ id: `#t${i}`, ...px(t) }); });
+  texts.forEach(t => { if (!inNode(t)) geo.extraObstacles.push({ id: `text "${t.str.length > 24 ? `${t.str.slice(0, 24)}…` : t.str}"`, ...px(t) }); });
   const boxFor = e => boxes.find(b => b.e === e);
   const seen = new Map();
   calls.forEach((c, i) => {
