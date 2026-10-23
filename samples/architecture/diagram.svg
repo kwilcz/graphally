@@ -219,16 +219,16 @@
 <text x="951.8" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">secrets</text>
 </g>
 <g data-id="appi" data-box="1308,636,150,51">
-<rect x="1308.3" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-application-insights" x="1320.8" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="1356.8" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">App Insights</text>
-<text x="1356.8" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">telemetry</text>
+<rect x="1308.4" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-azure-application-insights" x="1320.9" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
+<text x="1356.9" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">App Insights</text>
+<text x="1356.9" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">telemetry</text>
 </g>
 <g data-id="law" data-box="1713,636,150,51">
-<rect x="1713.4" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-log-analytics-workspaces" x="1725.9" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="1761.9" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Log Analytics</text>
-<text x="1761.9" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">logs</text>
+<rect x="1713.5" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-azure-log-analytics-workspaces" x="1726" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
+<text x="1762" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Log Analytics</text>
+<text x="1762" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">logs</text>
 </g>
 <g data-edge="stg-&gt;web" data-sides="top,bottom"><path d="M791,228 L791,194" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
 <g data-edge="api-&gt;sql" data-sides="right,right"><path d="M1253,152 L1261,152 Q1267,152 1267,158 L1267,394 Q1267,400 1261,400 L1253,400" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
