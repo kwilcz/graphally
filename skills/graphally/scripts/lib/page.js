@@ -6,6 +6,7 @@
 // This file turns the laid-out page into SVG: backgrounds, borders, clip-path shapes, text
 // line by line, icons; then the connectors (routed by route.js) and the script's drawings.
 import { S, T } from './style.js';
+import { schedule, timeline } from './time.js';
 import { resolveIcon, symbolFor } from './icons.js';
 import { routeEdges } from './route.js';
 import { rounded } from './render.js';
@@ -58,14 +59,14 @@ export function compilePage(el, opts, m) {
   if (subtitle) root.insertAdjacentHTML('beforeend', `<div style="font-size: 12.5px; color: var(--muted); margin-bottom: 4px">${esc(subtitle)}</div>`);
   if (title || subtitle) root.insertAdjacentHTML('beforeend', `<div style="height: ${S.titleGap - 4}px"></div>`);
   // <script> is drawing code; <script type="application/json"> is the connections, as data.
-  const scripts = [], lines = [];
+  const scripts = [], lines = [], before = [];
   // A drawing script without a type of its own also runs as a page script when the file is
   // opened in a browser (the viewer), before graphally has laid anything out.
   for (const c of el.childNodes) {
     if (c.nodeType === 1 && c.tagName === 'SCRIPT') {
       const type = (c.getAttribute('type') || '').toLowerCase();
       if (!type || /javascript|module/.test(type)) problems.push({ rule: 'plain-script', hint: 'a browser runs it on its own when the file is opened: write <script type="graphally">' });
-      (type === 'application/json' ? lines : scripts).push(c.textContent);
+      (type === 'application/json' ? lines : c.hasAttribute('before') ? before : scripts).push(c.textContent);
     } else root.appendChild(c.cloneNode(true));
   }
   // nudge="dx,dy" moves an element from where the layout put it (the edit command writes it).
@@ -75,6 +76,18 @@ export function compilePage(el, opts, m) {
     e.style.translate = `${v[0]}px ${v[1]}px`;
   }
   document.body.appendChild(root);
+  // <script type="graphally" before>: runs on the page before it is laid out, to make or
+  // place elements (rows from a list, bars on a timeline). Dates come from time.js.
+  const pre = {
+    root, el: sel => root.querySelector(/^[#.[]|[\s>:]/.test(sel) ? sel : `#${CSS.escape(sel)}`), all: sel => [...root.querySelectorAll(sel)],
+    make: (tag, attrs = {}, text = '') => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text) e.textContent = text; return e; },
+    schedule: (sel = '[data-start], [data-after], [data-at]') => schedule(typeof sel === 'string' ? [...root.querySelectorAll(sel)] : [].concat(sel), root, problems),
+    timeline: (box, o2) => timeline(typeof box === 'string' ? root.querySelector(box) : box, o2, problems),
+  };
+  for (const code of before) {
+    try { new Function(...Object.keys(pre), code)(...Object.values(pre)); }
+    catch (e) { const line = String(e.stack || '').match(/<anonymous>:(\d+):\d+/); problems.push({ rule: 'script-error', when: 'before', message: e.message, ...(line ? { line: Number(line[1]) - 2 } : {}) }); }
+  }
   try {
     return build(root, el, id, scripts, lines, opts, m, problems);
   } finally {
