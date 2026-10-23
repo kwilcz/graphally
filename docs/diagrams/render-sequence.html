@@ -2,26 +2,35 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=sequence numbered title="What one render does" subtitle="node scripts/graphally.mjs render diagram.html --png">
-  <node id=agent icon=user>Agent</node>
-  <node id=cli icon=code>graphally.mjs</node>
-  <node id=srv icon=server>Local server | 127.0.0.1 only</node>
-  <node id=chrome icon=browser>Browser | headless</node>
-  <links>
-  agent -> cli : render diagram.html
-  opt icon packs missing
-    cli -> cli : download Azure and AWS icons
-  end
-  cli -> srv : serve the skill and the diagram folder
-  cli -> chrome : launch over a DevTools pipe
-  cli -> chrome : open the harness page
-  chrome -> srv : GET engine, theme, icons, diagram
-  srv --> chrome : files
-  chrome -> chrome : measure, lay out, route, render
-  cli -> chrome : read results
-  chrome --> cli : SVG and problems
-  cli -> chrome : screenshot
-  chrome --> cli : PNG preview
-  cli --> agent : diagram.svg, diagram.png, ok
-  </links>
+<diagram layout=html width=1200 title="What one render does" subtitle="node scripts/graphally.mjs render diagram.html --png">
+<div class="seq pr-40" id=seq>
+  <div class=node id=agent data-who><icon name=user></icon>Agent</div>
+  <div class=node id=cli data-who><icon name=code></icon>graphally.mjs</div>
+  <div class=node id=srv data-who><icon name=server></icon>Local server<small>127.0.0.1 only</small></div>
+  <div class=node id=chrome data-who><icon name=browser></icon>Browser<small>headless</small></div>
+  <p class=msg data-from=agent data-to=cli>render diagram.html</p>
+  <div class=frag data-kind=opt data-guard="icon packs missing">
+    <p class=msg data-from=cli data-to=cli>download Azure and AWS icons</p>
+  </div>
+  <p class=msg data-from=cli data-to=srv>serve the skill and the diagram folder</p>
+  <p class=msg data-from=cli data-to=chrome>launch over a DevTools pipe</p>
+  <p class=msg data-from=cli data-to=chrome>open the harness page</p>
+  <p class=msg data-from=chrome data-to=srv>GET engine, theme, icons, diagram</p>
+  <p class="msg reply" data-from=srv data-to=chrome>files</p>
+  <p class=msg data-from=chrome data-to=chrome>lay out the page, route, render</p>
+  <p class=msg data-from=cli data-to=chrome>read results</p>
+  <p class="msg reply" data-from=chrome data-to=cli>SVG and problems</p>
+  <p class=msg data-from=cli data-to=chrome>screenshot</p>
+  <p class="msg reply" data-from=chrome data-to=cli>PNG preview</p>
+  <p class="msg reply" data-from=cli data-to=agent>diagram.svg, diagram.png, ok</p>
+</div>
+<script type="graphally" before>sequence('#seq')</script>
+<script type="graphally">
+for (const m of all('.msg')) {
+  const d = m.el.dataset, a = el(d.from).center.x, b = el(d.to).center.x, y = m.bottom.y - 6;
+  const o = { dashed: m.el.matches('.reply'), head: m.el.matches('.async') ? 'open' : 'arrow' };
+  if (d.from === d.to) draw.moveTo(pt(a + 6, y - 16)).lineTo(pt(a + 40, y - 16)).lineTo(pt(a + 40, y)).lineTo(pt(a + 6, y)).style(o);
+  else arrow(pt(a + (b > a ? 6 : -6), y), pt(b + (b > a ? -6 : 6), y), o);
+}
+</script>
 </diagram>

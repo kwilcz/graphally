@@ -2,22 +2,33 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=flow title="From source to SVG" subtitle="One render, and the agent's fix loop">
-  <start id=s>diagram.html</start>
-  <task id=parse icon=code>Parse | groups, nodes, links</task>
-  <task id=measure icon=browser>Measure | text in the browser</task>
-  <task id=layout>Lay out | grid, tree, lanes, time</task>
-  <task id=route>Route | orthogonal edges</task>
-  <task id=labels>Place labels</task>
-  <task id=render icon=file>Render | SVG with tokens</task>
-  <task id=check>Check | overlaps, ids, icons</task>
-  <gateway id=ok>Problems?</gateway>
-  <task id=fix icon=user>Agent edits | the source</task>
-  <end id=done>diagram.svg</end>
-  <links>
-  s -> parse -> measure -> layout -> route -> labels -> render -> check -> ok
-  ok -> done : none
-  ok -> fix : some
-  fix -> parse : render again
-  </links>
+<diagram layout=html width=2000 title="From source to SVG" subtitle="One render, and the agent's fix loop">
+<style>
+  [shape=task] { position: relative; width: 150px; min-height: 58px; font-weight: 500; }
+  [shape=task]:has(> icon) { padding-left: 28px; }
+  [shape=task] > icon { position: absolute; top: 6px; left: 8px; width: 16px; height: 16px; }
+  [shape=task] small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+  .ev, .gw { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px; text-align: center; font-size: 11.5px; }
+  .up { flex-direction: column-reverse; translate: 0 -10px; }
+</style>
+<div class="grid grid-cols-[repeat(10,auto)] grid-rows-[auto_auto] justify-between items-center gap-x-8 gap-y-14">
+  <div class="ev up row-[1] col-[1]"><i shape=start id=s></i>diagram.html</div>
+  <div shape=task class="row-[1] col-[2]" id=before><icon name=code></icon>Before script<small>dates, sequences</small></div>
+  <div shape=task class="row-[1] col-[3]" id=layout><icon name=browser></icon>Lay out<small>the browser, HTML and CSS</small></div>
+  <div shape=task class="row-[1] col-[4]" id=read>Read geometry<small>every box, every line of text</small></div>
+  <div shape=task class="row-[1] col-[5]" id=route>Route<small>connections around boxes</small></div>
+  <div shape=task class="row-[1] col-[6]" id=draw><icon name=code></icon>Drawing script<small>marks with no box</small></div>
+  <div shape=task class="row-[1] col-[7]" id=render><icon name=file></icon>Render<small>SVG with tokens</small></div>
+  <div shape=task class="row-[1] col-[8]" id=check>Check<small>overlaps, ids, icons</small></div>
+  <div class="gw up row-[1] col-[9]"><i shape="gateway exclusive" id=ok></i>Problems?</div>
+  <div class="ev row-[1] col-[10]"><i shape=end id=done></i>diagram.svg</div>
+  <div shape=task class="row-[2] col-[5]" id=fix><icon name=user></icon>Agent edits<small>the source</small></div>
+</div>
+<script type="application/json">
+[
+  ["s", "before"], ["before", "layout"], ["layout", "read"], ["read", "route"], ["route", "draw"], ["draw", "render"], ["render", "check"], ["check", "ok"],
+  ["ok", "done", "none"], { "from": "ok", "to": "fix", "label": "some", "out": "bottom" },
+  { "from": "fix", "to": "s", "label": "render again", "in": "bottom" }
+]
+</script>
 </diagram>

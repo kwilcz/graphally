@@ -2,59 +2,67 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram title="Fabrikam logistics platform" subtitle="Azure, North Europe, production">
-<layout>
-users  rg_hub
-users  rg_workload
-</layout>
-<group id=users label="Users" style=plain>
-  <node id=ho icon=building external>Head office | on-premises network</node>
-  <node id=dispatch icon=users external>Dispatchers | from the internet</node>
-</group>
-<group id=rg_hub label="rg-fab-prod-hub" icon="rg" layout=row>
-  <group id=vnet_hub label="vnet-fab-prod-hub" sub="10.100.0.0/16" style=vnet icon="vnet">
-    <group id=snet_gateway label="GatewaySubnet" sub="10.100.0.0/27" style=subnet>
-      <node id=vgw_vpn icon="vpn gateway">vgw-fab-prod | VPN gateway · VpnGw2 · public IP</node>
-    </group>
-  </group>
-  <node id=acr_acr icon="acr">acrfabprod | Container Registry</node>
-</group>
-<group id=rg_workload label="rg-fab-prod-logistics" icon="rg">
-<layout>
-vnet_spoke
-rg_workload_services
-</layout>
-  <group id=vnet_spoke label="vnet-fab-prod-logistics" sub="10.110.0.0/16" style=vnet icon="vnet">
-    <group id=snet_this_agw label="snet-agw" sub="10.110.0.0/24" style=subnet>
-      <node id=agw_ingress icon="app gateway">agw-fab-prod | Application Gateway · WAF_v2</node>
-    </group>
-    <group id=snet_this_aks label="snet-aks" sub="10.110.4.0/22" style=subnet>
-      <node id=aks_main icon="aks">aks-fab-prod | AKS · work node pool</node>
-    </group>
-    <group id=snet_this_db label="snet-db" sub="10.110.8.0/24" style=subnet>
-      <node id=psql_db icon="postgres">psql-fab-prod | PostgreSQL · shipments database</node>
-    </group>
-    <group id=snet_this_pe label="snet-pe" sub="10.110.9.0/24" style=subnet>
-      <node id=pe_sb icon="private endpoint">pe-fab-prod-sb | Private endpoint</node>
-    </group>
-  </group>
-  <group id=rg_workload_services style=plain layout=grid cols=2>
-    <node id=id_aks icon="managed identity">id-fab-prod-aks | Managed identity</node>
-    <node id=sb_events icon="service bus">sb-fab-prod | Service Bus · shipments queue · tracking topic</node>
-    <node id=log_law icon="log analytics">log-fab-prod | Log Analytics</node>
-    <node id=kv_kv icon="kv">kv-fab-prod | Key Vault</node>
-  </group>
-</group>
-<links>
-ho <-> vgw_vpn : site-to-site VPN
-dispatch -> agw_ingress : HTTPS
-vnet_spoke <-> vnet_hub : peering
-agw_ingress -> aks_main : logistics API
-aks_main -> acr_acr : AcrPull
-aks_main -> id_aks : identity
-id_aks -> kv_kv : Secrets User
-id_aks -> sb_events : Data Owner
-pe_sb -> sb_events : private link
-aks_main ~> log_law : diagnostics
-</links>
+<diagram layout=html width=1700 title="Fabrikam logistics platform" subtitle="Azure, North Europe, production">
+<style>
+  .map { grid-template-areas: "users hub" "key workload"; grid-template-columns: auto 1fr; }
+  .node { width: 250px; max-width: none; }
+</style>
+<div class="map grid gap-x-24 gap-y-14 items-start">
+  <div class="group plain [grid-area:users] self-end gap-10"><h4>Users</h4>
+    <div class="node external" id=ho><icon name=building></icon>Head office<small>on-premises network</small></div>
+    <div class="node external" id=dispatch><icon name=users></icon>Dispatchers<small>from the internet</small></div>
+  </div>
+  <div class="key flex-col items-start gap-[10px] [grid-area:key] self-end"><h4>Key</h4>
+    <span><i class="swatch border-0 h-2" id=k1></i>synchronous call</span>
+    <span><i class="swatch border-0 h-2" id=k2></i>asynchronous message or event</span>
+    <span><i class="swatch box"></i>outside our control</span>
+  </div>
+
+  <div class="group [grid-area:hub]" id=rg_hub><h4><icon name=rg></icon>rg-fab-prod-hub</h4>
+   <div class="flex items-center justify-between">
+    <div class="group vnet" id=vnet_hub><h4><icon name=vnet></icon>vnet-fab-prod-hub <small>10.100.0.0/16</small></h4>
+      <div class="group subnet" id=snet_gateway><h4>GatewaySubnet <small>10.100.0.0/27</small></h4>
+        <div class=node id=vgw_vpn><icon name="vpn gateway"></icon>vgw-fab-prod<small>VPN gateway · VpnGw2 · public IP</small></div></div>
+    </div>
+    <div class="node mr-6" id=acr_acr><icon name=acr></icon>acrfabprod<small>Container Registry</small></div>
+   </div>
+  </div>
+
+  <div class="group [grid-area:workload]" id=rg_workload><h4><icon name=rg></icon>rg-fab-prod-logistics</h4>
+   <div class="flex items-start justify-between">
+    <div class="group vnet grid grid-cols-2 gap-x-16 gap-y-10" id=vnet_spoke><h4 class=col-span-full><icon name=vnet></icon>vnet-fab-prod-logistics <small>10.110.0.0/16</small></h4>
+      <div class="group subnet" id=snet_agw><h4>snet-agw <small>10.110.0.0/24</small></h4>
+        <div class=node id=agw_ingress><icon name="app gateway"></icon>agw-fab-prod<small>Application Gateway · WAF_v2</small></div></div>
+      <div class="group subnet" id=snet_aks><h4>snet-aks <small>10.110.4.0/22</small></h4>
+        <div class=node id=aks_main><icon name=aks></icon>aks-fab-prod<small>AKS · work node pool</small></div></div>
+      <div class="group subnet" id=snet_db><h4>snet-db <small>10.110.8.0/24</small></h4>
+        <div class=node id=psql_db><icon name=postgres></icon>psql-fab-prod<small>PostgreSQL · shipments database</small></div></div>
+      <div class="group subnet" id=snet_pe><h4>snet-pe <small>10.110.9.0/24</small></h4>
+        <div class=node id=pe_sb><icon name="private endpoint"></icon>pe-fab-prod-sb<small>Private endpoint</small></div></div>
+    </div>
+    <div class="grid grid-cols-2 gap-x-24 gap-y-12 mt-12 mr-6">
+      <div class=node id=id_aks><icon name="managed identity"></icon>id-fab-prod-aks<small>Managed identity</small></div>
+      <div class=node id=kv_kv><icon name=kv></icon>kv-fab-prod<small>Key Vault</small></div>
+      <div class=node id=log_law><icon name="log analytics"></icon>log-fab-prod<small>Log Analytics</small></div>
+      <div class=node id=sb_events><icon name="service bus"></icon>sb-fab-prod<small>Service Bus · shipments queue · tracking topic</small></div>
+    </div>
+   </div>
+  </div>
+</div>
+<script type="application/json">
+[
+  { "from": "ho", "to": "vgw_vpn", "label": "site-to-site VPN", "both": true },
+  ["dispatch", "agw_ingress", "HTTPS"],
+  { "from": "vnet_hub", "to": "vnet_spoke", "label": "peering", "both": true },
+  ["agw_ingress", "aks_main", "logistics API"],
+  { "from": "aks_main", "to": "acr_acr", "label": "AcrPull" },
+  ["aks_main", "id_aks", "identity"],
+  ["id_aks", "kv_kv", "Secrets User"], ["id_aks", "sb_events", "Data Owner"],
+  ["pe_sb", "sb_events", "private link"],
+  { "from": "aks_main", "to": "log_law", "label": "diagnostics", "dashed": true }
+]
+</script>
+<script type="graphally">
+arrow(el('k1').left, el('k1').right); arrow(el('k2').left, el('k2').right, { dashed: true });
+</script>
 </diagram>

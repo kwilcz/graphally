@@ -2,43 +2,51 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=flow title="Orders service release pipeline" subtitle="From merge to main to production">
-  <start id=merge>Merge to main</start>
-  <task id=build>Build image | unit tests</task>
-  <gateway id=unit>Unit tests pass?</gateway>
-  <task id=notify icon=user>Notify author | pipeline stops</task>
-  <end id=stopped>Stopped</end>
-  <task id=push icon=acr>Push image | registry</task>
-  <task id=deploy icon="app service">Deploy to staging | App Service slot</task>
-  <task id=smoke>Run smoke tests | against staging</task>
-  <gateway id=smokeok>Smoke tests pass?</gateway>
-  <task id=rollback icon="app service">Roll back staging | previous image</task>
-  <task id=page1 icon=user>Page on-call engineer</task>
-  <end id=rolledback>Rolled back</end>
-  <task id=approve icon=user>Manual approval | sign-off</task>
-  <event id=expire type=timer on=approve>24 h</event>
-  <end id=expired>Expired, stopped</end>
-  <task id=swap icon="app service">Swap staging and production slots</task>
-  <task id=watch>Watch error rate | 15 minutes</task>
-  <gateway id=err>Error rate above 2%?</gateway>
-  <task id=swapback icon="app service">Swap back to previous</task>
-  <task id=page2 icon=user>Page on-call engineer</task>
-  <end id=rolledprod>Rolled back in production</end>
-  <end id=done>Release done</end>
-  <links>
-  merge -> build -> unit
-  unit -> push : yes
-  unit -> notify : no
-  notify -> stopped
-  push -> deploy -> smoke -> smokeok
-  smokeok -> rollback : no
-  rollback -> page1 -> rolledback
-  smokeok -> approve : yes
-  approve -> swap : approved
-  expire -> expired
-  swap -> watch -> err
-  err -> swapback : above 2%
-  swapback -> page2 -> rolledprod
-  err -> done : no
-  </links>
+<diagram layout=html width=2600 title="Orders service release pipeline" subtitle="From merge to main to production: the happy path runs along the middle, failures branch up">
+<style>
+  [shape=task] { position: relative; width: 150px; min-height: 58px; font-weight: 500; }
+  [shape=task] small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+  [shape=task]:has(> icon) { padding-left: 28px; }
+  [shape=task] > icon { position: absolute; top: 6px; left: 8px; width: 16px; height: 16px; }
+  .ev { width: 120px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11.5px; }
+  .gw { width: 120px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11.5px; translate: 0 10px; }
+</style>
+<div class="grid grid-cols-[repeat(14,auto)] grid-rows-[auto_auto_auto] justify-between items-center gap-x-12 gap-y-12">
+  <!-- The happy path -->
+  <div class="ev row-[2] col-[1]"><i shape=start id=merge></i>Merge to main</div>
+  <div shape=task class="row-[2] col-[2]" id=build>Build image<small>unit tests</small></div>
+  <div class="gw row-[2] col-[3]"><i shape="gateway exclusive" id=unit></i>Unit tests pass?</div>
+  <div shape=task class="row-[2] col-[4]" id=push><icon name=acr></icon>Push image<small>registry</small></div>
+  <div shape=task class="row-[2] col-[5]" id=deploy><icon name="app service"></icon>Deploy to staging<small>App Service slot</small></div>
+  <div shape=task class="row-[2] col-[6]" id=smoke>Run smoke tests<small>against staging</small></div>
+  <div class="gw row-[2] col-[7]"><i shape="gateway exclusive" id=smokeok></i>Smoke tests pass?</div>
+  <div shape=task class="row-[2] col-[8]" id=approve><icon name=user></icon>Manual approval<small>sign-off</small>
+    <i shape="event timer" class="absolute -bottom-[18px] right-[14px]" id=expire></i></div>
+  <div shape=task class="row-[2] col-[9] ml-12" id=swap><icon name="app service"></icon>Swap staging and production slots</div>
+  <div shape=task class="row-[2] col-[10]" id=watch>Watch error rate<small>15 minutes</small></div>
+  <div class="gw row-[2] col-[11]"><i shape="gateway exclusive" id=err></i>Error rate above 2%?</div>
+  <div class="ev row-[2] col-[12]"><i shape=end id=done></i>Release done</div>
+  <!-- Failures -->
+  <div shape=task class="row-[1] col-[4]" id=notify><icon name=user></icon>Notify author<small>pipeline stops</small></div>
+  <div class="ev row-[1] col-[5]"><i shape=end id=stopped></i>Stopped</div>
+  <div shape=task class="row-[1] col-[8]" id=rollback><icon name="app service"></icon>Roll back staging<small>previous image</small></div>
+  <div shape=task class="row-[1] col-[9] ml-12" id=page1><icon name=user></icon>Page on-call engineer</div>
+  <div class="ev row-[1] col-[10]"><i shape=end id=rolledback></i>Rolled back</div>
+  <div class="ev row-[3] col-[9]"><i shape=end id=expired></i>Expired, stopped</div>
+  <div shape=task class="row-[1] col-[12]" id=swapback><icon name="app service"></icon>Swap back to previous</div>
+  <div shape=task class="row-[1] col-[13]" id=page2><icon name=user></icon>Page on-call engineer</div>
+  <div class="ev row-[1] col-[14]"><i shape=end id=rolledprod></i>Rolled back in production</div>
+</div>
+<script type="application/json">
+[
+  ["merge", "build"], ["build", "unit"],
+  ["unit", "push", "yes"], { "from": "unit", "to": "notify", "label": "no", "out": "top" }, ["notify", "stopped"],
+  ["push", "deploy"], ["deploy", "smoke"], ["smoke", "smokeok"],
+  ["smokeok", "approve", "yes"], { "from": "smokeok", "to": "rollback", "label": "no", "out": "top" }, ["rollback", "page1"], ["page1", "rolledback"],
+  ["approve", "swap", "approved"], { "from": "expire", "to": "expired", "label": "24 h", "out": "bottom" },
+  ["swap", "watch"], ["watch", "err"],
+  { "from": "err", "to": "swapback", "label": "above 2%", "out": "top" }, ["swapback", "page2"], ["page2", "rolledprod"],
+  ["err", "done", "no"]
+]
+</script>
 </diagram>

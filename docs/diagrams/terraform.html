@@ -2,22 +2,33 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=lanes title="From Terraform to a diagram" subtitle="tf2graphally drafts; the agent tells the story">
-  <lane id=tool label="tf2graphally">
-    <start id=s>*.tf files</start>
-    <task id=parse icon=code>Parse HCL | root and local modules</task>
-    <task id=refs>Resolve references | var, local, outputs</task>
-    <task id=place>Place resources | RG, VNet, subnet</task>
-    <task id=fold>Fold plumbing | roles, links, children</task>
-    <task id=draft icon=file>draft.html</task>
-  </lane>
-  <lane id=agent label="Agent">
-    <task id=look icon=browser>Render and look</task>
-    <task id=edit icon=user>Add what code cannot know | users, story</task>
-    <end id=e>diagram.svg</end>
-  </lane>
-  <links>
-  s -> parse -> refs -> place -> fold -> draft
-  draft -> look -> edit -> e
-  </links>
+<diagram layout=html width=1500 title="From Terraform to a diagram" subtitle="tf2graphally drafts; the agent tells the story">
+<style>
+  .lane { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .lane > h4 { grid-column: 1; align-self: stretch; display: flex; align-items: center; margin: -26px 0; padding: 0 14px; font-size: 12px; }
+  [shape=task] { position: relative; width: 150px; min-height: 58px; font-weight: 500; }
+  [shape=task]:has(> icon) { padding-left: 28px; }
+  [shape=task] > icon { position: absolute; top: 6px; left: 8px; width: 16px; height: 16px; }
+  [shape=task] small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+  .ev { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11.5px; }
+</style>
+<div class="grid grid-cols-[120px_repeat(7,auto)] justify-between gap-x-8 border border-line">
+  <div class=lane><h4 class=bg-lane-a>tf2graphally</h4>
+    <div class="ev col-[2]"><i shape=start id=s></i>*.tf files</div>
+    <div shape=task class="col-[3]" id=parse><icon name=code></icon>Parse HCL<small>root and local modules</small></div>
+    <div shape=task class="col-[4]" id=refs>Resolve references<small>var, local, outputs</small></div>
+    <div shape=task class="col-[5]" id=place>Place resources<small>RG, VNet, subnet</small></div>
+    <div shape=task class="col-[6]" id=fold>Fold plumbing<small>roles, links, children</small></div>
+    <div shape=task class="col-[7]" id=draft><icon name=file></icon>draft.html</div>
+  </div>
+  <div class="lane border-b-0"><h4 class=bg-lane-b>Agent</h4>
+    <div shape=task class="col-[6]" id=look><icon name=browser></icon>Render and look</div>
+    <div shape=task class="col-[7]" id=edit><icon name=user></icon>Add what code cannot know<small>users, story</small></div>
+    <div class="ev col-[8]"><i shape=end id=e></i>diagram.svg</div>
+  </div>
+</div>
+<script type="application/json">
+[ ["s", "parse"], ["parse", "refs"], ["refs", "place"], ["place", "fold"], ["fold", "draft"],
+  { "from": "draft", "to": "look", "out": "bottom" }, ["look", "edit"], ["edit", "e"] ]
+</script>
 </diagram>

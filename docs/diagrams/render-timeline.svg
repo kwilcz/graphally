@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="render-timeline.html" viewBox="0 0 1012 362" width="1012" height="362" role="img" aria-label="Where a render's time goes. Browser: Start server and browser, Open a page; Engine: Load, measure, lay out, route, render; Output: PNG preview, Close the browser. Connections: Start server and browser to Open a page; Open a page to Load, measure, lay out, route, render; Load, measure, lay out, route, render to PNG preview; PNG preview to Close the browser">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="render-timeline.html" viewBox="0 0 1348 384" width="1348" height="384" role="img" aria-label="Where a render's time goes. Median of five renders of a 21-node architecture diagram, icon packs already downloaded">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
@@ -24,57 +24,42 @@
 .g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 .g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 </style>
-<defs><marker id="gr1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker></defs>
-<g style="color: var(--ink); fill: var(--ink)">
-<rect width="100%" height="100%" style="fill: var(--bg)"></rect>
-<text class="g-title" x="24" y="40.5">Where a render's time goes</text>
-<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Median of five renders of a 21-node architecture diagram, icon packs already downloaded</text>
-<g data-group="g1" data-box="24,116,963,86">
-<rect x="24" y="116" width="963" height="86" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="116" width="963" height="86" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="116" width="90" height="86" style="fill: var(--lane-a); stroke: var(--line)" stroke-width="1"></rect>
-<text class="g-group" x="38" y="163.5">Browser</text>
+<defs></defs>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Where a render's time goes</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Median of five renders of a 21-node architecture diagram, icon packs already downloaded</text>
+<g data-id="t0" data-box="153.5,82,1,15.5">
+<text x="153.5" y="92.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">0 ms</text>
 </g>
-<g data-group="g2" data-box="24,202,963,50">
-<rect x="24" y="202" width="963" height="50" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="202" width="963" height="50" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="202" width="90" height="50" style="fill: var(--lane-b); stroke: var(--line)" stroke-width="1"></rect>
-<text class="g-group" x="38" y="231.5">Engine</text>
+<text x="609.9" y="92.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">500 ms</text>
+<text x="1066.2" y="92.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">1000 ms</text>
+<line x1="24" y1="203.9" x2="1324" y2="203.9" style="stroke: var(--line)" stroke-width="1"></line>
+<text x="38" y="154" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Browser</text>
+<g data-id="launch" data-box="154,111.5,358,24">
+<rect x="154.5" y="111.9" width="356.8" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="520.8" y="127.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Start server and browser · 392 ms</text>
 </g>
-<g data-group="g3" data-box="24,252,963,86">
-<rect x="24" y="252" width="963" height="86" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="252" width="963" height="86" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="252" width="90" height="86" style="fill: var(--lane-c); stroke: var(--line)" stroke-width="1"></rect>
-<text class="g-group" x="38" y="299.5">Output</text>
+<g data-id="page" data-box="512,145.5,107,24">
+<rect x="512.3" y="145.9" width="105.8" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="627.5" y="161.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Open a page · 117 ms</text>
 </g>
-<line x1="114" y1="110" x2="987.1" y2="110" style="fill: none; stroke: var(--line)" stroke-width="1"></line>
-<line x1="126" y1="106" x2="126" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<line x1="257.8" y1="106" x2="257.8" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<line x1="389.7" y1="106" x2="389.7" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<line x1="521.5" y1="106" x2="521.5" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<line x1="653.4" y1="106" x2="653.4" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<line x1="785.2" y1="106" x2="785.2" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<line x1="917" y1="106" x2="917" y2="338" style="fill: none; stroke: var(--line)" stroke-width="0.8" stroke-dasharray="2 4"></line>
-<g data-edge="launch-&gt;page"><path d="M376.4,152 L376.4,158 Q376.4,159 375.4,159 L375.4,159 Q374.4,159 374.4,160 L374.4,172 Q374.4,177 379.4,177 L384.4,177" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="page-&gt;compile"><path d="M453.5,188 L453.5,208 Q453.5,209 452.5,209 L452.5,209 Q451.5,209 451.5,210 L451.5,222 Q451.5,227 456.5,227 L461.5,227" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="compile-&gt;shot"><path d="M723.8,238 L723.8,258 Q723.8,259 722.8,259 L722.8,259 Q721.8,259 721.8,260 L721.8,272 Q721.8,277 726.8,277 L731.8,277" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="shot-&gt;close"><path d="M835.2,288 L835.2,294 Q835.2,295 834.2,295 L834.2,295 Q833.2,295 833.2,296 L833.2,308 Q833.2,313 838.2,313 L843.2,313" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<rect x="126" y="130" width="258.4" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
-<rect x="384.4" y="166" width="77.1" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
-<rect x="461.5" y="216" width="270.3" height="22" rx="5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1.2"></rect>
-<rect x="731.8" y="266" width="111.4" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
-<rect x="843.2" y="302" width="127.9" height="22" rx="5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1.2"></rect>
-<text class="g-msg" x="134" y="145.5">Start server and browser</text>
-<text class="g-msg" x="469.5" y="181.5">Open a page</text>
-<text class="g-msg" x="469.5" y="231.5" style="fill: var(--card)">Load, measure, lay out, route, render</text>
-<text class="g-msg" x="739.8" y="281.5">PNG preview</text>
-<text class="g-msg" x="851.2" y="317.5">Close the browser</text>
-<text class="g-sub" x="126" y="98" text-anchor="middle" style="fill: var(--muted)">0 ms</text>
-<text class="g-sub" x="257.8" y="98" text-anchor="middle" style="fill: var(--muted)">200</text>
-<text class="g-sub" x="389.7" y="98" text-anchor="middle" style="fill: var(--muted)">400</text>
-<text class="g-sub" x="521.5" y="98" text-anchor="middle" style="fill: var(--muted)">600</text>
-<text class="g-sub" x="653.4" y="98" text-anchor="middle" style="fill: var(--muted)">800</text>
-<text class="g-sub" x="785.2" y="98" text-anchor="middle" style="fill: var(--muted)">1000</text>
-<text class="g-sub" x="917" y="98" text-anchor="middle" style="fill: var(--muted)">1200</text>
+<line x1="24" y1="286.9" x2="1324" y2="286.9" style="stroke: var(--line)" stroke-width="1"></line>
+<text x="38" y="249" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Engine</text>
+<g data-id="compile" data-box="618.5,218.5,374,24">
+<rect x="619" y="218.9" width="373.2" height="23" rx="4.5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="1001.7" y="234.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Load, lay out, route, render · 410 ms</text>
+</g>
+<text x="38" y="344" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Output</text>
+<g data-id="shot" data-box="992.5,301.5,154,24">
+<rect x="993.2" y="301.9" width="153.2" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="1155.9" y="317.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">PNG preview · 169 ms</text>
+</g>
+<g data-id="close" data-box="1147,335.5,177,24">
+<rect x="1147.4" y="335.9" width="176.1" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="971.3" y="351.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Close the browser · 194 ms</text>
+</g>
+
+
+
 </g>
 </svg>

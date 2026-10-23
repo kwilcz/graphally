@@ -2,43 +2,52 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=sequence numbered title="Checkout payment" subtitle="Payments runbook">
-  <node id=browser icon=browser>Shopper | browser</node>
-  <node id=shop icon="app service">Web shop | App Service</node>
-  <node id=pay icon="container app">Payments API | Container App</node>
-  <group id=ext label="Third parties" style=external>
-    <node id=stripe icon=cloud external>Stripe | payment provider</node>
-    <node id=bank icon=shield external>Bank | 3-D Secure page</node>
-  </group>
-  <node id=db icon=sql>Orders DB | Azure SQL</node>
-  <node id=sb icon="service bus">Service Bus | order events</node>
-  <links>
-  browser -> shop : POST checkout
-  shop -> pay : create payment
-  pay -> stripe : create PaymentIntent
-  stripe --> pay : client secret
-  pay --> shop : client secret
-  shop --> browser : client secret
-  browser -> stripe : confirm payment
-  alt 3-D Secure required
-    stripe --> browser : redirect to bank
-    browser -> bank : shopper approves
-    bank --> browser : redirect to shop
-    browser ~> shop : return
-  else no 3-D Secure
-    stripe --> browser : payment completes
-  end
-  par webhook
-    stripe ~> pay : payment_intent.succeeded
-    pay -> db : mark order paid
-    pay ~> sb : order paid event
-    pay --> stripe : 200 OK
-  and polling
-    loop every 2 s until paid
-      browser -> shop : GET order status
-      shop --> browser : pending or paid
-    end
-    browser -> browser : confirmation page
-  end
-  </links>
+<diagram layout=html width=1240 title="Checkout payment" subtitle="Payments runbook">
+  <div class="seq" id=seq>
+    <div class="node" id=browser data-who><icon name=browser></icon>Shopper<small>browser</small></div>
+    <div class="node" id=shop data-who><icon name="app service"></icon>Web shop<small>App Service</small></div>
+    <div class="node" id=pay data-who><icon name="container app"></icon>Payments API<small>Container App</small></div>
+    <div class="node external" id=stripe data-who><icon name=cloud></icon>Stripe<small>payment provider</small></div>
+    <div class="node external" id=bank data-who><icon name=shield></icon>Bank<small>3-D Secure page</small></div>
+    <div class="node" id=db data-who><icon name=sql></icon>Orders DB<small>Azure SQL</small></div>
+    <div class="node" id=sb data-who><icon name="service bus"></icon>Service Bus<small>order events</small></div>
+    <div class="group external" data-who-group="stripe bank"><h4>Third parties</h4></div>
+
+    <p class=msg data-from=browser data-to=shop>POST checkout</p>
+    <p class=msg data-from=shop data-to=pay>create payment</p>
+    <p class=msg data-from=pay data-to=stripe>create PaymentIntent</p>
+    <p class="msg reply" data-from=stripe data-to=pay>client secret</p>
+    <p class="msg reply" data-from=pay data-to=shop>client secret</p>
+    <p class="msg reply" data-from=shop data-to=browser>client secret</p>
+    <p class=msg data-from=browser data-to=stripe>confirm payment</p>
+    <div class=frag data-kind=alt data-guard="3-D Secure required">
+      <p class="msg reply" data-from=stripe data-to=browser>redirect to bank</p>
+      <p class=msg data-from=browser data-to=bank>shopper approves</p>
+      <p class="msg reply" data-from=bank data-to=browser>redirect to shop</p>
+      <p class="msg async" data-from=browser data-to=shop>return</p>
+      <div class=else data-guard="no 3-D Secure"></div>
+      <p class="msg reply" data-from=stripe data-to=browser>payment completes</p>
+    </div>
+    <div class=frag data-kind=par data-guard=webhook>
+      <p class="msg async" data-from=stripe data-to=pay>payment_intent.succeeded</p>
+      <p class=msg data-from=pay data-to=db>mark order paid</p>
+      <p class="msg async" data-from=pay data-to=sb>order paid event</p>
+      <p class="msg reply" data-from=pay data-to=stripe>200 OK</p>
+      <div class=else data-guard=polling></div>
+      <div class=frag data-kind=loop data-guard="every 2 s until paid">
+        <p class=msg data-from=browser data-to=shop>GET order status</p>
+        <p class="msg reply" data-from=shop data-to=browser>pending or paid</p>
+      </div>
+      <p class=msg data-from=browser data-to=browser>confirmation page</p>
+    </div>
+  </div>
+  <script type="graphally" before>sequence('#seq')</script>
+  <script type="graphally">
+    for (const m of all('.msg')) {
+      const d = m.el.dataset, a = el(d.from).center.x, b = el(d.to).center.x, y = m.bottom.y - 6;
+      const o = { dashed: m.el.matches('.reply'), head: m.el.matches('.async') ? 'open' : 'arrow' };
+      if (d.from === d.to) draw.moveTo(pt(a + 6, y - 16)).lineTo(pt(a + 40, y - 16)).lineTo(pt(a + 40, y)).lineTo(pt(a + 6, y)).style(o);
+      else arrow(pt(a + (b > a ? 6 : -6), y), pt(b + (b > a ? -6 : 6), y), o);
+    }
+  </script>
 </diagram>

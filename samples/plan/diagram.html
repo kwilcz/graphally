@@ -2,28 +2,60 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=gantt today=2026-03-02 title="Logistics move to AKS" subtitle="Migration plan for the steering group, first half of 2026">
-  <lane label="Network">
-    <task id=hub start=2026-01-05 end=2026-01-30 done>Hub VNet and site-to-site VPN</task>
-    <task id=spoke after=hub duration=2w>Spoke VNets and peering</task>
-  </lane>
-  <lane label="Platform">
-    <task id=aks after=spoke duration=3w accent>AKS cluster and ingress</task>
-    <task id=pg start=2026-02-09 duration=4w>PostgreSQL and Service Bus</task>
-    <task id=mon after=aks duration=2w>Monitoring and alerts</task>
-  </lane>
-  <lane label="Applications">
-    <task id=pilot after=aks,pg duration=3w>Pilot: tracking service</task>
-    <task id=rest after=pilot duration=5w>Move remaining services</task>
-    <milestone id=live at=2026-05-25>Go-live</milestone>
-  </lane>
-  <lane label="Security review">
-    <task id=pen start=2026-05-18 duration=1w external>External pen test</task>
-  </lane>
-  <links>
-  hub -> spoke -> aks -> pilot -> rest -> live
-  pg -> pilot
-  aks -> mon
-  pen -> live
-  </links>
+<diagram layout=html width=1600 title="Logistics move to AKS" subtitle="Migration plan for the steering group, first half of 2026">
+<style>
+  /* A lane: its name in the lead column, then one row per task; a bar spans its dates. */
+  .lane { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; border-bottom: 1px solid var(--line); }
+  .lane > b { grid-column: lead; grid-row: 1 / span 9; display: flex; align-items: center; padding: 0 20px; border-right: 1px solid var(--line); }
+  .lane > p { grid-column: start / end; display: grid; grid-template-columns: subgrid; align-items: center; height: 46px; }
+  .lane > p:first-of-type { margin-top: 14px; } .lane > p:last-child { margin-bottom: 14px; }
+  .bar { position: relative; font-style: normal; height: 26px; border: 1.3px solid var(--woad); border-radius: 5px; background: var(--lane-a); }
+  .bar > span { position: absolute; left: calc(100% + 12px); top: 3px; white-space: nowrap; font-size: 14px; }
+  .bar.done { background: #c9cfdb; border-color: var(--woad); } .bar.done > span { color: var(--muted); }
+  .bar.accent { background: var(--woad); }
+  .bar.external { background: none; border-style: dashed; border-color: var(--muted); }
+  .ms { justify-self: start; width: max-content; display: flex; align-items: center; gap: 10px; translate: -11px 0; font-size: 14px; white-space: nowrap; }
+  .ms > b { flex: none; width: 22px; height: 22px; min-height: 0; padding: 0; border: 0; background: var(--ink); }
+  .month { position: absolute; top: 0; bottom: 0; left: 0; border-left: 1px dashed var(--line); }
+  .today { position: absolute; top: 0; bottom: 0; left: 0; width: 0; }
+</style>
+<div id=plan class="relative grid mb-8 border border-line rounded-[2px]">
+  <div class="lane"><b class="bg-lane-a">Network</b>
+    <p><i class="bar done" id=hub data-start=2026-01-05 data-end=2026-01-30><span>Hub VNet and site-to-site VPN</span></i></p>
+    <p><i class=bar id=spoke data-after=hub data-duration=2w><span>Spoke VNets and peering</span></i></p>
+  </div>
+  <div class="lane"><b class="bg-lane-b">Platform</b>
+    <p><i class="bar accent" id=aks data-after=spoke data-duration=3w><span>AKS cluster and ingress</span></i></p>
+    <p><i class=bar id=pg data-start=2026-02-09 data-duration=4w><span>PostgreSQL and Service Bus</span></i></p>
+    <p><i class=bar id=mon data-after=aks data-duration=2w><span>Monitoring and alerts</span></i></p>
+  </div>
+  <div class="lane"><b class="bg-lane-c">Applications</b>
+    <p><i class=bar id=pilot data-after="aks pg" data-duration=3w><span>Pilot: tracking service</span></i></p>
+    <p><i class=bar id=rest data-after=pilot data-duration=5w><span>Move remaining services</span></i></p>
+    <p><span class=ms id=live data-at=2026-05-25><b shape=diamond></b>Go-live</span></p>
+  </div>
+  <div class="lane border-b-0"><b class="bg-lane-d">Security review</b>
+    <p><i class="bar external" id=pen data-start=2026-05-18 data-duration=1w><span>External pen test</span></i></p>
+  </div>
+  <i class=today id=today data-at=2026-03-02></i>
+</div>
+<script type="graphally" before>
+schedule();
+const t = timeline('#plan', { lead: '220px' });
+// Month names above the chart and a dashed line at the start of each month, behind the bars.
+const plan = el('#plan');
+plan.before(Object.assign(make('div', { class: 'grid h-10 items-end', style: `grid-template-columns: ${plan.style.gridTemplateColumns}` }), {
+  innerHTML: t.months.map((m, i) => `<span class="text-lg text-muted pb-2 -translate-x-1/2" style="grid-column: ${m.column}">${m.label}${i ? '' : ' ' + m.start.slice(0, 4)}</span>`).join('') }));
+plan.prepend(...t.months.slice(1).map(m => make('i', { class: 'month', style: `grid-column: ${m.column}` })));
+</script>
+<script type="graphally">
+// A dependency drops from near the end of the earlier task and runs into the start of the later one.
+const elbow = (a, b) => draw.moveTo(pt(el(a).right.x - 14, el(a).bottom.y)).lineTo(pt(el(a).right.x - 14, el(b).center.y)).lineTo(el(b).left).style({ head: 'arrow' });
+for (const b of all('[data-after]')) for (const d of b.el.dataset.after.split(' ')) elbow(d, b.el.id);
+elbow('rest', 'live');
+draw.moveTo(pt(el('live').left.x + 11, el('pen').top.y)).lineTo(pt(el('live').left.x + 11, el('live').bottom.y)).style({ head: 'arrow' });
+const today = el('today');
+draw.moveTo(today.top.up(10)).lineTo(today.bottom).style({ color: 'rust', width: 2, dashed: true });
+text(today.bottom.down(16).right(30), 'today', { size: 14, color: 'rust' });
+</script>
 </diagram>
