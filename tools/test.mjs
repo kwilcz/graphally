@@ -477,7 +477,10 @@ await test('page-depend', () => {
   const m = svg.match(/<path d="(M[^"]+)"[^>]*marker-end/);
   check(m, 'no dependency drawn');
   const pts = pointsOf(m[1]), first = pts[0], last = pts.at(-1);
-  check(Math.abs(first.x - (A[0] + A[2])) < 1 && Math.abs(last.x - C[0]) < 1, `the line does not run from the end of a to the start of c: ${m[1]}`);
+  // It leaves a by its end or its underside, and arrives at c's start or its top near it.
+  const leaves = Math.abs(first.x - (A[0] + A[2])) < 1 || (Math.abs(first.y - (A[1] + A[3])) < 1 && first.x > A[0] && first.x <= A[0] + A[2]);
+  const arrives = Math.abs(last.x - C[0]) < 1 || (Math.abs(last.y - C[1]) < 1 && last.x >= C[0] && last.x <= C[0] + 40);
+  check(leaves && arrives, `the line does not run from the end of a to the start of c: ${m[1]}`);
   // No corner or crossing point inside b: every segment stays outside its box.
   const inside = (x, y) => x > B[0] && x < B[0] + B[2] && y > B[1] && y < B[1] + B[3];
   for (let k = 1; k < pts.length; k++) for (let t = 0; t <= 1; t += 0.05)
