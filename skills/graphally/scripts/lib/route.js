@@ -187,6 +187,21 @@ export function routeEdges(model, geo, m) {
     list.forEach((it, i) => { fixed[it.k][it.which] = { side, coord: lo + (hi - lo) * (i + 1) / (list.length + 1) }; });
   }
 
+  // One exception: a line alone on two facing sides runs straight, at a height (or position)
+  // inside the middle 80% of both sides, the one nearest their middles. Without such an
+  // overlap it keeps the middles and takes a step.
+  edges.forEach((E, k) => {
+    const f = fixed[k];
+    if (!f.a || !f.b || (f.a.side + 2) % 4 !== f.b.side) return;
+    if ((ends.get(`${E.e.from}|${f.a.side}`) || []).length !== 1 || (ends.get(`${E.e.to}|${f.b.side}`) || []).length !== 1) return;
+    const span = (id, side) => { const r = rectOf(id), o = side % 2 === 0 ? r.y : r.x, n = side % 2 === 0 ? r.h : r.w; return geo.nodes.get(id)?.round ? [o + n / 2, o + n / 2] : [o + n * 0.1, o + n * 0.9]; };
+    const [a0, a1] = span(E.e.from, f.a.side), [b0, b1] = span(E.e.to, f.b.side), lo = Math.max(a0, b0), hi = Math.min(a1, b1);
+    if (lo > hi) return;
+    const want = (f.a.coord + f.b.coord) / 2, c = Math.min(hi, Math.max(lo, want));
+    if (![[E.e.from, f.a.side], [E.e.to, f.b.side]].every(([id, sd]) => sideFree(id, sd, c))) return;
+    f.a.coord = c; f.b.coord = c;
+  });
+
 
   // ---- pass 2: fixed ports ----
   for (const f of fixed) for (const w of ['a', 'b']) if (f[w]) (f[w].side % 2 === 0 ? extraY : extraX).add(f[w].coord);

@@ -154,14 +154,14 @@
 <g data-edge="smoke-&gt;smokeok" data-sides="right,left"><path d="M1104,238 L1190,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="smokeok-&gt;approve" data-sides="right,left"><path d="M1234,238 L1320,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="watch-&gt;err" data-sides="right,left"><path d="M1914,238 L2000,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="notify-&gt;stopped" data-sides="right,left"><path d="M708,117 L779.5,117 Q784,117 784,112.5 L784,112.5 Q784,108 788.5,108 L798,108" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="page1-&gt;rolledback" data-sides="right,left"><path d="M1716,117 L1787.5,117 Q1792,117 1792,112.5 L1792,112.5 Q1792,108 1796.5,108 L1806,108" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="merge-&gt;build" data-sides="right,left"><path d="M102,228 L173,228 Q178,228 178,233 L178,233 Q178,238 183,238 L192,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="notify-&gt;stopped" data-sides="right,left"><path d="M708,108 L798,108" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="page1-&gt;rolledback" data-sides="right,left"><path d="M1716,108 L1806,108" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="merge-&gt;build" data-sides="right,left"><path d="M102,228 L192,228" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="push-&gt;deploy" data-sides="right,left"><path d="M708,238 L756,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="deploy-&gt;smoke" data-sides="right,left"><path d="M906,238 L954,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="swapback-&gt;page2" data-sides="right,left"><path d="M2280,117 L2328,117" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="swap-&gt;watch" data-sides="right,left"><path d="M1716,238 L1764,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="page2-&gt;rolledprod" data-sides="right,left"><path d="M2478,117 L2548,117 Q2554,117 2554,111 L2554,106 Q2554,100 2560,100 L2568,100" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="page2-&gt;rolledprod" data-sides="right,left"><path d="M2478,100 L2568,100" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="expire-&gt;expired" data-sides="bottom,left"><path d="M1437,284 L1437,336 Q1437,342 1443,342 L1560,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="rollback-&gt;page1" data-sides="right,left"><path d="M1470,117 L1566,117" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="approve-&gt;swap" data-sides="right,left"><path d="M1470,238 L1566,238" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>

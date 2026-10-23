@@ -73,13 +73,13 @@
 </g>
 <g data-edge="connector-&gt;web" data-sides="right,left"><path d="M991,263 L1131,263 Q1137,263 1137,257 L1137,221 Q1137,215 1143,215 L1151,215" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="connector-&gt;ad" data-sides="right,left"><path d="M991,293 L1131,293 Q1137,293 1137,299 L1137,334 Q1137,340 1143,340 L1151,340" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="users-&gt;entra" data-sides="right,left"><path d="M164,245 L401,245 Q407,245 407,239 L407,212 Q407,206 413,206 L421,206" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="users-&gt;entra" data-sides="right,left"><path d="M164,225.5 L421,225.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="users-&gt;proxy" data-sides="bottom,left"><path d="M94,290 L94,346 Q94,352 100,352 L421,352" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="proxy-&gt;connector" data-sides="right,left"><path d="M561,352 L831,352 Q837,352 837,346 L837,284 Q837,278 843,278 L851,278" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
 
 <text class="g-edge" x="1048.6" y="257" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTP</text>
 <text class="g-edge" x="1025.8" y="287" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">Kerberos SSO</text>
-<text class="g-edge" x="255.4" y="239" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in first</text>
+<text class="g-edge" x="262.4" y="219.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in first</text>
 <text class="g-edge" x="238.4" y="346" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
 <text class="g-edge" x="641.1" y="346" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">outbound connection</text>
 </g>

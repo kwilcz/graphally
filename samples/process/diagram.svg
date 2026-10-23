@@ -137,8 +137,8 @@
 <g data-edge="finrev-&gt;finok" data-sides="right,left"><path d="M1560,477 L1624,477" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="validate-&gt;valid" data-sides="right,left"><path d="M690,622 L755,622" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="finok-&gt;finrej" data-sides="right,left"><path d="M1668,477 L1733,477" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="review-&gt;decide" data-sides="right,left"><path d="M1014,333 L1064.5,333 Q1065,333 1065,332.5 L1065,332.5 Q1065,332 1065.5,332 L1079,332" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="decide-&gt;reject" data-sides="right,left"><path d="M1123,332 L1213.5,332 Q1214,332 1214,332.5 L1214,332.5 Q1214,333 1214.5,333 L1228,333" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="review-&gt;decide" data-sides="right,left"><path d="M1014,332 L1079,332" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="decide-&gt;reject" data-sides="right,left"><path d="M1123,332 L1228,332" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="s-&gt;submit" data-sides="right,left"><path d="M250,127 L359,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="correct-&gt;submit" data-sides="right,left"><path d="M327,211.5 L339,211.5 Q345,211.5 345,205.5 L345,151 Q345,145 351,145 L359,145" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="finok-&gt;pay" data-sides="bottom,left"><path d="M1646,499 L1646,607 Q1646,613 1652,613 L1733,613" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
@@ -155,7 +155,7 @@
 <g data-edge="reject-&gt;notice" data-sides="right,left"><path d="M1378,333 L1966,333 Q1972,333 1972,327 L1972,133 Q1972,127 1978,127 L2008,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 
 <text class="g-edge" x="1693.6" y="471" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
-<text class="g-edge" x="1161.6" y="326" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="1168.6" y="326" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
 <text class="g-edge" x="352" y="182.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">resubmit</text>
 <text class="g-edge" x="1680" y="607" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
 <text class="g-edge" x="1322.8" y="471" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">&gt; £1,000</text>
