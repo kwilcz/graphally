@@ -225,9 +225,9 @@
 <text x="1840.5" y="957.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Gen2</text>
 </g>
 </g>
-<g data-edge="agw-&gt;app" data-sides="bottom,top"><path d="M198,402 L198,518" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="app-&gt;pesql" data-sides="bottom,top"><path d="M198,569 L198,686" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="dbw-&gt;pedl" data-sides="bottom,top"><path d="M1796,638 L1796,755" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="agw-&gt;app" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M198,402 L198,518" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="app-&gt;pesql" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M198,569 L198,686" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="dbw-&gt;pedl" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M1796,638 L1796,755" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="pedl-&gt;dls" data-sides="bottom,top"><path d="M1837.5,806 L1837.5,921" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="shopper-&gt;agw" data-sides="left,left"><path d="M24,135 L16,135 Q10,135 10,141 L10,370 Q10,376 16,376 L58,376" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="pesql-&gt;sql" data-sides="left,left"><path d="M58,711 L24,711 Q18,711 18,717 L18,940 Q18,946 24,946 L41,946" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>

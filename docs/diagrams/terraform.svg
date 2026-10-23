@@ -93,7 +93,7 @@
 <g data-edge="look-&gt;edit" data-sides="right,left"><path d="M1158,276.5 L1213.3,276.5 Q1218,276.5 1218,271.8 L1218,271.8 Q1218,267 1222.8,267 L1232,267" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="parse-&gt;refs" data-sides="right,left"><path d="M485,143 L559,143" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="place-&gt;fold" data-sides="right,left"><path d="M933,143 L1008,143" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="draft-&gt;look" data-sides="bottom,right"><path d="M1307,172 L1307,219 Q1307,225 1301,225 L1178,225 Q1172,225 1172,231 L1172,251.5 Q1172,257.5 1166,257.5 L1158,257.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="draft-&gt;look" data-sides="bottom,right" data-out="bottom"><path d="M1307,172 L1307,219 Q1307,225 1301,225 L1178,225 Q1172,225 1172,231 L1172,251.5 Q1172,257.5 1166,257.5 L1158,257.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 
 
 </g>
