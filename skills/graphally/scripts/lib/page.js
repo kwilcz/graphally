@@ -227,8 +227,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     // the shortest wins, a corner counting as 40px. Clear means: CLEAR from every other dated
     // element ([data-start], [data-at]) and off the upright runs of dependencies into other
     // tasks; every run between corners at least BEND long; the last run at least LAST long,
-    // unless the whole line is one straight drop. A long way round goes along a row edge,
-    // where the band between two rows' bars is.
+    // unless the whole line is one straight drop; and it touches a box only within the middle
+    // 80% of a side, never at a corner. A long way round goes along a row edge, where the band
+    // between two rows' bars is.
     depend(a, b, o2 = {}) {
       const [p, q] = [spot(a), spot(b)];
       if (!p.el || !q.el) throw new Error('depend(a, b) takes two elements');
@@ -242,18 +243,20 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       const rowEdge = (r, below) => { const row = geom(r.el.parentElement);
         return below ? (row.y + row.h > r.y + r.h + 2 ? row.y + row.h : r.y + r.h + BEND) : (row.y < r.y - 2 ? row.y : r.y - BEND); };
       const ya = rowEdge(p, down), yb = rowEdge(q, !down), pEdge = down ? p.y + p.h : p.y, qEdge = down ? q.y : q.y + q.h;
-      const xs = new Set([ex, q.x + 12, q.x + 20, q.x + q.w / 2, sx - 2, sx - 8]);
+      // Where a line may touch a top or bottom: the middle 80% of it.
+      const inner = (r, x) => x >= r.x + r.w * 0.1 && x <= r.x + r.w * 0.9;
+      const xs = new Set([ex, q.x + 12, q.x + 20, q.x + q.w / 2, q.x + q.w * 0.1, p.x + p.w * 0.9, p.x + p.w / 2]);
       for (let x = kx; x <= Math.max(ex, q.x + 20); x += 4) xs.add(x);
       for (let x = p.x + 12; x < sx; x += 6) xs.add(x);
       for (const r of bars) for (const o of [CLEAR + 2, CLEAR + 8, CLEAR + 14]) { xs.add(r.x - o); xs.add(r.x + r.w + o); }
       const leaves = x => [
         ...(x >= kx ? [[[sx, y1], [x, y1]]] : []),
         ...[0, 8, 16, 24, 32].map(d => [[sx, y1], [kx + d, y1], [kx + d, ya], [x, ya]]),
-        ...(x >= p.x + Math.min(12, p.w / 2) && x <= sx - 2 ? [[[x, pEdge]]] : []),
+        ...(inner(p, x) ? [[[x, pEdge]]] : []),
       ];
       const arrivals = (x, leave) => [
         ...(x <= ex ? [[[x, y2], [q.x, y2]]] : []),
-        ...(x >= q.x + Math.min(8, q.w / 2 - 1) && x <= q.x + Math.max(Math.min(q.w - 8, 40), q.w / 2 + 1) ? [[[x, qEdge]]] : []),
+        ...(inner(q, x) && x <= q.x + Math.max(40, q.w / 2) ? [[[x, qEdge]]] : []),
         [[x, yb], [ex, yb], [ex, y2], [q.x, y2]],
       ];
       const clear = path => path.every((v, k) => !k || free(path[k - 1][0], path[k - 1][1], v[0], v[1]));
