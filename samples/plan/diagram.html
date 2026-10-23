@@ -10,13 +10,14 @@
   .cells > span { color: var(--muted); }
   .lane { grid-column: 1 / -1; display: flex; align-items: center; height: 30px; padding: 0 14px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
   .st { justify-self: start; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-  .st.done { background: var(--wash); color: var(--muted); } .st.track { background: #e3f1e6; color: var(--green); }
-  .st.risk { background: #fbefd9; color: var(--amber); } .st.blocked { background: #fbe4df; color: var(--rust); } .st.planned { color: var(--muted); }
-  .bar { position: relative; height: 20px; overflow: hidden; border: 1.3px solid var(--woad); border-radius: 4px; background: var(--lane-a); }
-  .bar > i { position: absolute; top: 0; bottom: 0; left: 0; background: #b9cdee; }
-  .bar.done { border-color: var(--muted); background: #c9cfdb; } .bar.done > i { background: #aeb6c6; }
-  .bar.critical { background: var(--woad); } .bar.critical > i { background: #17488f; }
-  .bar.blocked { border: 1.5px dashed var(--rust); background: #fbe4df; }
+  .st.done { background: var(--wash); color: var(--muted); } .st.track { background: var(--lane-b); color: var(--green); }
+  .st.risk { background: var(--note); color: var(--amber); } .st.blocked { background: var(--lane-d); color: var(--rust); } .st.planned { color: var(--muted); }
+  /* Theme colours only, so the plan reads in the dark theme too. The filled part is done. */
+  .bar { position: relative; height: 20px; overflow: hidden; border: 1.3px solid var(--woad); border-radius: 4px; background: var(--card); }
+  .bar > i { position: absolute; top: 0; bottom: 0; left: 0; background: var(--icon-soft); }
+  .bar.done { border-color: var(--muted); background: var(--line); } .bar.done > i { background: var(--line); }
+  .bar.critical { background: var(--woad); }
+  .bar.blocked { border: 1.5px dashed var(--rust); background: var(--lane-d); }
   .bar.external { border-style: dashed; border-color: var(--muted); background: none; }
   .ms { justify-self: start; width: 18px; height: 18px; min-height: 0; padding: 0; border: 0; background: var(--ink); translate: -9px 0; }
   .month { position: absolute; top: 0; bottom: 0; left: 0; border-left: 1px dashed var(--line); }
@@ -35,7 +36,7 @@
 
   <div class="lane bg-lane-b">Platform</div>
   <div class=row><div class=cells><b>AKS cluster and ingress</b><span>Platform team</span><b class="st track">On track</b></div>
-    <i class="bar critical" id=aks data-after=spoke data-duration=3w><i class="w-[80%]"></i></i></div>
+    <i class="bar critical" id=aks data-after=spoke data-duration=3w></i></div>
   <div class=row><div class=cells><b>PostgreSQL and Service Bus</b><span>Platform team</span><b class="st risk">At risk</b></div>
     <i class=bar id=pg data-start=2026-02-09 data-duration=4w><i class="w-[55%]"></i></i></div>
   <div class=row><div class=cells><b>Monitoring and alerts</b><span>Platform team</span><b class="st planned">Planned</b></div>
@@ -63,8 +64,8 @@
 
   <i class=today id=today data-at=2026-03-02></i>
 </div>
-<div class="key mt-6"><span><i class="swatch box border-solid border-woad bg-woad"></i>critical path</span><span><i class="swatch box border-solid border-woad bg-lane-a"></i>task, darker part done</span>
-  <span><i class="swatch box border-rust bg-[#fbe4df]"></i>blocked</span><span><i class="swatch box"></i>external</span>
+<div class="key mt-6"><span><i class="swatch box border-solid border-woad bg-woad"></i>critical path</span><span><i class="swatch box border-solid border-woad bg-icon-soft"></i>task, filled part done</span>
+  <span><i class="swatch box border-rust bg-lane-d"></i>blocked</span><span><i class="swatch box"></i>external</span>
   <span><i class="swatch border-0 h-2" id=k1></i>depends on</span><span><i class="swatch border-0 h-2" id=k2></i>blocks</span></div>
 <script type="graphally" before>
 schedule();

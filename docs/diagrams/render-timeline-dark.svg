@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-theme="dark" data-source="render-timeline.html" viewBox="0 0 1348 384" width="1348" height="384" role="img" aria-label="Where a render's time goes. Median of five renders of a 21-node architecture diagram, icon packs already downloaded">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs></defs>
+<rect class="g-bg" width="1348" height="384" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Where a render's time goes</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Median of five renders of a 21-node architecture diagram, icon packs already downloaded</text>
+<g data-id="t0" data-box="153.5,82,1,15.5">
+<text x="153.5" y="92.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">0 ms</text>
+</g>
+<text x="609.9" y="92.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">500 ms</text>
+<text x="1066.2" y="92.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">1000 ms</text>
+<line x1="24" y1="203.9" x2="1324" y2="203.9" style="stroke: var(--line)" stroke-width="1"></line>
+<text x="38" y="154" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Browser</text>
+<g data-id="launch" data-box="154,111.5,358,24">
+<rect x="154.5" y="111.9" width="356.8" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="520.8" y="127.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Start server and browser · 392 ms</text>
+</g>
+<g data-id="page" data-box="512,145.5,107,24">
+<rect x="512.3" y="145.9" width="105.8" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="627.5" y="161.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Open a page · 117 ms</text>
+</g>
+<line x1="24" y1="286.9" x2="1324" y2="286.9" style="stroke: var(--line)" stroke-width="1"></line>
+<text x="38" y="249" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Engine</text>
+<g data-id="compile" data-box="618.5,218.5,374,24">
+<rect x="619" y="218.9" width="373.2" height="23" rx="4.5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="1001.7" y="234.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Load, lay out, route, render · 410 ms</text>
+</g>
+<text x="38" y="344" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Output</text>
+<g data-id="shot" data-box="992.5,301.5,154,24">
+<rect x="993.2" y="301.9" width="153.2" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="1155.9" y="317.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">PNG preview · 169 ms</text>
+</g>
+<g data-id="close" data-box="1147,335.5,177,24">
+<rect x="1147.4" y="335.9" width="176.1" height="23" rx="4.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="971.3" y="351.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Close the browser · 194 ms</text>
+</g>
+
+
+
+</g>
+</svg>
