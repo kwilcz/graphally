@@ -8,14 +8,15 @@ are data: a JSON list of who connects to whom, routed around the boxes. A `<scri
 anything else by name: arrows, gates on a column boundary, lines computed in a loop.
 Nothing in the source is a coordinate.
 
+Reach for the tools in this order. HTML structure and utility classes (`flex
+justify-center gap-6`) place almost everything. Plain CSS in a `<style>` covers what a class
+cannot say. The helpers (dates, sequences) do only what CSS cannot: they turn dates into
+grid columns and messages into rows. A script draws only what has no box.
+
 ```html
 <diagram layout=html width=1000>
-<style>
-  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; align-items: center; justify-items: center }
-  .ev { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11.5px }
-</style>
-<div class="flow">
-  <div class="ev"><i shape=start id=in></i>Order placed</div>
+<div class="grid grid-cols-4 gap-10 items-center justify-items-center">
+  <div class="flex flex-col items-center gap-1 text-sm"><i shape=start id=in></i>Order placed</div>
   <div shape=task id=check>Check stock</div>
   <i shape="gateway exclusive" id=ok></i>
   <div shape=cylinder id=db>Orders DB</div>
@@ -74,12 +75,90 @@ Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
 
 ## Classes and icons
 
-`icons=aws` on `<diagram>` makes AWS win names both vendors share, as in the other diagrams.
+**Utility classes** have Tailwind's names. Write them on the element, with no `<style>`:
+`flex`, `grid grid-cols-3`, `flex-col`, `justify-center`, `justify-between`,
+`items-center`, `self-end`, `justify-self-center`, `place-items-center`, `gap-6`,
+`gap-x-20`, `p-4`, `px-6`, `mt-10`, `mx-auto`, `w-40`, `w-full`, `max-w-xs`,
+`col-span-2`, `col-start-3`, `col-span-full`, `row-span-2`, `grid-cols-subgrid`, `relative`,
+`absolute`, `text-center`, `font-semibold`, `uppercase`, `rounded-lg`, `border`,
+`border-2`, `border-dashed`. The spacing scale is Tailwind's: one step is 4px, so `gap-6`
+is 24px. Brackets take any value: `w-[130px]`, `grid-cols-[160px_repeat(7,1fr)]`,
+`gap-[40px_80px]`, `col-[2/-1]`. They also take any property: `[grid-template-areas:'a_b']`.
+An underscore stands for a space.
+Two differences from Tailwind:
+- Colours are the theme tokens: `bg-wash`, `bg-card`, `text-muted`, `text-woad`,
+  `border-rust`, `border-line`. They follow the dark theme.
+- Text sizes follow the diagram's scale: `text-xs` (11px), `text-sm` (11.5px),
+  `text-base` (13px, a label), `text-lg` (15px), `text-xl` (17px), `text-2xl` (22px).
 
-Shorthand classes, which your own CSS overrides: `card` (white box, light border), `box`
-(white box, dark border), `pill`, `tag`, `banner` (dark band, light text), `muted`, `small`,
-`row` and `col` (flex with a gap), `circle` (a round box). `<icon name="app service" size=32>`
-places an icon inline, from the same names as the other diagrams.
+A class that reads like a utility but means nothing is reported as `unknown-utility`. Examples: `bg-blue-500`,
+`md:flex`, a typo. A class you style in your own `<style>` is never reported.
+
+**Building blocks** look like the rest of graphally. A utility or a rule of your own overrides
+them:
+- `node`: a card with an icon, a name and a `<small>` line under it. Add `external` to dash
+  it, or `accent` to make it blue.
+- `group` with an `<h4>` title (an icon and a `<small>` may go in it). Variants: `dashed`
+  or `external`, `vnet`, `subnet`, `region`, `plain`. Put `badges` holding `badge` icons
+  in the `<h4>`.
+- `tile` and `figure`: an icon over its name.
+- `band`: a full-width strip of shared services.
+- `key` with `swatch`, `swatch dashed` and `swatch box`: a legend.
+- `card`, `box`, `pill`, `tag`, `banner`.
+
+These names are taken. A class of your own with one of them gets their look too, so name
+yours differently (`lane`, not `band`).
+
+`<icon name="app service" size=32>` places an icon inline, from the same names as the other
+diagrams. `icons=aws` on `<diagram>` makes AWS win names both vendors share.
+
+## Before layout: dates and sequences
+
+`<script type="graphally" before>` runs on the page before the browser lays it out. Use it to make
+elements from a list (`make('div', { class: 'card' }, 'text')`, `root`, `el`, `all`), and
+to call the two helpers. Each helper does what CSS cannot. What it makes are plain
+elements with classes, styled like everything else.
+
+`schedule()` reads `data-start`, `data-end`, `data-duration` (`5d`, `2w`) and `data-after`
+(ids, separated by spaces) on elements, and works out every start and end. An end date
+is a boundary, so `data-end=2026-04-30` stops at the start of that day.
+`timeline('#plan', { lead: '160px' })` makes `#plan` a grid with one column per day and
+places every dated element in it, so a bar's left edge is its start date. The grid
+runs from the start of the first month to the month after the last date. Pass `from` and
+`to` to set the range yourself, or `unit: 'week'` for long plans. It returns `months`,
+`quarters` and `years`, each with a `label` and a `column`, for header cells:
+
+```html
+<div id=plan class="grid gap-y-2">
+  <div class="pill bg-lane-a" id=disc data-start=2026-03-02 data-duration=6w>Discovery</div>
+  <div class="pill bg-lane-b" data-after=disc data-end=2026-06-30>Build</div>
+</div>
+<script type="graphally" before>
+  schedule();
+  const t = timeline('#plan');
+  for (const m of t.months) el('#plan').prepend(make('div', { class: 'text-muted text-sm', style: `grid-row: 1; grid-column: ${m.column}` }, m.label));
+</script>
+```
+
+`sequence('#seq')` lays out a sequence diagram. Participants are direct children marked
+`data-who`, in order. Messages are `<p class=msg data-from=a data-to=b>`, with `reply`
+(a dashed return) or `async` (an open head). Fragments are `<div class=frag data-kind=alt
+data-guard="…">` holding messages, with `<div class=else data-guard="…">` between their
+parts. They nest. A group behind some participants is `<div class="group external"
+data-who-group="stripe bank"><h4>Third parties</h4></div>`.
+
+Each participant gets a column and each message a row, in source order. The helper adds
+lifelines, activation bars (from a call to its reply), numbers and fragment boxes. The
+arrows are yours, from the drawing script:
+
+```js
+for (const m of all('.msg')) {
+  const d = m.el.dataset, a = el(d.from).center.x, b = el(d.to).center.x, y = m.bottom.y - 6;
+  const o = { dashed: m.el.matches('.reply'), head: m.el.matches('.async') ? 'open' : 'arrow' };
+  if (d.from === d.to) draw.moveTo(pt(a + 6, y - 16)).lineTo(pt(a + 40, y - 16)).lineTo(pt(a + 40, y)).lineTo(pt(a + 6, y)).style(o);
+  else arrow(pt(a + (b > a ? 6 : -6), y), pt(b + (b > a ? -6 : 6), y), o);
+}
+```
 
 ## Connections
 
@@ -88,6 +167,10 @@ entries are `["from", "to", "label"]` or an object with `from`, `to` and any opt
 `connect` (below), `out`, `in` and `via` included: `{ "from": "api", "to": "db", "label":
 "writes", "dashed": true, "out": "bottom" }`. Each is routed around the boxes. `via` points
 are `"id.anchor"` (`"db.top"`, `"gate.center"`) or `[x, y]`.
+
+`"to"` or `"from"` may be a list: `{ "from": "lead", "to": ["a", "b", "c"], "out": "bottom",
+"in": "top" }` draws one bundle with a shared trunk, which is the bus of an org chart.
+With `"in": "left"` on children stacked in a column, the same entry draws a comb.
 
 A connection is known by its key: its `"id"`, else `from->to`, with `#2` for a second line
 between the same boxes. Give an `id` to lines you want to refer to.

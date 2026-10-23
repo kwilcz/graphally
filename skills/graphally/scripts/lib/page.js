@@ -6,6 +6,9 @@
 // This file turns the laid-out page into SVG: backgrounds, borders, clip-path shapes, text
 // line by line, icons; then the connectors (routed by route.js) and the script's drawings.
 import { S, T } from './style.js';
+import { schedule, timeline } from './time.js';
+import { sequence } from './seq.js';
+import { utilitiesFor } from './utilities.js';
 import { resolveIcon, symbolFor } from './icons.js';
 import { routeEdges } from './route.js';
 import { rounded } from './render.js';
@@ -19,8 +22,9 @@ const TONE_ALIASES = { blue: 'woad', red: 'rust' };
 // Line ends: head at the end of a line, tail at its start.
 const ENDS = ['arrow', 'open', 'circle', 'dot', 'diamond', 'open-diamond', 'none'];
 
-// Defaults for page mode and a few shorthands; anything else is plain CSS. :where() keeps
-// their specificity at zero, so any rule of the author wins.
+// Defaults for page mode and its building blocks; layout and spacing are utility classes
+// (utilities.js) or plain CSS. :where() keeps their specificity at zero, so any rule of the
+// author wins.
 const PAGE_CSS = `
 :where(.graphally-page) { font: 400 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; color: var(--ink); line-height: 1.35; }
 :where(.graphally-page *) { box-sizing: border-box; }
@@ -34,9 +38,57 @@ const PAGE_CSS = `
 :where(.graphally-page .pill) { background: var(--wash); border-radius: 999px; padding: 4px 12px; text-align: center; }
 :where(.graphally-page .tag) { display: inline-block; background: var(--wash); border-radius: 4px; padding: 3px 8px; font-size: 11.5px; font-weight: 600; }
 :where(.graphally-page .banner) { background: var(--ink); color: var(--card); border-radius: 6px; padding: 10px 16px; font-weight: 600; }
-:where(.graphally-page .muted) { color: var(--muted); } :where(.graphally-page .small) { font-size: 11.5px; }
-:where(.graphally-page .row) { display: flex; gap: 12px; align-items: center; } :where(.graphally-page .col) { display: flex; flex-direction: column; gap: 8px; }
-:where(.graphally-page .circle) { border-radius: 50%; display: grid; place-items: center; }
+/* Building blocks, styled like the rest of graphally: plain CSS that any rule of yours
+   overrides (they have no specificity). Text after an icon is the name; <small> the line
+   under it. */
+:where(.graphally-page .group) { display: flex; flex-direction: column; gap: 18px; background: var(--wash); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px 16px; }
+:where(.graphally-page .group .group) { background: var(--card); }
+:where(.graphally-page .group > h4) { display: flex; align-items: center; gap: 6px; margin: 0 0 -6px; font-size: 12px; font-weight: 600; color: var(--muted); }
+:where(.graphally-page .group > h4 > icon) { width: 18px; height: 18px; }
+:where(.graphally-page .group > h4 small, .graphally-page .band > h4 small) { font-weight: 400; font-size: 11.5px; }
+:where(.graphally-page .group.dashed, .graphally-page .group.external) { background: none; border: 1.2px dashed var(--muted); }
+:where(.graphally-page .group.plain) { background: none; border: 0; padding: 0; }
+:where(.graphally-page .group.vnet) { background: var(--vnet); border: 1.4px solid var(--woad); }
+:where(.graphally-page .group.subnet) { background: var(--card); border: 1.1px dashed var(--woad); }
+:where(.graphally-page .group.region) { background: none; border: 1.4px dashed var(--woad); border-radius: 12px; }
+:where(.graphally-page .group:is(.vnet, .subnet, .region) > h4) { color: var(--woad); }
+:where(.graphally-page .badges) { display: flex; gap: 4px; margin-left: auto; }
+:where(.graphally-page .badge) { display: inline-flex; padding: 2px; background: var(--card); border: 1px solid var(--line); border-radius: 4px; }
+:where(.graphally-page .badge > icon) { width: 16px; height: 16px; }
+:where(.graphally-page .node) { display: grid; grid-template-columns: 1fr; align-items: center; column-gap: 10px; min-width: 150px; max-width: 210px; min-height: 48px; padding: 9px 12px; background: var(--card); border: 1.3px solid var(--ink); border-radius: 6px; font-weight: 500; line-height: 16px; }
+:where(.graphally-page .node:has(> icon)) { grid-template-columns: auto 1fr; }
+:where(.graphally-page .node > icon) { grid-row: 1 / span 2; width: 26px; height: 26px; }
+:where(.graphally-page :is(.node, .tile, .figure) > small) { grid-column: -2; font-size: 11.5px; font-weight: 400; line-height: 15px; color: var(--muted); }
+:where(.graphally-page :is(.node, .tile, .figure).external) { border-style: dashed; border-color: var(--muted); }
+:where(.graphally-page :is(.node, .tile).accent) { border: 2px solid var(--woad); color: var(--woad); }
+:where(.graphally-page .tile) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 112px; padding: 10px 6px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
+:where(.graphally-page .tile > icon) { width: 40px; height: 40px; }
+:where(.graphally-page .figure) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 104px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
+:where(.graphally-page .figure > icon) { width: 48px; height: 48px; }
+:where(.graphally-page .band) { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; background: var(--wash); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+:where(.graphally-page .band > h4) { flex-basis: 100%; margin: 0; font-size: 12px; font-weight: 600; color: var(--muted); }
+:where(.graphally-page .key) { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; font-size: 11.5px; color: var(--muted); }
+:where(.graphally-page .key > *) { display: flex; align-items: center; gap: 8px; }
+:where(.graphally-page .swatch) { display: inline-block; width: 30px; border-top: 1.5px solid var(--ink); }
+:where(.graphally-page .swatch.dashed) { border-top-style: dashed; }
+:where(.graphally-page .swatch.box) { width: 26px; height: 14px; border: 1.2px dashed var(--muted); border-radius: 4px; }
+/* What sequence() makes. */
+:where(.graphally-page .seq) { column-gap: 18px; }
+:where(.graphally-page .seq > [data-who]) { min-width: 0; }
+:where(.graphally-page .msg) { padding: 6px 0 14px; text-align: center; font-size: 12.5px; }
+:where(.graphally-page .msg.self) { justify-self: start; margin-left: calc(50% + 48px); padding-bottom: 24px; text-align: left; white-space: nowrap; }
+:where(.graphally-page .msg > .label) { padding: 0 4px; background: var(--bg); }
+:where(.graphally-page .num) { display: inline-grid; place-items: center; width: 17px; height: 17px; margin-right: 6px; border-radius: 50%; background: var(--ink); color: var(--card); font-size: 10px; font-weight: 700; vertical-align: 1px; }
+:where(.graphally-page .lifeline) { justify-self: center; width: 0; border-left: 1px dashed var(--line); }
+:where(.graphally-page .activation) { justify-self: center; width: 12px; margin-top: -9px; background: var(--card); border: 1.2px solid var(--ink); }
+:where(.graphally-page :is(.frag-box, .frag-tab, .frag-else, .frag-end)) { margin-inline: max(0px, calc(100% / var(--k) / 2 - 38px + var(--depth) * 12px)); }
+:where(.graphally-page .frag-box) { border: 1px solid var(--ink); }
+:where(.graphally-page .frag-tab) { display: flex; align-items: center; gap: 10px; font-size: 11.5px; }
+:where(.graphally-page .frag-tab > b) { padding: 3px 16px 3px 8px; background: var(--card); border: 1px solid var(--ink); border-width: 0 1px 1px 0; clip-path: polygon(0 0, 100% 0, 100% 55%, calc(100% - 8px) 100%, 0 100%); font-size: 11px; }
+:where(.graphally-page .guard) { color: var(--muted); }
+:where(.graphally-page .frag-else) { padding: 4px 8px; border-top: 1px dashed var(--ink); font-size: 11.5px; }
+:where(.graphally-page .frag-end) { height: 12px; }
+:where(.graphally-page .who-group) { margin: -36px calc(100% / var(--k) / 2 - 124px) 0; }
 `;
 
 export function compilePage(el, opts, m) {
@@ -58,14 +110,14 @@ export function compilePage(el, opts, m) {
   if (subtitle) root.insertAdjacentHTML('beforeend', `<div style="font-size: 12.5px; color: var(--muted); margin-bottom: 4px">${esc(subtitle)}</div>`);
   if (title || subtitle) root.insertAdjacentHTML('beforeend', `<div style="height: ${S.titleGap - 4}px"></div>`);
   // <script> is drawing code; <script type="application/json"> is the connections, as data.
-  const scripts = [], lines = [];
+  const scripts = [], lines = [], before = [];
   // A drawing script without a type of its own also runs as a page script when the file is
   // opened in a browser (the viewer), before graphally has laid anything out.
   for (const c of el.childNodes) {
     if (c.nodeType === 1 && c.tagName === 'SCRIPT') {
       const type = (c.getAttribute('type') || '').toLowerCase();
       if (!type || /javascript|module/.test(type)) problems.push({ rule: 'plain-script', hint: 'a browser runs it on its own when the file is opened: write <script type="graphally">' });
-      (type === 'application/json' ? lines : scripts).push(c.textContent);
+      (type === 'application/json' ? lines : c.hasAttribute('before') ? before : scripts).push(c.textContent);
     } else root.appendChild(c.cloneNode(true));
   }
   // nudge="dx,dy" moves an element from where the layout put it (the edit command writes it).
@@ -75,6 +127,24 @@ export function compilePage(el, opts, m) {
     e.style.translate = `${v[0]}px ${v[1]}px`;
   }
   document.body.appendChild(root);
+  // <script type="graphally" before>: runs on the page before it is laid out, to make or
+  // place elements (rows from a list, bars on a timeline). Dates come from time.js.
+  const pre = {
+    root, el: sel => root.querySelector(/^[#.[]|[\s>:]/.test(sel) ? sel : `#${CSS.escape(sel)}`), all: sel => [...root.querySelectorAll(sel)],
+    make: (tag, attrs = {}, text = '') => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text) e.textContent = text; return e; },
+    schedule: (sel = '[data-start], [data-after], [data-at]') => schedule(typeof sel === 'string' ? [...root.querySelectorAll(sel)] : [].concat(sel), root, problems),
+    timeline: (box, o2) => timeline(typeof box === 'string' ? root.querySelector(box) : box, o2, problems),
+    sequence: (box, o2) => sequence(typeof box === 'string' ? root.querySelector(box) : box, o2, problems),
+  };
+  for (const code of before) {
+    try { new Function(...Object.keys(pre), code)(...Object.values(pre)); }
+    catch (e) { const line = String(e.stack || '').match(/<anonymous>:(\d+):\d+/); problems.push({ rule: 'script-error', when: 'before', message: e.message, ...(line ? { line: Number(line[1]) - 2 } : {}) }); }
+  }
+  // Utility classes (flex, justify-center, gap-6): written after the before-script, which
+  // may have added some, and removed with the page.
+  const ut = document.createElement('style');
+  ut.textContent = utilitiesFor(root, problems);
+  root.prepend(ut);
   try {
     return build(root, el, id, scripts, lines, opts, m, problems);
   } finally {
