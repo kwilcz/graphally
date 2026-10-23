@@ -228,27 +228,27 @@
 <g data-edge="agw-&gt;app" data-sides="bottom,top"><path d="M198,402 L198,518" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="app-&gt;pesql" data-sides="bottom,top"><path d="M198,569 L198,686" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="dbw-&gt;pedl" data-sides="bottom,top"><path d="M1796,638 L1796,755" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="pedl-&gt;dls" data-sides="bottom,top"><path d="M1863.5,806 L1863.5,921" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="shopper-&gt;agw" data-sides="left,left"><path d="M24,135.5 L16,135.5 Q10,135.5 10,141.5 L10,370.5 Q10,376.5 16,376.5 L58,376.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="pesql-&gt;sql" data-sides="left,left"><path d="M58,711.5 L24,711.5 Q18,711.5 18,717.5 L18,940.5 Q18,946.5 24,946.5 L41,946.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="ergw-&gt;fw" data-sides="left,right"><path d="M1086,365 L908,365" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="pest-&gt;stor" data-sides="right,left"><path d="M338,780.5 L595,780.5 Q601,780.5 601,786.5 L601,940.5 Q601,946.5 607,946.5 L615,946.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="ecom-&gt;fw" data-sides="right,left"><path d="M372,365.5 L628,365.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="dc-&gt;ergw" data-sides="left,right"><path d="M1777,146.5 L1399,146.5 Q1393,146.5 1393,152.5 L1393,358.5 Q1393,364.5 1387,364.5 L1366,364.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="hub-&gt;ecom" data-sides="left,right"><path d="M594,403 L372,403" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
-<g data-edge="hub-&gt;analytics" data-sides="right,left"><path d="M1400,521 L1622,521" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
+<g data-edge="pedl-&gt;dls" data-sides="bottom,top"><path d="M1837.5,806 L1837.5,921" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="shopper-&gt;agw" data-sides="left,left"><path d="M24,135 L16,135 Q10,135 10,141 L10,370 Q10,376 16,376 L58,376" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="pesql-&gt;sql" data-sides="left,left"><path d="M58,711 L24,711 Q18,711 18,717 L18,940 Q18,946 24,946 L41,946" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ergw-&gt;fw" data-sides="left,right"><path d="M1086,364.5 L908,364.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="pest-&gt;stor" data-sides="right,left"><path d="M338,780 L595,780 Q601,780 601,786 L601,940 Q601,946 607,946 L615,946" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ecom-&gt;fw" data-sides="right,left"><path d="M372,432.5 L380,432.5 Q386,432.5 386,426.5 L386,371 Q386,365 392,365 L628,365" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="dc-&gt;ergw" data-sides="left,right"><path d="M1777,146 L1399,146 Q1393,146 1393,152 L1393,358 Q1393,364 1387,364 L1366,364" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="hub-&gt;ecom" data-sides="left,right"><path d="M594,403 L414,403 Q408,403 408,409 L408,629.5 Q408,635.5 402,635.5 L372,635.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
+<g data-edge="hub-&gt;analytics" data-sides="right,left"><path d="M1400,527.5 L1622,527.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
 <path d="M594.1,117.2 L624.1,117.2" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <text class="g-edge" x="205" y="464" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
 <text class="g-edge" x="205" y="631.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">SQL</text>
 <text class="g-edge" x="1803" y="700.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">ABFS</text>
-<text class="g-edge" x="1870.5" y="867.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="17" y="218" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
-<text class="g-edge" x="25" y="857" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="958.9" y="359" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">UDR 0.0.0.0/0</text>
-<text class="g-edge" x="439.4" y="774.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="467.6" y="359.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">egress UDR</text>
-<text class="g-edge" x="1547.6" y="140.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">ExpressRoute</text>
-<text class="g-edge" x="462.2" y="397" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
-<text class="g-edge" x="1490.2" y="515" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
+<text class="g-edge" x="1844.5" y="867.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="17" y="217.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+<text class="g-edge" x="25" y="856.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="958.9" y="358.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">UDR 0.0.0.0/0</text>
+<text class="g-edge" x="439.4" y="774" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="474.6" y="359" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">egress UDR</text>
+<text class="g-edge" x="1547.6" y="140" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">ExpressRoute</text>
+<text class="g-edge" x="480.2" y="397" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
+<text class="g-edge" x="1490.2" y="521.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
 </g>
 </svg>

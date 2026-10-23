@@ -88,11 +88,11 @@
 <text x="1456.1" y="290.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">diagram.svg</text>
 <g data-edge="s-&gt;parse" data-sides="right,left"><path d="M258,134 L335,134" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="edit-&gt;e" data-sides="right,left"><path d="M1382,257 L1472,257" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="refs-&gt;place" data-sides="right,left"><path d="M709,142 L783,142" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="fold-&gt;draft" data-sides="right,left"><path d="M1158,142 L1232,142" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="look-&gt;edit" data-sides="right,left"><path d="M1158,269.5 L1216.8,269.5 Q1218,269.5 1218,268.3 L1218,268.3 Q1218,267 1219.3,267 L1232,267" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="refs-&gt;place" data-sides="right,left"><path d="M709,143 L783,143" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fold-&gt;draft" data-sides="right,left"><path d="M1158,143 L1232,143" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="look-&gt;edit" data-sides="right,left"><path d="M1158,276.5 L1213.3,276.5 Q1218,276.5 1218,271.8 L1218,271.8 Q1218,267 1222.8,267 L1232,267" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="parse-&gt;refs" data-sides="right,left"><path d="M485,143 L559,143" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="place-&gt;fold" data-sides="right,left"><path d="M933,142 L1008,142" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="place-&gt;fold" data-sides="right,left"><path d="M933,143 L1008,143" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="draft-&gt;look" data-sides="bottom,right"><path d="M1307,172 L1307,219 Q1307,225 1301,225 L1178,225 Q1172,225 1172,231 L1172,251.5 Q1172,257.5 1166,257.5 L1158,257.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 
 

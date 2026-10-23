@@ -242,12 +242,15 @@ await test('page-routing', () => {
   ok0(render(write(d, page(`<style>.l { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 60px } .bg { grid-column: 1 / -1; grid-row: 1; background: var(--wash) } .t { grid-row: 1; margin: 30px 0 }</style>
 <div class=l><div class=bg></div><div class="card t" id=a style="grid-column: 1">A</div><div class="card t" id=b style="grid-column: 3">B</div></div>`, "connect('a', 'b')")), out));
   check(corners(edgePath(svgOf(out), 'a->b')) === 0, 'the line from a to b bends round the lane background');
-  // Lines from facing sides keep their own heights on a shared side.
+  // Lines that share a side split it evenly: three lines into t's left side at a quarter, a
+  // half and three quarters of its height, in order.
   ok0(render(write(d, page(`<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
 <div class=g><div class=card id=a style="grid-row: 1">A</div><div class=card id=b style="grid-row: 2">B</div><div class=card id=c style="grid-row: 3">C</div><div class="card tall" id=t>T</div></div>`,
     "connect('a', 't'); connect('b', 't'); connect('c', 't')")), out));
-  const svg = svgOf(out), bent = ['a', 'b', 'c'].filter(k => corners(edgePath(svg, `${k}->t`)));
-  check(!bent.length, `lines into t bend: ${bent.join(', ')}`);
+  const svg = svgOf(out), T = rect(path.join(out, 'diagram.svg'), 't');
+  const ys = ['a', 'b', 'c'].map(k => pointsOf(edgePath(svg, `${k}->t`)).at(-1).y);
+  const want = [1, 2, 3].map(k => T[1] + T[3] * k / 4);
+  check(ys.every((y, i) => Math.abs(y - want[i]) < 1.5), `lines into t at ${ys.map(Math.round)}, not at a quarter, a half and three quarters (${want.map(Math.round)})`);
   // A via line passes through its waypoint, far below the straight path.
   ok0(render(write(d, page(`<style>.r { display: flex; gap: 200px; padding-bottom: 120px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>`,
     "connect('a', 'b', { via: [mid(el('a').bottom, el('b').bottom).down(80)] })")), out));
