@@ -136,7 +136,6 @@ The whole format, with every class, shape, option and call: [references/format.m
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts collide: give one more room |
 | `script-error` | the message and line say what failed in a script |
-| `old-syntax` | the file uses the removed tag syntax (`<node>`, `<links>`): rewrite it as HTML |
 
 ## References
 

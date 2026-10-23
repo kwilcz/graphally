@@ -3,10 +3,11 @@
 // node tools/test.mjs [--keep]
 // The suite. Renders every samples/*/diagram.html and docs/diagrams/*.html through the CLI,
 // then small diagrams written here: the layout each SVG carries, connection sides, blocked,
-// bad and dropped overrides, the old syntax reported, how far a layout moves when a box is
-// added (a stable re-render against --recompute), shapes, script errors, routing, problems,
-// connections as data, the viewer, utility classes, dates, sequences and dependencies. Works in a fresh folder under os.tmpdir(), removed at the
-// end unless --keep, which prints its path. Exits 1 when a test fails.
+// bad and dropped overrides, how far a layout moves when a box is added (a stable re-render
+// against --recompute), shapes, script errors, routing, problems, connections as data, the
+// viewer, utility classes, dates, sequences, dependencies and the skill's own examples.
+// Works in a fresh folder under os.tmpdir(), removed at the end unless --keep, which prints
+// its path. Exits 1 when a test fails.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import http from 'node:http';
@@ -166,12 +167,6 @@ await test('dropped', () => {
   const fresh = render(f, out, ['--recompute']);
   ok0(fresh);
   check(!fresh.text.includes('override dropped'), 'a --recompute render still reports a dropped override');
-});
-
-await test('old-syntax', () => {
-  const d = folder('old-syntax');
-  const r = render(write(d, '<diagram layout=tree>\n<node id=a>A</node>\n<links>\na -> b\n</links>\n</diagram>\n'), path.join(d, 'out'));
-  check(r.code === 1 && /old-syntax: found=layout=tree <node> <links>/.test(r.text), `expected old-syntax: ${tail(r.text)}`);
 });
 
 await test('stability', () => {

@@ -306,7 +306,6 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
 | `unknown-utility` | a class that reads like a utility and means nothing: use a theme colour (`bg-wash`) or a bracket value (`bg-[#eef]`) |
 | `plain-script` | a `<script>` without a type would run in the browser: write `<script type="graphally">` |
-| `old-syntax` | the file uses the removed tag syntax (`<node>`, `<group>`, `<links>`, `layout=tree`): rewrite it as HTML |
 
 The script's `text`, `gate` and arrow labels are not checked for overlap: look at the PNG.
 The render's summary counts crossings: lines crossing lines. A crossing is not a problem,

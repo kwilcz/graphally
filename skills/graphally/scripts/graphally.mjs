@@ -128,7 +128,7 @@ function readPrevious(dir, base, source) {
   return snaps;
 }
 
-// One line per override of prev that next no longer has. A node or link that is gone is
+// One line per override of prev that next no longer has. A box or connection that is gone is
 // "removed"; one that is still there lost its override ("attribute removed").
 function droppedOverrides(prev, next) {
   const has = (o, k) => Object.hasOwn(o || {}, k);
@@ -137,7 +137,7 @@ function droppedOverrides(prev, next) {
     lines.push(`  note: override dropped: nudge on ${id} (${has(next.nodes, id) ? 'attribute' : 'node'} removed)`);
   for (const [key, was] of Object.entries(prev.overrides?.edges || {})) {
     const now = next.overrides?.edges?.[key];
-    if (!now) lines.push(`  note: override dropped: sides of ${key} (${has(next.edges, key) ? 'attribute' : 'link'} removed)`);
+    if (!now) lines.push(`  note: override dropped: sides of ${key} (${has(next.edges, key) ? 'attribute' : 'connection'} removed)`);
     else for (const end of ['out', 'in']) if (was[end] && !now[end]) lines.push(`  note: override dropped: ${end} side of ${key} (attribute removed)`);
   }
   return lines;
