@@ -2,19 +2,31 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=gantt unit="ms" title="Where a render's time goes" subtitle="Median of five renders of a 21-node architecture diagram, icon packs already downloaded">
-  <lane label="Browser">
-    <task id=launch start=0 end=392>Start server and browser</task>
-    <task id=page start=392 end=509>Open a page</task>
-  </lane>
-  <lane label="Engine">
-    <task id=compile start=509 end=919 accent>Load, measure, lay out, route, render</task>
-  </lane>
-  <lane label="Output">
-    <task id=shot start=919 end=1088>PNG preview</task>
-    <task id=close start=1088 end=1282>Close the browser</task>
-  </lane>
-  <links>
-  launch -> page -> compile -> shot -> close
-  </links>
+<diagram layout=html width=1300 title="Where a render's time goes" subtitle="Median of five renders of a 21-node architecture diagram, icon packs already downloaded">
+<style>
+  /* One column per millisecond: a bar's grid-column is its start and end, as measured. */
+  .chart { grid-template-columns: 130px repeat(1282, minmax(0, 1fr)); }
+  .lane { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; row-gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .lane > b { grid-column: 1; grid-row: 1 / span 4; align-self: center; padding: 0 14px; font-size: 12.5px; }
+  .lane > p { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; align-items: center; }
+  .bar { position: relative; height: 24px; border: 1.3px solid var(--woad); border-radius: 5px; background: var(--lane-a); font-style: normal; }
+  .bar > span { position: absolute; left: calc(100% + 10px); top: 2px; white-space: nowrap; }
+  .bar.left > span { left: auto; right: calc(100% + 10px); }
+  .bar.accent { background: var(--woad); }
+  .tick { grid-row: 1; font-size: 11.5px; color: var(--muted); translate: -50% 0; white-space: nowrap; }
+</style>
+<div class="chart grid">
+  <span class="tick col-[2]" id=t0>0 ms</span><span class="tick col-[502]">500 ms</span><span class="tick col-[1002]">1000 ms</span>
+  <div class=lane><b>Browser</b>
+    <p><i class="bar col-[1/393]" id=launch><span>Start server and browser · 392 ms</span></i></p>
+    <p><i class="bar col-[393/510]" id=page><span>Open a page · 117 ms</span></i></p>
+  </div>
+  <div class=lane><b>Engine</b>
+    <p><i class="bar accent col-[510/920]" id=compile><span>Load, lay out, route, render · 410 ms</span></i></p>
+  </div>
+  <div class="lane border-b-0"><b>Output</b>
+    <p><i class="bar col-[920/1089]" id=shot><span>PNG preview · 169 ms</span></i></p>
+    <p><i class="bar left col-[1089/1283]" id=close><span>Close the browser · 194 ms</span></i></p>
+  </div>
+</div>
 </diagram>

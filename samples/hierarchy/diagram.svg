@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1052 885" width="1052" height="885" role="img" aria-label="Fabrikam management group hierarchy">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1148 836" width="1148" height="836" role="img" aria-label="Fabrikam management group hierarchy. Azure tenant, governance board">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
@@ -24,140 +24,128 @@
 .g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 .g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 </style>
-<defs><symbol id="gr1-azure-subscriptions" viewBox="0 0 11.246984 18.030787"><defs id="gr1-azure-subscriptions-0"> <radialGradient id="gr1-azure-subscriptions-1" cx="-36.630001" cy="17.120001" r="11.18" gradientTransform="matrix(0.94,0,0,0.94,41.88,-7.4)" gradientUnits="userSpaceOnUse"> <stop offset="0.27" stop-color="#ffd70f" id="gr1-azure-subscriptions-2" /> <stop offset="0.49" stop-color="#ffcb12" id="gr1-azure-subscriptions-3" /> <stop offset="0.88" stop-color="#feac19" id="gr1-azure-subscriptions-4" /> <stop offset="1" stop-color="#fea11b" id="gr1-azure-subscriptions-5" /> </radialGradient> </defs> <path id="gr1-azure-subscriptions-6" d="m 10.639404,7.1067278 a 2.07,2.07 0 0 0 0,-2.93 v 0 L 7.0794045,0.60672783 a 2.06,2.06 0 0 0 -2.92,0 v 0 L 0.59940448,4.1767278 a 2.09,2.09 0 0 0 0,2.93 L 3.5994045,10.106728 a 0.61,0.61 0 0 1 0.17,0.41 v 5.52 a 0.7,0.7 0 0 0 0.2,0.5 l 1.35,1.35 a 0.45,0.45 0 0 0 0.66,0 l 1.31,-1.31 v 0 l 0.77,-0.77 a 0.26,0.26 0 0 0 0,-0.38 l -0.55,-0.56 a 0.29,0.29 0 0 1 0,-0.42 l 0.55,-0.56 a 0.26,0.26 0 0 0 0,-0.38 l -0.58,-0.59 a 0.28,0.28 0 0 1 0,-0.41 l 0.6,-0.59 a 0.26,0.26 0 0 0 0,-0.38 l -0.77,-0.78 v -0.28 z m -4.9999995,-5.64 a 1.18,1.18 0 1 1 -1.19,1.18 1.17,1.17 0 0 1 1.17,-1.18 z" style="fill:url(#gr1-azure-subscriptions-1)" /> <path id="gr1-azure-subscriptions-7" d="m 4.6994045,16.126728 v 0 a 0.25,0.25 0 0 0 0.38,-0.21 v -4.45 a 0.27,0.27 0 0 0 -0.11,-0.22 v 0 a 0.25,0.25 0 0 0 -0.39,0.22 v 4.45 a 0.27,0.27 0 0 0 0.12,0.21 z" style="opacity:0.75;fill:#ff9300" /> <rect id="gr1-azure-subscriptions-8" x="2.7694046" y="5.3667278" width="5.8600001" height="0.69" rx="0.31999999" style="opacity:0.75;fill:#ff9300" /> <rect id="gr1-azure-subscriptions-9" x="2.7694046" y="6.4867282" width="5.8600001" height="0.69" rx="0.31999999" style="opacity:0.75;fill:#ff9300" /></symbol>
-<symbol id="gr1-azure-management-groups" viewBox="0 0 17.006714 16.433725"><defs id="gr1-azure-management-groups-0"> <linearGradient id="gr1-azure-management-groups-1" x1="9" y1="2.95" x2="9" y2="6.3400002" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.49664319,0.80313708)"> <stop offset="0" stop-color="#c69aeb" id="gr1-azure-management-groups-2" /> <stop offset="1" stop-color="#6f4bb2" id="gr1-azure-management-groups-3" /> </linearGradient> <linearGradient id="gr1-azure-management-groups-4" x1="8.9899998" y1="6.7600002" x2="8.9899998" y2="9.2200003" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.49664319,0.80313708)"> <stop offset="0" stop-color="#54aef0" id="gr1-azure-management-groups-5" /> <stop offset="1" stop-color="#1988d9" id="gr1-azure-management-groups-6" /> </linearGradient> </defs> <g id="gr1-azure-management-groups-7" transform="translate(-0.49664319,-0.80313708)"> <polygon points="9,4.2 5.79,7.91 4.28,11.2 4.81,11.45 6.04,8.77 7.25,11.45 7.79,11.21 6.39,8.12 9,5.1 11.6,8.13 10.18,11.21 10.71,11.46 11.94,8.79 13.15,11.47 13.69,11.22 12.19,7.92 " id="gr1-azure-management-groups-8" style="fill:#949494" /> <circle cx="9" cy="4.6500001" r="1.6900001" id="gr1-azure-management-groups-9" style="fill:url(#gr1-azure-management-groups-1)" /> <path d="M 6,6.76 A 1.23,1.23 0 1 1 4.82,8 1.23,1.23 0 0 1 6,6.76 Z M 10.72,8 A 1.22,1.22 0 0 0 11.94,9.22 1.23,1.23 0 1 0 10.72,8 Z" id="gr1-azure-management-groups-10" style="fill:url(#gr1-azure-management-groups-4)" /> <g id="gr1-azure-management-groups-11"> <g id="gr1-azure-management-groups-12"> <circle cx="4.54" cy="11.32" r="0.97000003" id="gr1-azure-management-groups-13" style="fill:#37c2b1" /> <circle cx="7.52" cy="11.33" r="0.97000003" id="gr1-azure-management-groups-14" style="fill:#37c2b1" /> </g> <g id="gr1-azure-management-groups-15"> <circle cx="10.44" cy="11.34" r="0.97000003" id="gr1-azure-management-groups-16" style="fill:#37c2b1" /> <circle cx="13.42" cy="11.35" r="0.97000003" id="gr1-azure-management-groups-17" style="fill:#37c2b1" /> </g> </g> <path d="m 0.5,15.22 a 0.16,0.16 0 0 0 0.08,0.14 l 1.15,0.64 2,1.14 A 0.18,0.18 0 0 0 3.96,17.08 L 4.57,16 A 0.15,0.15 0 0 0 4.51,15.78 L 2.22,14.41 A 0.16,0.16 0 0 1 2.14,14.27 V 3.73 A 0.16,0.16 0 0 1 2.22,3.59 L 4.51,2.26 A 0.15,0.15 0 0 0 4.57,2 L 3.92,0.89 A 0.18,0.18 0 0 0 3.69,0.83 L 1.77,1.94 0.58,2.64 A 0.16,0.16 0 0 0 0.5,2.78 Z" id="gr1-azure-management-groups-18" style="fill:#949494" /> <path d="M 4.57,2 3.92,0.89 A 0.18,0.18 0 0 0 3.75,0.81 H 3.67 L 1.75,1.94 0.56,2.64 a 0.1,0.1 0 0 0 -0.06,0 v 0 a 0.24,0.24 0 0 0 0,0.08 l 1.64,1 A 0.16,0.16 0 0 1 2.22,3.58 L 4.51,2.26 A 0.15,0.15 0 0 0 4.57,2 Z" id="gr1-azure-management-groups-19" style="fill:#a3a3a3" /> <path d="m 4.57,16 -0.65,1.15 a 0.18,0.18 0 0 1 -0.17,0.08 0.12,0.12 0 0 1 -0.08,0 L 1.75,16.06 0.56,15.36 a 0.1,0.1 0 0 1 -0.06,0 v 0 a 0.24,0.24 0 0 1 0,-0.08 l 1.64,-1 a 0.16,0.16 0 0 0 0.08,0.14 l 2.29,1.33 A 0.16,0.16 0 0 1 4.57,16 Z" id="gr1-azure-management-groups-20" style="fill:#a3a3a3" /> <path d="M 17.5,2.78 A 0.16,0.16 0 0 0 17.42,2.64 L 16.27,2 14.27,0.86 A 0.18,0.18 0 0 0 14.04,0.92 L 13.43,2 a 0.15,0.15 0 0 0 0.06,0.22 l 2.29,1.33 a 0.16,0.16 0 0 1 0.08,0.14 v 10.58 a 0.16,0.16 0 0 1 -0.08,0.14 l -2.29,1.33 a 0.15,0.15 0 0 0 -0.06,0.22 l 0.65,1.15 a 0.18,0.18 0 0 0 0.23,0.06 l 1.92,-1.11 1.19,-0.7 a 0.16,0.16 0 0 0 0.08,-0.14 z" id="gr1-azure-management-groups-21" style="fill:#949494" /> <path d="m 13.43,16 0.65,1.15 a 0.18,0.18 0 0 0 0.17,0.08 h 0.08 l 1.92,-1.11 1.19,-0.7 a 0.1,0.1 0 0 0 0.06,0 v 0 a 0.24,0.24 0 0 0 0,-0.08 l -1.64,-1 a 0.16,0.16 0 0 1 -0.08,0.14 l -2.29,1.33 A 0.15,0.15 0 0 0 13.43,16 Z" id="gr1-azure-management-groups-22" style="fill:#a3a3a3" /> <path d="m 13.43,2 0.65,-1.11 a 0.18,0.18 0 0 1 0.17,-0.08 0.12,0.12 0 0 1 0.08,0 l 1.92,1.11 1.19,0.7 a 0.1,0.1 0 0 1 0.06,0 v 0 a 0.24,0.24 0 0 1 0,0.08 l -1.64,1 A 0.16,0.16 0 0 0 15.78,3.56 L 13.49,2.26 A 0.16,0.16 0 0 1 13.43,2 Z" id="gr1-azure-management-groups-23" style="fill:#a3a3a3" /> </g></symbol></defs>
-<g style="color: var(--ink); fill: var(--ink)">
-<rect width="100%" height="100%" style="fill: var(--bg)"></rect>
-<text class="g-title" x="24" y="40.5">Fabrikam management group hierarchy</text>
-<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Azure tenant, governance board</text>
-<g data-group="#level0" data-box="24,82,1004,120">
-<rect x="24" y="82" width="1004" height="120" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<line x1="176.4" y1="92" x2="176.4" y2="192" style="stroke: var(--line)" stroke-width="1"></line>
-<text class="g-group" x="40" y="108.5" style="fill: var(--muted)">Tenant root group</text>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
+<symbol id="pg-azure-management-groups" viewBox="0 0 17.006714 16.433725"><defs id="pg-azure-management-groups-0"> <linearGradient id="pg-azure-management-groups-1" x1="9" y1="2.95" x2="9" y2="6.3400002" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.49664319,0.80313708)"> <stop offset="0" stop-color="#c69aeb" id="pg-azure-management-groups-2" /> <stop offset="1" stop-color="#6f4bb2" id="pg-azure-management-groups-3" /> </linearGradient> <linearGradient id="pg-azure-management-groups-4" x1="8.9899998" y1="6.7600002" x2="8.9899998" y2="9.2200003" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.49664319,0.80313708)"> <stop offset="0" stop-color="#54aef0" id="pg-azure-management-groups-5" /> <stop offset="1" stop-color="#1988d9" id="pg-azure-management-groups-6" /> </linearGradient> </defs> <g id="pg-azure-management-groups-7" transform="translate(-0.49664319,-0.80313708)"> <polygon points="9,4.2 5.79,7.91 4.28,11.2 4.81,11.45 6.04,8.77 7.25,11.45 7.79,11.21 6.39,8.12 9,5.1 11.6,8.13 10.18,11.21 10.71,11.46 11.94,8.79 13.15,11.47 13.69,11.22 12.19,7.92 " id="pg-azure-management-groups-8" style="fill:#949494" /> <circle cx="9" cy="4.6500001" r="1.6900001" id="pg-azure-management-groups-9" style="fill:url(#pg-azure-management-groups-1)" /> <path d="M 6,6.76 A 1.23,1.23 0 1 1 4.82,8 1.23,1.23 0 0 1 6,6.76 Z M 10.72,8 A 1.22,1.22 0 0 0 11.94,9.22 1.23,1.23 0 1 0 10.72,8 Z" id="pg-azure-management-groups-10" style="fill:url(#pg-azure-management-groups-4)" /> <g id="pg-azure-management-groups-11"> <g id="pg-azure-management-groups-12"> <circle cx="4.54" cy="11.32" r="0.97000003" id="pg-azure-management-groups-13" style="fill:#37c2b1" /> <circle cx="7.52" cy="11.33" r="0.97000003" id="pg-azure-management-groups-14" style="fill:#37c2b1" /> </g> <g id="pg-azure-management-groups-15"> <circle cx="10.44" cy="11.34" r="0.97000003" id="pg-azure-management-groups-16" style="fill:#37c2b1" /> <circle cx="13.42" cy="11.35" r="0.97000003" id="pg-azure-management-groups-17" style="fill:#37c2b1" /> </g> </g> <path d="m 0.5,15.22 a 0.16,0.16 0 0 0 0.08,0.14 l 1.15,0.64 2,1.14 A 0.18,0.18 0 0 0 3.96,17.08 L 4.57,16 A 0.15,0.15 0 0 0 4.51,15.78 L 2.22,14.41 A 0.16,0.16 0 0 1 2.14,14.27 V 3.73 A 0.16,0.16 0 0 1 2.22,3.59 L 4.51,2.26 A 0.15,0.15 0 0 0 4.57,2 L 3.92,0.89 A 0.18,0.18 0 0 0 3.69,0.83 L 1.77,1.94 0.58,2.64 A 0.16,0.16 0 0 0 0.5,2.78 Z" id="pg-azure-management-groups-18" style="fill:#949494" /> <path d="M 4.57,2 3.92,0.89 A 0.18,0.18 0 0 0 3.75,0.81 H 3.67 L 1.75,1.94 0.56,2.64 a 0.1,0.1 0 0 0 -0.06,0 v 0 a 0.24,0.24 0 0 0 0,0.08 l 1.64,1 A 0.16,0.16 0 0 1 2.22,3.58 L 4.51,2.26 A 0.15,0.15 0 0 0 4.57,2 Z" id="pg-azure-management-groups-19" style="fill:#a3a3a3" /> <path d="m 4.57,16 -0.65,1.15 a 0.18,0.18 0 0 1 -0.17,0.08 0.12,0.12 0 0 1 -0.08,0 L 1.75,16.06 0.56,15.36 a 0.1,0.1 0 0 1 -0.06,0 v 0 a 0.24,0.24 0 0 1 0,-0.08 l 1.64,-1 a 0.16,0.16 0 0 0 0.08,0.14 l 2.29,1.33 A 0.16,0.16 0 0 1 4.57,16 Z" id="pg-azure-management-groups-20" style="fill:#a3a3a3" /> <path d="M 17.5,2.78 A 0.16,0.16 0 0 0 17.42,2.64 L 16.27,2 14.27,0.86 A 0.18,0.18 0 0 0 14.04,0.92 L 13.43,2 a 0.15,0.15 0 0 0 0.06,0.22 l 2.29,1.33 a 0.16,0.16 0 0 1 0.08,0.14 v 10.58 a 0.16,0.16 0 0 1 -0.08,0.14 l -2.29,1.33 a 0.15,0.15 0 0 0 -0.06,0.22 l 0.65,1.15 a 0.18,0.18 0 0 0 0.23,0.06 l 1.92,-1.11 1.19,-0.7 a 0.16,0.16 0 0 0 0.08,-0.14 z" id="pg-azure-management-groups-21" style="fill:#949494" /> <path d="m 13.43,16 0.65,1.15 a 0.18,0.18 0 0 0 0.17,0.08 h 0.08 l 1.92,-1.11 1.19,-0.7 a 0.1,0.1 0 0 0 0.06,0 v 0 a 0.24,0.24 0 0 0 0,-0.08 l -1.64,-1 a 0.16,0.16 0 0 1 -0.08,0.14 l -2.29,1.33 A 0.15,0.15 0 0 0 13.43,16 Z" id="pg-azure-management-groups-22" style="fill:#a3a3a3" /> <path d="m 13.43,2 0.65,-1.11 a 0.18,0.18 0 0 1 0.17,-0.08 0.12,0.12 0 0 1 0.08,0 l 1.92,1.11 1.19,0.7 a 0.1,0.1 0 0 1 0.06,0 v 0 a 0.24,0.24 0 0 1 0,0.08 l -1.64,1 A 0.16,0.16 0 0 0 15.78,3.56 L 13.49,2.26 A 0.16,0.16 0 0 1 13.43,2 Z" id="pg-azure-management-groups-23" style="fill:#a3a3a3" /> </g></symbol>
+<symbol id="pg-azure-subscriptions" viewBox="0 0 11.246984 18.030787"><defs id="pg-azure-subscriptions-0"> <radialGradient id="pg-azure-subscriptions-1" cx="-36.630001" cy="17.120001" r="11.18" gradientTransform="matrix(0.94,0,0,0.94,41.88,-7.4)" gradientUnits="userSpaceOnUse"> <stop offset="0.27" stop-color="#ffd70f" id="pg-azure-subscriptions-2" /> <stop offset="0.49" stop-color="#ffcb12" id="pg-azure-subscriptions-3" /> <stop offset="0.88" stop-color="#feac19" id="pg-azure-subscriptions-4" /> <stop offset="1" stop-color="#fea11b" id="pg-azure-subscriptions-5" /> </radialGradient> </defs> <path id="pg-azure-subscriptions-6" d="m 10.639404,7.1067278 a 2.07,2.07 0 0 0 0,-2.93 v 0 L 7.0794045,0.60672783 a 2.06,2.06 0 0 0 -2.92,0 v 0 L 0.59940448,4.1767278 a 2.09,2.09 0 0 0 0,2.93 L 3.5994045,10.106728 a 0.61,0.61 0 0 1 0.17,0.41 v 5.52 a 0.7,0.7 0 0 0 0.2,0.5 l 1.35,1.35 a 0.45,0.45 0 0 0 0.66,0 l 1.31,-1.31 v 0 l 0.77,-0.77 a 0.26,0.26 0 0 0 0,-0.38 l -0.55,-0.56 a 0.29,0.29 0 0 1 0,-0.42 l 0.55,-0.56 a 0.26,0.26 0 0 0 0,-0.38 l -0.58,-0.59 a 0.28,0.28 0 0 1 0,-0.41 l 0.6,-0.59 a 0.26,0.26 0 0 0 0,-0.38 l -0.77,-0.78 v -0.28 z m -4.9999995,-5.64 a 1.18,1.18 0 1 1 -1.19,1.18 1.17,1.17 0 0 1 1.17,-1.18 z" style="fill:url(#pg-azure-subscriptions-1)" /> <path id="pg-azure-subscriptions-7" d="m 4.6994045,16.126728 v 0 a 0.25,0.25 0 0 0 0.38,-0.21 v -4.45 a 0.27,0.27 0 0 0 -0.11,-0.22 v 0 a 0.25,0.25 0 0 0 -0.39,0.22 v 4.45 a 0.27,0.27 0 0 0 0.12,0.21 z" style="opacity:0.75;fill:#ff9300" /> <rect id="pg-azure-subscriptions-8" x="2.7694046" y="5.3667278" width="5.8600001" height="0.69" rx="0.31999999" style="opacity:0.75;fill:#ff9300" /> <rect id="pg-azure-subscriptions-9" x="2.7694046" y="6.4867282" width="5.8600001" height="0.69" rx="0.31999999" style="opacity:0.75;fill:#ff9300" /></symbol></defs>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Fabrikam management group hierarchy</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Azure tenant, governance board</text>
+<rect x="24" y="85.9" width="1100" height="102" rx="8" style="fill: var(--wash)"></rect>
+<rect x="24" y="195.9" width="1100" height="102" rx="8" style="fill: var(--wash)"></rect>
+<rect x="24" y="305.9" width="1100" height="212" rx="8" style="fill: var(--wash)"></rect>
+<rect x="24" y="525.9" width="1100" height="286" rx="8" style="fill: var(--wash)"></rect>
+<text x="36" y="106.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Tenant root group</text>
+<text x="36" y="216.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Top-level</text>
+<text x="36" y="232.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">management group</text>
+<text x="36" y="326.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Management groups</text>
+<text x="36" y="546.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Subscriptions</text>
+<g data-id="root" data-box="597,95,104,84">
+<use href="#pg-azure-management-groups" x="625" y="94.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="613.2" y="160.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Tenant Root</text>
+<text x="630.6" y="175.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Group</text>
 </g>
-<g data-group="#level1" data-box="24,214,1004,105">
-<rect x="24" y="214" width="1004" height="105" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<line x1="176.4" y1="224" x2="176.4" y2="309" style="stroke: var(--line)" stroke-width="1"></line>
-<text class="g-group" x="40" y="240.5" style="fill: var(--muted)">Top-level</text>
-<text class="g-group" x="40" y="256.5" style="fill: var(--muted)">management group</text>
+<g data-id="fab" data-box="597,212.5,104,69">
+<use href="#pg-azure-management-groups" x="625" y="212.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="621.4" y="278.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Fabrikam</text>
 </g>
-<g data-group="#level2" data-box="24,331,1004,218">
-<rect x="24" y="331" width="1004" height="218" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<line x1="176.4" y1="341" x2="176.4" y2="539" style="stroke: var(--line)" stroke-width="1"></line>
-<text class="g-group" x="40" y="357.5" style="fill: var(--muted)">Management groups</text>
+<g data-id="platform" data-box="325.5,322.5,104,69">
+<use href="#pg-azure-management-groups" x="353.6" y="322.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="352.4" y="388.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Platform</text>
 </g>
-<g data-group="#level4" data-box="24,561,1004,282">
-<rect x="24" y="561" width="1004" height="282" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<line x1="176.4" y1="571" x2="176.4" y2="833" style="stroke: var(--line)" stroke-width="1"></line>
-<text class="g-group" x="40" y="587.5" style="fill: var(--muted)">Subscriptions</text>
+<g data-id="lz" data-box="665,322.5,104,69">
+<use href="#pg-azure-management-groups" x="692.8" y="322.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="673.3" y="388.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Landing zones</text>
 </g>
-<g data-edge="root-&gt;fab"><path d="M644.8,188 L644.8,232" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="fab-&gt;platform"><path d="M644.8,305 L644.8,321 Q644.8,327 638.8,327 L335.7,327 Q329.7,327 329.7,333 L329.7,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="fab-&gt;lz"><path d="M644.8,305 L644.8,321 Q644.8,327 638.8,327 L577.4,327 Q571.4,327 571.4,333 L571.4,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="fab-&gt;sandbox"><path d="M644.8,305 L644.8,321 Q644.8,327 650.8,327 L792.9,327 Q798.9,327 798.9,333 L798.9,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="fab-&gt;decom"><path d="M644.8,305 L644.8,321 Q644.8,327 650.8,327 L953.9,327 Q959.9,327 959.9,333 L959.9,349" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="platform-&gt;mgmt"><path d="M329.7,422 L329.7,436 Q329.7,442 323.7,442 L237.9,442 Q231.9,442 231.9,448 L231.9,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="platform-&gt;conn"><path d="M329.7,422 L329.7,438.1 Q329.7,442 333.6,442 L333.6,442 Q337.4,442 337.4,445.9 L337.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="platform-&gt;ident"><path d="M329.7,422 L329.7,436 Q329.7,442 335.7,442 L421.4,442 Q427.4,442 427.4,448 L427.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="mgmt-&gt;n4"><path d="M231.9,535 L231.9,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="conn-&gt;n6"><path d="M337.4,535 L337.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="ident-&gt;n8"><path d="M427.4,535 L427.4,579" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="lz-&gt;corp"><path d="M571.4,422 L571.4,436 Q571.4,442 565.4,442 L509.4,442 Q503.4,442 503.4,448 L503.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="lz-&gt;online"><path d="M571.4,422 L571.4,436 Q571.4,442 577.4,442 L633.4,442 Q639.4,442 639.4,448 L639.4,462" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="corp-&gt;n11"><path d="M503.4,535 L503.4,597 Q503.4,603 509.4,603 L531.4,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="corp-&gt;n12"><path d="M503.4,535 L503.4,678 Q503.4,684 509.4,684 L531.4,684" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="corp-&gt;n13"><path d="M503.4,535 L503.4,759 Q503.4,765 509.4,765 L531.4,765" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="online-&gt;n15"><path d="M639.4,535 L639.4,597 Q639.4,603 645.4,603 L667.4,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="online-&gt;n16"><path d="M639.4,535 L639.4,678 Q639.4,684 645.4,684 L667.4,684" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="sandbox-&gt;n18"><path d="M798.9,422 L798.9,597 Q798.9,603 804.9,603 L826.9,603" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="sandbox-&gt;n19"><path d="M798.9,422 L798.9,693 Q798.9,699 804.9,699 L826.9,699" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-id="n4" data-box="208,579,48,48">
-<use href="#gr1-azure-subscriptions" x="208" y="579" width="48" height="48"></use>
-<text class="g-tile" x="231.5" y="645" text-anchor="middle">Management</text>
+<g data-id="sandbox" data-box="868.5,322.5,104,69">
+<use href="#pg-azure-management-groups" x="896.4" y="322.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="894.2" y="388.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Sandbox</text>
 </g>
-<g data-id="mgmt" data-box="208,462,48,48">
-<use href="#gr1-azure-management-groups" x="208" y="462" width="48" height="48"></use>
-<text class="g-tile" x="231.5" y="528" text-anchor="middle">Management</text>
+<g data-id="decom" data-box="1004,322.5,104,69">
+<use href="#pg-azure-management-groups" x="1032.1" y="322.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="1004.5" y="388.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Decommissioned</text>
 </g>
-<g data-id="n6" data-box="313,579,48,48">
-<use href="#gr1-azure-subscriptions" x="313" y="579" width="48" height="48"></use>
-<text class="g-tile" x="337" y="645" text-anchor="middle">Connectivity</text>
+<g data-id="mgmt" data-box="190,432.5,104,69">
+<use href="#pg-azure-management-groups" x="217.8" y="432.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="202.6" y="498.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Management</text>
 </g>
-<g data-id="conn" data-box="313,462,48,48">
-<use href="#gr1-azure-management-groups" x="313" y="462" width="48" height="48"></use>
-<text class="g-tile" x="337" y="528" text-anchor="middle">Connectivity</text>
+<g data-id="conn" data-box="325.5,432.5,104,69">
+<use href="#pg-azure-management-groups" x="353.6" y="432.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="339.7" y="498.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Connectivity</text>
 </g>
-<g data-id="n8" data-box="403,579,48,48">
-<use href="#gr1-azure-subscriptions" x="403" y="579" width="48" height="48"></use>
-<text class="g-tile" x="427" y="645" text-anchor="middle">Identity</text>
+<g data-id="ident" data-box="461.5,432.5,104,69">
+<use href="#pg-azure-management-groups" x="489.3" y="432.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="490.7" y="498.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Identity</text>
 </g>
-<g data-id="ident" data-box="403,462,48,48">
-<use href="#gr1-azure-management-groups" x="403" y="462" width="48" height="48"></use>
-<text class="g-tile" x="427" y="528" text-anchor="middle">Identity</text>
+<g data-id="corp" data-box="597,432.5,104,69">
+<use href="#pg-azure-management-groups" x="625" y="432.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="634.3" y="498.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Corp</text>
 </g>
-<g data-id="platform" data-box="306,349,48,48">
-<use href="#gr1-azure-management-groups" x="306" y="349" width="48" height="48"></use>
-<text class="g-tile" x="329.5" y="415" text-anchor="middle">Platform</text>
+<g data-id="online" data-box="732.5,432.5,104,69">
+<use href="#pg-azure-management-groups" x="760.7" y="432.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="765.6" y="498.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Online</text>
 </g>
-<g data-id="corp" data-box="479,462,48,48">
-<use href="#gr1-azure-management-groups" x="479" y="462" width="48" height="48"></use>
-<text class="g-tile" x="503" y="528" text-anchor="middle">Corp</text>
+<g data-id="s1" data-box="190,540,104,69">
+<use href="#pg-azure-subscriptions" x="217.8" y="539.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="202.6" y="605.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Management</text>
 </g>
-<g data-id="n11" data-box="531,579,48,48">
-<use href="#gr1-azure-subscriptions" x="531" y="579" width="48" height="48"></use>
-<text class="g-tile" x="555.5" y="645" text-anchor="middle">Payroll</text>
+<g data-id="s2" data-box="325.5,540,104,69">
+<use href="#pg-azure-subscriptions" x="353.6" y="539.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="339.7" y="605.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Connectivity</text>
 </g>
-<g data-id="n12" data-box="531,660,48,48">
-<use href="#gr1-azure-subscriptions" x="531" y="660" width="48" height="48"></use>
-<text class="g-tile" x="555" y="726" text-anchor="middle">HR portal</text>
+<g data-id="s3" data-box="461.5,540,104,69">
+<use href="#pg-azure-subscriptions" x="489.3" y="539.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="490.7" y="605.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Identity</text>
 </g>
-<g data-id="n13" data-box="531,741,48,48">
-<use href="#gr1-azure-subscriptions" x="531" y="741" width="48" height="48"></use>
-<text class="g-tile" x="555.5" y="807" text-anchor="middle">Finance</text>
-<text class="g-tile" x="555.5" y="822" text-anchor="middle">reporting</text>
+<g data-id="s4" data-box="597,540,104,69">
+<use href="#pg-azure-subscriptions" x="625" y="539.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="628.7" y="605.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Payroll</text>
 </g>
-<g data-id="online" data-box="615,462,48,48">
-<use href="#gr1-azure-management-groups" x="615" y="462" width="48" height="48"></use>
-<text class="g-tile" x="639.5" y="528" text-anchor="middle">Online</text>
+<g data-id="s5" data-box="597,627,104,69">
+<use href="#pg-azure-subscriptions" x="625" y="626.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="621.2" y="692.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">HR portal</text>
 </g>
-<g data-id="n15" data-box="667,579,48,48">
-<use href="#gr1-azure-subscriptions" x="667" y="579" width="48" height="48"></use>
-<text class="g-tile" x="691.5" y="645" text-anchor="middle">E-commerce</text>
+<g data-id="s6" data-box="597,714,104,84">
+<use href="#pg-azure-subscriptions" x="625" y="713.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="625.4" y="779.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Finance</text>
+<text x="621.5" y="794.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">reporting</text>
 </g>
-<g data-id="n16" data-box="667,660,48,48">
-<use href="#gr1-azure-subscriptions" x="667" y="660" width="48" height="48"></use>
-<text class="g-tile" x="691" y="726" text-anchor="middle">Loyalty app</text>
+<g data-id="s7" data-box="732.5,540,104,69">
+<use href="#pg-azure-subscriptions" x="760.7" y="539.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="746.3" y="605.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">E-commerce</text>
 </g>
-<g data-id="lz" data-box="547,349,48,48">
-<use href="#gr1-azure-management-groups" x="547" y="349" width="48" height="48"></use>
-<text class="g-tile" x="571" y="415" text-anchor="middle">Landing zones</text>
+<g data-id="s8" data-box="732.5,627,104,69">
+<use href="#pg-azure-subscriptions" x="760.7" y="626.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="749.9" y="692.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Loyalty app</text>
 </g>
-<g data-id="sandbox" data-box="775,349,48,48">
-<use href="#gr1-azure-management-groups" x="775" y="349" width="48" height="48"></use>
-<text class="g-tile" x="798.5" y="415" text-anchor="middle">Sandbox</text>
+<g data-id="s9" data-box="868.5,540,104,69">
+<use href="#pg-azure-subscriptions" x="896.4" y="539.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="870" y="605.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Sandbox Team A</text>
 </g>
-<g data-id="n18" data-box="827,579,48,48">
-<use href="#gr1-azure-subscriptions" x="827" y="579" width="48" height="48"></use>
-<text class="g-tile" x="850.5" y="645" text-anchor="middle">Sandbox</text>
-<text class="g-tile" x="850.5" y="660" text-anchor="middle">Team A</text>
+<g data-id="s10" data-box="868.5,627,104,69">
+<use href="#pg-azure-subscriptions" x="896.4" y="626.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="870.4" y="692.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Sandbox Team B</text>
 </g>
-<g data-id="n19" data-box="827,675,48,48">
-<use href="#gr1-azure-subscriptions" x="827" y="675" width="48" height="48"></use>
-<text class="g-tile" x="850.5" y="741" text-anchor="middle">Sandbox</text>
-<text class="g-tile" x="850.5" y="756" text-anchor="middle">Team B</text>
-</g>
-<g data-id="decom" data-box="936,349,48,48">
-<use href="#gr1-azure-management-groups" x="936" y="349" width="48" height="48"></use>
-<text class="g-tile" x="960" y="415" text-anchor="middle">Decommissioned</text>
-</g>
-<g data-id="fab" data-box="621,232,48,48">
-<use href="#gr1-azure-management-groups" x="621" y="232" width="48" height="48"></use>
-<text class="g-tile" x="645" y="298" text-anchor="middle">Fabrikam</text>
-</g>
-<g data-id="root" data-box="621,100,48,48">
-<use href="#gr1-azure-management-groups" x="621" y="100" width="48" height="48"></use>
-<text class="g-tile" x="645" y="166" text-anchor="middle">Tenant</text>
-<text class="g-tile" x="645" y="181" text-anchor="middle">Root Group</text>
-</g>
+<g data-edge="mgmt-&gt;s1" data-sides="bottom,top"><path d="M242,501 L242,540" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="conn-&gt;s2" data-sides="bottom,top"><path d="M378,501 L378,540" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ident-&gt;s3" data-sides="bottom,top"><path d="M513,501 L513,540" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="corp-&gt;s4" data-sides="bottom,left"><path d="M649,501 L649,528 Q649,534 643,534 L577,534 Q571,534 571,540 L571,568.5 Q571,574.5 577,574.5 L597,574.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="online-&gt;s7" data-sides="bottom,left"><path d="M785,501 L785,528 Q785,534 779,534 L725,534 Q719,534 719,540 L719,568.5 Q719,574.5 725,574.5 L733,574.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="root-&gt;fab" data-sides="bottom,top"><path d="M649,179 L649,212" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="platform-&gt;conn" data-sides="bottom,top"><path d="M378,391 L378,432" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fab-&gt;lz" data-sides="bottom,top"><path d="M649,281 L649,289 Q649,295 655,295 L677,295 Q683,295 683,301 L683,322" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="lz-&gt;corp" data-sides="bottom,top"><path d="M717,391 L717,412 Q717,418 711,418 L689,418 Q683,418 683,424 L683,432" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="lz-&gt;online" data-sides="bottom,top"><path d="M717,391 L717,412 Q717,418 723,418 L745,418 Q751,418 751,424 L751,432" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="corp-&gt;s5" data-sides="bottom,left"><path d="M649,501 L649,528 Q649,534 643,534 L577,534 Q571,534 571,540 L571,655.5 Q571,661.5 577,661.5 L597,661.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="online-&gt;s8" data-sides="bottom,left"><path d="M785,501 L785,528 Q785,534 779,534 L725,534 Q719,534 719,540 L719,655.5 Q719,661.5 725,661.5 L733,661.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="sandbox-&gt;s9" data-sides="bottom,left"><path d="M920,391 L920,528 Q920,534 914,534 L860,534 Q854,534 854,540 L854,568.5 Q854,574.5 860,574.5 L868,574.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="platform-&gt;ident" data-sides="bottom,top"><path d="M378,391 L378,399 Q378,405 384,405 L507,405 Q513,405 513,411 L513,432" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="platform-&gt;mgmt" data-sides="bottom,top"><path d="M378,391 L378,399 Q378,405 372,405 L248,405 Q242,405 242,411 L242,432" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="corp-&gt;s6" data-sides="bottom,left"><path d="M649,501 L649,528 Q649,534 643,534 L577,534 Q571,534 571,540 L571,750 Q571,756 577,756 L597,756" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="sandbox-&gt;s10" data-sides="bottom,left"><path d="M920,391 L920,528 Q920,534 914,534 L860,534 Q854,534 854,540 L854,655.5 Q854,661.5 860,661.5 L868,661.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fab-&gt;platform" data-sides="bottom,top"><path d="M649,281 L649,289 Q649,295 643,295 L384,295 Q378,295 378,301 L378,322" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fab-&gt;sandbox" data-sides="bottom,top"><path d="M649,281 L649,289 Q649,295 655,295 L914,295 Q920,295 920,301 L920,322" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fab-&gt;decom" data-sides="bottom,top"><path d="M649,281 L649,289 Q649,295 655,295 L1050,295 Q1056,295 1056,301 L1056,322" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+
+
 </g>
 </svg>

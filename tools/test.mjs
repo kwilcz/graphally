@@ -67,14 +67,14 @@ const NUDGE = ' nudge="0,24"';
 // to an existing node. id is the new node.
 const EDITS = {
   architecture: { id: 'audit', pairs: [
-    ['<node id=engine icon="container app">scheduling-engine | internal</node>',
-      '<node id=engine icon="container app">scheduling-engine | internal</node>\n  <node id=audit icon="container app">audit worker | batch</node>'],
-    ['engine -> cosmos : locations', 'engine -> cosmos : locations\naudit -> sql : audit rows'],
+    ['<div class=node id=engine><icon name="container app"></icon>scheduling-engine<small>internal</small></div>',
+      '<div class=node id=engine><icon name="container app"></icon>scheduling-engine<small>internal</small></div>\n    <div class=node id=audit><icon name="container app"></icon>audit worker<small>batch</small></div>'],
+    ['["engine", "cosmos", "locations"],', '["engine", "cosmos", "locations"], ["audit", "sql", "audit rows"],'],
   ] },
   network: { id: 'batch', pairs: [
-    ['<node id=app icon="app service">App Service | VNet integration</node>',
-      '<node id=app icon="app service">App Service | VNet integration</node>\n    <node id=batch icon="app service">Batch worker | nightly jobs</node>'],
-    ['app -> pesql : SQL', 'app -> pesql : SQL\nbatch -> pest : blob reads'],
+    ['<div class=node id=app><icon name="app service"></icon>App Service<small>VNet integration</small></div>',
+      '<div class=node id=app><icon name="app service"></icon>App Service<small>VNet integration</small></div>\n      <div class=node id=batch><icon name="app service"></icon>Batch worker<small>nightly jobs</small></div>'],
+    ['["pesql", "sql", "private link"],', '["pesql", "sql", "private link"], ["batch", "pest", "blob reads"],'],
   ] },
 };
 

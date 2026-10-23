@@ -2,29 +2,25 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram title="Microsoft Entra application proxy" subtitle="Remote access to on-premises web apps without opening inbound ports">
-<layout>
-users  azure  onprem
-</layout>
-<node id=users icon=users style=icon>Remote users | on laptops</node>
-<group id=azure label="Azure" icon=cloud style=plain>
-  <node id=entra icon=entra style=icon>Microsoft Entra ID | pre-auth</node>
-  <node id=proxy icon=globe style=icon>Application Proxy | cloud service</node>
-</group>
-<group id=onprem label="On-premises network" style=dashed>
-  <layout>
-  connector web
-  connector ad
-  </layout>
-  <node id=connector icon=server style=icon>App Proxy connector | outbound only</node>
-  <node id=web icon=browser style=icon>Internal web apps</node>
-  <node id=ad icon="active directory" style=icon>Active Directory</node>
-</group>
-<links>
-users -> entra : sign in first
-users -> proxy : HTTPS
-proxy <-> connector : outbound connection
-connector -> web : HTTP
-connector -> ad : Kerberos SSO
-</links>
+<diagram layout=html width=1300 title="Microsoft Entra application proxy" subtitle="Remote access to on-premises web apps without opening inbound ports">
+<style> .figure { width: 140px; } </style>
+<div class="flex justify-between items-center">
+  <div class=figure id=users><icon name=users></icon>Remote users<small>on laptops</small></div>
+  <div class="group plain items-center gap-14" id=azure><h4><icon name=cloud></icon>Azure</h4>
+    <div class=figure id=entra><icon name=entra></icon>Microsoft Entra ID<small>pre-auth</small></div>
+    <div class=figure id=proxy><icon name=globe></icon>Application Proxy<small>cloud service</small></div>
+  </div>
+  <div class="group dashed grid grid-cols-2 items-center gap-x-40 gap-y-14 p-8" id=onprem><h4 class=col-span-full>On-premises network</h4>
+    <div class="figure row-span-2" id=connector><icon name=server></icon>App Proxy connector<small>outbound only</small></div>
+    <div class=figure id=web><icon name=browser></icon>Internal web apps</div>
+    <div class=figure id=ad><icon name="active directory"></icon>Active Directory</div>
+  </div>
+</div>
+<script type="application/json">
+[
+  ["users", "entra", "sign in first"], ["users", "proxy", "HTTPS"],
+  { "from": "proxy", "to": "connector", "label": "outbound connection", "both": true },
+  ["connector", "web", "HTTP"], ["connector", "ad", "Kerberos SSO"]
+]
+</script>
 </diagram>

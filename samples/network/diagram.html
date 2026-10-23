@@ -2,75 +2,70 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram title="Fabrikam Retail network topology" subtitle="Hub and spoke, West Europe">
-<layout>
-inet  key     onprem
-ecom  hub     analytics
-paas  paas    paas
-</layout>
-<group id=inet label="Internet" style=plain>
-  <node id=shopper icon=browser external>Customers | web browser</node>
-</group>
-<group id=onprem label="On-premises" sub="10.200.0.0/16" style=external>
-  <node id=dc icon=building external>Fabrikam datacenter | corporate network</node>
-</group>
-<group id=hub label="vnet-hub-weu" sub="10.0.0.0/16" style=vnet icon=vnet>
-  <layout>
-  fwsn  gwsn
-  dnssn bassn
-  </layout>
-  <group id=gwsn label="GatewaySubnet" sub="10.0.0.0/27" style=subnet>
-    <node id=ergw icon="vpn gateway">ExpressRoute gateway | on-prem link</node>
-  </group>
-  <group id=fwsn label="AzureFirewallSubnet" sub="10.0.1.0/26" style=subnet>
-    <node id=fw icon=firewall accent>Azure Firewall | all spoke egress</node>
-  </group>
-  <group id=bassn label="AzureBastionSubnet" sub="10.0.2.0/26" style=subnet>
-    <node id=bas icon=bastion>Azure Bastion | admin access</node>
-  </group>
-  <group id=dnssn label="snet-dns" sub="10.0.3.0/28" style=subnet>
-    <node id=dnsr icon="dns resolver">DNS Private Resolver | hybrid DNS</node>
-  </group>
-</group>
-<group id=ecom label="vnet-ecommerce-prod" sub="10.10.0.0/16" style=vnet icon=vnet>
-  <group id=agwsn label="snet-agw" sub="10.10.0.0/24" style=subnet>
-    <node id=agw icon="app gateway">Application Gateway | WAF v2</node>
-  </group>
-  <group id=appsn label="snet-app" sub="10.10.1.0/24" style=subnet>
-    <node id=app icon="app service">App Service | VNet integration</node>
-  </group>
-  <group id=pesn label="snet-pe" sub="10.10.2.0/24" style=subnet>
-    <node id=pesql icon="private endpoint">Private endpoint | Azure SQL</node>
-    <node id=pest icon="private endpoint">Private endpoint | Storage</node>
-  </group>
-</group>
-<group id=analytics label="vnet-analytics-prod" sub="10.20.0.0/16" style=vnet icon=vnet>
-  <group id=dbwsn label="snet-dbw-public, -private" sub="10.20.0.0/24, 10.20.1.0/24" style=subnet>
-    <node id=dbw icon=databricks>Azure Databricks | workspace</node>
-  </group>
-  <group id=anpe label="snet-pe" sub="10.20.2.0/24" style=subnet>
-    <node id=pedl icon="private endpoint">Private endpoint | Data Lake</node>
-  </group>
-</group>
-<band id=paas label="Azure PaaS and shared DNS" layout=row>
-  <node id=sql icon=sql>Azure SQL | orders DB</node>
-  <node id=stor icon=storage>Storage | blobs</node>
-  <node id=pdns icon="private dns">Private DNS zones | privatelink</node>
-  <node id=dls icon=storage>Data Lake Storage | Gen2</node>
-</band>
-<links>
-shopper => agw : HTTPS
-agw -> app : HTTPS
-dc -> ergw : ExpressRoute
-ergw -> fw : UDR 0.0.0.0/0
-ecom -> fw : egress UDR
-hub <-> ecom : peering
-hub <-> analytics : peering
-app -> pesql : SQL
-pesql -> sql : private link
-pest -> stor : private link
-dbw -> pedl : ABFS
-pedl -> dls : private link
-hub -- pdns : VNet links
-</links>
+<diagram layout=html width=1960 title="Fabrikam Retail network topology" subtitle="Hub and spoke, West Europe">
+<style>
+  .map { grid-template-areas: "inet key onprem" "ecom hub analytics" "paas paas paas"; grid-template-columns: auto auto auto; }
+  .subnet > .node { width: 280px; max-width: none; }
+</style>
+<div class="map grid justify-between items-start gap-x-28 gap-y-10">
+  <div class="group plain [grid-area:inet]" id=inet><h4>Internet</h4>
+    <div class="node external" id=shopper><icon name=browser></icon>Customers<small>web browser</small></div>
+  </div>
+  <div class="key flex-col items-start gap-[10px] [grid-area:key]"><h4>Key</h4>
+    <span><i class="swatch border-0 h-2" id=k1></i>synchronous call</span>
+    <span><i class="swatch box"></i>outside our control</span>
+    <span><span class=badge><icon name="private dns"></icon></span>uses the shared service with this icon</span>
+  </div>
+  <div class="group external [grid-area:onprem] justify-self-end" id=onprem><h4>On-premises <small>10.200.0.0/16</small></h4>
+    <div class="node external" id=dc><icon name=building></icon>Fabrikam datacenter<small>corporate network</small></div>
+  </div>
+
+  <div class="group vnet [grid-area:ecom] gap-[60px]" id=ecom><h4><icon name=vnet></icon>vnet-ecommerce-prod <small>10.10.0.0/16</small></h4>
+    <div class="group subnet" id=agwsn><h4>snet-agw <small>10.10.0.0/24</small></h4>
+      <div class=node id=agw><icon name="app gateway"></icon>Application Gateway<small>WAF v2</small></div></div>
+    <div class="group subnet" id=appsn><h4>snet-app <small>10.10.1.0/24</small></h4>
+      <div class=node id=app><icon name="app service"></icon>App Service<small>VNet integration</small></div></div>
+    <div class="group subnet" id=pesn><h4>snet-pe <small>10.10.2.0/24</small></h4>
+      <div class=node id=pesql><icon name="private endpoint"></icon>Private endpoint<small>Azure SQL</small></div>
+      <div class=node id=pest><icon name="private endpoint"></icon>Private endpoint<small>Storage</small></div></div>
+  </div>
+  <div class="group vnet [grid-area:hub] grid grid-cols-2 gap-x-36 gap-y-11" id=hub><h4 class="col-span-full"><icon name=vnet></icon>vnet-hub-weu <small>10.0.0.0/16</small><span class=badges><span class=badge><icon name="private dns"></icon></span></span></h4>
+    <div class="group subnet" id=fwsn><h4>AzureFirewallSubnet <small>10.0.1.0/26</small></h4>
+      <div class="node accent" id=fw><icon name=firewall></icon>Azure Firewall<small>all spoke egress</small></div></div>
+    <div class="group subnet" id=gwsn><h4>GatewaySubnet <small>10.0.0.0/27</small></h4>
+      <div class=node id=ergw><icon name="vpn gateway"></icon>ExpressRoute gateway<small>on-prem link</small></div></div>
+    <div class="group subnet" id=dnssn><h4>snet-dns <small>10.0.3.0/28</small></h4>
+      <div class=node id=dnsr><icon name="dns resolver"></icon>DNS Private Resolver<small>hybrid DNS</small></div></div>
+    <div class="group subnet" id=bassn><h4>AzureBastionSubnet <small>10.0.2.0/26</small></h4>
+      <div class=node id=bas><icon name=bastion></icon>Azure Bastion<small>admin access</small></div></div>
+  </div>
+  <div class="group vnet [grid-area:analytics] self-end gap-[60px]" id=analytics><h4><icon name=vnet></icon>vnet-analytics-prod <small>10.20.0.0/16</small></h4>
+    <div class="group subnet" id=dbwsn><h4>snet-dbw-public, -private <small>10.20.0.0/24, 10.20.1.0/24</small></h4>
+      <div class=node id=dbw><icon name=databricks></icon>Azure Databricks<small>workspace</small></div></div>
+    <div class="group subnet" id=anpe><h4>snet-pe <small>10.20.2.0/24</small></h4>
+      <div class=node id=pedl><icon name="private endpoint"></icon>Private endpoint<small>Data Lake</small></div></div>
+  </div>
+
+  <div class="band justify-between [grid-area:paas]" id=paas><h4>Azure PaaS and shared DNS</h4>
+    <div class=node id=sql><icon name=sql></icon>Azure SQL<small>orders DB</small></div>
+    <div class=node id=stor><icon name=storage></icon>Storage<small>blobs</small></div>
+    <div class=node id=pdns><icon name="private dns"></icon>Private DNS zones<small>privatelink</small></div>
+    <div class=node id=dls><icon name=storage></icon>Data Lake Storage<small>Gen2</small></div>
+  </div>
+</div>
+<script type="application/json">
+[
+  ["shopper", "agw", "HTTPS"], { "from": "agw", "to": "app", "label": "HTTPS", "out": "bottom", "in": "top" },
+  ["dc", "ergw", "ExpressRoute"], ["ergw", "fw", "UDR 0.0.0.0/0"],
+  ["ecom", "fw", "egress UDR"],
+  { "from": "hub", "to": "ecom", "label": "peering", "both": true },
+  { "from": "hub", "to": "analytics", "label": "peering", "both": true },
+  { "from": "app", "to": "pesql", "label": "SQL", "out": "bottom", "in": "top" },
+  ["pesql", "sql", "private link"], ["pest", "stor", "private link"],
+  { "from": "dbw", "to": "pedl", "label": "ABFS", "out": "bottom", "in": "top" }, ["pedl", "dls", "private link"]
+]
+</script>
+<script type="graphally">
+arrow(el('k1').left, el('k1').right);
+</script>
 </diagram>

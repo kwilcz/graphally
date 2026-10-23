@@ -2,40 +2,40 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram legend=none title="Getting graphally into an agent" subtitle="Every installer copies the same skill folder; icons arrive on the first render">
-<layout>
-src   inst   skill  run
-.     .      icons  .
-</layout>
-<group id=src label="Source" style=plain>
-  <node id=gh icon=repo>kwilcz/graphally | GitHub</node>
-</group>
-<group id=inst label="Installers">
-  <node id=plugin icon=code>Claude Code | /plugin install</node>
-  <node id=ghs icon=code>GitHub CLI | gh skill install</node>
-  <node id=npx icon=code>skills CLI | npx skills add</node>
-  <node id=zip icon=file>Claude.ai | release zip</node>
-</group>
-<group id=skill label="skills/graphally">
-  <node id=md icon=file>SKILL.md | instructions</node>
-  <node id=refs icon=file>references/ | one page per kind</node>
-  <node id=scripts icon=code>scripts/ | engine and CLIs</node>
-  <node id=assets icon=file>assets/ | theme, icon packs</node>
-</group>
-<group id=run label="At work" style=plain>
-  <node id=agent icon=user>Agent | Claude, Copilot, Codex…</node>
-  <node id=browser icon=browser>Chrome, Chromium | or Edge</node>
-</group>
-<group id=icons label="Icon sources" style=dashed>
-  <node id=drawio icon=globe external>draw.io repository | Azure icons</node>
-  <node id=npm icon=globe external>npm registry | AWS icons</node>
-</group>
-<links>
-gh -> plugin, ghs, npx, zip
-plugin, ghs, npx, zip -> skill : copy
-agent -> md : reads
-agent -> scripts : runs
-scripts -> browser : drives
-drawio, npm ~> assets : first render
-</links>
+<diagram layout=html width=1500 title="Getting graphally into an agent" subtitle="Every installer copies the same skill folder; icons arrive on the first render">
+<style> .map { grid-template-areas: "src inst skill run" ". . icons ."; } </style>
+<div class="map grid justify-between items-start gap-x-24 gap-y-10">
+  <div class="group plain [grid-area:src] self-center"><h4>Source</h4>
+    <div class=node id=gh><icon name=repo></icon>kwilcz/graphally<small>GitHub</small></div>
+  </div>
+  <div class="group [grid-area:inst]" id=inst><h4>Installers</h4>
+    <div class=node id=plugin><icon name=code></icon>Claude Code<small>/plugin install</small></div>
+    <div class=node id=ghs><icon name=code></icon>GitHub CLI<small>gh skill install</small></div>
+    <div class=node id=npx><icon name=code></icon>skills CLI<small>npx skills add</small></div>
+    <div class=node id=zip><icon name=file></icon>Claude.ai<small>release zip</small></div>
+  </div>
+  <div class="group [grid-area:skill]" id=skill><h4>skills/graphally</h4>
+    <div class=node id=md><icon name=file></icon>SKILL.md<small>instructions</small></div>
+    <div class=node id=refs><icon name=file></icon>references/<small>page mode, recipes</small></div>
+    <div class=node id=scripts><icon name=code></icon>scripts/<small>engine and CLIs</small></div>
+    <div class=node id=assets><icon name=file></icon>assets/<small>theme, icon packs</small></div>
+  </div>
+  <div class="group plain [grid-area:run] self-center gap-16"><h4>At work</h4>
+    <div class=node id=agent><icon name=user></icon>Agent<small>Claude, Copilot, Codex…</small></div>
+    <div class=node id=browser><icon name=browser></icon>Chrome, Chromium<small>or Edge</small></div>
+  </div>
+  <div class="group dashed [grid-area:icons]" id=icons><h4>Icon sources</h4>
+    <div class="node external" id=drawio><icon name=globe></icon>draw.io repository<small>Azure icons</small></div>
+    <div class="node external" id=npm><icon name=globe></icon>npm registry<small>AWS icons</small></div>
+  </div>
+</div>
+<script type="application/json">
+[
+  { "from": "gh", "to": ["plugin", "ghs", "npx", "zip"] },
+  { "from": ["plugin", "ghs", "npx", "zip"], "to": "skill", "label": "copy" },
+  ["agent", "md", "reads"], ["agent", "scripts", "runs"],
+  { "from": "scripts", "to": "browser", "label": "drives" },
+  { "from": ["drawio", "npm"], "to": "assets", "label": "first render", "dashed": true }
+]
+</script>
 </diagram>

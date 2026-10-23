@@ -2,40 +2,51 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=tree node-style=icon stack=leaves leaves=bottom title="Fabrikam management group hierarchy" subtitle="Azure tenant, governance board">
-  <level depth="0" label="Tenant root group"></level>
-  <level depth="1" label="Top-level management group"></level>
-  <level depth="2-3" label="Management groups"></level>
-  <level depth="4" label="Subscriptions"></level>
-  <node id=root icon=mg>Tenant Root Group
-    <node id=fab icon=mg>Fabrikam
-      <node id=platform icon=mg>Platform
-        <node id=mgmt icon=mg>Management
-          <node icon=subscription>Management</node>
-        </node>
-        <node id=conn icon=mg>Connectivity
-          <node icon=subscription>Connectivity</node>
-        </node>
-        <node id=ident icon=mg>Identity
-          <node icon=subscription>Identity</node>
-        </node>
-      </node>
-      <node id=lz icon=mg>Landing zones
-        <node id=corp icon=mg>Corp
-          <node icon=subscription>Payroll</node>
-          <node icon=subscription>HR portal</node>
-          <node icon=subscription>Finance reporting</node>
-        </node>
-        <node id=online icon=mg>Online
-          <node icon=subscription>E-commerce</node>
-          <node icon=subscription>Loyalty app</node>
-        </node>
-      </node>
-      <node id=sandbox icon=mg>Sandbox
-        <node icon=subscription>Sandbox Team A</node>
-        <node icon=subscription>Sandbox Team B</node>
-      </node>
-      <node id=decom icon=mg depth=2>Decommissioned</node>
-    </node>
-  </node>
+<diagram layout=html width=1100 title="Fabrikam management group hierarchy" subtitle="Azure tenant, governance board">
+<style>
+  .lab { grid-column: 1; padding: 14px 12px; font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .subs { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 18px 0; }
+</style>
+<!-- One row per level, a column per leaf: a parent spans the columns of its children. -->
+<div class="grid grid-cols-[150px_repeat(7,1fr)] grid-rows-[110px_110px_110px_110px_auto] place-items-center">
+  <div class="row-[1] col-span-full self-stretch justify-self-stretch my-1 rounded-lg bg-wash"></div>
+  <div class="row-[2] col-span-full self-stretch justify-self-stretch my-1 rounded-lg bg-wash"></div>
+  <div class="row-[3/5] col-span-full self-stretch justify-self-stretch my-1 rounded-lg bg-wash"></div>
+  <div class="row-[5] col-span-full self-stretch justify-self-stretch my-1 rounded-lg bg-wash"></div>
+  <div class="lab row-[1] justify-self-start self-start">Tenant root group</div>
+  <div class="lab row-[2] justify-self-start self-start">Top-level management group</div>
+  <div class="lab row-[3] justify-self-start self-start">Management groups</div>
+  <div class="lab row-[5] justify-self-start self-start">Subscriptions</div>
+
+  <div class="figure row-[1] col-[2/-1]" id=root><icon name=mg></icon>Tenant Root Group</div>
+  <div class="figure row-[2] col-[2/-1]" id=fab><icon name=mg></icon>Fabrikam</div>
+  <div class="figure row-[3] col-[2/5]" id=platform><icon name=mg></icon>Platform</div>
+  <div class="figure row-[3] col-[5/7]" id=lz><icon name=mg></icon>Landing zones</div>
+  <div class="figure row-[3] col-[7]" id=sandbox><icon name=mg></icon>Sandbox</div>
+  <div class="figure row-[3] col-[8]" id=decom><icon name=mg></icon>Decommissioned</div>
+  <div class="figure row-[4] col-[2]" id=mgmt><icon name=mg></icon>Management</div>
+  <div class="figure row-[4] col-[3]" id=conn><icon name=mg></icon>Connectivity</div>
+  <div class="figure row-[4] col-[4]" id=ident><icon name=mg></icon>Identity</div>
+  <div class="figure row-[4] col-[5]" id=corp><icon name=mg></icon>Corp</div>
+  <div class="figure row-[4] col-[6]" id=online><icon name=mg></icon>Online</div>
+
+  <div class="subs row-[5] col-[2] self-start"><div class=figure id=s1><icon name=subscription></icon>Management</div></div>
+  <div class="subs row-[5] col-[3] self-start"><div class=figure id=s2><icon name=subscription></icon>Connectivity</div></div>
+  <div class="subs row-[5] col-[4] self-start"><div class=figure id=s3><icon name=subscription></icon>Identity</div></div>
+  <div class="subs row-[5] col-[5] self-start"><div class=figure id=s4><icon name=subscription></icon>Payroll</div><div class=figure id=s5><icon name=subscription></icon>HR portal</div><div class=figure id=s6><icon name=subscription></icon>Finance reporting</div></div>
+  <div class="subs row-[5] col-[6] self-start"><div class=figure id=s7><icon name=subscription></icon>E-commerce</div><div class=figure id=s8><icon name=subscription></icon>Loyalty app</div></div>
+  <div class="subs row-[5] col-[7] self-start"><div class=figure id=s9><icon name=subscription></icon>Sandbox Team A</div><div class=figure id=s10><icon name=subscription></icon>Sandbox Team B</div></div>
+</div>
+<script type="application/json">
+[
+  { "from": "root", "to": "fab" },
+  { "from": "fab", "to": ["platform", "lz", "sandbox", "decom"], "out": "bottom", "in": "top" },
+  { "from": "platform", "to": ["mgmt", "conn", "ident"], "out": "bottom", "in": "top" },
+  { "from": "lz", "to": ["corp", "online"], "out": "bottom", "in": "top" },
+  ["mgmt", "s1"], ["conn", "s2"], ["ident", "s3"],
+  { "from": "corp", "to": ["s4", "s5", "s6"], "out": "bottom", "in": "left" },
+  { "from": "online", "to": ["s7", "s8"], "out": "bottom", "in": "left" },
+  { "from": "sandbox", "to": ["s9", "s10"], "out": "bottom", "in": "left" }
+]
+</script>
 </diagram>

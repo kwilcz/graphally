@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 2202 766" width="2202" height="766" role="img" aria-label="Expense claim approval. Employee: Expense incurred, Submit claim, Correct claim, Rejection notice, Claim rejected, Payment notice, Claim paid; Line manager: Review claim, 3 days, Approved?, Reject claim; Finance: Finance review, Approved?, Reject claim; ERP system: Validate claim, Valid?, Send reminder, Over £1,000?, Schedule payment. Connections: Expense incurred to Submit claim; Submit claim to Validate claim; Validate claim to Valid?; Valid? to Correct claim (no); Correct claim to Submit claim (resubmit); Valid? to Review claim (yes); 3 days to Send reminder; Send reminder sends events to Review claim (reminder); Review claim to Approved?; Approved? to Over £1,000? (yes); Approved? to Reject claim (no); Reject claim sends events to Rejection notice (rejection); Over £1,000? to Schedule payment (≤ £1,000); Over £1,000? to Finance review (&gt; £1,000); Finance review to Approved?; Approved? to Schedule payment (yes); Approved? to Reject claim (no); Reject claim sends events to Rejection notice (rejection); Rejection notice to Claim rejected; Schedule payment sends events to Payment notice (payment); Payment notice to Claim paid">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 2248 733" width="2248" height="733" role="img" aria-label="Expense claim approval. Northwind, finance operations">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
@@ -24,183 +24,148 @@
 .g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 .g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 </style>
-<defs><marker id="gr1-ink" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
-<symbol id="gr1-g-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-<symbol id="gr1-g-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 9v4l2.5 2M10 2.5h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
-<g style="color: var(--ink); fill: var(--ink)">
-<rect width="100%" height="100%" style="fill: var(--bg)"></rect>
-<text class="g-title" x="24" y="40.5">Expense claim approval</text>
-<text class="g-subtitle" x="24" y="59.5" style="fill: var(--muted)">Northwind, finance operations</text>
-<g data-group="emp" data-box="24,82,2154,200">
-<rect x="24" y="82" width="2154" height="200" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="82" width="2154" height="200" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="82" width="106.9" height="200" style="fill: var(--lane-a); stroke: var(--line)" stroke-width="1"></rect>
-<text class="g-group" x="38" y="186.5">Employee</text>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker></defs>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Expense claim approval</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Northwind, finance operations</text>
+<rect x="24.5" y="82.4" width="2199" height="625.6" rx="0" style="fill: none; stroke: var(--line)" stroke-width="1"></rect>
+<line x1="25" y1="274.4" x2="2222.9" y2="274.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="82.9" width="120" height="191" rx="0" style="fill: var(--lane-a)"></rect>
+<text x="39" y="182.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Employee</text>
+<g data-id="s" data-box="214,109,36,36">
+<path d="M214.3,126.9 A17.5,17.5 0 1 1 249.3,126.9 A17.5,17.5 0 1 1 214.3,126.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 </g>
-<g data-group="mgr" data-box="24,282,2154,184">
-<rect x="24" y="282" width="2154" height="184" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="282" width="2154" height="184" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="282" width="106.9" height="184" style="fill: var(--lane-b); stroke: var(--line)" stroke-width="1"></rect>
-<text class="g-group" x="38" y="378.5">Line manager</text>
+<text x="184.3" y="159.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Expense incurred</text>
+<g data-id="correct" data-box="177,194,150,52">
+<path d="M187.3,194.6 H316.3 Q326.3,194.6 326.3,204.6 V235.6 Q326.3,245.6 316.3,245.6 H187.3 Q177.3,245.6 177.3,235.6 V204.6 Q177.3,194.6 187.3,194.6 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="210.1" y="224.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Correct claim</text>
 </g>
-<g data-group="fin" data-box="24,466,2154,138">
-<rect x="24" y="466" width="2154" height="138" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="466" width="2154" height="138" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="466" width="106.9" height="138" style="fill: var(--lane-c); stroke: var(--line)" stroke-width="1"></rect>
-<text class="g-group" x="38" y="539.5">Finance</text>
+<g data-id="submit" data-box="358.5,109.5,150,54.5">
+<path d="M369.2,109.9 H498.2 Q508.2,109.9 508.2,119.9 V153.3 Q508.2,163.3 498.2,163.3 H369.2 Q359.2,163.3 359.2,153.3 V119.9 Q359.2,109.9 369.2,109.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="393.7" y="133.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Submit claim</text>
+<text x="400.3" y="149" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">with receipts</text>
 </g>
-<g data-group="erp" data-box="24,604,2154,138">
-<rect x="24" y="604" width="2154" height="138" rx="10" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="604" width="2154" height="138" rx="0" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<rect x="24" y="604" width="106.9" height="138" style="fill: var(--lane-d); stroke: var(--line)" stroke-width="1"></rect>
-<text class="g-group" x="38" y="677.5">ERP system</text>
+<g data-id="notice" data-box="2008,109,36,36">
+<path d="M2008.6,126.9 A17.5,17.5 0 1 1 2043.6,126.9 A17.5,17.5 0 1 1 2008.6,126.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M2012.1,126.9 A14,14 0 1 1 2040.1,126.9 A14,14 0 1 1 2012.1,126.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2017.6,121 H2034.7 V132.7 H2017.6 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2017.6,121 L2026.1,127.8 L2034.7,121" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linejoin="round"></path>
 </g>
-<g data-edge="notice-&gt;rejected" data-sides="right,left"><path d="M2001,126 L2092,126" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="paidnote-&gt;paid" data-sides="right,left"><path d="M2001,218 L2092,218" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="finok-&gt;finrej" data-sides="right,left"><path d="M1707,535 L1751,535" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="validate-&gt;valid" data-sides="right,left"><path d="M713,673 L775,673" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="decide-&gt;reject" data-sides="right,left"><path d="M1170,374 L1241,374" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="finrev-&gt;finok" data-sides="right,left"><path d="M1573,535 L1661,535" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="review-&gt;decide" data-sides="right,left"><path d="M1009,374 L1124,374" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="correct-&gt;submit" data-sides="right,left"><path d="M303,218.5 L363,218.5 Q369,218.5 369,212.5 L369,197.5 Q369,191.5 375,191.5 L381,191.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="finok-&gt;pay" data-sides="bottom,left"><path d="M1684,558 L1684,657.5 Q1684,663.5 1690,663.5 L1751,663.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="s-&gt;submit" data-sides="right,left"><path d="M249,126 L363,126 Q369,126 369,132 L369,166.5 Q369,172.5 375,172.5 L381,172.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="over-&gt;finrev" data-sides="top,left"><path d="M1341,650 L1341,541 Q1341,535 1347,535 L1429,535" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="late-&gt;remind" data-sides="bottom,left"><path d="M983,420 L983,657.5 Q983,663.5 989,663.5 L1053,663.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="valid-&gt;review" data-sides="top,left"><path d="M798,650 L798,380 Q798,374 804,374 L865,374" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="over-&gt;pay" data-sides="right,left"><path d="M1364,673 L1733,673 Q1739,673 1739,679 L1739,681.5 Q1739,687.5 1745,687.5 L1751,687.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="remind-&gt;review" data-sides="left,bottom"><path d="M1053,682.5 L943,682.5 Q937,682.5 937,676.5 L937,402" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="decide-&gt;over" data-sides="bottom,left"><path d="M1147,397 L1147,627 Q1147,633 1153,633 L1251,633 Q1257,633 1257,639 L1257,667 Q1257,673 1263,673 L1318,673" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="finrej-&gt;notice" data-sides="right,left"><path d="M1895,535 L1901,535 Q1907,535 1907,529 L1907,380 Q1907,374 1913,374 L1923,374 Q1929,374 1929,368 L1929,132 Q1929,126 1935,126 L1965,126" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="pay-&gt;paidnote" data-sides="right,left"><path d="M1895,673 L1930,673 Q1936,673 1936,667 L1936,224 Q1936,218 1942,218 L1965,218" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="submit-&gt;validate" data-sides="right,left"><path d="M525,182 L551,182 Q557,182 557,188 L557,667 Q557,673 563,673 L569,673" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="reject-&gt;notice" data-sides="right,left"><path d="M1385,374 L1923,374 Q1929,374 1929,368 L1929,132 Q1929,126 1935,126 L1965,126" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#gr1-ink)"></path></g>
-<g data-edge="valid-&gt;correct" data-sides="right,right"><path d="M821,673 L827,673 Q833,673 833,667 L833,248.5 Q833,242.5 827,242.5 L303,242.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#gr1-ink)"></path></g>
-<g data-id="s" data-box="213,108,36,36">
-<circle cx="231" cy="126" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
-<text class="g-sub" x="231" y="161" text-anchor="middle">Expense incurred</text>
+<text x="1982.6" y="159.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Rejection notice</text>
+<g data-id="rejected" data-box="2150,109,36,36">
+<path d="M2151.4,126.9 A16.5,16.5 0 1 1 2184.4,126.9 A16.5,16.5 0 1 1 2151.4,126.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="3"></path>
 </g>
-<g data-id="correct" data-box="159,200,144,56">
-<rect x="159" y="200" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="231" y="233" text-anchor="middle">Correct claim</text>
+<text x="2128.9" y="159.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Claim rejected</text>
+<g data-id="paidnote" data-box="2008,212,36,36">
+<path d="M2008.6,229.9 A17.5,17.5 0 1 1 2043.6,229.9 A17.5,17.5 0 1 1 2008.6,229.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M2012.1,229.9 A14,14 0 1 1 2040.1,229.9 A14,14 0 1 1 2012.1,229.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2017.6,224.1 H2034.7 V235.8 H2017.6 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2017.6,224.1 L2026.1,230.8 L2034.7,224.1" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linejoin="round"></path>
 </g>
-<g data-id="submit" data-box="381,154,144,56">
-<rect x="381" y="154" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="453" y="179.5" text-anchor="middle">Submit claim</text>
-<text class="g-sub" x="453" y="194" text-anchor="middle" style="fill: var(--muted)">with receipts</text>
+<text x="1984" y="203.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Payment notice</text>
+<g data-id="paid" data-box="2150,212,36,36">
+<path d="M2151.4,229.9 A16.5,16.5 0 1 1 2184.4,229.9 A16.5,16.5 0 1 1 2151.4,229.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="3"></path>
 </g>
-<g data-id="notice" data-box="1965,108,36,36">
-<circle cx="1983" cy="126" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
-<circle cx="1983" cy="126" r="13.5" style="fill: none; stroke: var(--ink)" stroke-width="1.2"></circle>
-<use href="#gr1-g-mail" x="1975" y="118" width="16" height="16" style="color: var(--ink)"></use>
-<text class="g-sub" x="1983" y="161" text-anchor="middle">Rejection notice</text>
+<text x="2139.3" y="203.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Claim paid</text>
+<line x1="25" y1="418.9" x2="2222.9" y2="418.9" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="274.9" width="120" height="143.5" rx="0" style="fill: var(--lane-b)"></rect>
+<text x="39" y="350.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Line manager</text>
+<g data-id="review" data-box="864,306.5,150,52">
+<path d="M874.6,307.2 H1003.6 Q1013.6,307.2 1013.6,317.2 V348.2 Q1013.6,358.2 1003.6,358.2 H874.6 Q864.6,358.2 864.6,348.2 V317.2 Q864.6,307.2 874.6,307.2 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="898.6" y="336.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Review claim</text>
+<g data-id="late" data-box="963,339.5,36,36">
+<path d="M963.6,357.7 A17.5,17.5 0 1 1 998.6,357.7 A17.5,17.5 0 1 1 963.6,357.7 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M967.1,357.7 A14,14 0 1 1 995.1,357.7 A14,14 0 1 1 967.1,357.7 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M972.1,357.7 A9,9 0 1 1 990.1,357.7 A9,9 0 1 1 972.1,357.7 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M981.1,351.4 V357.7 L985.6,359.9" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
-<g data-id="paidnote" data-box="1965,200,36,36">
-<circle cx="1983" cy="218" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
-<circle cx="1983" cy="218" r="13.5" style="fill: none; stroke: var(--ink)" stroke-width="1.2"></circle>
-<use href="#gr1-g-mail" x="1975" y="210" width="16" height="16" style="color: var(--ink)"></use>
-<text class="g-sub" x="1982.5" y="253" text-anchor="middle">Payment notice</text>
 </g>
-<g data-id="rejected" data-box="2092,108,36,36">
-<circle cx="2110" cy="126" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
-<text class="g-sub" x="2110.5" y="161" text-anchor="middle">Claim rejected</text>
+<g data-id="decide" data-box="1079,310.5,44,44">
+<path d="M1101,310.9 L1122.5,332.4 L1101,353.9 L1079.5,332.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M1094.4,325.8 L1107.6,339 M1107.6,325.8 L1094.4,339" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
-<g data-id="paid" data-box="2092,200,36,36">
-<circle cx="2110" cy="218" r="16.4" style="fill: var(--card); stroke: var(--ink)" stroke-width="3.2"></circle>
-<text class="g-sub" x="2110" y="253" text-anchor="middle">Claim paid</text>
+<text x="1071.6" y="301.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Approved?</text>
+<g data-id="reject" data-box="1228,306.5,150,52">
+<path d="M1238.3,307.2 H1367.3 Q1377.3,307.2 1377.3,317.2 V348.2 Q1377.3,358.2 1367.3,358.2 H1238.3 Q1228.3,358.2 1228.3,348.2 V317.2 Q1228.3,307.2 1238.3,307.2 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1265.2" y="336.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Reject claim</text>
 </g>
-<g data-id="review" data-box="865,346,144,56">
-<rect x="865" y="346" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="937" y="379" text-anchor="middle">Review claim</text>
+<line x1="25" y1="563.4" x2="2222.9" y2="563.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="419.4" width="120" height="143.5" rx="0" style="fill: var(--lane-c)"></rect>
+<text x="39" y="495.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Finance</text>
+<g data-id="finrev" data-box="1409.5,450,150,54.5">
+<path d="M1420.1,450.5 H1549.1 Q1559.1,450.5 1559.1,460.5 V493.9 Q1559.1,503.9 1549.1,503.9 H1420.1 Q1410.1,503.9 1410.1,493.9 V460.5 Q1410.1,450.5 1420.1,450.5 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1437.8" y="474" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Finance review</text>
+<text x="1454.2" y="489.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">over £1,000</text>
 </g>
-<g data-id="decide" data-box="1124,351,46,46">
-<path d="M1147,351 L1170,374 L1147,397 L1124,374 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M1141,368 L1153,380 M1153,368 L1141,380" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
-<text class="g-sub" x="1139" y="344" text-anchor="end">Approved?</text>
+<g data-id="finok" data-box="1624.5,455,44,44">
+<path d="M1646.5,455.4 L1668,476.9 L1646.5,498.4 L1625,476.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M1639.9,470.3 L1653.1,483.5 M1653.1,470.3 L1639.9,483.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
-<g data-id="reject" data-box="1241,346,144,56">
-<rect x="1241" y="346" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="1313" y="379" text-anchor="middle">Reject claim</text>
+<text x="1617.1" y="446.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Approved?</text>
+<g data-id="finrej" data-box="1733.5,451,150,52">
+<path d="M1743.8,451.7 H1872.8 Q1882.8,451.7 1882.8,461.7 V492.7 Q1882.8,502.7 1872.8,502.7 H1743.8 Q1733.8,502.7 1733.8,492.7 V461.7 Q1733.8,451.7 1743.8,451.7 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1770.7" y="481.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Reject claim</text>
 </g>
-<g data-id="finrev" data-box="1429,507,144,56">
-<rect x="1429" y="507" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="1501" y="532.5" text-anchor="middle">Finance review</text>
-<text class="g-sub" x="1501" y="547" text-anchor="middle" style="fill: var(--muted)">over £1,000</text>
+<rect x="25" y="563.9" width="120" height="143.5" rx="0" style="fill: var(--lane-d)"></rect>
+<text x="39" y="639.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">ERP system</text>
+<g data-id="validate" data-box="540.5,594.5,150,54.5">
+<path d="M551,595 H680 Q690,595 690,605 V638.4 Q690,648.4 680,648.4 H551 Q541,648.4 541,638.4 V605 Q541,595 551,595 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="572.3" y="618.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Validate claim</text>
+<text x="576.3" y="634" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">policy, receipts</text>
 </g>
-<g data-id="finok" data-box="1661,512,46,46">
-<path d="M1684,512 L1707,535 L1684,558 L1661,535 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M1678,529 L1690,541 M1690,529 L1678,541" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
-<text class="g-sub" x="1676" y="505" text-anchor="end">Approved?</text>
+<g data-id="valid" data-box="755.5,600,44,44">
+<path d="M777.3,600.4 L798.8,621.9 L777.3,643.4 L755.8,621.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M770.7,615.3 L783.9,628.5 M783.9,615.3 L770.7,628.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
-<g data-id="finrej" data-box="1751,507,144,56">
-<rect x="1751" y="507" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="1823" y="540" text-anchor="middle">Reject claim</text>
+<text x="761.2" y="658.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Valid?</text>
+<g data-id="remind" data-box="1046,595.5,150,52">
+<path d="M1056.5,596.2 H1185.5 Q1195.5,596.2 1195.5,606.2 V637.2 Q1195.5,647.2 1185.5,647.2 H1056.5 Q1046.5,647.2 1046.5,637.2 V606.2 Q1046.5,596.2 1056.5,596.2 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1075.4" y="625.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Send reminder</text>
 </g>
-<g data-id="validate" data-box="569,645,144,56">
-<rect x="569" y="645" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="641" y="670.5" text-anchor="middle">Validate claim</text>
-<text class="g-sub" x="641" y="685" text-anchor="middle" style="fill: var(--muted)">policy, receipts</text>
+<g data-id="over" data-box="1261,600,44,44">
+<path d="M1282.8,600.4 L1304.3,621.9 L1282.8,643.4 L1261.3,621.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M1276.2,615.3 L1289.4,628.5 M1289.4,615.3 L1276.2,628.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
-<g data-id="valid" data-box="775,650,46,46">
-<path d="M798,650 L821,673 L798,696 L775,673 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M792,667 L804,679 M804,667 L792,679" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
-<text class="g-sub" x="790" y="643" text-anchor="end">Valid?</text>
+<text x="1247" y="658.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Over £1,000?</text>
+<g data-id="pay" data-box="1733.5,594.5,150,54.5">
+<path d="M1743.8,595 H1872.8 Q1882.8,595 1882.8,605 V638.4 Q1882.8,648.4 1872.8,648.4 H1743.8 Q1733.8,648.4 1733.8,638.4 V605 Q1733.8,595 1743.8,595 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1750.4" y="618.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Schedule payment</text>
+<text x="1762.8" y="634" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">next payment run</text>
 </g>
-<g data-id="remind" data-box="1053,645,144,56">
-<rect x="1053" y="645" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="1125" y="678" text-anchor="middle">Send reminder</text>
-</g>
-<g data-id="over" data-box="1318,650,46,46">
-<path d="M1341,650 L1364,673 L1341,696 L1318,673 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
-<path d="M1335,667 L1347,679 M1347,667 L1335,679" style="fill: none; stroke: var(--ink)" stroke-width="2.4"></path>
-<text class="g-sub" x="1333" y="643" text-anchor="end">Over £1,000?</text>
-</g>
-<g data-id="pay" data-box="1751,645,144,56">
-<rect x="1751" y="645" width="144" height="56" rx="10" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.3"></rect>
-<text class="g-label" x="1823" y="670.5" text-anchor="middle">Schedule payment</text>
-<text class="g-sub" x="1823" y="685" text-anchor="middle" style="fill: var(--muted)">next payment run</text>
-</g>
-<g data-id="late" data-box="965,384,36,36">
-<circle cx="983" cy="402" r="17.3" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></circle>
-<circle cx="983" cy="402" r="13.5" style="fill: none; stroke: var(--ink)" stroke-width="1.2"></circle>
-<use href="#gr1-g-timer" x="975" y="394" width="16" height="16" style="color: var(--ink)"></use>
-<text class="g-sub" x="1023.5" y="417" text-anchor="middle">3 days</text>
-</g>
-<g data-edge="finok-&gt;finrej">
-<text class="g-edge" x="1722.1" y="529" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">no</text>
-</g>
-<g data-edge="decide-&gt;reject">
-<text class="g-edge" x="1198.6" y="368" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">no</text>
-</g>
-<g data-edge="correct-&gt;submit">
-<text class="g-edge" x="312.2" y="212.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">resubmit</text>
-</g>
-<g data-edge="finok-&gt;pay">
-<text class="g-edge" x="1691" y="620.8" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">yes</text>
-</g>
-<g data-edge="over-&gt;finrev">
-<text class="g-edge" x="1348" y="596.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">&gt; £1,000</text>
-</g>
-<g data-edge="valid-&gt;review">
-<text class="g-edge" x="805" y="516" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">yes</text>
-</g>
-<g data-edge="over-&gt;pay">
-<text class="g-edge" x="1527.8" y="667" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">≤ £1,000</text>
-</g>
-<g data-edge="remind-&gt;review">
-<text class="g-edge" x="880.8" y="546.3" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">reminder</text>
-</g>
-<g data-edge="decide-&gt;over">
-<text class="g-edge" x="1154" y="519" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">yes</text>
-</g>
-<g data-edge="finrej-&gt;notice">
-<text class="g-edge" x="1936" y="194" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">rejection</text>
-</g>
-<g data-edge="pay-&gt;paidnote">
-<text class="g-edge" x="1943" y="449.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">payment</text>
-</g>
-<g data-edge="valid-&gt;correct">
-<text class="g-edge" x="840" y="455.8" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">no</text>
-</g>
+<g data-edge="notice-&gt;rejected" data-sides="right,left"><path d="M2044,127 L2150,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="paidnote-&gt;paid" data-sides="right,left"><path d="M2044,230 L2150,230" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="finrev-&gt;finok" data-sides="right,left"><path d="M1560,477 L1624,477" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="validate-&gt;valid" data-sides="right,left"><path d="M690,622 L755,622" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="finok-&gt;finrej" data-sides="right,left"><path d="M1668,477 L1733,477" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="review-&gt;decide" data-sides="right,left"><path d="M1014,332 L1079,332" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="decide-&gt;reject" data-sides="right,left"><path d="M1123,332 L1228,332" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="s-&gt;submit" data-sides="right,left"><path d="M250,127 L359,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="correct-&gt;submit" data-sides="right,left"><path d="M327,210.5 L339,210.5 Q345,210.5 345,204.5 L345,151.5 Q345,145.5 351,145.5 L359,145.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="finok-&gt;pay" data-sides="bottom,left"><path d="M1646,499 L1646,606.5 Q1646,612.5 1652,612.5 L1733,612.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="over-&gt;finrev" data-sides="top,left"><path d="M1283,600 L1283,483 Q1283,477 1289,477 L1410,477" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="late-&gt;remind" data-sides="bottom,left"><path d="M981,376 L981,606.5 Q981,612.5 987,612.5 L1046,612.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="valid-&gt;review" data-sides="right,left"><path d="M799,622 L825.5,622 Q831.5,622 831.5,616 L831.5,339 Q831.5,333 837.5,333 L864,333" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="remind-&gt;review" data-sides="left,bottom"><path d="M1046,636.5 L945,636.5 Q939,636.5 939,630.5 L939,359" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="decide-&gt;over" data-sides="bottom,left"><path d="M1101,354 L1101,584 Q1101,590 1107,590 L1241,590 Q1247,590 1247,596 L1247,616 Q1247,622 1253,622 L1261,622" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="over-&gt;pay" data-sides="right,left"><path d="M1305,622 L1713,622 Q1719,622 1719,628 L1719,630.5 Q1719,636.5 1725,636.5 L1733,636.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="finrej-&gt;notice" data-sides="right,left"><path d="M1883,477 L1891,477 Q1897,477 1897,471 L1897,339 Q1897,333 1903,333 L1966,333 Q1972,333 1972,327 L1972,133 Q1972,127 1978,127 L2008,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="pay-&gt;paidnote" data-sides="right,bottom"><path d="M1883,622 L2227,622 Q2233,622 2233,616 L2233,268 Q2233,262 2227,262 L2032,262 Q2026,262 2026,256 L2026,248" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="submit-&gt;validate" data-sides="right,left"><path d="M509,136.5 L520,136.5 Q526,136.5 526,142.5 L526,616 Q526,622 532,622 L540,622" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="valid-&gt;correct" data-sides="top,right"><path d="M777,600 L777,240.5 Q777,234.5 771,234.5 L327,234.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="reject-&gt;notice" data-sides="right,left"><path d="M1378,333 L1966,333 Q1972,333 1972,327 L1972,133 Q1972,127 1978,127 L2008,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+
+<text class="g-edge" x="1693.6" y="471" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="1168.6" y="326" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="352" y="182" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">resubmit</text>
+<text class="g-edge" x="1680" y="606.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="1322.8" y="471" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">&gt; £1,000</text>
+<text class="g-edge" x="988" y="498.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">3 days</text>
+<text class="g-edge" x="838.5" y="481.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="967.9" y="630.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reminder</text>
+<text class="g-edge" x="1164.5" y="584" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="1488.3" y="616" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">≤ £1,000</text>
+<text class="g-edge" x="1917.9" y="234" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">rejection</text>
+<text class="g-edge" x="2034.3" y="616" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">payment</text>
+<text class="g-edge" x="545.1" y="228.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
 </g>
 </svg>

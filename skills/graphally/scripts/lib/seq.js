@@ -56,7 +56,8 @@ export function sequence(box, { number = true, activations = true } = {}, proble
         frags.push(f);
         const before = msgs.length;
         walk(e, depth + 1);
-        f.cols = msgs.slice(before).flatMap(m => [m.a, m.b]);
+        // A message to oneself loops and is labelled to the right: the fragment covers that column too.
+        f.cols = msgs.slice(before).flatMap(m => (m.a === m.b ? [m.a, Math.min(m.a + 1, ids.length - 1)] : [m.a, m.b]));
         f.end = row++;
         e.style.display = 'contents';
       } else if (e.matches('.else')) {

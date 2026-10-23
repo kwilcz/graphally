@@ -496,7 +496,6 @@ export function terraformToDiagram(root, { title, icons } = {}) {
     (kids.get(k) || kids.set(k, []).get(k)).push(it);
   }
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
-  const iconAttr = name => (name && (!icons || icons(name)) ? ` icon="${esc(name)}"` : '');
   // Inside a box, what uses comes before what is used (apps, then Key Vault and App
   // Insights, then Log Analytics), so links run one way down the stack.
   const under = new Map();
@@ -517,63 +516,80 @@ export function terraformToDiagram(root, { title, icons } = {}) {
   const net = it => ['resource_group', 'virtual_network', 'subnet'].includes(az(it.r));
   const order = it => ({ resource_group: 0, virtual_network: 1, subnet: 2 }[az(it.r)] ?? 3) * 1e6 + (net(it) ? 0 : (flowRank.get(it.r.addr) || 0) * 1e3) + position.get(it.r.addr);
   const lines = [];
+  const iconTag = name => (name && (!icons || icons(name)) ? `<icon name="${esc(name)}"></icon>` : '');
   const emit = (it, depth) => {
     const pad = '  '.repeat(depth);
     const t = az(it.r);
     const children = (kids.get(it.r.addr) || []).sort((a, b) => order(a) - order(b));
     const sub = [it.sku, ...it.subs].filter(Boolean).join(' · ');
     if (groupy.has(it.r.addr)) {
-      let style = '', gsub = sub;
-      if (t === 'virtual_network') { style = ' style=vnet'; gsub = [cidr(it.r.body.attrs.address_space, it.r), sub].filter(Boolean).join(' · '); }
-      else if (t === 'subnet') { style = ' style=subnet'; it.icon = ''; gsub = [cidr(it.r.body.attrs.address_prefixes || it.r.body.attrs.address_prefix, it.r), ...it.subs].filter(Boolean).join(' · '); }
+      let cls = 'group', gsub = sub;
+      if (t === 'virtual_network') { cls = 'group vnet'; gsub = [cidr(it.r.body.attrs.address_space, it.r), sub].filter(Boolean).join(' · '); }
+      else if (t === 'subnet') { cls = 'group subnet'; it.icon = ''; gsub = [cidr(it.r.body.attrs.address_prefixes || it.r.body.attrs.address_prefix, it.r), ...it.subs].filter(Boolean).join(' · '); }
       else if (t !== 'resource_group') gsub = [it.kind, sub].filter(Boolean).join(' · ');
       const vnets = children.filter(c => az(c.r) === 'virtual_network');
       const loose = children.filter(c => !groupy.has(c.r.addr));
       // A resource group with VNets: the VNets side by side, then its other resources in a
       // column to their right, next to what they connect to.
       const column = t === 'resource_group' && vnets.length && loose.length > 1;
-      const layout = vnets.length > 1 || (t === 'resource_group' && vnets.length && children.length > 1) ? ' layout=row' : children.length > 5 && t === 'resource_group' ? ' layout=grid cols=2' : '';
-      lines.push(`${pad}<group id=${it.id} label="${esc(it.label)}"${gsub ? ` sub="${esc(gsub)}"` : ''}${style}${iconAttr(it.icon)}${layout}>`);
-      children.filter(c => !column || !loose.includes(c)).forEach(c => emit(c, depth + 1));
+      const wrap = vnets.length > 1 || (t === 'resource_group' && vnets.length && children.length > 1) ? 'flex items-start gap-16'
+        : children.length > 5 && t === 'resource_group' ? 'grid grid-cols-2 gap-x-16 gap-y-[18px]' : '';
+      lines.push(`${pad}<div class="${cls}" id=${it.id}><h4>${iconTag(it.icon)}${esc(it.label)}${gsub ? ` <small>${esc(gsub)}</small>` : ''}</h4>`);
+      const inner = wrap ? depth + 2 : depth + 1;
+      if (wrap) lines.push(`${pad}  <div class="${wrap}">`);
+      children.filter(c => !column || !loose.includes(c)).forEach(c => emit(c, inner));
       if (column) {
-        lines.push(`${pad}  <group id=${it.id}_services style=plain>`);
-        loose.forEach(c => emit(c, depth + 2));
-        lines.push(`${pad}  </group>`);
+        lines.push(`${pad}${wrap ? '    ' : '  '}<div class="group plain" id=${it.id}_services>`);
+        loose.forEach(c => emit(c, inner + 1));
+        lines.push(`${pad}${wrap ? '    ' : '  '}</div>`);
       }
-      lines.push(`${pad}</group>`);
+      if (wrap) lines.push(`${pad}  </div>`);
+      lines.push(`${pad}</div>`);
     } else {
-      const count = Number.isFinite(it.many) ? ` count=${Math.min(it.many, 3)}` : '';
       const kind = it.many === 'each' || it.many === 'N' ? `${it.kind} ×N` : Number.isFinite(it.many) ? `${it.kind} ×${it.many}` : it.kind;
-      lines.push(`${pad}<node id=${it.id}${iconAttr(it.icon)}${count}${it.r.type === 'module' ? ' external' : ''}>${esc(it.label)} | ${esc([kind, sub].filter(Boolean).join(' · '))}</node>`);
+      const small = [kind, sub].filter(Boolean).join(' · ');
+      lines.push(`${pad}<div class="node${it.r.type === 'module' ? ' external' : ''}" id=${it.id}>${iconTag(it.icon)}${esc(it.label)}${small ? `<small>${esc(small)}</small>` : ''}</div>`);
     }
   };
   // Top-level boxes: the first in the flow on the left, the boxes it reaches stacked on
   // the right, so links from it to each are short (app | network / app | data).
   const top = (kids.get('__root') || []).sort((a, b) => order(a) - order(b));
   const firsts = top.filter(t => (flowRank.get(t.r.addr) || 0) === 0);
+  let outer = 'flex flex-wrap items-start gap-20', after = null;
   if (top.length >= 3 && top.length <= 5 && firsts.length === 1 && top.every(t => groupy.has(t.r.addr))) {
-    const rest = top.filter(t => t !== firsts[0]);
-    lines.push('<layout>', ...rest.map(t => `${firsts[0].id} ${t.id}`), '</layout>');
+    outer = 'flex items-start gap-20';
+    after = firsts[0];
   } else if (top.length === 2 && top.every(t => groupy.has(t.r.addr))) {
     // Two resource groups: one above the other, the hub (gateways, firewall) on top, so
     // peering runs straight down instead of across the other group's services.
     const hubby = t => [...collect(t.r.addr)].some(a => /GatewaySubnet|AzureFirewallSubnet|AzureBastionSubnet/.test(items.get(a)?.label || '') || /firewall$|virtual_network_gateway$|bastion_host$/.test(items.get(a)?.r.type || ''));
-    const [a, b] = hubby(top[1]) && !hubby(top[0]) ? [top[1], top[0]] : top;
-    lines.push('<layout>', a.id, b.id, '</layout>');
+    if (hubby(top[1]) && !hubby(top[0])) top.reverse();
+    outer = 'flex flex-col items-start gap-14';
   }
-  for (const it of top) emit(it, 0);
+  lines.push(`<div class="${outer}">`);
+  if (after) {
+    emit(after, 1);
+    lines.push('  <div class="flex flex-col items-start gap-14">');
+    top.filter(t => t !== after).forEach(t => emit(t, 2));
+    lines.push('  </div>');
+  } else for (const it of top) emit(it, 1);
+  lines.push('</div>');
   const name = title || path.basename(path.resolve(root));
   const nRes = [...resources.values()].filter(r => !r.data && r.type !== 'module').length;
   const nMod = modules.length - 1;
-  // Links with the same target, label and kind become one statement: drawn as a bundle
-  // with one label ("app, func -> appi : telemetry").
+  // Links with the same target, label and kind become one entry with a list of sources:
+  // drawn as a bundle with one label.
   const merged = new Map();
   for (const l of links) {
     const k = `${l.to}|${l.label}|${l.op}`;
     (merged.get(k) || merged.set(k, { ...l, froms: [] }).get(k)).froms.push(l.from);
   }
-  const linkLines = [...merged.values()].map(l => `${l.froms.map(f => item(f).id).join(', ')} ${l.op} ${item(l.to).id}${l.label ? ` : ${l.label}` : ''}`);
-  const html = `<diagram title="${esc(name)}" subtitle="${esc(`From Terraform: ${nRes} resources${nMod ? ` in ${nMod + 1} modules` : ''}`)}">\n${lines.join('\n')}\n<links>\n${linkLines.join('\n')}\n</links>\n</diagram>\n`;
+  const linkLines = [...merged.values()].map(l => {
+    const from = l.froms.map(f => item(f).id);
+    return '  ' + JSON.stringify({ from: from.length > 1 ? from : from[0], to: item(l.to).id, ...(l.label ? { label: l.label } : {}),
+      ...(l.op === '<->' ? { both: true } : {}), ...(l.op === '~>' ? { dashed: true } : {}) });
+  });
+  const html = `<diagram layout=html width=1600 title="${esc(name)}" subtitle="${esc(`From Terraform: ${nRes} resources${nMod ? ` in ${nMod + 1} modules` : ''}`)}">\n${lines.join('\n')}\n<script type="application/json">\n[\n${linkLines.join(',\n')}\n]\n</script>\n</diagram>\n`;
   for (const r of resources.values()) if (r.data && !/client_config|subscription|tenant|role_definition/.test(r.type)) notes.skipped.push(r.addr);
   const groups = [...items.values()].filter(it => groupy.has(it.r.addr));
   return {

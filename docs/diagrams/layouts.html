@@ -2,28 +2,34 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=tree stack=leaves title="One engine, five layouts" subtitle="Each kind of diagram uses the layout that suits it">
-  <level depth="0" label="Engine"></level>
-  <level depth="1" label="Layouts"></level>
-  <level depth="2" label="Diagrams"></level>
-  <node id=g icon=code>graphally | compile()
-    <node id=areas>Areas | CSS grid from a map
-      <node id=a1 icon=cloud>Architecture</node>
-      <node id=a2 icon=vnet>Network</node>
-      <node id=a3 icon=globe>Icon diagram</node>
-    </node>
-    <node id=tree>Tree | tidy tree, bands
-      <node id=t1 icon=mg>Hierarchy</node>
-    </node>
-    <node id=lanes>Lanes | flow order in columns
-      <node id=l1 icon=users>BPMN process</node>
-      <node id=l2 icon=gear>Flowchart</node>
-    </node>
-    <node id=seq>Sequence | lifelines, bars
-      <node id=s1 icon=message>Sequence</node>
-    </node>
-    <node id=gantt>Gantt | time axis
-      <node id=p1 icon=timer>Plan</node>
-    </node>
-  </node>
+<diagram layout=html width=1300 title="One page, many diagrams" subtitle="HTML and CSS place almost everything; two helpers do what CSS cannot">
+<style> .figure { width: 120px; } </style>
+<div class="grid grid-cols-[150px_repeat(8,1fr)] grid-rows-[120px_120px_auto] place-items-center">
+  <div class="row-[1] col-span-full self-stretch justify-self-stretch my-1 rounded-lg bg-wash"></div>
+  <div class="row-[2] col-span-full self-stretch justify-self-stretch my-1 rounded-lg bg-wash"></div>
+  <div class="row-[3] col-span-full self-stretch justify-self-stretch my-1 rounded-lg bg-wash"></div>
+  <div class="row-[1] col-[1] justify-self-start self-start p-3 text-sm font-semibold text-muted">Engine</div>
+  <div class="row-[2] col-[1] justify-self-start self-start p-3 text-sm font-semibold text-muted">What places it</div>
+  <div class="row-[3] col-[1] justify-self-start self-start p-3 text-sm font-semibold text-muted">Diagrams</div>
+
+  <div class="node row-[1] col-[2/-1]" id=g><icon name=code></icon>graphally<small>page mode</small></div>
+  <div class="node row-[2] col-[2/8]" id=css><icon name=browser></icon>HTML and CSS<small>utilities, building blocks</small></div>
+  <div class="node row-[2] col-[8]" id=tl><icon name=timer></icon>timeline()<small>dates to columns</small></div>
+  <div class="node row-[2] col-[9]" id=sq><icon name=message></icon>sequence()<small>messages to rows</small></div>
+  <div class="figure row-[3] col-[2] my-5" id=d1><icon name=cloud></icon>Architecture</div>
+  <div class="figure row-[3] col-[3] my-5" id=d2><icon name=vnet></icon>Network</div>
+  <div class="figure row-[3] col-[4] my-5" id=d3><icon name=mg></icon>Hierarchy</div>
+  <div class="figure row-[3] col-[5] my-5" id=d4><icon name=users></icon>BPMN process</div>
+  <div class="figure row-[3] col-[6] my-5" id=d5><icon name=gear></icon>Flowchart</div>
+  <div class="figure row-[3] col-[7] my-5" id=d6><icon name=globe></icon>Charts of your own</div>
+  <div class="figure row-[3] col-[8] my-5" id=d7><icon name=timer></icon>Plan, roadmap</div>
+  <div class="figure row-[3] col-[9] my-5" id=d8><icon name=message></icon>Sequence</div>
+</div>
+<script type="application/json">
+[
+  { "from": "g", "to": ["css", "tl", "sq"], "out": "bottom", "in": "top" },
+  { "from": "css", "to": ["d1", "d2", "d3", "d4", "d5", "d6"], "out": "bottom", "in": "top" },
+  { "from": "tl", "to": "d7" }, { "from": "sq", "to": "d8" }
+]
+</script>
 </diagram>

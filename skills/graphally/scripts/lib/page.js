@@ -83,7 +83,7 @@ const PAGE_CSS = `
 :where(.graphally-page .activation) { justify-self: center; width: 12px; margin-top: -9px; background: var(--card); border: 1.2px solid var(--ink); }
 :where(.graphally-page :is(.frag-box, .frag-tab, .frag-else, .frag-end)) { margin-inline: max(0px, calc(100% / var(--k) / 2 - 38px + var(--depth) * 12px)); }
 :where(.graphally-page .frag-box) { border: 1px solid var(--ink); }
-:where(.graphally-page .frag-tab) { display: flex; align-items: center; gap: 10px; font-size: 11.5px; }
+:where(.graphally-page .frag-tab) { white-space: nowrap; display: flex; align-items: center; gap: 10px; font-size: 11.5px; }
 :where(.graphally-page .frag-tab > b) { padding: 3px 16px 3px 8px; background: var(--card); border: 1px solid var(--ink); border-width: 0 1px 1px 0; clip-path: polygon(0 0, 100% 0, 100% 55%, calc(100% - 8px) 100%, 0 100%); font-size: 11px; }
 :where(.graphally-page .guard) { color: var(--muted); }
 :where(.graphally-page .frag-else) { padding: 4px 8px; border-top: 1px dashed var(--ink); font-size: 11.5px; }
