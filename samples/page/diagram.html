@@ -12,10 +12,10 @@
   #p1 { margin-left: 0 } #p4 { margin-right: 0 }
   .ms { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; font-size: 11.5px; color: var(--muted) }
   .ms div { grid-column: span 1; text-align: right; margin-right: -64px; padding-right: 0 }
-  .band { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; padding: 10px 0; border-radius: 10px }
-  .band .card:first-child { margin-left: 10px } .band .card:last-child { margin-right: 10px }
-  .band .card { border: 0 }
-  .band .card b { display: block; margin-bottom: 4px }
+  .lane { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; padding: 10px 0; border-radius: 10px }
+  .lane .card:first-child { margin-left: 10px } .lane .card:last-child { margin-right: 10px }
+  .lane .card { border: 0 }
+  .lane .card b { display: block; margin-bottom: 4px }
   .plat { background: var(--lane-a) } .apps { background: var(--lane-b) } .sec { background: var(--lane-d) }
 </style>
 <h1>Who does what in the move to AKS</h1>
@@ -28,7 +28,7 @@
   <div class="phase" shape=chevron style="background: var(--ink)" id=p4>Operate</div>
 
   <div class="lab">Platform team<span>AKS, network, GitOps</span></div>
-  <div class="band plat">
+  <div class="lane plat">
     <div class="card" id=pl1><b>Size it</b>Clusters, node pools and the hub-and-spoke network</div>
     <div class="card" id=pl2><b>Build it</b>AKS, ingress, GitOps and the delivery pipelines</div>
     <div class="card" id=pl3><b>Run each wave</b>Namespaces, quotas and on-call during cut-over</div>
@@ -36,7 +36,7 @@
   </div>
 
   <div class="lab">Application teams<span>one per service</span></div>
-  <div class="band apps">
+  <div class="lane apps">
     <div class="card" id=ap1><b>Choose the order</b>Pick the services and the waves they move in</div>
     <div class="card" id=ap2><b>Pilot</b>Containerise the tracking service</div>
     <div class="card" id=ap3><b>Move wave by wave</b>Deploy, cut over traffic, retire the old hosts</div>
@@ -44,7 +44,7 @@
   </div>
 
   <div class="lab">Security<span>controls and tests</span></div>
-  <div class="band sec">
+  <div class="lane sec">
     <div class="card" id=se1><b>Agree the controls</b>Policies, identities and network rules</div>
     <div class="card" id=se2><b>Review the platform</b>Gate for M2</div>
     <div class="card" id=se3><b>Test each wave</b>Scan, penetration-test, sign off</div>
@@ -52,7 +52,7 @@
   </div>
 </div>
 <script type="graphally">
-  const phases = all('.phase'), cards = all('.band .card')
+  const phases = all('.phase'), cards = all('.lane .card')
   const bottom = el('se1').bottom.y
   // Milestones on the phase boundaries, with a dashed line down through the teams
   ;['M1', 'M2', 'M3'].forEach((m, i) => {

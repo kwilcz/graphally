@@ -106,6 +106,9 @@ them:
 - `key` with `swatch`, `swatch dashed` and `swatch box`: a legend.
 - `card`, `box`, `pill`, `tag`, `banner`.
 
+These names are taken. A class of your own with one of them gets their look too, so name
+yours differently (`lane`, not `band`).
+
 `<icon name="app service" size=32>` places an icon inline, from the same names as the other
 diagrams. `icons=aws` on `<diagram>` makes AWS win names both vendors share.
 
