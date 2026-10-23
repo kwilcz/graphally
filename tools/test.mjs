@@ -391,6 +391,76 @@ await test('viewer', async () => {
   check(r.code === 1 && /plain-script/.test(r.text), `expected plain-script: ${tail(r.text)}`);
 });
 
+await test('page-utilities', () => {
+  const d = folder('page-utilities'), out = path.join(d, 'out');
+  const body = `<style>.wobble { color: red }</style>
+<div class="flex justify-center gap-6 p-4"><div class=card id=a>A</div><div class=card id=b>B</div><div class=card id=c>C</div></div>
+<div class="grid grid-cols-[100px_1fr_100px] gap-x-[20px] mt-10"><div class="card col-start-3" id=r>R</div><div class="card col-span-full mx-auto w-40" id=w>W</div></div>
+<p class="wobble text-muted">note</p>`;
+  const r = render(write(d, page(body, '')), out);
+  ok0(r);
+  const svg = path.join(out, 'diagram.svg'), [a, b, c] = ['a', 'b', 'c'].map(id => rect(svg, id));
+  // The content box is 700px wide and starts 24px in, so its middle is at 374.
+  const mid = (a[0] + c[0] + c[2]) / 2;
+  check(Math.abs(mid - 374) < 1, `justify-center: the row's middle is at ${mid}, not 374`);
+  check(Math.abs(b[0] - a[0] - a[2] - 24) < 0.5, `gap-6: ${b[0] - a[0] - a[2]}px between the boxes, not 24`);
+  const R = rect(svg, 'r'), W = rect(svg, 'w');
+  check(Math.abs(R[0] - (724 - 100)) < 1 && Math.abs(R[2] - 100) < 1, `col-start-3 in a 100px track: ${R}`);
+  check(Math.abs(W[2] - 160) < 0.5 && Math.abs(W[0] + W[2] / 2 - 374) < 1, `w-40 mx-auto: ${W}`);
+  check(R[1] - (a[1] + a[3]) > 40 + 16 - 1, `mt-10 and p-4: ${R[1] - (a[1] + a[3])}px below the row`);
+  // A class that reads like a utility and means nothing is reported; the author's own is not.
+  const bad = render(write(d, page('<div class="flex bg-blue-500 md:flex jusitfy-center wobble">x</div>', '')), out);
+  check(bad.code === 1 && /unknown-utility: class=bg-blue-500/.test(bad.text) && /class=md:flex/.test(bad.text), `expected unknown-utility: ${tail(bad.text)}`);
+  check(!/wobble/.test(bad.text), 'an author class was reported as a utility');
+});
+
+await test('page-before-and-dates', () => {
+  const d = folder('page-dates'), out = path.join(d, 'out');
+  const body = `<div id=plan class="grid gap-y-2">
+<div class=card id=t1 data-start=2026-03-02 data-duration=2w>One</div>
+<div class=card id=t2 data-after=t1 data-duration=10d>Two</div>
+<div class=card id=t3 data-after="t1 t2" data-end=2026-04-30>Three</div>
+</div>`;
+  const before = `<script type="graphally" before>
+schedule();
+const t = timeline('#plan');
+for (const m of t.months) root.querySelector('#plan').append(make('div', { id: 'm' + m.month, style: 'grid-row: 4; grid-column: ' + m.column }, m.label));
+</script>`;
+  const r = render(write(d, page(body + before, '')), out);
+  ok0(r);
+  const svg = path.join(out, 'diagram.svg'), [t1, t2, t3] = ['t1', 't2', 't3'].map(id => rect(svg, id));
+  // Two weeks then ten days: t2 starts where t1 ends, t3 where t2 ends; day widths agree.
+  check(Math.abs(t2[0] - (t1[0] + t1[2])) < 1 && Math.abs(t3[0] - (t2[0] + t2[2])) < 1, `dependencies: ${t1} ${t2} ${t3}`);
+  const day = t1[2] / 14;
+  check(Math.abs(t2[2] / day - 10) < 0.1, `10d is ${t2[2] / day} days wide`);
+  // An end date is a boundary: 2026-03-26 to 2026-04-30 is 35 days.
+  check(Math.abs(t3[2] / day - 35) < 0.2, `t3 from 2026-03-26 to 2026-04-30 is ${t3[2] / day} days wide`);
+  const mar = rect(svg, 'm2026-03'), apr = rect(svg, 'm2026-04');
+  check(Math.abs(mar[0] - (t1[0] - day)) < 1 && Math.abs(apr[0] - (mar[0] + 31 * day)) < 1, `month headers off the day grid: ${mar} ${apr}`);
+  const loop = render(write(d, page('<div id=p><div id=x data-after=y data-duration=1d></div><div id=y data-after=x data-duration=1d></div></div>', '').replace('</diagram>', '<script type="graphally" before>schedule()</script></diagram>')), out);
+  check(loop.code === 1 && /schedule-loop/.test(loop.text), `expected schedule-loop: ${tail(loop.text)}`);
+});
+
+await test('page-sequence', () => {
+  const d = folder('page-sequence'), out = path.join(d, 'out');
+  const body = `<div class=seq id=seq>
+<div class=node id=a data-who>A</div><div class=node id=b data-who>B</div><div class=node id=c data-who>C</div>
+<p class=msg id=m1 data-from=a data-to=c>call</p>
+<div class=frag data-kind=alt data-guard=ok><p class=msg id=m2 data-from=c data-to=b>ask</p><div class=else></div><p class="msg reply" id=m3 data-from=b data-to=c>told</p></div>
+<p class="msg reply" id=m4 data-from=c data-to=a>done</p>
+</div><script type="graphally" before>sequence('#seq')</script>`;
+  const r = render(write(d, page(body, '', 'width=900')), out);
+  ok0(r);
+  const svgFile = path.join(out, 'diagram.svg'), [a, b, c, m1, m2, m3, m4] = ['a', 'b', 'c', 'm1', 'm2', 'm3', 'm4'].map(id => rect(svgFile, id));
+  check(a[0] < b[0] && b[0] < c[0] && a[1] === c[1], `participants not in one row, in order: ${a} ${b} ${c}`);
+  check(m1[1] >= a[1] + a[3] && m2[1] > m1[1] && m3[1] > m2[1] && m4[1] > m3[1], 'messages not one per row, in order');
+  // A message spans from its leftmost participant to its rightmost, either way round.
+  check(m1[0] <= a[0] + 1 && m1[0] + m1[2] >= c[0] + c[2] - 1 && m4[2] === m1[2], `message spans: ${m1} ${m4}`);
+  const svg = svgOf(out), num = (svg.match(/>[1-4]<\/text>/g) || []).length;
+  check(num === 4, `expected four numbers, found ${num}`);
+  check(/alt/.test(svg) && /\[ok\]/.test(svg), 'fragment tab missing');
+});
+
 if (table.length) {
   const rows = [['sample', 'stable: nodes', 'in group', 'sides', 'recompute: nodes', 'in group', 'sides'], ...table];
   const w = rows[0].map((_, i) => Math.max(...rows.map(r => String(r[i]).length)));
