@@ -194,7 +194,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     if (!found.length) throw new Error(`no element "${s}"${closest(s, ids()) ? `; did you mean "${closest(s, ids())}"?` : ''}`);
     return found.map(geom);
   };
-  const edges = [], drawings = [];
+  const edges = [], drawings = [], dependRuns = [];
   const opt = (v, d) => (v === undefined ? d : v);
   // What the script names: a box (element, id or selector) or a point. Anything else is an
   // error with the script's line, not a line drawn to NaN.
@@ -220,6 +220,38 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       const [p, q] = ends(a, b), bend = opt(o2.bend, 40), dx = q.x - p.x, dy = q.y - p.y, len = Math.hypot(dx, dy) || 1;
       const c = { x: (p.x + q.x) / 2 - dy / len * bend, y: (p.y + q.y) / 2 + dx / len * bend };
       drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: pt((p.x + 2 * c.x + q.x) / 4, (p.y + 2 * c.y + q.y) / 4) });
+    },
+    // depend(a, b): a finish-to-start dependency on a time chart. It leaves the end of a and
+    // enters the start of b, and keeps off every other dated element ([data-start],
+    // [data-at]): straight down where a column between them is free, else down to the gap
+    // above (or below) b's row and along it.
+    depend(a, b, o2 = {}) {
+      const [p, q] = [spot(a), spot(b)];
+      if (!p.el || !q.el) throw new Error('depend(a, b) takes two elements');
+      const bars = find('[data-start], [data-at]').filter(r => r.el !== p.el && r.el !== q.el);
+      // Clear of other dated elements, and of the upright runs of dependencies into other
+      // tasks (lines into the same task may share their last run).
+      const runs = dependRuns.filter(v => v.to !== q.el);
+      const free = (x1, y1, x2, y2) => bars.every(r => Math.max(x1, x2) < r.x - 4 || Math.min(x1, x2) > r.x + r.w + 4 || Math.max(y1, y2) < r.y - 3 || Math.min(y1, y2) > r.y + r.h + 3)
+        && (x1 !== x2 || runs.every(v => Math.abs(v.x - x1) > 5 || Math.max(y1, y2) < v.y1 - 3 || Math.min(y1, y2) > v.y2 + 3));
+      const gap = 10, sx = p.x + p.w, y1 = p.center.y, y2 = q.center.y, ex = q.x - gap;
+      let pts = null;
+      for (let x = ex; x >= sx + gap && !pts; x -= 4) if (free(sx, y1, x, y1) && free(x, y1, x, y2)) pts = [[sx, y1], [x, y1], [x, y2], [q.x, y2]];
+      if (!pts) {
+        // Else along the gaps between rows: out of a into the gap beside its row, along it to
+        // a column free all the way, down it to the gap beside b's row, and along that to b.
+        const down = y2 > y1;
+        const gapBy = (r, below) => { const row = geom(r.el.parentElement);
+          return below ? (row.y + row.h > r.y + r.h + 2 ? (row.y + row.h + r.y + r.h) / 2 : r.y + r.h + 6) : (row.y < r.y - 2 ? (row.y + r.y) / 2 : r.y - 6); };
+        const ya = gapBy(p, down), yb = gapBy(q, !down), kx = sx + gap;
+        const xs = [...new Set([ex, ...bars.flatMap(r => [r.x - 10, r.x - 16, r.x - 22, r.x + r.w + 10, r.x + r.w + 16, r.x + r.w + 22])])].sort((u, v) => Math.abs(u - ex) - Math.abs(v - ex));
+        const x = xs.find(x => free(kx, ya, x, ya) && free(x, ya, x, yb) && free(x, yb, ex, yb)) ?? ex;
+        pts = [[sx, y1], [kx, y1], [kx, ya], [x, ya], [x, yb], [ex, yb], [ex, y2], [q.x, y2]]
+          .filter((v, k, a) => !k || v[0] !== a[k - 1][0] || v[1] !== a[k - 1][1]);
+      }
+      for (let k = 1; k < pts.length; k++) if (pts[k][0] === pts[k - 1][0]) dependRuns.push({ x: pts[k][0], y1: Math.min(pts[k][1], pts[k - 1][1]), y2: Math.max(pts[k][1], pts[k - 1][1]), to: q.el });
+      const ps = pts.map(([x, y]) => pt(x, y));
+      drawings.push({ kind: 'path', d: rounded(ps, 4), o: { arrow: true, ...o2 }, ends: [ps[0], ps.at(-1)], via: ps[Math.floor(ps.length / 2)] });
     },
     draw: { moveTo: p => pathBuilder(point(p), drawings, point), arc: (c, r, a0, a1) => pathBuilder(arcPoint(point(c), r, a0), drawings, point).arc(c, r, a0, a1) },
     gate(p, label = '', o2 = {}) { drawings.push({ kind: 'gate', p: point(p), label, o: o2 }); },
