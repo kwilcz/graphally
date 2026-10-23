@@ -221,57 +221,54 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       const c = { x: (p.x + q.x) / 2 - dy / len * bend, y: (p.y + q.y) / 2 + dx / len * bend };
       drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: pt((p.x + 2 * c.x + q.x) / 4, (p.y + 2 * c.y + q.y) / 4) });
     },
-    // depend(a, b): a finish-to-start dependency on a time chart. It leaves the end of a and
-    // enters the start of b, and keeps off every other dated element ([data-start],
-    // [data-at]): straight down where a column between them is free, else down to the gap
-    // above (or below) b's row and along it.
+    // depend(a, b): a finish-to-start dependency on a time chart, from a to the start of b.
+    // It may leave a by its back or anywhere along its underside (its top when b is above),
+    // and arrives at b's start, or straight into its top near the start. Of the clear ways
+    // the shortest wins, a corner counting as 40px. Clear means: CLEAR from every other dated
+    // element ([data-start], [data-at]) and off the upright runs of dependencies into other
+    // tasks; every run between corners at least BEND long; the last run at least LAST long,
+    // unless the whole line is one straight drop. A long way round goes along a row edge,
+    // where the band between two rows' bars is.
     depend(a, b, o2 = {}) {
       const [p, q] = [spot(a), spot(b)];
       if (!p.el || !q.el) throw new Error('depend(a, b) takes two elements');
+      const CLEAR = 12, CLEAR_Y = 6, LAST = 24, FIRST = 20, BEND = 18;
       // Obstacles: the other dated elements with a body (a today line has none).
       const bars = find('[data-start], [data-at]').filter(r => r.el !== p.el && r.el !== q.el && r.w > 1 && r.h > 1);
-      // Clear of other dated elements, and of the upright runs of dependencies into other
-      // tasks (lines into the same task may share their last run).
       const runs = dependRuns.filter(v => v.to !== q.el);
-      const free = (x1, y1, x2, y2) => bars.every(r => Math.max(x1, x2) < r.x - 4 || Math.min(x1, x2) > r.x + r.w + 4 || Math.max(y1, y2) < r.y - 3 || Math.min(y1, y2) > r.y + r.h + 3)
-        && (x1 !== x2 || runs.every(v => Math.abs(v.x - x1) > 5 || Math.max(y1, y2) < v.y1 - 3 || Math.min(y1, y2) > v.y2 + 3));
-      // The last run into b is long enough to read as arriving (no corner just before the
-      // head); the first run out of a is a short stub.
-      const LAST = 24, FIRST = 16;
+      const free = (x1, y1, x2, y2) => bars.every(r => Math.max(x1, x2) < r.x - CLEAR || Math.min(x1, x2) > r.x + r.w + CLEAR || Math.max(y1, y2) < r.y - CLEAR_Y || Math.min(y1, y2) > r.y + r.h + CLEAR_Y)
+        && (x1 !== x2 || runs.every(v => Math.abs(v.x - x1) > 6 || Math.max(y1, y2) < v.y1 - 3 || Math.min(y1, y2) > v.y2 + 3));
       const sx = p.x + p.w, kx = sx + FIRST, y1 = p.center.y, y2 = q.center.y, ex = q.x - LAST, down = y2 > y1;
-      // The gap beside a task's row, toward the other task: halfway between it and its row's edge.
-      const gapBy = (r, below) => { const row = geom(r.el.parentElement);
-        return below ? (row.y + row.h > r.y + r.h + 2 ? (row.y + row.h + r.y + r.h) / 2 : r.y + r.h + 6) : (row.y < r.y - 2 ? (row.y + r.y) / 2 : r.y - 6); };
-      const ya = gapBy(p, down), yb = gapBy(q, !down), edge = down ? q.y : q.y + q.h;
-      // Every way down a column x. Leave along a's row, or by the gap beside it. Arrive along
-      // b's row into its start, straight into its top (or bottom) near its start, or by the
-      // gap beside its row. The shortest clear one wins; a corner counts as 40px, so a path
-      // does not zigzag to save a few.
-      const xs = new Set([ex, q.x + 12, q.x + 20, sx - 2, sx - 6, sx - 10, q.x + 4, q.x + q.w / 2]);
-      for (let x = p.x + 12; x < sx; x += 6) xs.add(x);
+      const rowEdge = (r, below) => { const row = geom(r.el.parentElement);
+        return below ? (row.y + row.h > r.y + r.h + 2 ? row.y + row.h : r.y + r.h + BEND) : (row.y < r.y - 2 ? row.y : r.y - BEND); };
+      const ya = rowEdge(p, down), yb = rowEdge(q, !down), pEdge = down ? p.y + p.h : p.y, qEdge = down ? q.y : q.y + q.h;
+      const xs = new Set([ex, q.x + 12, q.x + 20, q.x + q.w / 2, sx - 2, sx - 8]);
       for (let x = kx; x <= Math.max(ex, q.x + 20); x += 4) xs.add(x);
-      for (const r of bars) for (const o of [10, 16, 22]) { xs.add(r.x - o); xs.add(r.x + r.w + o); }
-      const ok = path => path.every((v, k) => !k || free(path[k - 1][0], path[k - 1][1], v[0], v[1]));
-      let pts = null, best = Infinity;
-      // Out of a's end (its back), along its row or by the gap beside it; or out of its
-      // underside (its top when b is above), anywhere along it.
-      const pEdge = down ? p.y + p.h : p.y, nearEnd = x => x >= p.x + Math.min(12, p.w / 2) && x <= sx - 2;
-      const leaves = x => [[[sx, y1], [x, y1]], ...[0, 8, 16, 24, 32].map(d => [[sx, y1], [kx + d, y1], [kx + d, ya], [x, ya]]), ...(nearEnd(x) ? [[[x, pEdge]]] : [])];
-      for (const x of xs) for (const leave of leaves(x)) {
-        if (leave.length === 2 && x < kx) continue;
-        const from = leave.at(-1)[1];
-        const arrivals = [];
-        if (x <= ex) arrivals.push([[x, y2], [q.x, y2]]);
-        // Straight into b's top: a run long enough to read, unless the whole line is one
-        // straight drop (no corner to confuse it).
-        if (x >= q.x + Math.min(8, q.w / 2 - 1) && x <= q.x + Math.max(Math.min(q.w - 8, 40), q.w / 2 + 1) && Math.abs(edge - from) >= (leave.length === 1 ? 6 : LAST)) arrivals.push([[x, edge]]);
-        arrivals.push([[x, yb], [ex, yb], [ex, y2], [q.x, y2]]);
-        for (const arrive of arrivals) {
+      for (let x = p.x + 12; x < sx; x += 6) xs.add(x);
+      for (const r of bars) for (const o of [CLEAR + 2, CLEAR + 8, CLEAR + 14]) { xs.add(r.x - o); xs.add(r.x + r.w + o); }
+      const leaves = x => [
+        ...(x >= kx ? [[[sx, y1], [x, y1]]] : []),
+        ...[0, 8, 16, 24, 32].map(d => [[sx, y1], [kx + d, y1], [kx + d, ya], [x, ya]]),
+        ...(x >= p.x + Math.min(12, p.w / 2) && x <= sx - 2 ? [[[x, pEdge]]] : []),
+      ];
+      const arrivals = (x, leave) => [
+        ...(x <= ex ? [[[x, y2], [q.x, y2]]] : []),
+        ...(x >= q.x + Math.min(8, q.w / 2 - 1) && x <= q.x + Math.max(Math.min(q.w - 8, 40), q.w / 2 + 1) ? [[[x, qEdge]]] : []),
+        [[x, yb], [ex, yb], [ex, y2], [q.x, y2]],
+      ];
+      const clear = path => path.every((v, k) => !k || free(path[k - 1][0], path[k - 1][1], v[0], v[1]));
+      let pts = null;
+      for (const bend of [BEND, 12, 6, 0]) {
+        let best = Infinity;
+        for (const x of xs) for (const leave of leaves(x)) for (const arrive of arrivals(x, leave)) {
           const path = [...leave, ...arrive].filter((v, k, a) => !k || v[0] !== a[k - 1][0] || v[1] !== a[k - 1][1]);
-          const len = path.reduce((n, v, k) => n + (k ? Math.abs(v[0] - path[k - 1][0]) + Math.abs(v[1] - path[k - 1][1]) : 0), 0);
-          const score = (path.length - 2) * 40 + len;
-          if (score < best && ok(path)) { best = score; pts = path; }
+          const lens = path.slice(1).map((v, k) => Math.abs(v[0] - path[k][0]) + Math.abs(v[1] - path[k][1]));
+          if (lens.length > 1 && (lens.some(n => n < bend) || lens.at(-1) < Math.min(LAST, Math.max(bend, 12)))) continue;
+          if (lens.length === 1 && lens[0] < 6) continue;
+          const score = (path.length - 2) * 40 + lens.reduce((n, l) => n + l, 0);
+          if (score < best && clear(path)) { best = score; pts = path; }
         }
+        if (pts) break;
       }
       pts ||= [[sx, y1], [kx, y1], [kx, yb], [ex, yb], [ex, y2], [q.x, y2]];
       for (let k = 1; k < pts.length; k++) if (pts[k][0] === pts[k - 1][0]) dependRuns.push({ x: pts[k][0], y1: Math.min(pts[k][1], pts[k - 1][1]), y2: Math.max(pts[k][1], pts[k - 1][1]), to: q.el });
