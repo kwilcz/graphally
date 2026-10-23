@@ -207,10 +207,10 @@
 <text x="90" y="957.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">orders DB</text>
 </g>
 <g data-id="stor" data-box="615.5,921,150,51">
-<rect x="615.8" y="921.3" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-storage-accounts" x="628.3" y="933.3" width="26" height="26" style="color: var(--ink)"></use>
-<text x="664.3" y="943.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Storage</text>
-<text x="664.3" y="957.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">blobs</text>
+<rect x="615.9" y="921.3" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-azure-storage-accounts" x="628.4" y="933.3" width="26" height="26" style="color: var(--ink)"></use>
+<text x="664.4" y="943.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Storage</text>
+<text x="664.4" y="957.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">blobs</text>
 </g>
 <g data-id="pdns" data-box="1189.5,921,177.5,51">
 <rect x="1190.2" y="921.3" width="176.4" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
