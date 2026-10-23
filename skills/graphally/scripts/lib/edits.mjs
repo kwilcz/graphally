@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Edits of a page-mode diagram's source, as text patches that keep the rest of the file as
+// Edits of a diagram's source, as text patches that keep the rest of the file as
 // written: the edit command and agents change a diagram through these.
 //
 //   { op: 'move', id, dx, dy }          adds to the element's nudge="dx,dy"

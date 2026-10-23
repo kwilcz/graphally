@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram layout=html width=1500 title="Getting graphally into an agent" subtitle="Every installer copies the same skill folder; icons arrive on the first render">
+<diagram width=1500 title="Getting graphally into an agent" subtitle="Every installer copies the same skill folder; icons arrive on the first render">
 <style> .map { grid-template-areas: "src inst skill run" ". . icons ."; } </style>
 <div class="map grid justify-between items-start gap-x-24 gap-y-10">
   <div class="group plain [grid-area:src] self-center"><h4>Source</h4>
@@ -16,7 +16,7 @@
   </div>
   <div class="group [grid-area:skill]" id=skill><h4>skills/graphally</h4>
     <div class=node id=md><icon name=file></icon>SKILL.md<small>instructions</small></div>
-    <div class=node id=refs><icon name=file></icon>references/<small>page mode, recipes</small></div>
+    <div class=node id=refs><icon name=file></icon>references/<small>the format, one page per kind</small></div>
     <div class=node id=scripts><icon name=code></icon>scripts/<small>engine and CLIs</small></div>
     <div class=node id=assets><icon name=file></icon>assets/<small>theme, icon packs</small></div>
   </div>

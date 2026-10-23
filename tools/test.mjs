@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // node tools/test.mjs [--keep]
-// The regression and v2 suite. Renders every samples/*/diagram.html and docs/diagrams/*.html
-// through the CLI, then small diagrams written here: the layout each SVG carries, nudge, link sides,
-// bad and dropped overrides, how far a layout moves when a node is added (a stable
-// re-render against --recompute), and page mode (shapes, script errors, routing, problems). Works in a fresh folder under os.tmpdir(), removed at the
+// The suite. Renders every samples/*/diagram.html and docs/diagrams/*.html through the CLI,
+// then small diagrams written here: the layout each SVG carries, connection sides, blocked,
+// bad and dropped overrides, the old syntax reported, how far a layout moves when a box is
+// added (a stable re-render against --recompute), shapes, script errors, routing, problems,
+// connections as data, the viewer, utility classes, dates, sequences and dependencies. Works in a fresh folder under os.tmpdir(), removed at the
 // end unless --keep, which prints its path. Exits 1 when a test fails.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -46,19 +47,14 @@ const rect = (svg, id) => { const r = readSnapshot(svg).nodes?.[id]; check(r, `n
 // The source with the one occurrence of a replaced by b. Throws when a is not there exactly once.
 const replaceOnce = (src, a, b) => { check(src.split(a).length === 2, `edit anchor not found once: ${a.slice(0, 40)}`); return src.replace(a, () => b); };
 
-// The small diagram: two groups side by side, three nodes, one link. attr goes on node b1.
-const doc = ({ attr = '', links = '<links>\na1 -> b1 : flow\n</links>' } = {}) => `<diagram title="Nudge test">
-<layout>
-left  right
-</layout>
-<group id=ga label="Left" area=left>
-  <node id=a1>Alpha | first</node>
-  <node id=a2>Beta | second</node>
-</group>
-<group id=gb label="Right" area=right>
-  <node id=b1${attr}>Gamma | third</node>
-</group>
-${links}
+// The small diagram: two groups side by side, three boxes, one connection. attr goes on b1;
+// line is the connection entry.
+const doc = ({ attr = '', line = '["a1", "b1", "flow"]' } = {}) => `<diagram width=760 title="Sides test">
+<div class="grid grid-cols-2 gap-x-40 items-start">
+  <div class=group id=ga><h4>Left</h4><div class=node id=a1>Alpha<small>first</small></div><div class=node id=a2>Beta<small>second</small></div></div>
+  <div class=group id=gb><h4>Right</h4><div class=node id=b1${attr}>Gamma<small>third</small></div></div>
+</div>
+<script type="application/json">[${line}]</script>
 </diagram>
 `;
 const NUDGE = ' nudge="0,24"';
@@ -101,8 +97,6 @@ function shares(a, b) {
     edges: share(edges.filter(k => a.edges[k].out === b.edges[k].out && a.edges[k].in === b.edges[k].in).length, edges.length),
   };
 }
-// Gantt plans and timelines place bars by date and carry no node boxes.
-const timeChart = p => /layout=["']?(gantt|timeline)\b/.test(fs.readFileSync(path.join(root, p), 'utf8'));
 
 const sources = [
   ...fs.readdirSync(path.join(root, 'samples')).sort().map(d => path.join('samples', d, 'diagram.html')),
@@ -134,7 +128,7 @@ await test('layout', () => {
   for (const [p, r] of renders) {
     if (!r.summaries.length) bad.push(`${p}: no diagram in the output`);
     for (const s of r.summaries) {
-      if (timeChart(p) || !s.nodes) continue;   // nothing named, nothing to record
+      if (!s.nodes) continue;   // nothing named, nothing to record
       const name = `${p} (${path.basename(s.svg)})`;
       let snap;
       try { snap = readSnapshot(s.svg); } catch (e) { bad.push(`${name}: ${e.message}`); continue; }
@@ -145,35 +139,21 @@ await test('layout', () => {
   check(!bad.length, bad.join('; '));
 });
 
-await test('nudge', () => {
-  const a = folder('nudge-base'), b = folder('nudge-moved');
-  const ra = render(write(a, doc()), path.join(a, 'out'), ['--recompute']);
-  const rb = render(write(b, doc({ attr: NUDGE })), path.join(b, 'out'), ['--recompute']);
-  ok0(ra); ok0(rb);
-  const [x0, y0] = rect(path.join(a, 'out', 'diagram.svg'), 'b1');
-  const [x1, y1] = rect(path.join(b, 'out', 'diagram.svg'), 'b1');
-  check(Math.abs(y1 - y0 - 24) <= 1 && Math.abs(x1 - x0) <= 1, `b1 moved by (${x1 - x0}, ${y1 - y0}), expected (0, 24)`);
-});
-
 await test('sides', () => {
   const d = folder('sides'), out = path.join(d, 'out');
-  // a2 is the lower node of its stack, so its bottom side is free (a1's is blocked by a2).
-  ok0(render(write(d, doc({ links: '<link from=a2 to=b1 out=bottom in=bottom>' })), out));
+  // a2 is the lower box of its stack, so its bottom side is free.
+  ok0(render(write(d, doc({ line: '{ "from": "a2", "to": "b1", "out": "bottom", "in": "bottom" }' })), out));
   const e = readSnapshot(path.join(out, 'diagram.svg')).edges?.['a2->b1'];
-  check(e && Object.keys(e).length === 2 && e.out === 'bottom' && e.in === 'bottom', `edge a2->b1 is ${JSON.stringify(e)}`);
+  check(e && e.out === 'bottom' && e.in === 'bottom', `connection a2->b1 is ${JSON.stringify(e)}`);
 });
 
-await test('blocked-side', () => {
-  const d = folder('blocked-side');
-  const r = render(write(d, doc({ links: '<link from=a1 to=b1 out=bottom>' })), path.join(d, 'out'));
-  check(r.code === 1 && /override-ignored: id=a1->b1 attr=out/.test(r.text), `expected override-ignored for a1->b1 out: ${tail(r.text)}`);
-});
-
-await test('bad-override', () => {
-  const d = folder('bad-override');
-  const r = render(write(d, doc({ links: '<link from=a1 to=b1 out=diagonal>' })), path.join(d, 'out'));
-  check(r.code === 1, `exit ${r.code}, expected 1`);
-  check(/bad-override/.test(r.text), `no bad-override line: ${tail(r.text)}`);
+await test('bad-sides', () => {
+  const d = folder('bad-sides'), out = path.join(d, 'out');
+  // a1's bottom is blocked by a2 right under it; "diagonal" is no side.
+  const blocked = render(write(d, doc({ line: '{ "from": "a1", "to": "b1", "out": "bottom" }' }).replace('class=group id=ga', 'class="group gap-0" id=ga')), out);
+  check(blocked.code === 1 && /override-ignored: id=a1->b1 attr=out/.test(blocked.text), `expected override-ignored for a1->b1 out: ${tail(blocked.text)}`);
+  const bad = render(write(d, doc({ line: '{ "from": "a1", "to": "b1", "out": "diagonal" }' })), out);
+  check(bad.code === 1 && /diagonal/.test(bad.text), `expected a problem naming "diagonal": ${tail(bad.text)}`);
 });
 
 await test('dropped', () => {
@@ -182,10 +162,16 @@ await test('dropped', () => {
   write(d, doc());
   const r = render(f, out);
   ok0(r);
-  check(r.text.includes('override dropped: nudge on b1 (attribute removed)'), 'no "override dropped: nudge on b1 (attribute removed)" line');
+  check(r.text.includes('override dropped: nudge on b1 (attribute removed)'), `no "override dropped: nudge on b1 (attribute removed)" line: ${tail(r.text)}`);
   const fresh = render(f, out, ['--recompute']);
   ok0(fresh);
   check(!fresh.text.includes('override dropped'), 'a --recompute render still reports a dropped override');
+});
+
+await test('old-syntax', () => {
+  const d = folder('old-syntax');
+  const r = render(write(d, '<diagram layout=tree>\n<node id=a>A</node>\n<links>\na -> b\n</links>\n</diagram>\n'), path.join(d, 'out'));
+  check(r.code === 1 && /old-syntax: found=layout=tree <node> <links>/.test(r.text), `expected old-syntax: ${tail(r.text)}`);
 });
 
 await test('stability', () => {
@@ -210,8 +196,8 @@ await test('stability', () => {
   check(!bad.length, bad.join('; '));
 });
 
-// Page mode: a figure written as HTML and CSS, with a drawing script.
-const page = (body, script = '', attrs = 'width=700') => `<diagram layout=html ${attrs}>\n${body}\n<script type="graphally">\n${script}\n</script>\n</diagram>\n`;
+// Small figures written as HTML and CSS, with a drawing script.
+const page = (body, script = '', attrs = 'width=700') => `<diagram ${attrs}>\n${body}\n<script type="graphally">\n${script}\n</script>\n</diagram>\n`;
 const svgOf = out => fs.readFileSync(path.join(out, 'diagram.svg'), 'utf8');
 // A routed line's path, and its corners (each bend is drawn as a Q curve).
 const edgePath = (svg, key) => { const m = svg.match(new RegExp(`<g data-edge="${key.replace(/>/g, '&gt;')}"[^>]*><path d="([^"]+)"`)); check(m, `no edge ${key}`); return m[1]; };
@@ -268,8 +254,8 @@ await test('bundles', () => {
     check(Math.hypot(b.x - a.x, b.y - a.y) >= 30, `the shared end is ${Math.hypot(b.x - a.x, b.y - a.y)} px long`);
     check(svg.split('>copy</text>').length === 2, `${svg.split('>copy</text>').length - 1} copy labels`);
   };
-  const c = folder('bundles-classic'), cOut = path.join(c, 'out');
-  ok0(render(write(c, doc({ links: '<links>\na1 -> b1 : copy\na2 -> b1 : copy\n</links>' })), cOut, ['--recompute']));
+  const c = folder('bundles-data'), cOut = path.join(c, 'out');
+  ok0(render(write(c, doc({ line: '["a1", "b1", "copy"], ["a2", "b1", "copy"]' })), cOut, ['--recompute']));
   merged(svgOf(cOut), ['a1->b1', 'a2->b1']);
   const d = folder('bundles-page'), out = path.join(d, 'out');
   const grid = `<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
@@ -302,7 +288,7 @@ await test('page-problems', () => {
 });
 
 // Connections as data, nudge, edits, and lines that keep their sides across an edit.
-const DATA = `<diagram layout=html width=760>
+const DATA = `<diagram width=760>
 <style>.g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px 80px; align-items: center }</style>
 <div class=g>
   <div class=card id=web>Web</div><div class=card id=api>API</div><div shape=cylinder id=db>DB</div>
@@ -488,6 +474,24 @@ await test('page-depend', () => {
   const inside = (x, y) => x > B[0] && x < B[0] + B[2] && y > B[1] && y < B[1] + B[3];
   for (let k = 1; k < pts.length; k++) for (let t = 0; t <= 1; t += 0.05)
     check(!inside(pts[k - 1].x + (pts[k].x - pts[k - 1].x) * t, pts[k - 1].y + (pts[k].y - pts[k - 1].y) * t), `the dependency crosses b: ${m[1]}`);
+});
+
+// The skill's own examples: every complete <diagram> in SKILL.md and the references renders
+// with no problem, so what an agent copies works.
+await test('doc-examples', () => {
+  const docs = [path.join(root, 'skills/graphally/SKILL.md'), ...fs.readdirSync(path.join(root, 'skills/graphally/references')).filter(f => f.endsWith('.md')).sort().map(f => path.join(root, 'skills/graphally/references', f))];
+  const bad = [];
+  let n = 0;
+  for (const md of docs) {
+    const examples = [...fs.readFileSync(md, 'utf8').matchAll(/```html\n(<diagram[\s\S]*?<\/diagram>)\n```/g)].map(m => m[1]);
+    examples.forEach((html, k) => {
+      n++;
+      const d = folder(`doc-${path.basename(md, '.md')}-${k}`), r = render(write(d, html + '\n'), path.join(d, 'out'), ['--no-viewer']);
+      if (r.code !== 0) bad.push(`${path.basename(md)} example ${k + 1}: ${tail(r.text)}`);
+    });
+  }
+  check(n >= 8, `only ${n} examples found`);
+  check(!bad.length, bad.join('; '));
 });
 
 if (table.length) {

@@ -11,7 +11,7 @@
 import { S, T } from './style.js';
 
 const BEND = 36, CROSS = 70, OVERLAP = 22, FOREIGN = 2.2;
-// An end segment shorter than MIN_END puts the arrowhead on the bend before it. Page mode's small
+// An end segment shorter than MIN_END puts the arrowhead on the bend before it. The page's small
 // clearance allows such ends: its ports sit MIN_END + 2 out where there is room (portAt), and
 // where there is not, turning near the box costs STUB, so the bend moves out where it can.
 const MIN_END = 12, STUB = 60;
@@ -77,7 +77,7 @@ export function routeEdges(model, geo, m) {
   // ---- pass 1: free sides ----
   const extraX = new Set(), extraY = new Set();
   for (const r of [...geo.nodes.values(), ...geo.groups.values()]) { extraX.add(r.x + r.w / 2); extraY.add(r.y + r.h / 2); }
-  // Page mode's small clearance: grid lines where a full-length end would turn (see portAt).
+  // The page's small clearance: grid lines where a full-length end would turn (see portAt).
   const END = P < MIN_END ? MIN_END + 2 : 0;
   if (END) for (const r of [...geo.nodes.values(), ...geo.groups.values()]) if (!r.virtual) { extraX.add(r.x - END); extraX.add(r.x + r.w + END); extraY.add(r.y - END); extraY.add(r.y + r.h + END); }
   for (const E of edges) {
@@ -345,7 +345,7 @@ function buildGrid(geo, hard, groupsList, extraX, extraY) {
       bV[k] = hugV(ux[i], my) ? 1 : 0;
     }
   }
-  // Lines drawn by other means (page mode's script) are taken: running along one costs as
+  // Lines drawn by other means (the drawing script) are taken: running along one costs as
   // overlap, crossing one as a crossing.
   const useH = new Uint8Array(nx * ny), useV = new Uint8Array(nx * ny);
   // A grid line within 3px of a drawn line counts as on it.
@@ -371,7 +371,7 @@ const snap = (map, arr, v) => {
 
 // A port: the point on the box edge, and the grid point just outside it.
 function portAt(r, side, coord, grid, P, isGroup, want = 0) {
-  // With page mode's small clearance the port sits a full end's length out (grid.end) when the
+  // With the page's small clearance the port sits a full end's length out (grid.end) when the
   // way there is free, so the line runs that far before it may turn; else at the clearance.
   // want: a longer first choice (a bundle's marked end, so its trunk turns away from the box).
   const near = isGroup ? 10 : P;
@@ -428,7 +428,7 @@ function portsOf(r, E, which, grid, P) {
 
 // ---------- search ----------
 
-// Which ends of an edge carry a mark (page mode sets ends; classic edges have an arrowhead).
+// Which ends of an edge carry a mark (a line's ends; by default an arrowhead at its end).
 const marksOf = e => (e.ends ? { head: e.ends.head !== 'none', tail: e.ends.tail !== 'none' } : { head: true, tail: false });
 
 function astar(grid, starts, goals, allowed, gIndex, bundle = 0, marks = { head: true, tail: false }) {

@@ -94,7 +94,8 @@ try {
     r.problems = r.problems.filter(p => !offline.includes(p));
     const s = r.stats;
     console.log(`${svgPath}  ${r.width}×${r.height}  ${s.nodes} nodes, ${s.edges} edges, ${s.crossings} crossings  ${r.problems.length ? r.problems.length + ' problem(s):' : 'ok'}`);
-    if (prev && r.snapshot) for (const line of droppedOverrides(prev, r.snapshot)) console.log(line);
+    const now = r.snapshot || readLayout(r.svg);
+    if (prev && now) for (const line of droppedOverrides(prev, now)) console.log(line);
     if (offline.length) console.log(`  note: drawn without ${offline.length} icon(s) (${[...new Set(offline.map(p => p.icon))].slice(0, 6).join(', ')}): the icon packs are not downloaded; run node ${path.join(skillRoot, 'scripts/fetch-icons.mjs')} when online`);
     for (const p of r.problems) {
       const { rule, hint, ...rest } = p;

@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Utility classes with Tailwind's names, for page mode: class="flex justify-center gap-6"
+// Utility classes with Tailwind's names: class="flex justify-center gap-6"
 // instead of a rule in a <style>. The page asks for a class, this file writes its CSS; only
 // the classes a diagram uses are written. The names and the spacing scale (1 = 4px) are
 // Tailwind's, so an author who knows Tailwind knows these. Two differences, both on

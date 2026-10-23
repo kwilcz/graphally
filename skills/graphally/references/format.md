@@ -1,12 +1,9 @@
-# Figures in HTML and CSS
+# The format
 
-`<diagram layout=html>` draws any figure that is not a plain graph: phase and role charts,
-matrices, step cards, roadmaps, BPMN processes with a layout of your own, one-page
-overviews, several kinds in one figure. You write the figure as a web page; the browser
-places every box and wraps every line; graphally turns the page into SVG. The connections
-are data: a JSON list of who connects to whom, routed around the boxes. A `<script type="graphally">` draws
-anything else by name: arrows, gates on a column boundary, lines computed in a loop.
-Nothing in the source is a coordinate.
+A diagram is a web page inside `<diagram>`: the browser places every box and wraps every
+line, and graphally turns the page into SVG. The connections are data, a JSON list routed
+around the boxes; a drawing script draws what has no box. Nothing in the source is a
+coordinate.
 
 Reach for the tools in this order. HTML structure and utility classes (`flex
 justify-center gap-6`) place almost everything. Plain CSS in a `<style>` covers what a class
@@ -14,7 +11,7 @@ cannot say. The helpers (dates, sequences) do only what CSS cannot: they turn da
 grid columns and messages into rows. A script draws only what has no box.
 
 ```html
-<diagram layout=html width=1000>
+<diagram width=1000>
 <div class="grid grid-cols-4 gap-10 items-center justify-items-center">
   <div class="flex flex-col items-center gap-1 text-sm"><i shape=start id=in></i>Order placed</div>
   <div shape=task id=check>Check stock</div>
@@ -30,6 +27,18 @@ grid columns and messages into rows. A script draws only what has no box.
 </script>
 </diagram>
 ```
+
+## Contents
+
+- [The page](#the-page): width, what is drawn, colours, themes
+- [Shapes](#shapes)
+- [Classes and icons](#classes-and-icons): utility classes, building blocks
+- [Before layout: dates and sequences](#before-layout-dates-and-sequences)
+- [Connections](#connections)
+- [Moving one thing](#moving-one-thing), [Changing a diagram](#changing-a-diagram)
+- [The script](#the-script): every call and option
+- [Lines](#lines): how connections find their way
+- [Problems](#problems)
 
 ## The page
 
@@ -48,6 +57,10 @@ grid columns and messages into rows. A script draws only what has no box.
   `--lane-b` (green), `--lane-c` (purple), `--lane-d` (orange). Literal colours stay as
   written in both themes.
 - `title` and `subtitle` on `<diagram>` add the standard heading; or write your own `<h1>`.
+- Every figure paints its own background, the theme's `--bg`: `background="#fff"` on
+  `<diagram>` sets a colour, `background="none"` leaves it transparent. `theme=dark` draws
+  the dark theme; `render --themes` writes both (`diagram.svg`, `diagram-dark.svg`). Use the
+  tokens for colours, so the dark copy follows.
 
 ## Shapes
 
@@ -109,8 +122,23 @@ them:
 These names are taken. A class of your own with one of them gets their look too, so name
 yours differently (`lane`, not `band`).
 
-`<icon name="app service" size=32>` places an icon inline, from the same names as the other
-diagrams. `icons=aws` on `<diagram>` makes AWS win names both vendors share.
+`<icon name="app service">` places an icon inline. Loose names work for every service of
+both packs (`elasticache`, `glue`, `purview`), for example:
+
+- Azure: `app service`, `functions`, `aks`, `container app`, `acr`, `service bus`,
+  `event hubs`, `apim`, `front door`, `app gateway`, `firewall`, `vnet`, `subnet`, `nsg`,
+  `private endpoint`, `vpn gateway`, `entra`, `managed identity`, `kv`, `sql`, `cosmos`,
+  `redis`, `storage`, `app insights`, `log analytics`, `mg`, `subscription`.
+- AWS: `lambda`, `s3`, `dynamodb`, `api gateway`, `cloudfront`, `cognito`, `ec2`, `ecs`,
+  `eks`, `fargate`, `rds`, `aurora`, `sqs`, `sns`, `eventbridge`, `step functions`, `vpc`,
+  `alb`, `nat gateway`, `route 53`, `cloudwatch`, `iam`, `kms`, `secrets manager`, `waf`.
+- Generic: `user`, `users`, `browser`, `mobile`, `laptop`, `server`, `database`, `api`,
+  `globe`, `building`, `cloud`, `key`, `lock`, `shield`, `file`, `mail`.
+
+`icons=aws` on `<diagram>` makes AWS win names both clouds share (`load balancer`), or
+prefix one icon: `aws:waf`, `azure:firewall`. An unknown name is reported with
+suggestions. The first render downloads the Azure and AWS icon packs into the skill (once,
+a few seconds).
 
 ## Before layout: dates and sequences
 
@@ -246,9 +274,10 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
   These do not block: a box painted behind boxes it does not hold (a lane's background in
   the same grid cells), and a full-width header strip without an id, up to 48px tall. The
   script's straight lines count as taken, so `connect` keeps off them.
-- Lines that share a side spread along it; a line whose other end faces it runs straight
-  in when that end lies along the side. Lines into (or out of) one box with the same label
-  and style merge into one trunk with one label. Two boxes line up only when they share a grid row
+- Lines that share a side split it evenly: one meets it at the middle, two at a third and
+  two thirds, n at k/(n+1), ordered so they do not cross. A line alone on two facing sides
+  runs straight when both ends fit in the middle 80% of their sides. Lines into (or out of)
+  one box with the same label and style merge into one trunk with one label. Two boxes line up only when they share a grid row
   or column: put boxes that a straight line joins in one grid (or a `subgrid`), rather
   than nudging one with margins.
 - It keeps 6px from boxes, so it passes through any gap wider than 12px. A labelled line
@@ -274,36 +303,14 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 | `lines-overlap` | two lines share a stretch and read as one: give one `via` points or other sides |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts of the page collide: give one more room |
-| `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200`, a `head` name) |
+| `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
+| `unknown-utility` | a class that reads like a utility and means nothing: use a theme colour (`bg-wash`) or a bracket value (`bg-[#eef]`) |
+| `plain-script` | a `<script>` without a type would run in the browser: write `<script type="graphally">` |
+| `old-syntax` | the file uses the removed tag syntax (`<node>`, `<group>`, `<links>`, `layout=tree`): rewrite it as HTML |
 
 The script's `text`, `gate` and arrow labels are not checked for overlap: look at the PNG.
 The render's summary counts crossings: lines crossing lines. A crossing is not a problem,
 but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 
-## Recipes
-
-**Phase and role chart.** A grid with a label column and one column per stage:
-`grid-template-columns: 160px repeat(7, 1fr)`. Phase bars span their stages
-(`grid-column: span 2`, `shape=chevron`, `border: 0`, a background); a band whose cards
-line up with the stages is `grid-column: 2 / -1; display: grid; grid-template-columns:
-subgrid`. Gates on a boundary: `gate(pt(mid(a.right, b.left).x, bar.center.y), 'G1')`.
-Arrows from each card to the card below: `all('.top .card').forEach((c, i) => arrow(c,
-below[i]))`.
-
-**BPMN.** A grid with one row per lane and a label column; lane backgrounds may sit in the
-same cells as the tasks. Events with a caption: `<div class=ev><i shape=start
-id=s></i>Order placed</div>` with `.ev { display: flex; flex-direction: column;
-align-items: center; gap: 4px }`. A boundary event is a child of its task, placed on the
-border: `<div shape=task style="position: relative">Review<i shape="event timer"
-style="position: absolute; bottom: -18px; right: 14px" id=late></i></div>`; lines can
-leave from it. Gateways take a caption the same way, above or below. Sequence flows are `connect`
-with labels on the branches; message flows between pools are `connect(a, b, { message:
-true })`. A non-interrupting boundary event has `border-style: dashed`.
-
-**Gates that lines connect to.** `gate()` is a drawing, not an element, so lines cannot
-end on it. A gate in a flow is an element: `<i shape=gateway id=g1></i>` (or `shape=diamond`
-with a background and `border: 0` for a filled one).
-
-**Architecture.** Tiers as boxes holding cards with icons (`<div class=card><icon
-name=sql></icon> Orders DB</div>`), placed by a grid; `connect` for the calls, `dashed`
-for asynchronous ones. Leave 50px or more between tiers where lines and labels run.
+Recipes for each kind of diagram, each with a complete example: `network.md`,
+`hierarchy.md`, `process.md`, `sequence.md`, `plan.md`, `charts.md`, `terraform.md`.

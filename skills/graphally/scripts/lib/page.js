@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// <diagram layout=html>: the page is the layout. The author writes ordinary HTML and CSS; the
+// <diagram>: the page is the layout. The author writes ordinary HTML and CSS; the
 // browser places everything. An optional <script> then runs with the geometry of every
 // element and connects and draws by name: el('id').right, mid(a, b), connect(a, b), arrow,
 // curve, draw.moveTo(…).lineTo(…), gate, text, icon, shape. Nobody writes a coordinate.
@@ -11,10 +11,22 @@ import { sequence } from './seq.js';
 import { utilitiesFor } from './utilities.js';
 import { resolveIcon, symbolFor } from './icons.js';
 import { routeEdges } from './route.js';
-import { rounded } from './render.js';
 import { parseShape, drawShape, SHAPE_CSS } from './shapes.js';
 
 const fmt = n => String(Math.round(n * 10) / 10);
+// A polyline with its corners rounded by r: the path of a line with bends.
+function rounded(pts, r) {
+  let d = `M${fmt(pts[0].x)},${fmt(pts[0].y)}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1], p1 = pts[i], p2 = pts[i + 1];
+    const d1 = Math.hypot(p1.x - p0.x, p1.y - p0.y), d2 = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    if (d1 < 0.01 || d2 < 0.01) continue;
+    const k = Math.min(r, d1 / 2, d2 / 2);
+    d += ` L${fmt(p1.x - (p1.x - p0.x) / d1 * k)},${fmt(p1.y - (p1.y - p0.y) / d1 * k)} Q${fmt(p1.x)},${fmt(p1.y)} ${fmt(p1.x + (p2.x - p1.x) / d2 * k)},${fmt(p1.y + (p2.y - p1.y) / d2 * k)}`;
+  }
+  const last = pts.at(-1);
+  return d + ` L${fmt(last.x)},${fmt(last.y)}`;
+}
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const SIDES = ['right', 'bottom', 'left', 'top'];
 const TOKENS = ['ink', 'muted', 'line', 'woad', 'rust', 'teal', 'green', 'purple', 'amber', 'wash', 'card', 'bg', 'icon-soft', 'vnet', 'note', 'lane-a', 'lane-b', 'lane-c', 'lane-d'];
@@ -22,7 +34,7 @@ const TONE_ALIASES = { blue: 'woad', red: 'rust' };
 // Line ends: head at the end of a line, tail at its start.
 const ENDS = ['arrow', 'open', 'circle', 'dot', 'diamond', 'open-diamond', 'none'];
 
-// Defaults for page mode and its building blocks; layout and spacing are utility classes
+// Defaults for the page and its building blocks; layout and spacing are utility classes
 // (utilities.js) or plain CSS. :where() keeps their specificity at zero, so any rule of the
 // author wins.
 const PAGE_CSS = `
@@ -385,7 +397,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       boxes.push({ e, b, painted: true, parent: parentBox });
       return;
     }
-    const open = e.id ? out.push(`<g data-id="${esc(e.id)}" data-box="${[b.x, b.y, b.w, b.h].map(v => Math.round(v * 2) / 2).join(',')}">`) : 0;
+    // The layout the next render reads back (snapshot.mjs), with the author's nudge.
+    const nudge = e.getAttribute('nudge') ? ` data-nudge="${esc(e.getAttribute('nudge'))}"` : '';
+    const open = e.id ? out.push(`<g data-id="${esc(e.id)}" data-box="${[b.x, b.y, b.w, b.h].map(v => Math.round(v * 2) / 2).join(',')}"${nudge}>`) : 0;
     const bg = paintOf(cs.backgroundColor);
     const bw = ['Top', 'Right', 'Bottom', 'Left'].map(s => (cs[`border${s}Style`] === 'none' ? 0 : parseFloat(cs[`border${s}Width`]) || 0));
     const bc = paintOf(cs.borderTopColor), dashed = cs.borderTopStyle === 'dashed' ? ' stroke-dasharray="5 4"' : cs.borderTopStyle === 'dotted' ? ' stroke-dasharray="1.5 3"' : '';
@@ -453,7 +467,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
   const markers = new Set(), lineOut = [], labelOut = [], drawOut = [];
   for (const rt of routes) {
     const e = rt.edge, tone = paintOf(toneOf(e.color)) || (e.accent ? 'var(--woad)' : 'var(--ink)');
-    const sides = rt.out != null && rt.in != null ? ` data-sides="${SIDES[rt.out]},${SIDES[rt.in]}"` : '';
+    const ov = e.leg?.edge.override || e.override || {};
+    const sides = (rt.out != null && rt.in != null ? ` data-sides="${SIDES[rt.out]},${SIDES[rt.in]}"` : '')
+      + ['out', 'in'].filter(k => ov[k] != null).map(k => ` data-${k}="${SIDES[ov[k]]}"`).join('');
     lineOut.push(`<g data-edge="${esc(e.key)}"${sides}><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path></g>`);
     if (rt.label) {
       const halo = under(boxes, rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) || 'var(--bg)';
@@ -645,6 +661,7 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H, previous) 
     if (!fb || !tb) { problems.push({ rule: 'unknown-id', id: (!fb ? c.from : c.to).id || '(element without id)' }); return; }
     const from = keyOf.get(fb), to = keyOf.get(tb), base = c.o.id || `${from}->${to}`, k = (seen.get(base) || 0) + 1;
     seen.set(base, k);
+    for (const k of ['out', 'in']) if (c.o[k] != null && !SIDES.includes(c.o[k])) problems.push({ rule: 'bad-option', option: k, value: String(c.o[k]), hint: 'a side: top, right, bottom or left' });
     const override = Object.fromEntries(['out', 'in'].filter(s => SIDES.includes(c.o[s])).map(s => [s, SIDES.indexOf(c.o[s])]));
     const edge = { id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends: endsOf(c.o, true, problems),
       accent: !!c.o.accent, color: c.o.color, width: c.o.width, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) };

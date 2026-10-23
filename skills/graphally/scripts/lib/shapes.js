@@ -1,10 +1,10 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Shapes for page mode: <div shape="cylinder">, <i shape="gateway parallel">, and the
+// Shapes: <div shape="cylinder">, <i shape="gateway parallel">, and the
 // script's shape(). A shape is a base and optional markers. The base is a path over the
 // element's box; the browser lays the element out as a box, and the element's background
 // and border become the shape's fill and outline. Markers are drawn inside: a gateway's ×,
-// an event's clock or envelope, a task's loop. BPMN conventions follow the classic process
-// layout (render.js): thin circle start, thick end, double intermediate.
+// an event's clock or envelope, a task's loop. BPMN conventions: a thin circle starts, a thick
+// one ends, a double one is an intermediate event.
 
 const f = n => String(Math.round(n * 10) / 10);
 const poly = pts => `M${pts.map(([x, y]) => `${f(x)},${f(y)}`).join(' L')} Z`;
@@ -177,7 +177,7 @@ export function drawShape(spec, b, st) {
   return out;
 }
 
-// Page-mode defaults, at zero specificity: any rule of the author wins. Every shape is a
+// Shape defaults, at zero specificity: any rule of the author wins. Every shape is a
 // box with an outline and centred content; events and gateways have their BPMN sizes.
 const any = names => names.map(n => `[shape~="${n}"]`).join(', ');
 export const SHAPE_CSS = `

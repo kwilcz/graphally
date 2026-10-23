@@ -1,40 +1,61 @@
 # Sequence diagrams
 
-`<diagram layout=sequence>`: participants across the top, messages in time order down the
-page. Add `numbered` to number the steps.
+Participants across the top, messages down the page in the order they happen. CSS cannot
+give each message a row of its own, so `sequence()` does that placing: it puts each
+participant in a column and each message in a row, and adds lifelines, activation bars,
+numbers and fragment boxes. The arrows are the drawing script's, one loop for all.
 
 ```html
-<diagram layout=sequence numbered title="Sign-in">
-  <node id=user icon=user>Dispatcher | browser</node>
-  <group id=azure label="Azure">                 <!-- optional box behind some participants -->
-    <node id=app icon="app service">Web app</node>
-    <node id=entra icon=entra>Entra ID</node>
-  </group>
-  <links>
-  user -> app : GET /orders
-  app --> user : 302 to Entra ID
-  user -> entra : sign in | authorization code, PKCE
-  note app : validates nonce
-  alt token valid
-    app -> app : render
-  else expired
-    app -> entra : refresh token
-  end
-  app ~> entra : audit event
-  </links>
+<diagram width=1100 title="Checkout" subtitle="Payment with 3-D Secure">
+<div class=seq id=seq>
+  <div class=node id=browser data-who><icon name=browser></icon>Shopper<small>browser</small></div>
+  <div class=node id=shop data-who><icon name="app service"></icon>Web shop<small>App Service</small></div>
+  <div class="node external" id=psp data-who><icon name=cloud></icon>Payment provider</div>
+  <div class="node external" id=bank data-who><icon name=shield></icon>Bank</div>
+  <div class="group external" data-who-group="psp bank"><h4>Third parties</h4></div>
+
+  <p class=msg data-from=browser data-to=shop>POST checkout</p>
+  <p class=msg data-from=shop data-to=psp>create payment</p>
+  <p class="msg reply" data-from=psp data-to=shop>client secret</p>
+  <div class=frag data-kind=alt data-guard="3-D Secure required">
+    <p class="msg reply" data-from=psp data-to=browser>redirect to bank</p>
+    <p class=msg data-from=browser data-to=bank>shopper approves</p>
+    <div class=else data-guard="no 3-D Secure"></div>
+    <p class="msg reply" data-from=psp data-to=browser>payment completes</p>
+  </div>
+  <p class="msg async" data-from=psp data-to=shop>payment succeeded</p>
+  <p class=msg data-from=shop data-to=shop>mark order paid</p>
+</div>
+<script type="graphally" before>sequence('#seq')</script>
+<script type="graphally">
+for (const m of all('.msg')) {
+  const d = m.el.dataset, a = el(d.from).center.x, b = el(d.to).center.x, y = m.bottom.y - 6;
+  const o = { dashed: m.el.matches('.reply'), head: m.el.matches('.async') ? 'open' : 'arrow' };
+  if (d.from === d.to) draw.moveTo(pt(a + 6, y - 16)).lineTo(pt(a + 40, y - 16)).lineTo(pt(a + 40, y)).lineTo(pt(a + 6, y)).style(o);
+  else arrow(pt(a + (b > a ? 6 : -6), y), pt(b + (b > a ? -6 : 6), y), o);
+}
+</script>
 </diagram>
 ```
 
-| Line | Draws |
-|---|---|
-| `a -> b : text` | call (solid); opens an activation bar on `b` |
-| `b --> a : text` | reply (dashed); closes `b`'s bar |
-| `a ~> b : text` | asynchronous message (open arrowhead, no bar) |
-| `a => b : text` | the highlighted message |
-| `a -> a : text` | self call |
-| `text \| more` | second line under the arrow |
-| `note a : text`, `note a, b : text` | note over one participant or spanning several |
-| `loop`, `alt`/`else`, `opt`, `par`/`and`, `critical`, `break` … `end` | fragment around the messages it contains; text after the keyword is the condition |
+## How to
 
-Order participants left to right in the order they are first used. Keep message text to a
-few words; put detail on the second line.
+- **Participants** are direct children of the container with `data-who`, in the order of
+  their columns. Any block works; `node` gives the usual card.
+- **Messages**: `<p class=msg data-from=a data-to=b>text</p>`. Add `reply` for a dashed
+  return, `async` for an open arrowhead. A message to oneself loops on the right.
+- **Fragments**: `<div class=frag data-kind=alt data-guard="condition">` around messages;
+  `<div class=else data-guard="other">` divides its parts. Kinds: `alt`, `opt`, `loop`,
+  `par`, `break`, `critical`. Fragments nest.
+- **A group behind participants** (third parties, one system): `<div class="group external"
+  data-who-group="psp bank"><h4>Third parties</h4></div>`.
+- **Activation bars** run from a call to the reply that answers it (or one row). Numbers
+  come first in each message; `sequence('#seq', { number: false, activations: false })`
+  leaves them out.
+- **The arrows** are the loop in the example, copied as it is.
+
+## Pitfalls
+
+- A message to oneself on the last participant runs past the right edge: give the
+  container room (`class="seq pr-40"`).
+- Long message labels widen nothing; keep them to a few words.
