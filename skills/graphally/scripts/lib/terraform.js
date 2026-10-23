@@ -589,7 +589,7 @@ export function terraformToDiagram(root, { title, icons } = {}) {
     return '  ' + JSON.stringify({ from: from.length > 1 ? from : from[0], to: item(l.to).id, ...(l.label ? { label: l.label } : {}),
       ...(l.op === '<->' ? { both: true } : {}), ...(l.op === '~>' ? { dashed: true } : {}) });
   });
-  const html = `<diagram layout=html width=1600 title="${esc(name)}" subtitle="${esc(`From Terraform: ${nRes} resources${nMod ? ` in ${nMod + 1} modules` : ''}`)}">\n${lines.join('\n')}\n<script type="application/json">\n[\n${linkLines.join(',\n')}\n]\n</script>\n</diagram>\n`;
+  const html = `<diagram width=1600 title="${esc(name)}" subtitle="${esc(`From Terraform: ${nRes} resources${nMod ? ` in ${nMod + 1} modules` : ''}`)}">\n${lines.join('\n')}\n<script type="application/json">\n[\n${linkLines.join(',\n')}\n]\n</script>\n</diagram>\n`;
   for (const r of resources.values()) if (r.data && !/client_config|subscription|tenant|role_definition/.test(r.type)) notes.skipped.push(r.addr);
   const groups = [...items.values()].filter(it => groupy.has(it.r.addr));
   return {

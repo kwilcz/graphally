@@ -1,14 +1,14 @@
 # graphally
 
-An agent skill for professional diagrams. The agent writes a short HTML description:
-what exists, what contains what, and what talks to what. graphally measures the text,
-places and aligns the boxes, routes the edges, places the labels, applies the theme, and
-writes an SVG.
+An agent skill for professional diagrams. The agent writes a diagram as a small web page:
+HTML for what exists and what contains what, CSS (mostly Tailwind-style utility classes)
+for where it goes, and a JSON list for what connects to what. graphally lays the page out
+in a browser, routes the connections around the boxes, places the labels, applies the
+theme, and writes an SVG. Nobody writes a coordinate.
 
-It draws architecture (with Azure and AWS icons), network, hierarchy, BPMN process,
-flowchart, sequence, plan (Gantt) and icon diagrams, and drafts diagrams of Terraform
-repositories from the code. Anything else (phase and role charts, matrices, step cards,
-roadmaps) is written as plain HTML and CSS, with a short script for the lines.
+It draws architecture (with Azure and AWS icons), networks, hierarchies, BPMN processes,
+flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts and any
+other figure a grid can hold, and drafts diagrams of Terraform repositories from the code.
 
 > **Licence.** graphally is open source under the [Apache License 2.0](LICENSE).
 > Copyright © 2026 Kamil Wilczyński ([kwilcz](https://github.com/kwilcz)).
@@ -83,36 +83,45 @@ mirror.
 The source looks like this:
 
 ```html
-<diagram title="Orders platform">
-<layout>
-edge  app
-.     data
-</layout>
-<group id=edge label="Edge"><node id=fd icon="front door">Front Door | WAF</node></group>
-<group id=app label="Application"><node id=api icon="app service">Orders API</node></group>
-<group id=data label="Data"><node id=db icon=sql>Orders DB | Azure SQL</node></group>
-<links>
-fd -> api : HTTPS
-api -> db : writes
-</links>
+<diagram width=1000 title="Orders platform">
+<div class="grid grid-cols-3 items-start justify-between gap-x-20">
+  <div class=group><h4>Edge</h4>
+    <div class=node id=fd><icon name="front door"></icon>Front Door<small>WAF</small></div></div>
+  <div class=group><h4>Application</h4>
+    <div class=node id=api><icon name="app service"></icon>Orders API<small>App Service</small></div></div>
+  <div class=group><h4>Data</h4>
+    <div class=node id=db><icon name=sql></icon>Orders DB<small>Azure SQL</small></div></div>
+</div>
+<script type="application/json">
+[ ["fd", "api", "HTTPS"], ["api", "db", "writes"] ]
+</script>
 </diagram>
 ```
+
+The page uses whatever CSS lays it out best: utility classes with Tailwind's names
+(`grid grid-cols-3 gap-x-20`), building blocks that look like graphally (`node`, `group`,
+`band`, `key`), shapes (`shape="cylinder"`, `shape="gateway exclusive"`), and two helpers for
+what CSS cannot do, dates to grid columns and messages to rows. A short drawing script adds
+marks that have no box, such as a gate on a boundary. The whole format is in
+[`skills/graphally/references/format.md`](skills/graphally/references/format.md), with a page
+per kind of diagram beside it.
 
 The skill's scripts can also be run directly:
 
 ```sh
 node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG and a preview PNG
-node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG; --dark for the dark theme
+node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG to publish
+node skills/graphally/scripts/graphally.mjs render diagram.html --themes  # also diagram-dark.svg, the dark theme
 node skills/graphally/scripts/graphally.mjs render diagram.html --recompute  # lay out afresh, ignoring the previous SVG
-node skills/graphally/scripts/edit.mjs diagram.html --move db 0,20 --connect api cache "reads"  # patch a page-mode diagram
+node skills/graphally/scripts/edit.mjs diagram.html --move db 0,20 --connect api cache "reads"  # patch moves and connections
 node skills/graphally/scripts/tf2graphally.mjs ./infra --out diagram.html  # a Terraform configuration, drafted
 node skills/graphally/scripts/fetch-icons.mjs                            # download or refresh the icon packs
 ```
 
 **Source and output.** The `.html` source is the diagram; the SVG next to it is compiled
 output. Edit the source and render again: the render reads the previous SVG's layout, so
-what you did not change stays where it was. Corrections made by hand are attributes in the
-source (`nudge="0,24"` on a node, `out=bottom in=left` on a `<link>`), so they survive
+what you did not change stays where it was. Corrections made by hand live in the
+source (`nudge="0,24"` on an element, `"out": "bottom"` on a connection), so they survive
 later edits, and a render that loses one says so. To commit the SVGs for your docs but keep
 them out of pull-request diffs, mark them as generated in `.gitattributes`:
 
@@ -120,18 +129,8 @@ them out of pull-request diffs, mark them as generated in `.gitattributes`:
 *.svg linguist-generated=true
 ```
 
-**Figures in HTML.** `<diagram layout=html>` is a page of HTML and CSS: the browser lays it
-out, shapes come from `shape="cylinder"`, `shape="gateway parallel"` and the like, and the
-connections are data, a JSON list routed around the boxes:
-
-```html
-<script type="application/json">
-[ { "from": "api", "to": "db", "label": "writes" }, ["api", "queue", "events"] ]
-</script>
-```
-
-Colours are CSS tokens in `skills/graphally/assets/theme.css`, so a brand theme only
-redefines them. Large diagrams can be split into files with `<include src="parts/app.html">`.
+Colours are CSS tokens in `skills/graphally/assets/theme.css`, with a light and a dark
+set, so a brand theme only redefines them.
 
 ## Samples
 
@@ -150,7 +149,7 @@ Each sample folder holds the brief an agent was given, the source it wrote
 | [Hierarchy](#hierarchy) | [management groups and subscriptions](samples/hierarchy/brief.md) |
 | [Plan](#plan-gantt) | [six-month migration plan](samples/plan/brief.md) |
 | [Icon diagram](#icon-diagram) | [Microsoft Entra application proxy](samples/icons/brief.md) |
-| [Figure in HTML](#figure-in-html) | [who does what, phase by phase, in a move to AKS](samples/page/brief.md) |
+| [Phase and role chart](#phase-and-role-chart) | [who does what, phase by phase, in a move to AKS](samples/page/brief.md) |
 
 ### Architecture
 
@@ -194,12 +193,15 @@ users and the VPN from head office, and rearranged the services.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/process/diagram-dark.png"><img alt="BPMN swimlanes" src="samples/process/diagram.png"></picture>
 
-Four lanes, gateways with one branch per corner, a three-day timer on the review task,
-message flows between lanes.
+Four lanes, one column per step in the order the flow runs, gateways with labelled
+branches, a three-day timer on the review task, notices between lanes dashed.
 [Brief](samples/process/brief.md) · [source](samples/process/diagram.html) ·
 [SVG](samples/process/diagram.svg)
 
 ### Flowchart
+
+The happy path runs along the middle; every failure branches up, and the expired
+approval drops below.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/flowchart/diagram-dark.png"><img alt="Release pipeline flowchart" src="samples/flowchart/diagram.png"></picture>
 
@@ -216,12 +218,18 @@ Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling
 
 ### Hierarchy
 
+One column per leaf and one row per level: each parent spans its children, and one
+connection per parent draws its bus.
+
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/hierarchy/diagram-dark.png"><img alt="Management group hierarchy" src="samples/hierarchy/diagram.png"></picture>
 
 [Brief](samples/hierarchy/brief.md) · [source](samples/hierarchy/diagram.html) ·
 [SVG](samples/hierarchy/diagram.svg)
 
 ### Plan (Gantt)
+
+A task table beside the chart, a critical path, a blocked approval holding back the
+pilot, parallel work, and only the dependencies that tell the story.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/plan/diagram-dark.png"><img alt="Migration plan" src="samples/plan/diagram.png"></picture>
 
@@ -230,12 +238,14 @@ Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling
 
 ### Icon diagram
 
+Figures: an icon over its name, in plain groups.
+
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/icons/diagram-dark.png"><img alt="Entra application proxy" src="samples/icons/diagram.png"></picture>
 
 [Brief](samples/icons/brief.md) · [source](samples/icons/diagram.html) ·
 [SVG](samples/icons/diagram.svg)
 
-### Figure in HTML
+### Phase and role chart
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/page/diagram-dark.png"><img alt="Who does what in the move to AKS" src="samples/page/diagram.png"></picture>
 

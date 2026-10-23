@@ -1,32 +1,34 @@
 # How graphally works
 
-graphally turns a short HTML description of a diagram into a finished SVG. The author,
-usually a coding agent, says what exists, what contains what and what talks to what.
-graphally decides every coordinate.
+graphally turns a diagram written as a small web page into a finished SVG. The author,
+usually a coding agent, says what exists and what contains what in HTML, where it goes in
+CSS, and what connects to what in a JSON list. The browser decides every coordinate.
 
 ## The source
 
-A diagram holds groups, nodes, links and, optionally, an ASCII map of how the main groups
-sit relative to each other:
-
 ```html
-<diagram title="Orders platform">
-<layout>
-edge  app
-.     data
-</layout>
-<group id=edge label="Edge"><node id=fd icon="front door">Front Door | WAF</node></group>
-<group id=app label="Application"><node id=api icon="app service">Orders API</node></group>
-<group id=data label="Data"><node id=db icon=sql>Orders DB | Azure SQL</node></group>
-<links>
-fd -> api : HTTPS
-api -> db : writes
-</links>
+<diagram width=1000 title="Orders platform">
+<div class="grid grid-cols-3 items-start justify-between gap-x-20">
+  <div class=group><h4>Edge</h4>
+    <div class=node id=fd><icon name="front door"></icon>Front Door<small>WAF</small></div></div>
+  <div class=group><h4>Application</h4>
+    <div class=node id=api><icon name="app service"></icon>Orders API<small>App Service</small></div></div>
+  <div class=group><h4>Data</h4>
+    <div class=node id=db><icon name=sql></icon>Orders DB<small>Azure SQL</small></div></div>
+</div>
+<script type="application/json">
+[ ["fd", "api", "HTTPS"], ["api", "db", "writes"] ]
+</script>
 </diagram>
 ```
 
-There are no coordinates or sizes in it. Adding a node is one line, and the rest of the
-diagram makes room for it.
+There are no coordinates or sizes in it. Adding a box is one line, and the page makes room
+for it; adding a connection is one entry in the list.
+
+The author reaches for the tools in this order: HTML and utility classes with Tailwind's
+names place almost everything; CSS in a `<style>` covers what a class cannot say; two
+helpers do only what CSS cannot (dates to grid columns, messages to rows); a drawing
+script draws only what has no box.
 
 ## The pipeline
 
@@ -35,17 +37,23 @@ diagram makes room for it.
 All of it runs in a headless Chrome, Chromium or Edge, driven by the skill's scripts over
 the DevTools protocol, so text is measured with the same font that draws it.
 
-1. **Parse** (`scripts/lib/parse.js`): elements become a model of groups, nodes and links.
-   Unknown ids are reported with the nearest existing id.
-2. **Measure** (`measure.js`): every label is measured in the browser. Long words break at
-   dots and hyphens, and line breaks are balanced.
-3. **Lay out**: one algorithm per kind of diagram (below).
-4. **Route** (`route.js`): orthogonal edges around the boxes.
-5. **Place labels**: edge labels go where they collide with nothing.
-6. **Render** (`render.js`): SVG with colours as CSS tokens, icons as reusable symbols, and
-   a legend built from what the diagram uses.
-7. **Check** (`check.js`): overlapping text, crowded labels, unknown icons, ids missing
-   from the layout map, extreme aspect ratios. Each problem is one line that names its fix.
+1. **Before script** (`<script type="graphally" before>`): makes or places elements before
+   layout, with the helpers `schedule()`, `timeline()` (`time.js`) and `sequence()`
+   (`seq.js`).
+2. **Utility classes** (`utilities.js`): the classes the page uses become CSS; a class that
+   reads like a utility and means nothing is reported.
+3. **Lay out**: the browser lays the page out, with graphally's building blocks and shapes
+   as zero-specificity defaults, so any rule of the author wins.
+4. **Read geometry** (`page.js`): every element's box, every line of text with its own
+   measured position and baseline.
+5. **Route** (`route.js`): the JSON connections, orthogonally, around the boxes.
+6. **Drawing script** (`<script type="graphally">`): runs with the geometry of every element
+   and draws by name: arrows, gates, dependency lines (`depend()`), text, shapes.
+7. **Render** (`page.js`, `shapes.js`): SVG with colours as CSS tokens, icons as reusable
+   symbols, shapes drawn from path templates over the boxes the browser gave them.
+8. **Check**: unknown ids, icons, shapes and classes, crowded labels, short arrow ends,
+   overlapping lines and text, content wider than the page. Each problem is one line that
+   names its fix.
 
 One render, step by step: the script serves the skill and the diagram folder on
 127.0.0.1, starts the browser, lets the engine compile the page, and reads back the SVG
@@ -59,78 +67,83 @@ Most of a render's time is starting the browser and compiling the diagram:
 
 The same engine also runs without the script. `tools/build-viewer.mjs` bundles it with the
 theme and an index of the icon packs (names and upstream files, no artwork) into
-`skills/graphally/viewer/graphally.js`, about 230 KB. A diagram file that loads it, from
+`skills/graphally/viewer/graphally.js`, about 190 KB. A diagram file that loads it, from
 jsDelivr or a local copy, renders itself where it stands when a browser opens it, from disk
 too, since it is a classic script rather than a module. The viewer compiles each diagram
 twice when it draws icons: the first pass names them, the viewer fetches just those files
 from the draw.io repository and the aws-icons package, and the second pass draws them. It
-loads Inter from the inter-ui package, so the text measures as it does in a render.
+loads Inter from the inter-ui package, so the text measures as it does in a render, and it
+follows the reader's light or dark setting.
 
-## Layouts
+## One page, many diagrams
 
-Each kind of diagram uses the layout that suits it:
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/layouts-dark.svg"><img alt="HTML and CSS place most diagrams; two helpers place plans and sequences" src="diagrams/layouts.svg"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/layouts-dark.svg"><img alt="Layouts and the diagrams they serve, as a tree" src="diagrams/layouts.svg"></picture>
+Every kind of diagram is a page, so no kind needs a layout algorithm of its own:
 
-- **Architecture and networks** (`layout/areas.js`): the ASCII map becomes a CSS grid;
-  groups inside it are stacks, rows or grids. Three passes follow the browser's placement:
-  - **Shrink:** groups that fill little of their cell shrink to their content.
-  - **Align:** nodes slide towards what they connect to, so edges come out straight.
-  - **Widen:** gaps between columns widen to hold the labels crossing them.
-- **Hierarchies** (`layout/tree.js`): a tidy tree with bus connectors and labelled level
-  bands.
-- **Processes** (`layout/lanes.js`): columns follow the order of the flow, rows are
-  swimlanes, and each node sits on its lane's centre line. Gateways give each branch its
-  own corner, and boundary events sit on their task's border.
-- **Sequences** (`layout/sequence.js`): lifelines spaced by their cards and labels, and
-  activation bars from call to reply. Fragments enclose the messages they contain.
-- **Plans** (`layout/gantt.js`): a time axis with day, week or month ticks, one row per
-  task, and dependency arrows.
+- **Architecture and networks**: a grid map of areas (`grid-template-areas`) holding groups
+  of nodes; VNets and subnets are nested groups.
+- **Hierarchies**: one column per leaf and one row per level; a parent spans the columns of
+  its children, and a connection to a list of children draws one bus.
+- **Processes**: one column per step in the order of the flow, one subgrid row per lane.
+- **Plans**: `schedule()` resolves `data-after` and durations into dates; `timeline()` makes
+  a grid with one column per day, so a bar's left edge is its start date. `depend()` draws
+  each dependency from the end of one task to the start of the next, clear of every bar.
+- **Sequences**: `sequence()` gives each participant a column and each message a row,
+  which CSS auto-placement cannot, and adds lifelines, activation bars, numbers and
+  fragment boxes as plain elements styled by CSS.
+- **Anything else**: phase and role charts, matrices, step cards; bands of cards line up
+  with a chart's columns through `subgrid`.
 
-- **Figures in HTML** (`page.js`, `<diagram layout=html>`): the author writes the figure as
-  a web page and the browser lays it out, so a grid of phases and roles needs no layout
-  algorithm of its own. graphally then reads the page back as SVG: backgrounds, borders,
-  `clip-path` polygons, text line by line (each line's words measured in place, with the
-  font's ascent for the baseline), icons. A `<script>` runs after layout with the geometry
-  of every element (`el('id').right`, `mid(a, b)`) and draws by name; its `connect` calls
-  go to the router below, with the page's boxes as obstacles and the script's own straight
-  lines counted as taken. `shape="…"` on an element draws it from a library of path
-  templates (`shapes.js`: flowchart, BPMN, stores, block arrows) over the box the browser
-  gave it, with its background and border as fill and outline.
+`shape="…"` on an element draws it from a library of path templates (`shapes.js`:
+flowchart, BPMN, stores, block arrows) over the box the browser gave it, with its background
+and border as fill and outline.
 
-  <picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/shapes-dark.svg"><img alt="Every page-mode shape and marker, drawn by page mode" src="diagrams/shapes.svg"></picture>
-
-  The connections are data, a JSON list in the diagram, so an agent changes them as
-  data: `scripts/lib/edits.mjs` patches the source (moves as `nudge`, connections added,
-  changed or removed by key) and keeps the rest of the file as written. Page-mode lines
-  record their sides in the SVG, and the next render prefers them.
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/shapes-dark.svg"><img alt="Every shape and marker" src="diagrams/shapes.svg"></picture>
 
 ## Routing and labels
 
-Edges are found by A* search over a sparse grid built from the boxes' edges and the
+Connections are found by A* search over a sparse grid built from the boxes' edges and the
 channels between them. A path's cost counts:
 
 - its length;
 - its bends;
 - crossings, priced above bends;
-- running along another edge or along a group's border;
-- passing through groups the edge does not belong to.
+- running along another line or along a group's border;
+- passing through groups the line does not belong to.
 
-Routing runs in two passes. The first picks the side each edge leaves from. The second
-spreads edges that share a side. A few rounds of rip-up and reroute follow, and then
-parallel segments are pulled apart.
+Routing runs in two passes. The first picks the side each line leaves from. The second
+fixes where lines meet their boxes: lines that share a side split it evenly, one at the
+middle, two at a third and two thirds, n at k/(n+1), ordered so they do not cross; a line
+alone on two facing sides runs straight when both ends fit in the middle 80% of their
+sides. A few rounds of rip-up and reroute follow, and then parallel segments are pulled
+apart.
 
-Edges that share an end and say the same thing bundle: written in one statement
-(`a, b -> c`), or with the same label in the same style. A bundle meets its shared box on
-one side, and routes as a tree: its longest edge first, then each other edge joins the
-lines already drawn and follows them from there. The bundle draws one trunk and carries
-one label. Every arrowhead in a bundle sits at least 36px past the trunk's last bend.
+Lines that share an end and say the same thing bundle: a connection with a list of sources
+or targets, or lines with the same label in the same style. A bundle meets its shared box
+at one point and routes as a tree: its longest line first, then each other line joins the
+lines already drawn. The bundle draws one trunk and carries one label, and every arrowhead
+in it sits at least 36px past the trunk's last bend.
 
-A link from a whole group to a shared service in a `<band>` is drawn as a badge: the
-service's icon in the group's header, instead of a wire across the diagram.
+Labels are placed longest first, at candidate positions along their line. A candidate must
+avoid boxes, text, group borders, other labels and other lines.
 
-Labels are placed longest first, at candidate positions along their edge. A candidate
-must avoid nodes, text, group borders, other labels and other edges' lines.
+## Stable layout and overrides
+
+The source is the diagram; the SVG is compiled output, and its elements record where they
+landed. Every element with an id is wrapped in `<g data-id data-box="x,y,w,h">`, and every
+connection in `<g data-edge data-sides="out,in">`; corrections add `data-nudge`, `data-out`
+and `data-in`. Tools can find any element by its id.
+
+When a diagram is rendered again, the CLI reads that layout back from the previous SVG, and
+every line that existed before keeps the sides it used, whether the author set them or the
+router chose them; only what changed moves. `--recompute` ignores the previous SVG.
+
+Corrections live in the source: `nudge="dx,dy"` on an element moves it after layout, and
+`out` and `in` on a connection fix the sides it leaves and enters. Because they live in the
+source, an edit keeps them, and a render that finds one missing compared with the previous
+SVG reports it. `scripts/edit.mjs` patches moves and connections by key (a connection's
+`id`, else `from->to`, with `#2` for a repeat) and keeps the rest of the file as written.
 
 ## Terraform
 
@@ -138,16 +151,17 @@ must avoid nodes, text, group borders, other labels and other edges' lines.
 
 `scripts/tf2graphally.mjs` reads a Terraform root module and its local modules without
 running Terraform. It follows references through variables, locals and module outputs,
-and expands `for_each` over literal maps. It then draws what the configuration deploys:
+and expands `for_each` over literal maps. It then writes a diagram file of what the
+configuration deploys:
 
-- resource groups as boxes;
+- resource groups as `group` boxes;
 - VNets holding subnets, and resources inside the subnet they are deployed into;
 - App Service plans holding their apps;
-- references as links named by meaning: secrets, telemetry, private link, peering,
+- references as connections named by meaning: secrets, telemetry, private link, peering,
   routes.
 
 Associations, role assignments, diagnostic settings and child resources fold into those
-links and labels.
+connections and labels.
 
 ## Icons
 
@@ -170,31 +184,12 @@ devices, servers, documents) covers what has no vendor icon.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/install-dark.svg"><img alt="How the skill reaches an agent, and where its icons come from" src="diagrams/install.svg"></picture>
 
-## Stable layout and overrides
-
-The source is the diagram; the SVG is compiled output, and its elements record where
-they landed. Every node is wrapped in `<g data-id data-box="x,y,w,h">`, every group in
-`<g data-group data-box>`, and every edge in `<g data-edge data-sides="out,in">`; overrides
-add `data-nudge`, `data-out` and `data-in`. Tools can find any element by its id.
-
-When a diagram is rendered again, the CLI reads that layout back from the previous SVG, and
-the engine treats it as soft constraints:
-
-- an edge that existed before prefers the sides it used;
-- a group whose members did not change keeps its internal arrangement;
-- cards keep their width, so a longer new label wraps.
-
-New and changed parts are laid out as usual. `--recompute` ignores the previous SVG.
-
-Overrides are hard constraints, written as attributes in the source: `nudge="dx,dy"` on a
-node moves it after layout, and `out` and `in` on a `<link>` fix the sides the edge leaves
-and enters. Because they live in the source, an agent's edit keeps them, and a render that
-finds one missing compared with the previous SVG reports it. Edges are identified by
-key: the link's `id`, else `from->to`, with `#2`, `#3` for repeats.
-
 ## Theming and output
 
-Colours are CSS custom properties in `assets/theme.css`, redefined for the dark theme. A
-brand theme redefines the tokens and nothing else. A standalone SVG embeds its styles; an
-inlined one uses the page's tokens. Text stays text, and the SVG's `aria-label` describes
-the diagram in words.
+Colours are CSS custom properties in `assets/theme.css`, with a light and a dark set; a
+brand theme redefines the tokens and nothing else. Every figure paints its own background
+(the theme's `--bg`, or `background` on `<diagram>`), so it reads on a dark page as on a
+light one. `render --themes` writes the dark copy beside the light one, and a page can show
+the one that matches its reader with a `<picture>` element. A standalone SVG embeds its
+styles; an inlined one uses the page's tokens. Text stays text, and the SVG's `aria-label`
+describes the diagram in words.

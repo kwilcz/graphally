@@ -45,11 +45,11 @@
 <text x="36" y="105.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Engine</text>
 <text x="36" y="225.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">What places it</text>
 <text x="36" y="345.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Diagrams</text>
-<g data-id="g" data-box="674,116.5,150,51">
-<rect x="674.5" y="116.9" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-g-code" x="687" y="128.9" width="26" height="26" style="color: var(--ink)"></use>
-<text x="723" y="139.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">graphally</text>
-<text x="723" y="153.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">page mode</text>
+<g data-id="g" data-box="656.5,116.5,185.5,51">
+<rect x="656.8" y="116.9" width="184.3" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-g-code" x="669.3" y="128.9" width="26" height="26" style="color: var(--ink)"></use>
+<text x="705.3" y="139.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">graphally</text>
+<text x="705.3" y="153.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">HTML and CSS to SVG</text>
 </g>
 <g data-id="css" data-box="504.5,236.5,189,51">
 <rect x="505.1" y="236.9" width="187.8" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
@@ -105,15 +105,15 @@
 </g>
 <g data-edge="tl-&gt;d7" data-sides="bottom,top"><path d="M1099,295 L1099,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="sq-&gt;d8" data-sides="bottom,top"><path d="M1249,295 L1249,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="css-&gt;d3" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 593,306 L534,306 Q528,306 528,312 L528,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="css-&gt;d4" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 605,306 L664,306 Q670,306 670,312 L670,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="g-&gt;css" data-sides="bottom,top"><path d="M749,167 L749,194 Q749,200 743,200 L605,200 Q599,200 599,206 L599,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="css-&gt;d5" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 605,306 L805,306 Q811,306 811,312 L811,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="css-&gt;d2" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 593,306 L392,306 Q386,306 386,312 L386,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="css-&gt;d1" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 593,306 L251,306 Q245,306 245,312 L245,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="css-&gt;d6" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 605,306 L947,306 Q953,306 953,312 L953,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="g-&gt;tl" data-sides="bottom,top"><path d="M749,167 L749,194 Q749,200 755,200 L1093,200 Q1099,200 1099,206 L1099,229" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="g-&gt;sq" data-sides="bottom,top"><path d="M749,167 L749,194 Q749,200 755,200 L1243,200 Q1249,200 1249,206 L1249,229" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d3" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M599,287 L599,300 Q599,306 593,306 L534,306 Q528,306 528,312 L528,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d4" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M599,287 L599,300 Q599,306 605,306 L664,306 Q670,306 670,312 L670,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g-&gt;css" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M749,167 L749,194 Q749,200 743,200 L605,200 Q599,200 599,206 L599,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d5" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M599,287 L599,300 Q599,306 605,306 L805,306 Q811,306 811,312 L811,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d2" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M599,287 L599,300 Q599,306 593,306 L392,306 Q386,306 386,312 L386,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d1" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M599,287 L599,300 Q599,306 593,306 L251,306 Q245,306 245,312 L245,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d6" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M599,287 L599,300 Q599,306 605,306 L947,306 Q953,306 953,312 L953,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g-&gt;tl" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M749,167 L749,194 Q749,200 755,200 L1093,200 Q1099,200 1099,206 L1099,229" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g-&gt;sq" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M749,167 L749,194 Q749,200 755,200 L1243,200 Q1249,200 1249,206 L1249,229" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 
 
 </g>

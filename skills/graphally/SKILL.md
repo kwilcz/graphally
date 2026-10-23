@@ -1,6 +1,6 @@
 ---
 name: graphally
-description: Draws professional diagrams as SVG from a short HTML description - architecture (Azure and AWS icons, tiers, shared services), networks (VNets, subnets, peering, private endpoints), hierarchies (management groups, org charts), BPMN processes and flowcharts, sequence diagrams, Gantt plans, diagrams of Terraform repositories generated from the code, and any other figure (phase and role charts, matrices, step cards, roadmaps, custom BPMN) written as HTML and CSS with a shape library. Use it whenever the user asks for a diagram, architecture picture, flow, process map, sequence, timeline or plan, or wants to visualise infrastructure, even if they do not say "diagram"; never hand-write SVG coordinates instead.
+description: Draws professional diagrams as SVG and PNG from HTML and CSS - architecture with Azure and AWS icons, networks (VNets, subnets, peering, private endpoints), hierarchies and org charts, BPMN processes and flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, and diagrams of Terraform repositories drafted from the code. The browser lays the figure out and graphally routes the connections, so nobody writes a coordinate. Use it whenever the user asks for a diagram, an architecture or network picture, a flow, a process map, a sequence, a timeline, a plan or a roadmap, or wants to visualise infrastructure, even without the word "diagram". Not for charts of numeric data (bar, line, pie).
 license: Apache-2.0. Copyright (c) 2026 Kamil Wilczyński (kwilcz), https://github.com/kwilcz/graphally. LICENSE.txt has the terms.
 compatibility: Requires Node.js 18 or later and Chrome, Chromium or Edge (or `npx playwright install chromium`). Internet once, to download the Azure and AWS icon packs.
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/tf2graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/fetch-icons.mjs *)
@@ -12,168 +12,162 @@ metadata:
 
 # graphally
 
-You describe what exists, what contains what, and what talks to what. graphally sizes,
-aligns and routes everything and writes the SVG. Never write coordinates.
+A diagram is a small web page: HTML says what exists and what contains what, CSS says
+where it goes, and a JSON list says what connects to what. graphally lays the page out in
+a browser, routes the connections around the boxes, and writes an SVG. Never write
+coordinates, and never hand-write SVG.
 
-## Workflow (aim for 3 or 4 tool calls)
+Reach for the tools in this order:
 
-1. If the diagram is not a plain architecture diagram, read its reference (listed at the
-   end) together with anything else you need, in one command: every extra step re-reads
-   everything before it.
-2. Write the whole diagram and render it in **one shell command**, in your working
-   directory:
-   ```sh
-   cd <working dir> && cat > diagram.html <<'EOF'
-   <diagram …> … </diagram>
-   EOF
-   node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
-   ```
-   It prints `ok` or one line per problem, and writes `diagram.svg` (the deliverable) and
-   `diagram.png` (a preview). `${CLAUDE_SKILL_DIR}` is the directory of this skill: Claude
-   Code fills it in; elsewhere, use the path of the folder that holds this file.
-3. Fix the reported problems the same way (rewrite and render in one command).
-4. Look at the PNG once at the end: `ok` means nothing collides, not that the story reads
-   well.
+1. **HTML and utility classes** place almost everything: `grid grid-cols-4 gap-x-20`,
+   `flex justify-between`, `col-span-2`.
+2. **CSS in a `<style>`** covers what a class cannot say (`grid-template-areas`).
+3. **The helpers** do only what CSS cannot: dates to grid columns, messages to rows.
+4. **The drawing script** draws only what has no box: a gate on a boundary, a lifeline arrow.
 
-**Opening it in a browser:** the render adds a header to the source (a doctype and a
-`<script src>` that loads graphally's viewer), so the `.html` file itself shows the diagram
-when opened in a browser, with nothing installed. Keep the header; anyone can edit the text
-and reload.
+## Workflow
 
-**Changing an existing diagram:** edit its source file in place with your edit tool, then
-render it again. The SVG is compiled output; the render reads the previous one, so what
-you did not change stays where it was. Keep `nudge`, `out` and `in` attributes: they are
-the user's corrections. `--recompute` lays the whole diagram out afresh.
+Copy this checklist and work through it; render as often as the diagram needs.
 
-## Syntax
+```
+- [ ] 1. Read the reference for the diagram's kind (table below), unless it is a plain architecture diagram
+- [ ] 2. Write diagram.html
+- [ ] 3. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
+- [ ] 4. Fix every reported problem; render again until it prints ok
+- [ ] 5. Look at diagram.png; fix what reads badly; render again
+- [ ] 6. Hand over diagram.svg, diagram.png and diagram.html
+```
+
+1. **The reference.** Each kind has a page with a complete example to start from.
+2. **Write.** Start from the example below or the reference's. Ids name what the
+   connections join; text is what the reader sees.
+3. **Render.** The command writes `diagram.svg` (the deliverable) and `diagram.png` (a
+   preview), then prints `ok` or one line per problem. `${CLAUDE_SKILL_DIR}` is this
+   skill's directory: Claude Code fills it in; elsewhere, use the path of the folder that
+   holds this file.
+4. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
+   again.
+5. **Look.** `ok` means nothing collides, not that the story reads well: check that the
+   flow runs one way, labels sit by their lines, and nothing important is crowded.
+6. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
+   that loads graphally's viewer), so the file itself shows the diagram when opened in a
+   browser, with nothing installed. Keep the header; anyone can edit the text and reload.
+
+**Changing an existing diagram:** edit its `.html` in place, then render. The render reads
+the previous SVG, so what you did not change stays where it was. Keep `nudge`, `out` and
+`in`: they are the user's corrections. `--recompute` lays everything out afresh.
+
+## Example
 
 ```html
-<diagram title="Orders platform" subtitle="Production, West Europe">
-<layout>
-users  edge  app   data
-key    .     bus   bus
-</layout>
-<group id=users label="Users" style=plain>
-  <node id=shopper icon=browser external>Shopper | web browser</node>
-</group>
-<group id=edge label="Edge" icon="front door">
-  <node id=fd icon="front door">Front Door | WAF</node>
-</group>
-<group id=app label="Application">
-  <node id=api icon="app service">Orders API | App Service</node>
-  <node id=worker icon=functions>Worker | Functions</node>
-</group>
-<group id=data label="Data"><node id=db icon=sql>Orders DB | Azure SQL</node></group>
-<group id=bus label="Messaging"><node id=sb icon="service bus">Service Bus | orders topic</node></group>
-<links>
-shopper -> fd : HTTPS
-fd -> api
-api -> db : writes
-api ~> sb : order placed
-sb ~> worker : events
-</links>
+<diagram width=1300 title="Orders platform" subtitle="Production, West Europe">
+<div class="grid grid-cols-4 items-start justify-between gap-x-20">
+  <div class="group plain"><h4>Users</h4>
+    <div class="node external" id=shopper><icon name=browser></icon>Shopper<small>web browser</small></div>
+  </div>
+  <div class=group><h4><icon name="front door"></icon>Edge</h4>
+    <div class=node id=fd><icon name="front door"></icon>Front Door<small>WAF</small></div>
+  </div>
+  <div class=group><h4>Application</h4>
+    <div class=node id=api><icon name="app service"></icon>Orders API<small>App Service</small></div>
+    <div class=node id=worker><icon name=functions></icon>Worker<small>Functions</small></div>
+  </div>
+  <div class=group><h4>Data</h4>
+    <div class=node id=db><icon name=sql></icon>Orders DB<small>Azure SQL</small></div>
+    <div class="node accent" id=sb><icon name="service bus"></icon>Service Bus<small>orders topic</small></div>
+  </div>
+</div>
+<script type="application/json">
+[
+  ["shopper", "fd", "HTTPS"],
+  ["fd", "api"],
+  ["api", "db", "writes"],
+  { "from": "api", "to": "sb", "label": "order placed", "dashed": true },
+  { "from": "sb", "to": "worker", "label": "events", "dashed": true }
+]
+</script>
 </diagram>
 ```
 
-- **`<node>`**: `Name | second line`. Attributes: `id`, `icon`, `external` (outside your
-  control, dashed), `accent` (the one thing to highlight), `style=card` (default) `tile`
-  `icon` `chip`.
-- **`<group>`**: `id`, `label`, `icon`, `sub` (e.g. a CIDR range), `style=box` (default)
-  `plain` `dashed` `external` `vnet` `subnet` `component` `region`. Groups nest. Children
-  stack vertically; `layout=row` or `layout=grid cols=3`, or a nested `<layout>` map.
-  `<band>` is a full-width row of items (shared platform services); if it is not in the
-  map it becomes the bottom row. `sub` is free text shown after the label.
-- **`<layout>`**: an ASCII map of the diagram (or of a group), one word per cell, like CSS
-  `grid-template-areas`. Each word is the id of a direct child; repeat a word to span
-  cells; `.` is empty; `key` places the legend. Without a map, groups are placed in
-  columns following the flow of the links.
-- **`<links>`**: one per line, `from -> to : label`. Several ids allowed on each side
-  (`a, b -> c`); chains allowed (`a -> b -> c`). Lines into (or out of) one box with the
-  same label merge into one trunk with one label. `->` call, `~>` async message or event
-  (dashed), `<->` two-way, `--` plain line, `=>` highlighted. A group id is a valid end:
-  `app -> kv : secrets` instead of one edge per app.
-- **Corrections**: `<link from=api to=db label=writes out=bottom in=left>` is the long form
-  of a link line; `out` and `in` fix the sides it leaves and enters (`right`, `bottom`,
-  `left`, `top`). `nudge="0,24"` on a node moves it by pixels.
-- **Large diagrams**: split them into files with `<include src="parts/app.html">`. A part
-  holds one `<group id=app>`; inside it, ids and links are local, and from the main file
-  its items are `app.<id>` (`fd -> app.api`).
-- **Shared services**: a link between a whole **group** and an item of a `<band>`
-  (`web, api -> kv`) is drawn as a badge, the item's icon in the group's header, not a
-  line. Link a **node** to the band item when the line itself matters (private endpoint
-  to its database).
-- **Icons**: loose names work, for every service of both packs (`elasticache`, `glue`,
-  `purview`), not only these examples:
-  - Azure: `app service`, `functions`, `aks`, `container app`, `acr`, `service bus`,
-    `event hubs`, `apim`, `front door`, `app gateway`, `firewall`, `vnet`, `subnet`, `nsg`,
-    `private endpoint`, `vpn gateway`, `entra`, `managed identity`, `kv`, `sql`, `cosmos`,
-    `redis`, `storage`, `app insights`, `log analytics`, `mg`, `subscription`.
-  - AWS: `lambda`, `s3`, `dynamodb`, `api gateway`, `cloudfront`, `cognito`, `ec2`, `ecs`,
-    `eks`, `fargate`, `rds`, `aurora`, `sqs`, `sns`, `eventbridge`, `step functions`, `vpc`,
-    `alb`, `nat gateway`, `route 53`, `cloudwatch`, `iam`, `kms`, `secrets manager`, `waf`.
-    Put `icons=aws` on `<diagram>` so AWS wins names both clouds share (`load balancer`), or
-    prefix one icon: `aws:waf`, `azure:firewall`.
-  - Generic: `user`, `users`, `browser`, `mobile`, `laptop`, `server`, `database`, `api`,
-    `globe`, `building`, `cloud`, `key`, `lock`, `shield`, `file`, `mail`.
+## The format in brief
 
-  An unknown name is reported with suggestions. The first render downloads the Azure and
-  AWS icon packs into this skill (once, a few seconds); offline, diagrams render without
-  vendor icons and say how to fetch them.
+- **`<diagram>`**: `width` in pixels (default 1200; the height follows the content),
+  `title`, `subtitle`, `icons=aws` (AWS wins names both clouds share), `theme=dark`,
+  `background` (a colour, or `none`).
+- **Utility classes** have Tailwind's names and spacing (one step is 4px): `grid`,
+  `grid-cols-3`, `flex`, `flex-col`, `justify-between`, `items-center`, `gap-6`, `p-4`,
+  `mt-10`, `col-span-2`, `w-40`, `text-center`, `font-semibold`, `rounded-lg`, `border-dashed`.
+  Brackets take any value or property: `w-[130px]`, `grid-cols-[160px_1fr]`,
+  `[grid-area:edge]`. Colours are the theme's tokens (`bg-wash`, `text-muted`,
+  `border-woad`); text sizes follow the diagram's scale (`text-base` is 13px).
+- **Building blocks**: `node` (a card: `<icon>`, a name, a `<small>` line; `external`,
+  `accent`), `group` with an `<h4>` title (`plain`, `dashed`, `external`, `vnet`, `subnet`,
+  `region`; `badges` of `badge` icons in the title), `tile` and `figure` (an icon over its
+  name), `band` (a strip of shared services), `key` with `swatch` (a legend), `card`,
+  `box`, `pill`, `tag`, `banner`. These class names are taken: name your own differently.
+- **Shapes**: `shape="cylinder"` on any element draws it as that shape: `diamond`,
+  `hexagon`, `chevron`, `document`, `cloud`, BPMN `task`, `start`, `end`,
+  `gateway exclusive`, `event timer` and more.
+- **Icons**: `<icon name="app service">`. Loose names work for every service of both
+  packs; an unknown name is reported with suggestions.
+- **Connections**: `<script type="application/json">`, a list of `["from", "to", "label"]`
+  or objects with `dashed`, `out`/`in` (the sides), `both`, `via`, `color`. A list in `to`
+  or `from` draws one bundle with a shared trunk.
+- **Drawing script**: `<script type="graphally">` runs after layout with every element's
+  box: `arrow`, `connect`, `depend`, `draw.moveTo(…).lineTo(…)`, `gate`, `text`, `shape`.
+- **Helpers**: `<script type="graphally" before>` calls `schedule()` and `timeline()`
+  (plans) or `sequence()` (sequence diagrams) before layout.
+- **Themes**: `--themes` writes `diagram-dark.svg` beside the light one; `--dark` draws
+  dark only.
 
-## Layout advice
-
-- One map row is one band of the story: request path on top, data below, shared platform
-  in a bottom `<band>`. Put the entry point on the left, external systems on the right.
-- Nodes in a group stack in source order; the engine lines them up with what they connect
-  to, so order them in the order of the flow.
-- Put what a service calls beside it (the next column), not under it: a stack below forces
-  every edge to go round the nodes in between.
-- Label edges with what flows, in one to three words. Draw shared services once, with one
-  edge from a group, or none.
+The whole format, with every class, shape, option and call: [references/format.md](references/format.md).
 
 ## Problems and fixes
 
 | Problem | Fix |
 |---|---|
-| `unknown-id` | typo; the suggestion is the closest id |
-| `unknown-icon` | use a suggested name |
-| `not-in-layout` | add the id to the `<layout>` map, or remove the map |
-| `label-crowded` | shorten the label (gaps already widen to fit labels) |
-| `too-wide`, `too-tall` | move groups into another row or column of the map |
-| `text-overlap` | shorten the text involved |
-| `bad-override` | use a side name, or `nudge="dx,dy"` |
-| `override-ignored` | the side is blocked: choose another, or remove `out`/`in` |
+| `unknown-id` | a connection names an id that does not exist: the suggestion is the closest |
+| `unknown-icon`, `unknown-shape`, `unknown-utility` | use the suggested name, or a theme colour for a colour class |
+| `label-crowded` | widen the gap the line runs through, or shorten the label |
+| `override-ignored … by=x` | the side named in `out`/`in` is blocked by `x`: choose another side |
+| `short-end` | an arrowhead sits on a bend right before its box: give the line more room there |
+| `lines-overlap` | two lines share a stretch: give one other sides (`out`/`in`) or `via` points |
+| `unroutable` | the line has no way through: widen a gap, or give it `via` points |
+| `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
+| `text-overlap` | two texts collide: give one more room |
+| `script-error` | the message and line say what failed in a script |
 
-## More diagram types
+## References
 
-Read only the one you need:
+Read the one for the kind of diagram you draw; each starts with a complete example.
 
-- [references/network.md](references/network.md): VNets, subnets, peering, hub and spoke.
-- [references/tree.md](references/tree.md): management groups, org charts, module trees.
-- [references/process.md](references/process.md): BPMN swimlanes and flowcharts.
-- [references/sequence.md](references/sequence.md): sequence diagrams (calls, replies, loops, alternatives).
-- [references/gantt.md](references/gantt.md): plans and timelines (Gantt charts, milestones, dependencies).
-- [references/terraform.md](references/terraform.md): a diagram of a Terraform repository, generated from the code.
-- [references/page.md](references/page.md): anything else, as HTML and CSS with shapes (BPMN, flowchart,
-  stores) and a drawing script: phase and role charts, matrices, step cards, roadmaps, a
-  layout of your own for a process or an architecture, several kinds in one figure.
+| Kind | Reference |
+|---|---|
+| Networks: VNets, subnets, peering, hub and spoke, private endpoints | [references/network.md](references/network.md) |
+| Hierarchies: management groups, org charts, module trees | [references/hierarchy.md](references/hierarchy.md) |
+| BPMN processes with swimlanes, and flowcharts | [references/process.md](references/process.md) |
+| Sequence diagrams: calls, replies, loops, alternatives | [references/sequence.md](references/sequence.md) |
+| Plans: Gantt charts, roadmaps, milestones, dependencies | [references/plan.md](references/plan.md) |
+| Phase and role charts, matrices, step cards, anything else | [references/charts.md](references/charts.md) |
+| A diagram of a Terraform repository, drafted from the code | [references/terraform.md](references/terraform.md) |
+| The whole format | [references/format.md](references/format.md) |
 
 ## Scripts
 
-- `scripts/graphally.mjs render <file.html> [--png | --png2x] [--dark] [--out dir] [--recompute]`:
+- `scripts/graphally.mjs render <file.html> [--png | --png2x] [--themes | --dark] [--out dir] [--recompute]`:
   compiles every `<diagram>` in the file to SVG; `--png` adds a preview, `--png2x` a sharp
-  PNG, `--recompute` ignores the previous layout.
+  PNG to publish, `--themes` a dark copy, `--recompute` ignores the previous layout.
 - `scripts/edit.mjs <file.html> --move id dx,dy | --connect from to [label] | --line 'a->b' json | --unline 'a->b' | --lines`:
-  patches a page-mode diagram (moves, connections) and keeps the rest of the file as written
-  (see `references/page.md`).
+  patches moves and connections and keeps the rest of the file as written.
 - `scripts/tf2graphally.mjs <terraform dir> [--out file.html] [--title "…"]`: drafts a
-  diagram of a Terraform configuration (see `references/terraform.md`).
+  diagram of a Terraform configuration.
 - `scripts/fetch-icons.mjs [azure] [aws] [--force]`: downloads the icon packs; the first
-  render does this by itself.
+  render does it by itself.
 
 They need only Node.js and an installed Chrome, Chromium or Edge. If the render prints
 `graphally needs Chrome, Chromium or Edge`, run `npx playwright install chromium` once, or
-set `CHROMIUM_PATH` to a browser executable.
+set `CHROMIUM_PATH` to a browser executable. Offline, diagrams render without vendor icons
+and say how to fetch them later.
 
 ---
 graphally · Copyright (c) 2026 Kamil Wilczyński (kwilcz) · https://github.com/kwilcz/graphally ·

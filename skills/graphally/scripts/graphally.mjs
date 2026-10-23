@@ -94,7 +94,8 @@ try {
     r.problems = r.problems.filter(p => !offline.includes(p));
     const s = r.stats;
     console.log(`${svgPath}  ${r.width}×${r.height}  ${s.nodes} nodes, ${s.edges} edges, ${s.crossings} crossings  ${r.problems.length ? r.problems.length + ' problem(s):' : 'ok'}`);
-    if (prev && r.snapshot) for (const line of droppedOverrides(prev, r.snapshot)) console.log(line);
+    const now = r.snapshot || readLayout(r.svg);
+    if (prev && now) for (const line of droppedOverrides(prev, now)) console.log(line);
     if (offline.length) console.log(`  note: drawn without ${offline.length} icon(s) (${[...new Set(offline.map(p => p.icon))].slice(0, 6).join(', ')}): the icon packs are not downloaded; run node ${path.join(skillRoot, 'scripts/fetch-icons.mjs')} when online`);
     for (const p of r.problems) {
       const { rule, hint, ...rest } = p;
@@ -127,7 +128,7 @@ function readPrevious(dir, base, source) {
   return snaps;
 }
 
-// One line per override of prev that next no longer has. A node or link that is gone is
+// One line per override of prev that next no longer has. A box or connection that is gone is
 // "removed"; one that is still there lost its override ("attribute removed").
 function droppedOverrides(prev, next) {
   const has = (o, k) => Object.hasOwn(o || {}, k);
@@ -136,7 +137,7 @@ function droppedOverrides(prev, next) {
     lines.push(`  note: override dropped: nudge on ${id} (${has(next.nodes, id) ? 'attribute' : 'node'} removed)`);
   for (const [key, was] of Object.entries(prev.overrides?.edges || {})) {
     const now = next.overrides?.edges?.[key];
-    if (!now) lines.push(`  note: override dropped: sides of ${key} (${has(next.edges, key) ? 'attribute' : 'link'} removed)`);
+    if (!now) lines.push(`  note: override dropped: sides of ${key} (${has(next.edges, key) ? 'attribute' : 'connection'} removed)`);
     else for (const end of ['out', 'in']) if (was[end] && !now[end]) lines.push(`  note: override dropped: ${end} side of ${key} (attribute removed)`);
   }
   return lines;

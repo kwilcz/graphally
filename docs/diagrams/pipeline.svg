@@ -103,8 +103,8 @@
 <g data-edge="route-&gt;draw" data-sides="right,left"><path d="M1013,116 L1085,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="layout-&gt;read" data-sides="right,left"><path d="M568,116 L641,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="render-&gt;check" data-sides="right,left"><path d="M1457,116 L1530,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="ok-&gt;fix" data-sides="bottom,right"><path d="M1802,138 L1802,230 Q1802,236 1796,236 L1013,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="fix-&gt;s" data-sides="left,bottom"><path d="M863,236 L80,236 Q74,236 74,230 L74,134" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ok-&gt;fix" data-sides="bottom,right" data-out="bottom"><path d="M1802,138 L1802,230 Q1802,236 1796,236 L1013,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fix-&gt;s" data-sides="left,bottom" data-in="bottom"><path d="M863,236 L80,236 Q74,236 74,230 L74,134" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 
 <text class="g-edge" x="1869.3" y="110" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">none</text>
 <text class="g-edge" x="1392.5" y="230" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">some</text>

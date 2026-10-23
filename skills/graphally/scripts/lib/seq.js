@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Sequence diagrams for page mode: the placing an author should not do by hand, as one
+// Sequence diagrams: the placing an author should not do by hand, as one
 // primitive a before-layout script calls. It decides where things go, not how they look:
 // everything it makes is a plain element with a class, styled by CSS like the rest.
 //

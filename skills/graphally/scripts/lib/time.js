@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Dates for page mode: the arithmetic an author should not do by hand, as two primitives a
+// Dates: the arithmetic an author should not do by hand, as two primitives a
 // before-layout script calls. Neither decides how anything looks.
 //
 //   schedule(elements)            data-after="a,b" data-duration="2w" (or data-start, data-end,

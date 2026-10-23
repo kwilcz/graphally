@@ -11,7 +11,7 @@
 //   --edits '[{…}]'           several edits as JSON (see lib/edits.mjs)
 //   --lines                   print the connections, with their keys, as JSON
 //
-// Edits a page-mode diagram's source in place and keeps the rest of the file as written.
+// Edits a diagram's source in place and keeps the rest of the file as written.
 // Render it afterwards to see the result; the render keeps everything else where it was.
 import fs from 'node:fs';
 import { applyEdits, readLines } from './lib/edits.mjs';
