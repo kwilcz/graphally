@@ -97,11 +97,11 @@
 <g data-edge="s-&gt;before" data-sides="right,left"><path d="M92,116 L196,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="check-&gt;ok" data-sides="right,left"><path d="M1680,116 L1780,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="read-&gt;route" data-sides="right,left"><path d="M791,116 L863,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="draw-&gt;render" data-sides="right,left"><path d="M1235,115 L1307,115" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="draw-&gt;render" data-sides="right,left"><path d="M1235,116 L1307,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="before-&gt;layout" data-sides="right,left"><path d="M346,116 L418,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="route-&gt;draw" data-sides="right,left"><path d="M1013,116 L1085,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="layout-&gt;read" data-sides="right,left"><path d="M568,116 L641,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="render-&gt;check" data-sides="right,left"><path d="M1457,115 L1530,115" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="render-&gt;check" data-sides="right,left"><path d="M1457,116 L1530,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="ok-&gt;fix" data-sides="bottom,right"><path d="M1802,138 L1802,230 Q1802,236 1796,236 L1013,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="fix-&gt;s" data-sides="left,bottom"><path d="M863,236 L80,236 Q74,236 74,230 L74,134" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 

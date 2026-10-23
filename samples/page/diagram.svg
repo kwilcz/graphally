@@ -127,7 +127,7 @@
 <text x="1031.5" y="397.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: var(--ink)">Review access</text>
 <text x="1031.5" y="419.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Every quarter</text>
 </g>
-<g data-edge="se2-&gt;pl2" data-sides="right,right"><path d="M719,413 L735,413 Q741,413 741,407 L741,201.5 Q741,195.5 735,195.5 L719,195.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="se2-&gt;pl2" data-sides="right,right"><path d="M719,413 L735,413 Q741,413 741,407 L741,201 Q741,195 735,195 L719,195" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 <path d="M460.5,135.2 L460.5,457.2" style="fill: none; stroke: var(--rust)" stroke-width="1.2" stroke-dasharray="5 4"></path>
 <polygon points="460.5,100.2 475.5,115.2 460.5,130.2 445.5,115.2" style="fill: var(--rust); stroke: var(--card)" stroke-width="2"></polygon>
 <text x="460.5" y="119.2" text-anchor="middle" style="font: 700 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--card)">M1</text>
@@ -144,7 +144,7 @@
 <path d="M978.1,284.8 L977.8,280 L974.1,282.2 Z" style="fill: var(--woad); stroke: none"></path>
 <path d="M977.4,288 A6.2,6.2 0 0 1 967,290.2" style="fill: none; stroke: var(--woad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
 <path d="M964.9,286.9 L965.2,291.8 L968.9,289.6 Z" style="fill: var(--woad); stroke: none"></path>
-<text class="g-edge" x="748" y="362.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">findings</text>
+<text class="g-edge" x="748" y="362" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">findings</text>
 <text class="g-edge" x="603.8" y="253.9" text-anchor="start" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">cluster and pipelines</text>
 <text class="g-edge" x="876.3" y="362.5" text-anchor="start" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">each wave</text>
 </g>

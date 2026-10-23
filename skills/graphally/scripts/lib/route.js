@@ -172,53 +172,21 @@ export function routeEdges(model, geo, m) {
       for (const it of list) fixed[it.k][it.which] = { side, coord: c };
       continue;
     }
-    if (list.length === 1 || geo.nodes.get(id)?.round) {
+    if (geo.nodes.get(id)?.round) {
       // Circles and diamonds attach at their points; every edge on that side shares it.
-      for (const it of list) fixed[it.k][it.which] = { side, coord: geo.nodes.get(id)?.round ? (side % 2 === 0 ? r.y + r.h / 2 : r.x + r.w / 2) : it.coord };
+      for (const it of list) fixed[it.k][it.which] = { side, coord: side % 2 === 0 ? r.y + r.h / 2 : r.x + r.w / 2 };
       continue;
     }
+    // Lines that share a side split it evenly: one at the middle, two at a third and two
+    // thirds, n at k/(n+1) of its free stretch, in the order they head off so they do not cross.
     list.sort((p, q) => p.sortBy - q.sortBy);
     const along = side % 2 === 0 ? r.h : r.w, origin = side % 2 === 0 ? r.y : r.x;
-    // Free stretch of this side (the part whose outside points are not blocked).
     const free = [];
     for (let c = origin + 6; c <= origin + along - 6; c += 2) if (sideFree(id, side, c)) free.push(c);
-    const lo = free.length ? free[0] : origin + 6, hi = free.length ? free.at(-1) : origin + along - 6;
-    const span = hi - lo, centre = (lo + hi) / 2;
-    const step = Math.min(S.edge.portGap * 1.6, list.length > 1 ? span / (list.length - 1) : 0);
-    const startAt = centre - (step * (list.length - 1)) / 2;
-    // Lines from facing sides whose other end lies along the free stretch aim for its
-    // coordinate, so they run straight in; the rest keep their evenly spaced slot. A forward and a backward pass keep the order and a
-    // port gap between neighbours; when the side is too short for that, even spacing it is.
-    const axis = side % 2 === 0 ? 'y' : 'x', gap = Math.min(S.edge.portGap, step || S.edge.portGap);
-    const straight = it => it.facing && it.other[axis] >= lo && it.other[axis] <= hi;
-    const c = list.map((it, i) => (straight(it) ? it.other[axis] : startAt + i * step));
-    // Two labelled neighbours need room for a label between them.
-    const gapAt = i => (edges[list[i].k].e.label && edges[list[i - 1].k].e.label ? Math.max(gap, 24) : gap);
-    for (let i = 1; i < c.length; i++) c[i] = Math.max(c[i], c[i - 1] + gapAt(i));
-    c[c.length - 1] = Math.min(c.at(-1), hi);
-    for (let i = c.length - 2; i >= 0; i--) c[i] = Math.min(c[i], c[i + 1] - gapAt(i + 1));
-    const fits = c[0] >= lo - 0.5;
-    list.forEach((it, i) => { fixed[it.k][it.which] = { side, coord: fits ? c[i] : startAt + i * step }; });
+    const lo = free.length ? free[0] - 6 : origin, hi = free.length ? free.at(-1) + 6 : origin + along;
+    list.forEach((it, i) => { fixed[it.k][it.which] = { side, coord: lo + (hi - lo) * (i + 1) / (list.length + 1) }; });
   }
 
-  // ---- straighten: an edge alone on two facing sides gets one shared coordinate ----
-  const freeOn = (id, side) => {
-    const r = rectOf(id), along = side % 2 === 0 ? r.h : r.w, origin = side % 2 === 0 ? r.y : r.x, out = [];
-    if (geo.nodes.get(id)?.round) return [origin + along / 2];
-    for (let c = origin + 8; c <= origin + along - 8; c += 2) if (sideFree(id, side, c)) out.push(c);
-    return out;
-  };
-  edges.forEach((E, k) => {
-    const f = fixed[k], p = first[k];
-    if (!f.a || !f.b || !p || (f.a.side + 2) % 4 !== f.b.side) return;
-    if ((ends.get(`${E.e.from}|${f.a.side}`) || []).length !== 1 || (ends.get(`${E.e.to}|${f.b.side}`) || []).length !== 1) return;
-    const A = new Set(freeOn(E.e.from, f.a.side).map(Math.round)), both = freeOn(E.e.to, f.b.side).map(Math.round).filter(c => A.has(c));
-    if (!both.length) return;
-    const want = (f.a.coord + f.b.coord) / 2;
-    const c = both.reduce((best, v) => (Math.abs(v - want) < Math.abs(best - want) ? v : best), both[0]);
-    if (globalThis.__routeDebug) (globalThis.__routeLog ||= []).push({ straighten: `${E.e.from}->${E.e.to}`, c, was: [f.a.coord, f.b.coord] });
-    f.a.coord = c; f.b.coord = c;
-  });
 
   // ---- pass 2: fixed ports ----
   for (const f of fixed) for (const w of ['a', 'b']) if (f[w]) (f[w].side % 2 === 0 ? extraY : extraX).add(f[w].coord);

@@ -218,51 +218,51 @@
 <text x="951.8" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">secrets</text>
 </g>
 <g data-id="appi" data-box="1308,636,150,51">
-<rect x="1308.4" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-application-insights" x="1320.9" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="1356.9" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">App Insights</text>
-<text x="1356.9" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">telemetry</text>
+<rect x="1308.3" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-azure-application-insights" x="1320.8" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
+<text x="1356.8" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">App Insights</text>
+<text x="1356.8" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">telemetry</text>
 </g>
 <g data-id="law" data-box="1713,636,150,51">
-<rect x="1713.5" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-log-analytics-workspaces" x="1726" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="1762" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Log Analytics</text>
-<text x="1762" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">logs</text>
+<rect x="1713.4" y="636.6" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-azure-log-analytics-workspaces" x="1725.9" y="648.6" width="26" height="26" style="color: var(--ink)"></use>
+<text x="1761.9" y="659.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Log Analytics</text>
+<text x="1761.9" y="673.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">logs</text>
 </g>
 <g data-edge="stg-&gt;web" data-sides="top,bottom"><path d="M791,228 L791,194" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="api-&gt;sql" data-sides="right,right"><path d="M1253,152 L1261,152 Q1267,152 1267,158 L1267,394.5 Q1267,400.5 1261,400.5 L1253,400.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="engine-&gt;cosmos" data-sides="left,left"><path d="M1043,221.5 L1022,221.5 Q1016,221.5 1016,227.5 L1016,463.5 Q1016,469.5 1022,469.5 L1043,469.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="sb-&gt;notify" data-sides="right,left"><path d="M1589,147.5 L1700.8,147.5 Q1701,147.5 1701,147.3 L1701,147.3 Q1701,147 1701.3,147 L1737,147" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="fd-&gt;web" data-sides="right,left"><path d="M539,167 L655.8,167 Q660,167 660,162.8 L660,162.8 Q660,158.5 664.3,158.5 L687,158.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="dispatch-&gt;fd" data-sides="right,left"><path d="M234,142 L242,142 Q248,142 248,148 L248,198.5 Q248,204.5 254,204.5 L347,204.5 Q353,204.5 353,198.5 L353,154.5 Q353,148.5 359,148.5 L389,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="api-&gt;sb" data-sides="right,left"><path d="M1253,133 L1404,133 Q1410,133 1410,139 L1410,144.5 Q1410,150.5 1416,150.5 L1437,150.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="sb-&gt;billing" data-sides="right,left"><path d="M1589,147.5 L1695,147.5 Q1701,147.5 1701,153.5 L1701,215.5 Q1701,221.5 1707,221.5 L1737,221.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="api-&gt;blob" data-sides="right,right"><path d="M1253,171 L1274.5,171 Q1280.5,171 1280.5,177 L1280.5,532.5 Q1280.5,538.5 1274.5,538.5 L1253,538.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="tech-&gt;fd" data-sides="right,left"><path d="M234,204.5 L347,204.5 Q353,204.5 353,198.5 L353,154.5 Q353,148.5 359,148.5 L389,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="appi-&gt;law" data-sides="right,left"><path d="M1458,662 L1713,662" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="tech-&gt;entra" data-sides="left,left"><path d="M24,204.5 L16,204.5 Q10,204.5 10,210.5 L10,655.5 Q10,661.5 16,661.5 L65,661.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="notify-&gt;twilio" data-sides="left,right"><path d="M1737,171 L1712,171 Q1706,171 1706,177 L1706,394.5 Q1706,400.5 1700,400.5 L1647,400.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="billing-&gt;sap" data-sides="bottom,right"><path d="M1812,247 L1812,463.5 Q1812,469.5 1806,469.5 L1647,469.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="dispatch-&gt;entra" data-sides="left,left"><path d="M24,135.5 L16,135.5 Q10,135.5 10,141.5 L10,655.5 Q10,661.5 16,661.5 L65,661.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="fd-&gt;api" data-sides="right,left"><path d="M539,143 L654,143 Q660,143 660,137 L660,78 Q660,72 666,72 L1010,72 Q1016,72 1016,78 L1016,141 Q1016,147 1022,147 L1043,147" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="engine-&gt;maps" data-sides="right,left"><path d="M1253,221.5 L1404,221.5 Q1410,221.5 1410,227.5 L1410,532.5 Q1410,538.5 1416,538.5 L1437,538.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="api-&gt;entra" data-sides="left,top"><path d="M1043,171 L928,171 Q922,171 922,177 L922,605 Q922,611 916,611 L146,611 Q140,611 140,617 L140,636" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="api-&gt;sql" data-sides="right,right"><path d="M1253,152 L1261,152 Q1267,152 1267,158 L1267,394 Q1267,400 1261,400 L1253,400" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="engine-&gt;cosmos" data-sides="left,left"><path d="M1043,221 L1022,221 Q1016,221 1016,227 L1016,463 Q1016,469 1022,469 L1043,469" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="sb-&gt;notify" data-sides="right,left"><path d="M1589,147.5 L1699,147.5 Q1701,147.5 1701,145.5 L1701,145.5 Q1701,143.5 1703,143.5 L1737,143.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fd-&gt;web" data-sides="right,left"><path d="M539,156.5 L654.3,156.5 Q660,156.5 660,162.3 L660,162.3 Q660,168 665.8,168 L687,168" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="dispatch-&gt;fd" data-sides="right,left"><path d="M234,135 L242,135 Q248,135 248,141 L248,198 Q248,204 254,204 L347,204 Q353,204 353,198 L353,154.5 Q353,148.5 359,148.5 L389,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="api-&gt;sb" data-sides="right,left"><path d="M1253,139.5 L1406.3,139.5 Q1410,139.5 1410,143.3 L1410,143.3 Q1410,147 1413.8,147 L1437,147" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="sb-&gt;billing" data-sides="right,left"><path d="M1589,147.5 L1695,147.5 Q1701,147.5 1701,153.5 L1701,215 Q1701,221 1707,221 L1737,221" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="api-&gt;blob" data-sides="right,right"><path d="M1253,164.5 L1274.5,164.5 Q1280.5,164.5 1280.5,170.5 L1280.5,532 Q1280.5,538 1274.5,538 L1253,538" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="tech-&gt;fd" data-sides="right,left"><path d="M234,204 L347,204 Q353,204 353,198 L353,154.5 Q353,148.5 359,148.5 L389,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="appi-&gt;law" data-sides="right,left"><path d="M1458,661 L1713,661" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="tech-&gt;entra" data-sides="left,left"><path d="M24,204 L16,204 Q10,204 10,210 L10,655.5 Q10,661.5 16,661.5 L65,661.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="notify-&gt;twilio" data-sides="left,right"><path d="M1737,160.5 L1712,160.5 Q1706,160.5 1706,166.5 L1706,394 Q1706,400 1700,400 L1647,400" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="billing-&gt;sap" data-sides="bottom,right"><path d="M1812,247 L1812,463 Q1812,469 1806,469 L1647,469" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="dispatch-&gt;entra" data-sides="left,left"><path d="M24,135 L16,135 Q10,135 10,141 L10,655.5 Q10,661.5 16,661.5 L65,661.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fd-&gt;api" data-sides="right,left"><path d="M539,139.5 L654,139.5 Q660,139.5 660,133.5 L660,78 Q660,72 666,72 L1010,72 Q1016,72 1016,78 L1016,137.5 Q1016,143.5 1022,143.5 L1043,143.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="engine-&gt;maps" data-sides="right,left"><path d="M1253,221 L1404,221 Q1410,221 1410,227 L1410,532 Q1410,538 1416,538 L1437,538" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="api-&gt;entra" data-sides="left,top"><path d="M1043,160.5 L928,160.5 Q922,160.5 922,166.5 L922,605 Q922,611 916,611 L146,611 Q140,611 140,617 L140,636" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <path d="M24,371.2 L54,371.2" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <path d="M24,396.7 L54,396.7" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
 <text class="g-edge" x="798" y="215" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">swap</text>
-<text class="g-edge" x="1236.2" y="280.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">jobs</text>
-<text class="g-edge" x="1023" y="325.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">locations</text>
+<text class="g-edge" x="1236.2" y="280" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">jobs</text>
+<text class="g-edge" x="1023" y="325" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">locations</text>
 <text class="g-edge" x="1627" y="141.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">events</text>
-<text class="g-edge" x="576.1" y="161" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">web app</text>
-<text class="g-edge" x="255" y="177.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
-<text class="g-edge" x="1314" y="127" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">job-events</text>
-<text class="g-edge" x="1287.5" y="328.8" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photos</text>
-<text class="g-edge" x="1555.7" y="656" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">stores logs</text>
-<text class="g-edge" x="17" y="479" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in (OIDC)</text>
-<text class="g-edge" x="1713" y="289.8" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">SMS, push</text>
-<text class="g-edge" x="1687.8" y="463.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">completed jobs</text>
+<text class="g-edge" x="576.1" y="171.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">web app</text>
+<text class="g-edge" x="255" y="173.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+<text class="g-edge" x="1314" y="133.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">job-events</text>
+<text class="g-edge" x="1287.5" y="325.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photos</text>
+<text class="g-edge" x="1555.7" y="655" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">stores logs</text>
+<text class="g-edge" x="17" y="478.8" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in (OIDC)</text>
+<text class="g-edge" x="1713" y="284.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">SMS, push</text>
+<text class="g-edge" x="1687.8" y="463" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">completed jobs</text>
 <text class="g-edge" x="814.8" y="66" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API calls</text>
-<text class="g-edge" x="1313.2" y="215.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">route plans</text>
+<text class="g-edge" x="1313.2" y="215" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">route plans</text>
 <text class="g-edge" x="487.1" y="605" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">validates tokens</text>
 </g>
 </svg>

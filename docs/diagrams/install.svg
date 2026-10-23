@@ -126,24 +126,24 @@
 <text x="935.9" y="581.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">AWS icons</text>
 </g>
 </g>
-<g data-edge="drawio-&gt;assets" data-sides="left,left"><path d="M887,500.5 L857,500.5 Q851,500.5 851,494.5 L851,359.5 Q851,353.5 857,353.5 L887,353.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="npm-&gt;assets" data-sides="left,left"><path d="M887,569.5 L857,569.5 Q851,569.5 851,563.5 L851,359.5 Q851,353.5 857,353.5 L887,353.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="gh-&gt;npx" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,259.5 L418,263 Q418,269 424,269 L454,269" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="gh-&gt;ghs" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,247.5 L418,221.5 Q418,215.5 424,215.5 L454,215.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="ghs-&gt;skill" data-sides="right,left"><path d="M604,215.5 L625,215.5 Q631,215.5 631,221.5 L631,347.5 Q631,353.5 637,353.5 L828,353.5 Q834,353.5 834,347.5 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="npx-&gt;skill" data-sides="right,left"><path d="M604,284.5 L625,284.5 Q631,284.5 631,290.5 L631,347.5 Q631,353.5 637,353.5 L828,353.5 Q834,353.5 834,347.5 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="scripts-&gt;browser" data-sides="right,left"><path d="M1061,298.5 L1307,298.5 Q1313,298.5 1313,304.5 L1313,327.5 Q1313,333.5 1319,333.5 L1327,333.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="agent-&gt;scripts" data-sides="left,right"><path d="M1327,232.5 L1094,232.5 Q1088,232.5 1088,238.5 L1088,268.5 Q1088,274.5 1082,274.5 L1061,274.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="gh-&gt;zip" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,259.5 L418,347.5 Q418,353.5 424,353.5 L454,353.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="agent-&gt;md" data-sides="left,right"><path d="M1327,208.5 L1094,208.5 Q1088,208.5 1088,202.5 L1088,152.5 Q1088,146.5 1082,146.5 L1061,146.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="gh-&gt;plugin" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,247.5 L418,152.5 Q418,146.5 424,146.5 L454,146.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="plugin-&gt;skill" data-sides="right,left"><path d="M604,146.5 L625,146.5 Q631,146.5 631,152.5 L631,347.5 Q631,353.5 637,353.5 L828,353.5 Q834,353.5 834,347.5 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="zip-&gt;skill" data-sides="right,left"><path d="M604,353.5 L828,353.5 Q834,353.5 834,347.5 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="drawio-&gt;assets" data-sides="left,left"><path d="M887,500 L857,500 Q851,500 851,494 L851,359.5 Q851,353.5 857,353.5 L887,353.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="npm-&gt;assets" data-sides="left,left"><path d="M887,569 L857,569 Q851,569 851,563 L851,359.5 Q851,353.5 857,353.5 L887,353.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="gh-&gt;npx" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,259.5 L418,278 Q418,284 424,284 L454,284" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="gh-&gt;ghs" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,247.5 L418,221 Q418,215 424,215 L454,215" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ghs-&gt;skill" data-sides="right,left"><path d="M604,215 L625,215 Q631,215 631,221 L631,347 Q631,353 637,353 L828,353 Q834,353 834,347 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="npx-&gt;skill" data-sides="right,left"><path d="M604,284 L625,284 Q631,284 631,290 L631,347 Q631,353 637,353 L828,353 Q834,353 834,347 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="scripts-&gt;browser" data-sides="right,left"><path d="M1061,292.5 L1307,292.5 Q1313,292.5 1313,298.5 L1313,327 Q1313,333 1319,333 L1327,333" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="agent-&gt;scripts" data-sides="left,right"><path d="M1327,226.5 L1094,226.5 Q1088,226.5 1088,232.5 L1088,269.5 Q1088,275.5 1082,275.5 L1061,275.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="gh-&gt;zip" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,259.5 L418,347 Q418,353 424,353 L454,353" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="agent-&gt;md" data-sides="left,right"><path d="M1327,209.5 L1094,209.5 Q1088,209.5 1088,203.5 L1088,152 Q1088,146 1082,146 L1061,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="gh-&gt;plugin" data-sides="right,left"><path d="M188,253.5 L412,253.5 Q418,253.5 418,247.5 L418,152 Q418,146 424,146 L454,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="plugin-&gt;skill" data-sides="right,left"><path d="M604,146 L625,146 Q631,146 631,152 L631,347 Q631,353 637,353 L828,353 Q834,353 834,347 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="zip-&gt;skill" data-sides="right,left"><path d="M604,353 L828,353 Q834,353 834,347 L834,245 Q834,239 840,239 L870,239" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 
-<text class="g-edge" x="858" y="425" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">first render</text>
-<text class="g-edge" x="638" y="288.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">copy</text>
-<text class="g-edge" x="1170.3" y="292.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">drives</text>
-<text class="g-edge" x="1195.5" y="226.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">runs</text>
-<text class="g-edge" x="1192.2" y="202.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reads</text>
+<text class="g-edge" x="858" y="424.8" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">first render</text>
+<text class="g-edge" x="638" y="288" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">copy</text>
+<text class="g-edge" x="1170.3" y="286.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">drives</text>
+<text class="g-edge" x="1195.5" y="241.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">runs</text>
+<text class="g-edge" x="1192.2" y="203.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reads</text>
 </g>
 </svg>

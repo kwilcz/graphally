@@ -186,35 +186,35 @@
 <text x="995" y="664.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">secrets</text>
 </g>
 <g data-edge="cdn-&gt;waf" data-sides="bottom,top"><path d="M514,174 L514,192" style="fill: none; stroke: var(--ink)" stroke-width="1.5"></path></g>
-<g data-edge="thumb-&gt;sns" data-sides="bottom,top"><path d="M1587,430 L1587,478" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="web-&gt;cognito" data-sides="right,right"><path d="M223,218.5 L236,218.5 Q242,218.5 242,224.5 L242,362.5 Q242,368.5 236,368.5 L206,368.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="mobile-&gt;cognito" data-sides="right,right"><path d="M223,125.5 L236,125.5 Q242,125.5 242,131.5 L242,362.5 Q242,368.5 236,368.5 L206,368.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="thumb-&gt;s3" data-sides="right,right"><path d="M1693,404.5 L1728,404.5 Q1734,404.5 1734,398.5 L1734,152.5 Q1734,146.5 1728,146.5 L1707,146.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="queue-&gt;thumb" data-sides="right,left"><path d="M1390,418.5 L1463,418.5 Q1469,418.5 1469,412.5 L1469,410.5 Q1469,404.5 1475,404.5 L1483,404.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="sns-&gt;push" data-sides="left,right"><path d="M1483,504 L1390,504" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="apigw-&gt;upload" data-sides="right,left"><path d="M972,149 L1180,149" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="upload-&gt;s3" data-sides="right,left"><path d="M1339,147 L1514,147 Q1520,147 1520,153 L1520,154.5 Q1520,160.5 1526,160.5 L1547,160.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="feed-&gt;ddb" data-sides="right,left"><path d="M1339,218.5 L1514.5,218.5 Q1520,218.5 1520,224 L1520,224 Q1520,229.5 1525.5,229.5 L1547,229.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="cdn-&gt;apigw" data-sides="right,left"><path d="M614,147 L822,147" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="mobile-&gt;cdn" data-sides="right,left"><path d="M223,149.5 L231,149.5 Q237,149.5 237,155.5 L237,188.5 Q237,194.5 243,194.5 L372,194.5 Q378,194.5 378,188.5 L378,154.5 Q378,148.5 384,148.5 L414,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="upload-&gt;ddb" data-sides="right,left"><path d="M1339,171 L1514,171 Q1520,171 1520,177 L1520,199.5 Q1520,205.5 1526,205.5 L1547,205.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="apigw-&gt;feed" data-sides="bottom,left"><path d="M897,172 L897,215.5 Q897,221.5 903,221.5 L1180,221.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="web-&gt;cdn" data-sides="right,left"><path d="M223,194.5 L372,194.5 Q378,194.5 378,188.5 L378,154.5 Q378,148.5 384,148.5 L414,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="s3-&gt;queue" data-sides="left,right"><path d="M1547,136.5 L1410,136.5 Q1404,136.5 1404,142.5 L1404,388.5 Q1404,394.5 1398,394.5 L1390,394.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="thumb-&gt;sns" data-sides="bottom,top"><path d="M1588,430 L1588,478" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="web-&gt;cognito" data-sides="right,right"><path d="M223,212.5 L236,212.5 Q242,212.5 242,218.5 L242,362.5 Q242,368.5 236,368.5 L206,368.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="mobile-&gt;cognito" data-sides="right,right"><path d="M223,126.5 L236,126.5 Q242,126.5 242,132.5 L242,362.5 Q242,368.5 236,368.5 L206,368.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="thumb-&gt;s3" data-sides="right,right"><path d="M1693,404 L1728,404 Q1734,404 1734,398 L1734,152 Q1734,146 1728,146 L1707,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="queue-&gt;thumb" data-sides="right,left"><path d="M1390,412.5 L1464.8,412.5 Q1469,412.5 1469,408.3 L1469,408.3 Q1469,404 1473.3,404 L1483,404" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="sns-&gt;push" data-sides="left,right"><path d="M1483,503 L1390,503" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="apigw-&gt;upload" data-sides="right,left"><path d="M972,146 L1150,146 Q1153,146 1153,149 L1153,149 Q1153,152 1156,152 L1180,152" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="upload-&gt;s3" data-sides="right,left"><path d="M1339,143.5 L1514.5,143.5 Q1520,143.5 1520,149 L1520,149 Q1520,154.5 1525.5,154.5 L1547,154.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="feed-&gt;ddb" data-sides="right,left"><path d="M1339,221 L1518.8,221 Q1520,221 1520,222.3 L1520,222.3 Q1520,223.5 1521.3,223.5 L1547,223.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="cdn-&gt;apigw" data-sides="right,left"><path d="M614,148 L794,148 Q795,148 795,147 L795,147 Q795,146 796,146 L822,146" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="mobile-&gt;cdn" data-sides="right,left"><path d="M223,143.5 L231,143.5 Q237,143.5 237,149.5 L237,189.5 Q237,195.5 243,195.5 L372,195.5 Q378,195.5 378,189.5 L378,154.5 Q378,148.5 384,148.5 L414,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="upload-&gt;ddb" data-sides="right,left"><path d="M1339,160.5 L1514,160.5 Q1520,160.5 1520,166.5 L1520,200.5 Q1520,206.5 1526,206.5 L1547,206.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="apigw-&gt;feed" data-sides="bottom,left"><path d="M897,172 L897,215 Q897,221 903,221 L1180,221" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="web-&gt;cdn" data-sides="right,left"><path d="M223,195.5 L372,195.5 Q378,195.5 378,189.5 L378,154.5 Q378,148.5 384,148.5 L414,148.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="s3-&gt;queue" data-sides="left,right"><path d="M1547,137.5 L1410,137.5 Q1404,137.5 1404,143.5 L1404,389.5 Q1404,395.5 1398,395.5 L1390,395.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 <path d="M396.8,339.2 L426.8,339.2" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <path d="M396.8,364.7 L426.8,364.7" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
-<text class="g-edge" x="1594" y="458" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">photo ready</text>
-<text class="g-edge" x="249" y="297.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in</text>
-<text class="g-edge" x="1667.6" y="279.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">thumbnails</text>
-<text class="g-edge" x="1414.2" y="412.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">reads</text>
-<text class="g-edge" x="1420.8" y="498" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">notify</text>
-<text class="g-edge" x="1035.1" y="143" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">upload request</text>
-<text class="g-edge" x="1365.8" y="141" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo</text>
-<text class="g-edge" x="1413.5" y="212.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">query</text>
-<text class="g-edge" x="708.8" y="141" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API</text>
-<text class="g-edge" x="332.9" y="175.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
-<text class="g-edge" x="1410.1" y="165" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">metadata</text>
-<text class="g-edge" x="1004" y="215.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">feed request</text>
-<text class="g-edge" x="1443.7" y="130.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo lands</text>
+<text class="g-edge" x="1595" y="458" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">photo ready</text>
+<text class="g-edge" x="249" y="294.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in</text>
+<text class="g-edge" x="1667.6" y="279" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">thumbnails</text>
+<text class="g-edge" x="1414.2" y="406.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">reads</text>
+<text class="g-edge" x="1420.8" y="497" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">notify</text>
+<text class="g-edge" x="1021.6" y="140" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">upload request</text>
+<text class="g-edge" x="1365.8" y="137.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo</text>
+<text class="g-edge" x="1413.5" y="215" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">query</text>
+<text class="g-edge" x="695.3" y="142" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API</text>
+<text class="g-edge" x="332.9" y="176" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+<text class="g-edge" x="1410.1" y="175.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">metadata</text>
+<text class="g-edge" x="1004" y="215" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">feed request</text>
+<text class="g-edge" x="1443.7" y="131.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">photo lands</text>
 </g>
 </svg>

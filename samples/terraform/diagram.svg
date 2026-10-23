@@ -172,27 +172,27 @@
 <text x="1482" y="601.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">tracking topic</text>
 </g>
 </g>
-<g data-edge="id_aks-&gt;kv_kv" data-sides="right,left"><path d="M1337,470 L1416.3,470 Q1419,470 1419,472.8 L1419,472.8 Q1419,475.5 1421.8,475.5 L1433,475.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="agw_ingress-&gt;aks_main" data-sides="right,left"><path d="M671,530 L769,530" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;log_law" data-sides="right,left"><path d="M1019,548 L1067,548 Q1073,548 1073,554 L1073,576 Q1073,582 1079,582 L1087,582" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;id_aks" data-sides="right,left"><path d="M1019,510 L1067,510 Q1073,510 1073,504 L1073,481.5 Q1073,475.5 1079,475.5 L1087,475.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="ho-&gt;vgw_vpn" data-sides="right,left"><path d="M274,188.5 L392,188.5 Q398,188.5 398,194.5 L398,222.5 Q398,228.5 404,228.5 L421,228.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
-<g data-edge="id_aks-&gt;sb_events" data-sides="right,left"><path d="M1337,494 L1413,494 Q1419,494 1419,500 L1419,566.5 Q1419,572.5 1425,572.5 L1433,572.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="vnet_hub-&gt;vnet_spoke" data-sides="bottom,top"><path d="M545,288 L545,402" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
-<g data-edge="dispatch-&gt;agw_ingress" data-sides="right,left"><path d="M274,279.5 L354,279.5 Q360,279.5 360,285.5 L360,523.5 Q360,529.5 366,529.5 L421,529.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="pe_sb-&gt;sb_events" data-sides="right,left"><path d="M1019,676.5 L1413,676.5 Q1419,676.5 1419,670.5 L1419,602.5 Q1419,596.5 1425,596.5 L1433,596.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;acr_acr" data-sides="right,left"><path d="M1019,529 L1379,529 Q1385,529 1385,523 L1385,211.5 Q1385,205.5 1391,205.5 L1433,205.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;kv_kv" data-sides="right,left"><path d="M1337,466.5 L1414.8,466.5 Q1419,466.5 1419,470.8 L1419,470.8 Q1419,475 1423.3,475 L1433,475" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="agw_ingress-&gt;aks_main" data-sides="right,left"><path d="M671,529 L769,529" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;log_law" data-sides="right,left"><path d="M1019,541.5 L1067,541.5 Q1073,541.5 1073,547.5 L1073,576 Q1073,582 1079,582 L1087,582" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;id_aks" data-sides="right,left"><path d="M1019,516.5 L1067,516.5 Q1073,516.5 1073,510.5 L1073,481 Q1073,475 1079,475 L1087,475" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ho-&gt;vgw_vpn" data-sides="right,left"><path d="M274,188 L392,188 Q398,188 398,194 L398,222 Q398,228 404,228 L421,228" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;sb_events" data-sides="right,left"><path d="M1337,483.5 L1413,483.5 Q1419,483.5 1419,489.5 L1419,565 Q1419,571 1425,571 L1433,571" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="vnet_hub-&gt;vnet_spoke" data-sides="bottom,top"><path d="M546,288 L546,382 Q546,388 552,388 L723,388 Q729,388 729,394 L729,402" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
+<g data-edge="dispatch-&gt;agw_ingress" data-sides="right,left"><path d="M274,279 L354,279 Q360,279 360,285 L360,523 Q360,529 366,529 L421,529" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="pe_sb-&gt;sb_events" data-sides="right,left"><path d="M1019,676 L1413,676 Q1419,676 1419,670 L1419,599 Q1419,593 1425,593 L1433,593" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;acr_acr" data-sides="right,left"><path d="M1019,529 L1379,529 Q1385,529 1385,523 L1385,211 Q1385,205 1391,205 L1433,205" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <path d="M24,692.2 L54,692.2" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <path d="M24,717.7 L54,717.7" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
-<text class="g-edge" x="1342.6" y="464" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Secrets User</text>
-<text class="g-edge" x="692.8" y="524" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">logistics API</text>
-<text class="g-edge" x="1003.7" y="575" style="paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
-<text class="g-edge" x="1025.1" y="496.8" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">identity</text>
-<text class="g-edge" x="292.6" y="182.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">site-to-site VPN</text>
-<text class="g-edge" x="1426" y="537.3" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
-<text class="g-edge" x="552" y="349" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
-<text class="g-edge" x="367" y="354.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
-<text class="g-edge" x="1188.9" y="670.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="1342.6" y="460.5" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Secrets User</text>
+<text class="g-edge" x="692.8" y="523" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">logistics API</text>
+<text class="g-edge" x="1003.7" y="577.8" style="paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
+<text class="g-edge" x="1080" y="517.8" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">identity</text>
+<text class="g-edge" x="292.6" y="182" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">site-to-site VPN</text>
+<text class="g-edge" x="1426" y="531.3" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
+<text class="g-edge" x="616.7" y="382" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">peering</text>
+<text class="g-edge" x="367" y="354" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+<text class="g-edge" x="1188.9" y="670" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
 <text class="g-edge" x="1182.6" y="523" style="paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">AcrPull</text>
 </g>
 </svg>
