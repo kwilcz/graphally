@@ -457,7 +457,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     lineOut.push(`<g data-edge="${esc(e.key)}"${sides}><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path></g>`);
     if (rt.label) {
       const halo = under(boxes, rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) || 'var(--bg)';
-      labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
+      labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="fill: var(--ink); paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
     }
   }
   for (const d of drawings) {
@@ -468,7 +468,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       if (o2.label && d.via) {
         const [p, q] = d.ends, upright = Math.abs(q.x - p.x) < Math.abs(q.y - p.y), x = d.via.x + (upright ? 7 : 0), y = d.via.y - (upright ? 0 : 9);
         const halo = under(boxes, x, y) || 'var(--bg)';
-        labelOut.push(`<text class="${T.edge}" x="${fmt(x)}" y="${fmt(y + 4)}" text-anchor="${upright ? 'start' : 'middle'}" style="paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(o2.label)}</text>`);
+        labelOut.push(`<text class="${T.edge}" x="${fmt(x)}" y="${fmt(y + 4)}" text-anchor="${upright ? 'start' : 'middle'}" style="fill: var(--ink); paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(o2.label)}</text>`);
       }
     } else if (d.kind === 'gate') {
       const s = (o2.size || 30) / 2, { x, y } = d.p, fill = paintOf(toneOf(o2.fill || o2.tone || 'rust')) || 'var(--rust)';
@@ -498,7 +498,11 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
   const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
   const style = opts.standalone ? `<style>${opts.css}</style>\n` : '';
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" class="graphally"${theme}${opts.source ? ` data-source="${esc(opts.source)}"` : ''} viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">\n${style}<defs>${defs.join('\n')}</defs>\n<g>\n${out.join('\n')}\n${lineOut.join('\n')}\n${drawOut.join('\n')}\n${labelOut.join('\n')}\n</g>\n</svg>`;
+  // The figure paints its own background, so it reads on a dark page as on a light one:
+  // the theme's --bg, a colour of the author's (background="#fff"), or none (background=none).
+  const bgAttr = (el.getAttribute('background') || '').trim();
+  const bg = bgAttr === 'none' ? '' : `<rect class="g-bg" width="${W}" height="${H}" style="fill: ${bgAttr ? esc(bgAttr) : 'var(--bg)'}"></rect>\n`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" class="graphally"${theme}${opts.source ? ` data-source="${esc(opts.source)}"` : ''} viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">\n${style}<defs>${defs.join('\n')}</defs>\n${bg}<g>\n${out.join('\n')}\n${lineOut.join('\n')}\n${drawOut.join('\n')}\n${labelOut.join('\n')}\n</g>\n</svg>`;
   return { svg, width: W, height: H, problems, stats: { nodes: boxes.filter(x => x.e.id).length, groups: 0, edges: routes.length, crossings: crossings(routes) }, snapshot: null };
 }
 

@@ -26,6 +26,7 @@
 </style>
 <defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
 <marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--rust)"></path></marker></defs>
+<rect class="g-bg" width="1848" height="879" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Logistics move to AKS</text>
 <text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Migration plan for the steering group, first half of 2026: critical path, parallel work, one blocker</text>
@@ -47,8 +48,8 @@
 <rect x="385" y="172" width="43.9" height="18.8" rx="9.4" style="fill: var(--wash)"></rect>
 <text x="393" y="185" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Done</text>
 <g data-id="hub" data-box="520.5,171.5,221.5,20">
-<rect x="520.9" y="171.9" width="220.5" height="19" rx="3.5" style="fill: rgb(201, 207, 219); stroke: var(--muted)" stroke-width="1"></rect>
-<rect x="521.4" y="172.4" width="219.5" height="18" rx="0" style="fill: rgb(174, 182, 198)"></rect>
+<rect x="520.9" y="171.9" width="220.5" height="19" rx="3.5" style="fill: var(--line); stroke: var(--muted)" stroke-width="1"></rect>
+<rect x="521.4" y="172.4" width="219.5" height="18" rx="0" style="fill: var(--line)"></rect>
 </g>
 <line x1="25" y1="241.4" x2="1823" y2="241.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="224.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Spoke VNets and peering</text>
@@ -56,43 +57,42 @@
 <rect x="385" y="212" width="43.9" height="18.8" rx="9.4" style="fill: var(--wash)"></rect>
 <text x="393" y="225" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Done</text>
 <g data-id="spoke" data-box="742,211.5,124,20">
-<rect x="742.5" y="211.9" width="123.1" height="19" rx="3.5" style="fill: rgb(201, 207, 219); stroke: var(--muted)" stroke-width="1"></rect>
-<rect x="743" y="212.4" width="122.1" height="18" rx="0" style="fill: rgb(174, 182, 198)"></rect>
+<rect x="742.5" y="211.9" width="123.1" height="19" rx="3.5" style="fill: var(--line); stroke: var(--muted)" stroke-width="1"></rect>
+<rect x="743" y="212.4" width="122.1" height="18" rx="0" style="fill: var(--line)"></rect>
 </g>
 <line x1="25" y1="281.4" x2="1823" y2="281.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="264.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Firewall change approval</text>
 <text x="265" y="264.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Security CAB</text>
-<rect x="385" y="252" width="58.6" height="18.8" rx="9.4" style="fill: rgb(251, 228, 223)"></rect>
+<rect x="385" y="252" width="58.6" height="18.8" rx="9.4" style="fill: var(--lane-d)"></rect>
 <text x="393" y="265" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--rust)">Blocked</text>
 <g data-id="fw" data-box="892.5,251.5,283.5,20">
-<rect x="893.1" y="251.9" width="282.5" height="19" rx="3.5" style="fill: rgb(251, 228, 223); stroke: var(--rust)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<rect x="893.1" y="251.9" width="282.5" height="19" rx="3.5" style="fill: var(--lane-d); stroke: var(--rust)" stroke-width="1" stroke-dasharray="5 4"></rect>
 </g>
 <rect x="25" y="281.9" width="1798" height="30" rx="0" style="fill: var(--lane-b)"></rect>
 <text x="39" y="300.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.48px; fill: var(--ink)">PLATFORM</text>
 <line x1="25" y1="351.4" x2="1823" y2="351.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="334.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">AKS cluster and ingress</text>
 <text x="265" y="334.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Platform team</text>
-<rect x="385" y="322" width="61.1" height="18.8" rx="9.4" style="fill: rgb(227, 241, 230)"></rect>
+<rect x="385" y="322" width="61.1" height="18.8" rx="9.4" style="fill: var(--lane-b)"></rect>
 <text x="393" y="335" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--green)">On track</text>
 <g data-id="aks" data-box="866,321.5,186,20">
 <rect x="866.5" y="321.9" width="185.1" height="19" rx="3.5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1"></rect>
-<rect x="867" y="322.4" width="147.3" height="18" rx="0" style="fill: rgb(23, 72, 143)"></rect>
 </g>
 <line x1="25" y1="391.4" x2="1823" y2="391.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="374.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">PostgreSQL and Service Bus</text>
 <text x="265" y="374.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Platform team</text>
-<rect x="385" y="362" width="50.1" height="18.8" rx="9.4" style="fill: rgb(251, 239, 217)"></rect>
+<rect x="385" y="362" width="50.1" height="18.8" rx="9.4" style="fill: var(--note)"></rect>
 <text x="393" y="375" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--amber)">At risk</text>
 <g data-id="pg" data-box="830.5,361.5,248,20">
-<rect x="831.1" y="361.9" width="247.1" height="19" rx="3.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
-<rect x="831.6" y="362.4" width="135.4" height="18" rx="0" style="fill: rgb(185, 205, 238)"></rect>
+<rect x="831.1" y="361.9" width="247.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
+<rect x="831.6" y="362.4" width="135.4" height="18" rx="0" style="fill: var(--icon-soft)"></rect>
 </g>
 <line x1="25" y1="431.4" x2="1823" y2="431.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="414.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Monitoring and alerts</text>
 <text x="265" y="414.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Platform team</text>
 <text x="393" y="415" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="mon" data-box="1052,401.5,124,20">
-<rect x="1052.6" y="401.9" width="123" height="19" rx="3.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<rect x="1052.6" y="401.9" width="123" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
 </g>
 <rect x="25" y="431.9" width="1798" height="30" rx="0" style="fill: var(--lane-c)"></rect>
 <text x="39" y="450.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.48px; fill: var(--ink)">APPLICATIONS</text>
@@ -108,7 +108,7 @@
 <text x="265" y="524.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Data team</text>
 <text x="393" y="525" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="rehearse" data-box="1078.5,511.5,186,20">
-<rect x="1079.2" y="511.9" width="185.1" height="19" rx="3.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<rect x="1079.2" y="511.9" width="185.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
 </g>
 <line x1="25" y1="581.4" x2="1823" y2="581.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="564.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Move remaining services</text>
@@ -131,7 +131,7 @@
 <text x="265" y="674.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Operations</text>
 <text x="393" y="675" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="runbooks" data-box="1176,661.5,248,20">
-<rect x="1176.6" y="661.9" width="247.1" height="19" rx="3.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<rect x="1176.6" y="661.9" width="247.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
 </g>
 <line x1="25" y1="731.4" x2="1823" y2="731.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="714.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Go / no-go review</text>
@@ -145,7 +145,7 @@
 <text x="265" y="754.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Platform team</text>
 <text x="393" y="755" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="load" data-box="1362,741.5,124,20">
-<rect x="1362.7" y="741.9" width="123.1" height="19" rx="3.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
+<rect x="1362.7" y="741.9" width="123.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
 </g>
 <text x="39" y="795.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">External pen test</text>
 <text x="265" y="795.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Security vendor</text>
@@ -182,18 +182,18 @@
 </g>
 <rect x="24.5" y="837.4" width="25" height="17" rx="3.5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1"></rect>
 <text x="58" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">critical path</text>
-<rect x="144.3" y="837.4" width="25" height="17" rx="3.5" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="1"></rect>
-<text x="177.8" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">task, darker part done</text>
-<rect x="320.3" y="837.4" width="25" height="17" rx="3.5" style="fill: rgb(251, 228, 223); stroke: var(--rust)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<text x="353.8" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">blocked</text>
-<rect x="419.4" y="837.4" width="25" height="17" rx="3.5" style="fill: var(--card); stroke: var(--muted)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<text x="452.9" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">external</text>
-<g data-id="k1" data-box="519,842,30,8">
+<rect x="144.3" y="837.4" width="25" height="17" rx="3.5" style="fill: var(--icon-soft); stroke: var(--woad)" stroke-width="1"></rect>
+<text x="177.8" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">task, filled part done</text>
+<rect x="311.6" y="837.4" width="25" height="17" rx="3.5" style="fill: var(--lane-d); stroke: var(--rust)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<text x="345.1" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">blocked</text>
+<rect x="410.7" y="837.4" width="25" height="17" rx="3.5" style="fill: var(--card); stroke: var(--muted)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<text x="444.2" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">external</text>
+<g data-id="k1" data-box="510,842,30,8">
 </g>
-<text x="556.8" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">depends on</text>
-<g data-id="k2" data-box="643,842,30,8">
+<text x="548.1" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">depends on</text>
+<g data-id="k2" data-box="634.5,842,30,8">
 </g>
-<text x="681.1" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">blocks</text>
+<text x="672.4" y="849.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">blocks</text>
 
 <path d="M742,181.4 L758,181.4 Q762,181.4 762,185.4 L762,211.4" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <path d="M842,231.4 L842,327.4 Q842,331.4 846,331.4 L866,331.4" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
@@ -206,8 +206,8 @@
 <path d="M1639.4,571.4 L1639.4,597.4 Q1639.4,601.4 1643.4,601.4 L1663.4,601.4" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <path d="M1016.6,82.9 L1016.6,811.9" style="fill: none; stroke: var(--rust)" stroke-width="2"></path>
 <text x="1016.6" y="829.9" text-anchor="middle" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--rust)">today, 2 March</text>
-<path d="M518.8,845.9 L548.8,845.9" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
-<path d="M643.1,845.9 L673.1,845.9" style="fill: none; stroke: var(--rust)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m1)"></path>
+<path d="M510.1,845.9 L540.1,845.9" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
+<path d="M634.4,845.9 L664.4,845.9" style="fill: none; stroke: var(--rust)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m1)"></path>
 
 </g>
 </svg>

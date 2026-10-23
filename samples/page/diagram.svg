@@ -27,6 +27,7 @@
 <defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
 <marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--woad)"></path></marker>
 <marker id="pg-m2" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--rust)"></path></marker></defs>
+<rect class="g-bg" width="1288" height="486" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="46" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--ink)">Who does what in the move to AKS</text>
 <text x="24" y="70.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">Four phases, three teams. The platform is built once; services move in waves, each tested before it goes live.</text>
@@ -144,8 +145,8 @@
 <path d="M978.1,284.8 L977.8,280 L974.1,282.2 Z" style="fill: var(--woad); stroke: none"></path>
 <path d="M977.4,288 A6.2,6.2 0 0 1 967,290.2" style="fill: none; stroke: var(--woad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
 <path d="M964.9,286.9 L965.2,291.8 L968.9,289.6 Z" style="fill: var(--woad); stroke: none"></path>
-<text class="g-edge" x="748" y="362" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">findings</text>
-<text class="g-edge" x="603.8" y="253.9" text-anchor="start" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">cluster and pipelines</text>
-<text class="g-edge" x="876.3" y="362.5" text-anchor="start" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">each wave</text>
+<text class="g-edge" x="748" y="362" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">findings</text>
+<text class="g-edge" x="603.8" y="253.9" text-anchor="start" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">cluster and pipelines</text>
+<text class="g-edge" x="876.3" y="362.5" text-anchor="start" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">each wave</text>
 </g>
 </svg>

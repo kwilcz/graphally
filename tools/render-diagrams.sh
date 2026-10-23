@@ -17,6 +17,8 @@ for src in samples/*/diagram.html docs/diagrams/*.html; do
   args=(render "$src")
   # A PNG next to the source is kept, drawn at 2x so it can be published.
   [ -f "${src%.html}.png" ] && args+=(--png2x)
+  # So is a dark copy (<name>-dark.svg), for pages that show the reader's theme.
+  [ -f "${src%.html}-dark.svg" ] && args+=(--themes)
   echo "== $src"
   out=$(node skills/graphally/scripts/graphally.mjs "${args[@]}" 2>&1)
   code=$?

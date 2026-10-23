@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-theme="dark" data-source="pipeline.html" viewBox="0 0 2048 290" width="2048" height="290" role="img" aria-label="From source to SVG. One render, and the agent's fix loop">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
+<symbol id="pg-g-code" viewBox="0 0 24 24"><path d="M8.5 7 3.5 12l5 5M15.5 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-browser" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="2.5" y="4" width="19" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 8.5h19M5.5 6.3h.01M8 6.3h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-file" viewBox="0 0 24 24"><path d="M6 2.5h8l4.5 4.5v14.5H6z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M6 2.5h8l4.5 4.5v14.5H6zM14 2.5V7h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
+<rect class="g-bg" width="2048" height="290" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">From source to SVG</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">One render, and the agent's fix loop</text>
+<g data-id="s" data-box="56,98.5,36,36">
+<path d="M56.5,116.3 A17.5,17.5 0 1 1 91.5,116.3 A17.5,17.5 0 1 1 56.5,116.3 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+</g>
+<text x="38.5" y="89.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">diagram.html</text>
+<g data-id="before" data-box="196,87.5,150,58">
+<path d="M206.7,88 H335.7 Q345.7,88 345.7,98 V135 Q345.7,145 335.7,145 H206.7 Q196.7,145 196.7,135 V98 Q196.7,88 206.7,88 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<use href="#pg-g-code" x="205.2" y="94.5" width="16" height="16" style="color: var(--ink)"></use>
+<text x="238.3" y="112.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Before script</text>
+<text x="232.3" y="129.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">dates, sequences</text>
+</g>
+<g data-id="layout" data-box="418.5,82,150,69">
+<path d="M428.9,82.4 H557.9 Q567.9,82.4 567.9,92.4 V140.6 Q567.9,150.6 557.9,150.6 H428.9 Q418.9,150.6 418.9,140.6 V92.4 Q418.9,82.4 428.9,82.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<use href="#pg-g-browser" x="427.4" y="88.9" width="16" height="16" style="color: var(--ink)"></use>
+<text x="477.6" y="105.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Lay out</text>
+<text x="450.9" y="121.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">the browser, HTML</text>
+<text x="478.1" y="136.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">and CSS</text>
+</g>
+<g data-id="read" data-box="640.5,82,150,69">
+<path d="M651.2,82.4 H780.2 Q790.2,82.4 790.2,92.4 V140.6 Q790.2,150.6 780.2,150.6 H651.2 Q641.2,150.6 641.2,140.6 V92.4 Q641.2,82.4 651.2,82.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="668.3" y="105.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Read geometry</text>
+<text x="661.7" y="121.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">every box, every line</text>
+<text x="699" y="136.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">of text</text>
+</g>
+<g data-id="route" data-box="863,82,150,69">
+<path d="M873.4,82.4 H1002.4 Q1012.4,82.4 1012.4,92.4 V140.6 Q1012.4,150.6 1002.4,150.6 H873.4 Q863.4,150.6 863.4,140.6 V92.4 Q863.4,82.4 873.4,82.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="919.9" y="105.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Route</text>
+<text x="886.2" y="121.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">connections around</text>
+<text x="922.3" y="136.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">boxes</text>
+</g>
+<g data-id="draw" data-box="1085,87.5,150,58">
+<path d="M1095.6,88 H1224.6 Q1234.6,88 1234.6,98 V135 Q1234.6,145 1224.6,145 H1095.6 Q1085.6,145 1085.6,135 V98 Q1085.6,88 1095.6,88 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<use href="#pg-g-code" x="1094.1" y="94.5" width="16" height="16" style="color: var(--ink)"></use>
+<text x="1121.8" y="112.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Drawing script</text>
+<text x="1119.5" y="129.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">marks with no box</text>
+</g>
+<g data-id="render" data-box="1307.5,87.5,150,58">
+<path d="M1317.8,88 H1446.8 Q1456.8,88 1456.8,98 V135 Q1456.8,145 1446.8,145 H1317.8 Q1307.8,145 1307.8,135 V98 Q1307.8,88 1317.8,88 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<use href="#pg-g-file" x="1316.3" y="94.5" width="16" height="16" style="color: var(--ink)"></use>
+<text x="1367.1" y="112.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Render</text>
+<text x="1346.8" y="129.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">SVG with tokens</text>
+</g>
+<g data-id="check" data-box="1529.5,87.5,150,58">
+<path d="M1540,88 H1669 Q1679,88 1679,98 V135 Q1679,145 1669,145 H1540 Q1530,145 1530,135 V98 Q1530,88 1540,88 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1584.6" y="112.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Check</text>
+<text x="1554.5" y="129.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">overlaps, ids, icons</text>
+</g>
+<g data-id="ok" data-box="1780,94.5,44,44">
+<path d="M1801.8,94.8 L1823.3,116.3 L1801.8,137.8 L1780.3,116.3 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M1795.2,109.7 L1808.4,122.9 M1808.4,109.7 L1795.2,122.9" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<text x="1773.3" y="85.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Problems?</text>
+<g data-id="done" data-box="1956,88.5,36,36">
+<path d="M1957.5,106.7 A16.5,16.5 0 1 1 1990.5,106.7 A16.5,16.5 0 1 1 1957.5,106.7 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="3"></path>
+</g>
+<text x="1940.5" y="139.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">diagram.svg</text>
+<g data-id="fix" data-box="863,207,150,58">
+<path d="M873.4,207.6 H1002.4 Q1012.4,207.6 1012.4,217.6 V254.6 Q1012.4,264.6 1002.4,264.6 H873.4 Q863.4,264.6 863.4,254.6 V217.6 Q863.4,207.6 873.4,207.6 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<use href="#pg-g-user" x="871.9" y="214.1" width="16" height="16" style="color: var(--ink)"></use>
+<text x="909.5" y="232" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">Agent edits</text>
+<text x="917.3" y="249.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">the source</text>
+</g>
+<g data-edge="ok-&gt;done" data-sides="right,left"><path d="M1824,116 L1937.5,116 Q1942,116 1942,111.5 L1942,111.5 Q1942,107 1946.5,107 L1956,107" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="s-&gt;before" data-sides="right,left"><path d="M92,116 L196,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="check-&gt;ok" data-sides="right,left"><path d="M1680,116 L1780,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="read-&gt;route" data-sides="right,left"><path d="M791,116 L863,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="draw-&gt;render" data-sides="right,left"><path d="M1235,116 L1307,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="before-&gt;layout" data-sides="right,left"><path d="M346,116 L418,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="route-&gt;draw" data-sides="right,left"><path d="M1013,116 L1085,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="layout-&gt;read" data-sides="right,left"><path d="M568,116 L641,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="render-&gt;check" data-sides="right,left"><path d="M1457,116 L1530,116" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ok-&gt;fix" data-sides="bottom,right"><path d="M1802,138 L1802,230 Q1802,236 1796,236 L1013,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="fix-&gt;s" data-sides="left,bottom"><path d="M863,236 L80,236 Q74,236 74,230 L74,134" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+
+<text class="g-edge" x="1869.3" y="110" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">none</text>
+<text class="g-edge" x="1392.5" y="230" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">some</text>
+<text class="g-edge" x="434.3" y="230" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">render again</text>
+</g>
+</svg>

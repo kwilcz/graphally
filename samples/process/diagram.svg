@@ -25,6 +25,7 @@
 .g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 </style>
 <defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker></defs>
+<rect class="g-bg" width="2248" height="733" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Expense claim approval</text>
 <text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Northwind, finance operations</text>
@@ -154,18 +155,18 @@
 <g data-edge="valid-&gt;correct" data-sides="top,right"><path d="M777,600 L777,234.5 Q777,228.5 771,228.5 L327,228.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="reject-&gt;notice" data-sides="right,left"><path d="M1378,333 L1966,333 Q1972,333 1972,327 L1972,133 Q1972,127 1978,127 L2008,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 
-<text class="g-edge" x="1693.6" y="471" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
-<text class="g-edge" x="1168.6" y="326" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
-<text class="g-edge" x="352" y="182.3" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">resubmit</text>
-<text class="g-edge" x="1680" y="607" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
-<text class="g-edge" x="1322.8" y="471" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">&gt; £1,000</text>
-<text class="g-edge" x="988" y="498.8" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">3 days</text>
-<text class="g-edge" x="838.5" y="481.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
-<text class="g-edge" x="882.8" y="498.8" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reminder</text>
-<text class="g-edge" x="1164.5" y="584" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
-<text class="g-edge" x="1488.3" y="616" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">≤ £1,000</text>
-<text class="g-edge" x="1917.9" y="234" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">rejection</text>
-<text class="g-edge" x="2034.3" y="616" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">payment</text>
-<text class="g-edge" x="545.1" y="222.5" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="1693.6" y="471" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="1168.6" y="326" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="352" y="182.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">resubmit</text>
+<text class="g-edge" x="1680" y="607" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="1322.8" y="471" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">&gt; £1,000</text>
+<text class="g-edge" x="988" y="498.8" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">3 days</text>
+<text class="g-edge" x="838.5" y="481.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="882.8" y="498.8" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">reminder</text>
+<text class="g-edge" x="1164.5" y="584" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="1488.3" y="616" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">≤ £1,000</text>
+<text class="g-edge" x="1917.9" y="234" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">rejection</text>
+<text class="g-edge" x="2034.3" y="616" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">payment</text>
+<text class="g-edge" x="545.1" y="222.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
 </g>
 </svg>

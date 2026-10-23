@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-theme="dark" data-source="layouts.html" viewBox="0 0 1348 451" width="1348" height="451" role="img" aria-label="One page, many diagrams. HTML and CSS place almost everything; two helpers do what CSS cannot">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
+<symbol id="pg-g-code" viewBox="0 0 24 24"><path d="M8.5 7 3.5 12l5 5M15.5 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-browser" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="2.5" y="4" width="19" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 8.5h19M5.5 6.3h.01M8 6.3h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 9v4l2.5 2M10 2.5h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-cloud" viewBox="0 0 24 24"><path d="M7 18.5h10.5a4 4 0 0 0 .6-8A6 6 0 0 0 6.6 9.2 4.7 4.7 0 0 0 7 18.5z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M7 18.5h10.5a4 4 0 0 0 .6-8A6 6 0 0 0 6.6 9.2 4.7 4.7 0 0 0 7 18.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-azure-virtual-networks" viewBox="0 0 18.006025 10.784314"><defs id="pg-azure-virtual-networks-0"> <linearGradient id="pg-azure-virtual-networks-1" x1="9.8800001" y1="8.5900002" x2="11.52" y2="10.23" gradientTransform="rotate(-0.08,-285.46384,-1454.0801)" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#86d633" id="pg-azure-virtual-networks-2" /> <stop offset="1" stop-color="#5e9624" id="pg-azure-virtual-networks-3" /> </linearGradient> <linearGradient id="pg-azure-virtual-networks-4" x1="6.1799998" y1="8.5900002" x2="7.8099999" y2="10.23" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#86d633" id="pg-azure-virtual-networks-5" /> <stop offset="1" stop-color="#5e9624" id="pg-azure-virtual-networks-6" /> </linearGradient> <linearGradient id="pg-azure-virtual-networks-7" x1="2.48" y1="8.5900002" x2="4.1100001" y2="10.23" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#86d633" id="pg-azure-virtual-networks-8" /> <stop offset="1" stop-color="#5e9624" id="pg-azure-virtual-networks-9" /> </linearGradient> </defs> <circle cx="12.744286" cy="5.3829632" r="1.16" id="pg-azure-virtual-networks-10" style="fill:url(#pg-azure-virtual-networks-1)" /> <circle cx="9.0442858" cy="5.3929634" r="1.16" id="pg-azure-virtual-networks-11" style="fill:url(#pg-azure-virtual-networks-4)" /> <circle cx="5.3442855" cy="5.3929634" r="1.16" id="pg-azure-virtual-networks-12" style="fill:url(#pg-azure-virtual-networks-7)" /> <path d="M 6.1863956,10.030542 5.5226439,10.69615 a 0.3,0.3 0 0 1 -0.4242636,5.93e-4 L 0.18421208,5.7962782 A 0.6,0.6 0 0 1 0.18302731,4.9477509 L 0.84677897,4.2821431 6.1858032,9.6062787 a 0.3,0.3 0 0 1 5.924e-4,0.4242633 z" id="pg-azure-virtual-networks-13" style="fill:#50e6ff" /> <path d="M 5.4221989,0.10117925 6.0878067,0.76493091 A 0.3,0.3 0 0 1 6.0883991,1.1891946 L 0.84193654,6.4503285 0.17632875,5.7865769 A 0.6,0.6 0 0 1 0.17514398,4.9380496 L 4.9979353,0.10177164 a 0.3,0.3 0 0 1 0.4242636,-5.9239e-4 z" id="pg-azure-virtual-networks-14" style="fill:#1490df" /> <path d="m 17.160946,4.2730297 0.663752,0.6656078 a 0.6,0.6 0 0 1 -0.0012,0.8485273 l -4.914168,4.9004642 a 0.3,0.3 0 0 1 -0.424264,-5.92e-4 l -0.663752,-0.665608 a 0.3,0.3 0 0 1 5.93e-4,-0.4242636 z" id="pg-azure-virtual-networks-15" style="fill:#50e6ff" /> <path d="M 17.822617,5.7800309 17.157009,6.4437825 11.910546,1.1826486 a 0.3,0.3 0 0 1 5.93e-4,-0.42426368 l 0.672688,-0.67081284 a 0.3,0.3 0 0 1 0.424264,5.9238e-4 l 4.822791,4.83627794 a 0.6,0.6 0 0 1 -0.0012,0.8485273 z" id="pg-azure-virtual-networks-16" style="fill:#1490df" /></symbol>
+<symbol id="pg-azure-management-groups" viewBox="0 0 17.006714 16.433725"><defs id="pg-azure-management-groups-0"> <linearGradient id="pg-azure-management-groups-1" x1="9" y1="2.95" x2="9" y2="6.3400002" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.49664319,0.80313708)"> <stop offset="0" stop-color="#c69aeb" id="pg-azure-management-groups-2" /> <stop offset="1" stop-color="#6f4bb2" id="pg-azure-management-groups-3" /> </linearGradient> <linearGradient id="pg-azure-management-groups-4" x1="8.9899998" y1="6.7600002" x2="8.9899998" y2="9.2200003" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.49664319,0.80313708)"> <stop offset="0" stop-color="#54aef0" id="pg-azure-management-groups-5" /> <stop offset="1" stop-color="#1988d9" id="pg-azure-management-groups-6" /> </linearGradient> </defs> <g id="pg-azure-management-groups-7" transform="translate(-0.49664319,-0.80313708)"> <polygon points="9,4.2 5.79,7.91 4.28,11.2 4.81,11.45 6.04,8.77 7.25,11.45 7.79,11.21 6.39,8.12 9,5.1 11.6,8.13 10.18,11.21 10.71,11.46 11.94,8.79 13.15,11.47 13.69,11.22 12.19,7.92 " id="pg-azure-management-groups-8" style="fill:#949494" /> <circle cx="9" cy="4.6500001" r="1.6900001" id="pg-azure-management-groups-9" style="fill:url(#pg-azure-management-groups-1)" /> <path d="M 6,6.76 A 1.23,1.23 0 1 1 4.82,8 1.23,1.23 0 0 1 6,6.76 Z M 10.72,8 A 1.22,1.22 0 0 0 11.94,9.22 1.23,1.23 0 1 0 10.72,8 Z" id="pg-azure-management-groups-10" style="fill:url(#pg-azure-management-groups-4)" /> <g id="pg-azure-management-groups-11"> <g id="pg-azure-management-groups-12"> <circle cx="4.54" cy="11.32" r="0.97000003" id="pg-azure-management-groups-13" style="fill:#37c2b1" /> <circle cx="7.52" cy="11.33" r="0.97000003" id="pg-azure-management-groups-14" style="fill:#37c2b1" /> </g> <g id="pg-azure-management-groups-15"> <circle cx="10.44" cy="11.34" r="0.97000003" id="pg-azure-management-groups-16" style="fill:#37c2b1" /> <circle cx="13.42" cy="11.35" r="0.97000003" id="pg-azure-management-groups-17" style="fill:#37c2b1" /> </g> </g> <path d="m 0.5,15.22 a 0.16,0.16 0 0 0 0.08,0.14 l 1.15,0.64 2,1.14 A 0.18,0.18 0 0 0 3.96,17.08 L 4.57,16 A 0.15,0.15 0 0 0 4.51,15.78 L 2.22,14.41 A 0.16,0.16 0 0 1 2.14,14.27 V 3.73 A 0.16,0.16 0 0 1 2.22,3.59 L 4.51,2.26 A 0.15,0.15 0 0 0 4.57,2 L 3.92,0.89 A 0.18,0.18 0 0 0 3.69,0.83 L 1.77,1.94 0.58,2.64 A 0.16,0.16 0 0 0 0.5,2.78 Z" id="pg-azure-management-groups-18" style="fill:#949494" /> <path d="M 4.57,2 3.92,0.89 A 0.18,0.18 0 0 0 3.75,0.81 H 3.67 L 1.75,1.94 0.56,2.64 a 0.1,0.1 0 0 0 -0.06,0 v 0 a 0.24,0.24 0 0 0 0,0.08 l 1.64,1 A 0.16,0.16 0 0 1 2.22,3.58 L 4.51,2.26 A 0.15,0.15 0 0 0 4.57,2 Z" id="pg-azure-management-groups-19" style="fill:#a3a3a3" /> <path d="m 4.57,16 -0.65,1.15 a 0.18,0.18 0 0 1 -0.17,0.08 0.12,0.12 0 0 1 -0.08,0 L 1.75,16.06 0.56,15.36 a 0.1,0.1 0 0 1 -0.06,0 v 0 a 0.24,0.24 0 0 1 0,-0.08 l 1.64,-1 a 0.16,0.16 0 0 0 0.08,0.14 l 2.29,1.33 A 0.16,0.16 0 0 1 4.57,16 Z" id="pg-azure-management-groups-20" style="fill:#a3a3a3" /> <path d="M 17.5,2.78 A 0.16,0.16 0 0 0 17.42,2.64 L 16.27,2 14.27,0.86 A 0.18,0.18 0 0 0 14.04,0.92 L 13.43,2 a 0.15,0.15 0 0 0 0.06,0.22 l 2.29,1.33 a 0.16,0.16 0 0 1 0.08,0.14 v 10.58 a 0.16,0.16 0 0 1 -0.08,0.14 l -2.29,1.33 a 0.15,0.15 0 0 0 -0.06,0.22 l 0.65,1.15 a 0.18,0.18 0 0 0 0.23,0.06 l 1.92,-1.11 1.19,-0.7 a 0.16,0.16 0 0 0 0.08,-0.14 z" id="pg-azure-management-groups-21" style="fill:#949494" /> <path d="m 13.43,16 0.65,1.15 a 0.18,0.18 0 0 0 0.17,0.08 h 0.08 l 1.92,-1.11 1.19,-0.7 a 0.1,0.1 0 0 0 0.06,0 v 0 a 0.24,0.24 0 0 0 0,-0.08 l -1.64,-1 a 0.16,0.16 0 0 1 -0.08,0.14 l -2.29,1.33 A 0.15,0.15 0 0 0 13.43,16 Z" id="pg-azure-management-groups-22" style="fill:#a3a3a3" /> <path d="m 13.43,2 0.65,-1.11 a 0.18,0.18 0 0 1 0.17,-0.08 0.12,0.12 0 0 1 0.08,0 l 1.92,1.11 1.19,0.7 a 0.1,0.1 0 0 1 0.06,0 v 0 a 0.24,0.24 0 0 1 0,0.08 l -1.64,1 A 0.16,0.16 0 0 0 15.78,3.56 L 13.49,2.26 A 0.16,0.16 0 0 1 13.43,2 Z" id="pg-azure-management-groups-23" style="fill:#a3a3a3" /> </g></symbol>
+<symbol id="pg-g-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 20c0-3.8 2.9-6 6.5-6s6.5 2.2 6.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.5" cy="7.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 13.5c2.8.3 4.8 2.3 4.8 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
+<rect class="g-bg" width="1348" height="451" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">One page, many diagrams</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">HTML and CSS place almost everything; two helpers do what CSS cannot</text>
+<rect x="24" y="85.9" width="1300" height="112" rx="8" style="fill: var(--wash)"></rect>
+<rect x="24" y="205.9" width="1300" height="112" rx="8" style="fill: var(--wash)"></rect>
+<rect x="24" y="325.9" width="1300" height="101" rx="8" style="fill: var(--wash)"></rect>
+<text x="36" y="105.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Engine</text>
+<text x="36" y="225.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">What places it</text>
+<text x="36" y="345.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--muted)">Diagrams</text>
+<g data-id="g" data-box="674,116.5,150,51">
+<rect x="674.5" y="116.9" width="149" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-g-code" x="687" y="128.9" width="26" height="26" style="color: var(--ink)"></use>
+<text x="723" y="139.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">graphally</text>
+<text x="723" y="153.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">page mode</text>
+</g>
+<g data-id="css" data-box="504.5,236.5,189,51">
+<rect x="505.1" y="236.9" width="187.8" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-g-browser" x="517.6" y="248.9" width="26" height="26" style="color: var(--ink)"></use>
+<text x="553.6" y="259.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">HTML and CSS</text>
+<text x="553.6" y="273.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">utilities, building blocks</text>
+</g>
+<g data-id="tl" data-box="1024,229,150,66">
+<rect x="1024.5" y="229.4" width="149" height="65" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-g-timer" x="1037" y="248.9" width="26" height="26" style="color: var(--ink)"></use>
+<text x="1073" y="251.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">timeline()</text>
+<text x="1073" y="265.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">dates to</text>
+<text x="1073" y="280.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">columns</text>
+</g>
+<g data-id="sq" data-box="1174,229,150,66">
+<rect x="1174.5" y="229.4" width="149" height="65" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
+<use href="#pg-g-message" x="1187" y="248.9" width="26" height="26" style="color: var(--ink)"></use>
+<text x="1223" y="251.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">sequence()</text>
+<text x="1223" y="265.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">messages to</text>
+<text x="1223" y="280.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">rows</text>
+</g>
+<g data-id="d1" data-box="185,342,120,69">
+<use href="#pg-g-cloud" x="220.8" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="208" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Architecture</text>
+</g>
+<g data-id="d2" data-box="326.5,342,120,69">
+<use href="#pg-azure-virtual-networks" x="362.5" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="361" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Network</text>
+</g>
+<g data-id="d3" data-box="468,342,120,69">
+<use href="#pg-azure-management-groups" x="504.2" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="499.1" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Hierarchy</text>
+</g>
+<g data-id="d4" data-box="610,342,120,69">
+<use href="#pg-g-users" x="645.8" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="625.7" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">BPMN process</text>
+</g>
+<g data-id="d5" data-box="751.5,342,120,69">
+<use href="#pg-g-gear" x="787.5" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="781.9" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Flowchart</text>
+</g>
+<g data-id="d6" data-box="893,342,120,69">
+<use href="#pg-g-globe" x="929.2" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="896.1" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Charts of your own</text>
+</g>
+<g data-id="d7" data-box="1039,342,120,69">
+<use href="#pg-g-timer" x="1075" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="1056.1" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Plan, roadmap</text>
+</g>
+<g data-id="d8" data-box="1189,342,120,69">
+<use href="#pg-g-message" x="1225" y="341.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="1219" y="407.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Sequence</text>
+</g>
+<g data-edge="tl-&gt;d7" data-sides="bottom,top"><path d="M1099,295 L1099,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="sq-&gt;d8" data-sides="bottom,top"><path d="M1249,295 L1249,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d3" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 593,306 L534,306 Q528,306 528,312 L528,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d4" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 605,306 L664,306 Q670,306 670,312 L670,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g-&gt;css" data-sides="bottom,top"><path d="M749,167 L749,194 Q749,200 743,200 L605,200 Q599,200 599,206 L599,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d5" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 605,306 L805,306 Q811,306 811,312 L811,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d2" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 593,306 L392,306 Q386,306 386,312 L386,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d1" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 593,306 L251,306 Q245,306 245,312 L245,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="css-&gt;d6" data-sides="bottom,top"><path d="M599,287 L599,300 Q599,306 605,306 L947,306 Q953,306 953,312 L953,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g-&gt;tl" data-sides="bottom,top"><path d="M749,167 L749,194 Q749,200 755,200 L1093,200 Q1099,200 1099,206 L1099,229" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g-&gt;sq" data-sides="bottom,top"><path d="M749,167 L749,194 Q749,200 755,200 L1243,200 Q1249,200 1249,206 L1249,229" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+
+
+</g>
+</svg>
