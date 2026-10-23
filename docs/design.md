@@ -30,7 +30,7 @@ diagram makes room for it.
 
 ## The pipeline
 
-![The render pipeline as a flowchart, with the agent's fix loop](diagrams/pipeline.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/pipeline-dark.svg"><img alt="The render pipeline as a flowchart, with the agent's fix loop" src="diagrams/pipeline.svg"></picture>
 
 All of it runs in a headless Chrome, Chromium or Edge, driven by the skill's scripts over
 the DevTools protocol, so text is measured with the same font that draws it.
@@ -51,11 +51,11 @@ One render, step by step: the script serves the skill and the diagram folder on
 127.0.0.1, starts the browser, lets the engine compile the page, and reads back the SVG
 and a screenshot.
 
-![A render as a sequence diagram](diagrams/render-sequence.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/render-sequence-dark.svg"><img alt="A render as a sequence diagram" src="diagrams/render-sequence.svg"></picture>
 
 Most of a render's time is starting the browser and compiling the diagram:
 
-![A render's stages on a time axis](diagrams/render-timeline.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/render-timeline-dark.svg"><img alt="A render's stages on a time axis" src="diagrams/render-timeline.svg"></picture>
 
 The same engine also runs without the script. `tools/build-viewer.mjs` bundles it with the
 theme and an index of the icon packs (names and upstream files, no artwork) into
@@ -70,7 +70,7 @@ loads Inter from the inter-ui package, so the text measures as it does in a rend
 
 Each kind of diagram uses the layout that suits it:
 
-![Layouts and the diagrams they serve, as a tree](diagrams/layouts.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/layouts-dark.svg"><img alt="Layouts and the diagrams they serve, as a tree" src="diagrams/layouts.svg"></picture>
 
 - **Architecture and networks** (`layout/areas.js`): the ASCII map becomes a CSS grid;
   groups inside it are stacks, rows or grids. Three passes follow the browser's placement:
@@ -98,7 +98,7 @@ Each kind of diagram uses the layout that suits it:
   templates (`shapes.js`: flowchart, BPMN, stores, block arrows) over the box the browser
   gave it, with its background and border as fill and outline.
 
-  ![Every page-mode shape and marker, drawn by page mode](diagrams/shapes.svg)
+  <picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/shapes-dark.svg"><img alt="Every page-mode shape and marker, drawn by page mode" src="diagrams/shapes.svg"></picture>
 
   The connections are data, a JSON list in the diagram, so an agent changes them as
   data: `scripts/lib/edits.mjs` patches the source (moves as `nudge`, connections added,
@@ -134,7 +134,7 @@ must avoid nodes, text, group borders, other labels and other edges' lines.
 
 ## Terraform
 
-![tf2graphally and the agent, as swimlanes](diagrams/terraform.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/terraform-dark.svg"><img alt="tf2graphally and the agent, as swimlanes" src="diagrams/terraform.svg"></picture>
 
 `scripts/tf2graphally.mjs` reads a Terraform root module and its local modules without
 running Terraform. It follows references through variables, locals and module outputs,
@@ -168,7 +168,7 @@ work. `icons=aws` on `<diagram>` makes AWS win names both vendors share, and `aw
 `azure:` picks a pack for one icon. A small set of generic outline icons (people,
 devices, servers, documents) covers what has no vendor icon.
 
-![How the skill reaches an agent, and where its icons come from](diagrams/install.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/install-dark.svg"><img alt="How the skill reaches an agent, and where its icons come from" src="diagrams/install.svg"></picture>
 
 ## Stable layout and overrides
 

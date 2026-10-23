@@ -29,6 +29,7 @@
 <symbol id="pg-g-browser" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="2.5" y="4" width="19" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 8.5h19M5.5 6.3h.01M8 6.3h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="pg-g-file" viewBox="0 0 24 24"><path d="M6 2.5h8l4.5 4.5v14.5H6z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M6 2.5h8l4.5 4.5v14.5H6zM14 2.5V7h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="pg-g-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
+<rect class="g-bg" width="2048" height="290" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">From source to SVG</text>
 <text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">One render, and the agent's fix loop</text>
@@ -105,8 +106,8 @@
 <g data-edge="ok-&gt;fix" data-sides="bottom,right"><path d="M1802,138 L1802,230 Q1802,236 1796,236 L1013,236" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="fix-&gt;s" data-sides="left,bottom"><path d="M863,236 L80,236 Q74,236 74,230 L74,134" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 
-<text class="g-edge" x="1869.3" y="110" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">none</text>
-<text class="g-edge" x="1392.5" y="230" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">some</text>
-<text class="g-edge" x="434.3" y="230" style="paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">render again</text>
+<text class="g-edge" x="1869.3" y="110" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">none</text>
+<text class="g-edge" x="1392.5" y="230" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">some</text>
+<text class="g-edge" x="434.3" y="230" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">render again</text>
 </g>
 </svg>

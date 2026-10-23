@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// graphally render <file.html> [--png | --png2x] [--dark] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]
+// graphally render <file.html> [--png | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]
 //
 // Writes <name>.svg next to the source (or in --out). Prints one short line per
-// diagram, then one line per problem. --png also writes a preview image. The layout of
+// diagram, then one line per problem. --png also writes a preview image; --dark draws the
+// dark theme, --themes writes both (<name>.svg and <name>-dark.svg). The layout of
 // the earlier renders is reused unless --recompute is given. A diagram file without the
 // viewer header gets it (unless --no-viewer), so it opens in any browser.
 import fs from 'node:fs';
@@ -20,7 +21,7 @@ if (argv[0] === 'render') argv.shift();
 const flag = f => argv.includes(f);
 const opt = f => (argv.includes(f) ? argv[argv.indexOf(f) + 1] : null);
 const file = argv.find((a, i) => !a.startsWith('--') && argv[i - 1] !== '--out');
-if (!file) { console.error('usage: node graphally.mjs render <file.html> [--png | --png2x] [--dark] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]'); process.exit(2); }
+if (!file) { console.error('usage: node graphally.mjs render <file.html> [--png | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]'); process.exit(2); }
 if (!fs.existsSync(file)) { console.log(`error: no such file: ${file}`); process.exit(2); }
 if (!flag('--no-viewer') && addViewer(file)) console.log(`${file}: added the viewer header; the file now opens in a browser`);
 const outDir = opt('--out') || path.dirname(file);
@@ -73,10 +74,19 @@ try {
     const name = results.length === 1 ? base : `${base}.${r.id || i + 1}`;
     const svgPath = path.join(outDir, `${name}.svg`);
     fs.writeFileSync(svgPath, r.svg + '\n');
+    // --themes: the dark copy beside it (<name>-dark.svg). Same layout, the dark tokens.
+    const dark = flag('--themes') && !flag('--dark');
+    if (dark) fs.writeFileSync(path.join(outDir, `${name}-dark.svg`), r.svg.replace(/^<svg ([^>]*?)class="graphally"(?! data-theme)/, '<svg $1class="graphally" data-theme="dark"') + '\n');
     if (flag('--png') || flag('--png2x')) {
       await page.viewport(Math.max(800, r.width), Math.max(600, r.height), scale);
-      const box = await page.evaluate(`(() => { const b = document.querySelectorAll('.out svg')[${i}].getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);
+      const sel = `document.querySelectorAll('.out svg')[${i}]`;
+      const box = await page.evaluate(`(() => { const b = ${sel}.getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);
       fs.writeFileSync(path.join(outDir, `${name}.png`), await page.screenshot(box));
+      if (dark) {
+        await page.evaluate(`${sel}.setAttribute('data-theme', 'dark')`);
+        fs.writeFileSync(path.join(outDir, `${name}-dark.png`), await page.screenshot(box));
+        await page.evaluate(`${sel}.removeAttribute('data-theme')`);
+      }
     }
     if (flag('--json')) { console.log(JSON.stringify({ ...r, svg: svgPath })); continue; }
     // Icons from a pack that is not downloaded are one note, not a problem to fix.

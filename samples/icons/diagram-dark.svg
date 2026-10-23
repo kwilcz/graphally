@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-theme="dark" data-source="diagram.html" viewBox="0 0 1348 433" width="1348" height="433" role="img" aria-label="Microsoft Entra application proxy. Remote access to on-premises web apps without opening inbound ports">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
+<symbol id="pg-g-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 20c0-3.8 2.9-6 6.5-6s6.5 2.2 6.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.5" cy="7.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 13.5c2.8.3 4.8 2.3 4.8 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-cloud" viewBox="0 0 24 24"><path d="M7 18.5h10.5a4 4 0 0 0 .6-8A6 6 0 0 0 6.6 9.2 4.7 4.7 0 0 0 7 18.5z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M7 18.5h10.5a4 4 0 0 0 .6-8A6 6 0 0 0 6.6 9.2 4.7 4.7 0 0 0 7 18.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-azure-entra-identity" viewBox="0 0 17.999 16.001"><defs> <linearGradient id="pg-azure-entra-identity-0" x1="7.697" y1="11.409" x2="14.082" y2="3.947" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#225086"/> <stop offset="1" stop-color="#0055c5"/> </linearGradient> <linearGradient id="pg-azure-entra-identity-1" x1="6.363" y1="12.413" x2="6.363" y2="-3.834" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#6df"/> <stop offset="1" stop-color="#0294e4"/> </linearGradient> <linearGradient id="pg-azure-entra-identity-2" x1="9" y1="15.621" x2="9" y2="-3.267" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#44dbf9"/> <stop offset="1" stop-color="#cbf8ff"/> </linearGradient> <linearGradient id="pg-azure-entra-identity-3" x1="13.5" y1="15.856" x2="13.5" y2="-.204" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#041642"/> <stop offset="1" stop-color="#041642" stop-opacity=".25"/> </linearGradient> </defs> <path d="M17.646 8.967l-7.5-8.46c-.599-.676-1.694-.676-2.294 0L.353 8.967c-.579.654-.428 1.641.323 2.111l7.499 4.688c.5.313 1.148.313 1.648 0l7.499-4.688c.751-.469.902-1.457.323-2.111z" fill="url(#pg-azure-entra-identity-0)"/> <path d="M10.147.507c-.599-.676-1.694-.676-2.294 0L.354 8.967c-.579.654-.428 1.641.323 2.111l3.126 1.954c.388.242 1.033.511 1.715.511.621 0 1.197-.18 1.676-.487L9 11.927 4.636 9.199 9.11 4.152c.55-.627 1.377-1.026 2.302-1.026.472 0 .917.107 1.314.292L10.147.509z" fill="url(#pg-azure-entra-identity-1)"/> <path fill="url(#pg-azure-entra-identity-2)" transform="translate(0 -1)" d="M9 12.927h0l4.364-2.728h.001-.001L9 5.275l-4.364 4.924.052.032z"/> <path d="M9 16c.287 0 .574-.078.824-.234l7.499-4.688c.751-.469.902-1.457.323-2.111L10.147.507C9.847.169 9.424 0 9 0z" fill="url(#pg-azure-entra-identity-3)" fill-opacity=".5" opacity=".5"/></symbol>
+<symbol id="pg-g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-server" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="7" rx="1.5" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="4" y="13.5" width="16" height="7" rx="1.5" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="4" y="3.5" width="16" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="13.5" width="16" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7h.01M7.5 17h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-browser" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="2.5" y="4" width="19" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 8.5h19M5.5 6.3h.01M8 6.3h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-azure-azure-active-directory" viewBox="0 0 18 16.379999"><defs id="pg-azure-azure-active-directory-0"> <linearGradient id="pg-azure-azure-active-directory-1" x1="13.25" y1="13.02" x2="8.6199999" y2="4.25" gradientUnits="userSpaceOnUse" gradientTransform="translate(0,0.81)"> <stop offset="0" stop-color="#1988d9" id="pg-azure-azure-active-directory-2" /> <stop offset="0.9" stop-color="#54aef0" id="pg-azure-azure-active-directory-3" /> </linearGradient> <linearGradient id="pg-azure-azure-active-directory-4" x1="11.26" y1="10.47" x2="14.46" y2="15.99" gradientUnits="userSpaceOnUse" gradientTransform="translate(0,0.81)"> <stop offset="0.1" stop-color="#54aef0" id="pg-azure-azure-active-directory-5" /> <stop offset="0.29" stop-color="#4fabee" id="pg-azure-azure-active-directory-6" /> <stop offset="0.51" stop-color="#41a2e9" id="pg-azure-azure-active-directory-7" /> <stop offset="0.74" stop-color="#2a93e0" id="pg-azure-azure-active-directory-8" /> <stop offset="0.88" stop-color="#1988d9" id="pg-azure-azure-active-directory-9" /> </linearGradient> </defs> <polygon points="16.99,10.17 18,11.35 8.93,17.19 0,11.35 1.01,10.19 8.93,15.33 " id="pg-azure-azure-active-directory-10" style="fill:#50e6ff" transform="translate(0,-0.81)" /> <polygon points="16.4,9.54 8.93,14.26 1.61,9.53 8.93,0.81 " id="pg-azure-azure-active-directory-11" style="fill:#ffffff" transform="translate(0,-0.81)" /> <polygon points="1.61,9.53 8.93,0.81 8.93,14.26 " id="pg-azure-azure-active-directory-12" style="fill:#50e6ff" transform="translate(0,-0.81)" /> <polygon points="16.4,9.54 8.93,0.81 8.93,14.26 " id="pg-azure-azure-active-directory-13" style="fill:url(#pg-azure-azure-active-directory-1)" transform="translate(0,-0.81)" /> <polygon points="8.93,14.26 8.93,7.76 16.4,9.54 " id="pg-azure-azure-active-directory-14" style="fill:#53b1e0" transform="translate(0,-0.81)" /> <polygon points="8.93,7.76 8.93,14.26 1.61,9.53 " id="pg-azure-azure-active-directory-15" style="fill:#9cebff" transform="translate(0,-0.81)" /> <polygon points="16.99,10.17 8.93,15.33 8.93,17.19 18,11.35 " id="pg-azure-azure-active-directory-16" style="fill:url(#pg-azure-azure-active-directory-4)" transform="translate(0,-0.81)" /></symbol></defs>
+<rect class="g-bg" width="1348" height="433" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Microsoft Entra application proxy</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Remote access to on-premises web apps without opening inbound ports</text>
+<g data-id="users" data-box="24,200,140,90">
+<use href="#pg-g-users" x="70" y="200" width="48" height="48" style="color: var(--ink)"></use>
+<text x="53" y="266" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Remote users</text>
+<text x="65.6" y="286" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">on laptops</text>
+</g>
+<g data-id="azure" data-box="421,93,140,304">
+<use href="#pg-g-cloud" x="461.8" y="93" width="18" height="18" style="color: var(--muted)"></use>
+<text x="485.8" y="105.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--muted)">Azure</text>
+<g data-id="entra" data-box="421,161,140,90">
+<use href="#pg-azure-entra-identity" x="467" y="161" width="48" height="48" style="color: var(--ink)"></use>
+<text x="437.5" y="227" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Microsoft Entra ID</text>
+<text x="467.5" y="247" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">pre-auth</text>
+</g>
+<g data-id="proxy" data-box="421,307,140,90">
+<use href="#pg-g-globe" x="467" y="307" width="48" height="48" style="color: var(--ink)"></use>
+<text x="438.5" y="373" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Application Proxy</text>
+<text x="454.4" y="393" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">cloud service</text>
+</g>
+</g>
+<g data-id="onprem" data-box="818,82,506,326">
+<rect x="818.5" y="82.4" width="505" height="325.2" rx="9.5" style="fill: none; stroke: var(--muted)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<text x="851" y="126.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--muted)">On-premises network</text>
+<g data-id="connector" data-box="851,233,140,90">
+<use href="#pg-g-server" x="897" y="233.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="858" y="299.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">App Proxy connector</text>
+<text x="881.9" y="319.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">outbound only</text>
+</g>
+<g data-id="web" data-box="1151,181,140,69">
+<use href="#pg-g-browser" x="1197" y="181.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="1167.8" y="247.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Internal web apps</text>
+</g>
+<g data-id="ad" data-box="1151,306,140,69">
+<use href="#pg-azure-azure-active-directory" x="1197" y="306.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="1172.9" y="372.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Active Directory</text>
+</g>
+</g>
+<g data-edge="connector-&gt;web" data-sides="right,left"><path d="M991,241.5 L1151,241.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="connector-&gt;ad" data-sides="right,left"><path d="M991,314.5 L1151,314.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="users-&gt;entra" data-sides="right,left"><path d="M164,225.5 L421,225.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="users-&gt;proxy" data-sides="bottom,left"><path d="M94,290 L94,346 Q94,352 100,352 L421,352" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="proxy-&gt;connector" data-sides="right,left"><path d="M561,315 L851,315" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
+
+<text class="g-edge" x="1055.6" y="235.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTP</text>
+<text class="g-edge" x="1032.8" y="308.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">Kerberos SSO</text>
+<text class="g-edge" x="262.4" y="219.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">sign in first</text>
+<text class="g-edge" x="238.4" y="346" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+<text class="g-edge" x="648.1" y="309" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">outbound connection</text>
+</g>
+</svg>

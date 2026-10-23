@@ -13,7 +13,15 @@ roadmaps) is written as plain HTML and CSS, with a short script for the lines.
 > **Licence.** graphally is open source under the [Apache License 2.0](LICENSE).
 > Copyright © 2026 Kamil Wilczyński ([kwilcz](https://github.com/kwilcz)).
 
-![An Azure architecture diagram](samples/architecture/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/architecture/diagram-dark.png"><img alt="An Azure architecture diagram" src="samples/architecture/diagram.png"></picture>
+
+Every diagram comes in a light and a dark theme from the same source: `render --themes`
+writes both, a page shows the one that matches its reader, and a diagram opened in a
+browser follows the system setting.
+
+| Light | Dark |
+|---|---|
+| <img alt="The architecture diagram, light theme" src="samples/architecture/diagram.png"> | <img alt="The architecture diagram, dark theme" src="samples/architecture/diagram-dark.png"> |
 
 ## Install
 
@@ -22,7 +30,7 @@ needs **Node.js 18 or later** and **Chrome, Chromium or Edge** on the machine wh
 agent runs. There is no `npm install` and nothing to clone. The first render downloads
 the Azure and AWS icon packs into the skill, which takes a few seconds once.
 
-![How the skill reaches an agent, and where its icons come from](docs/diagrams/install.svg)
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/install-dark.svg"><img alt="How the skill reaches an agent, and where its icons come from" src="docs/diagrams/install.svg"></picture>
 
 **Claude Code**
 
@@ -154,7 +162,7 @@ appear as badges in the headers of the tiers that use them, instead of wires.
 
 ### AWS
 
-![Serverless photo sharing on AWS](samples/aws/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/aws/diagram-dark.png"><img alt="Serverless photo sharing on AWS" src="samples/aws/diagram.png"></picture>
 
 The same kind of diagram with the AWS pack: CloudFront and WAF at the edge, Lambda
 functions behind API Gateway, and the asynchronous path from S3 through SQS and SNS
@@ -164,7 +172,7 @@ drawn dashed. CloudWatch and Secrets Manager are badges on the two function grou
 
 ### Network
 
-![Hub-and-spoke network](samples/network/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/network/diagram-dark.png"><img alt="Hub-and-spoke network" src="samples/network/diagram.png"></picture>
 
 VNets, subnets with their address ranges, resources inside their subnets, peering, a
 default route to the firewall, private endpoints to the PaaS services below.
@@ -173,7 +181,7 @@ default route to the firewall, private endpoints to the PaaS services below.
 
 ### Terraform repository
 
-![Diagram of a Terraform repository](samples/terraform/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/terraform/diagram-dark.png"><img alt="Diagram of a Terraform repository" src="samples/terraform/diagram.png"></picture>
 
 `tf2graphally` read the configuration in [`repo/`](samples/terraform/repo) and wrote
 [`draft.html`](samples/terraform/draft.html) ([rendered](samples/terraform/draft.svg)),
@@ -184,7 +192,7 @@ users and the VPN from head office, and rearranged the services.
 
 ### Process (BPMN)
 
-![BPMN swimlanes](samples/process/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/process/diagram-dark.png"><img alt="BPMN swimlanes" src="samples/process/diagram.png"></picture>
 
 Four lanes, gateways with one branch per corner, a three-day timer on the review task,
 message flows between lanes.
@@ -193,14 +201,14 @@ message flows between lanes.
 
 ### Flowchart
 
-![Release pipeline flowchart](samples/flowchart/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/flowchart/diagram-dark.png"><img alt="Release pipeline flowchart" src="samples/flowchart/diagram.png"></picture>
 
 [Brief](samples/flowchart/brief.md) · [source](samples/flowchart/diagram.html) ·
 [SVG](samples/flowchart/diagram.svg)
 
 ### Sequence
 
-![Checkout sequence](samples/sequence/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/sequence/diagram-dark.png"><img alt="Checkout sequence" src="samples/sequence/diagram.png"></picture>
 
 Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling `loop`.
 [Brief](samples/sequence/brief.md) · [source](samples/sequence/diagram.html) ·
@@ -208,28 +216,28 @@ Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling
 
 ### Hierarchy
 
-![Management group hierarchy](samples/hierarchy/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/hierarchy/diagram-dark.png"><img alt="Management group hierarchy" src="samples/hierarchy/diagram.png"></picture>
 
 [Brief](samples/hierarchy/brief.md) · [source](samples/hierarchy/diagram.html) ·
 [SVG](samples/hierarchy/diagram.svg)
 
 ### Plan (Gantt)
 
-![Migration plan](samples/plan/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/plan/diagram-dark.png"><img alt="Migration plan" src="samples/plan/diagram.png"></picture>
 
 [Brief](samples/plan/brief.md) · [source](samples/plan/diagram.html) ·
 [SVG](samples/plan/diagram.svg)
 
 ### Icon diagram
 
-![Entra application proxy](samples/icons/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/icons/diagram-dark.png"><img alt="Entra application proxy" src="samples/icons/diagram.png"></picture>
 
 [Brief](samples/icons/brief.md) · [source](samples/icons/diagram.html) ·
 [SVG](samples/icons/diagram.svg)
 
 ### Figure in HTML
 
-![Who does what in the move to AKS](samples/page/diagram.png)
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/page/diagram-dark.png"><img alt="Who does what in the move to AKS" src="samples/page/diagram.png"></picture>
 
 [Brief](samples/page/brief.md) · [source](samples/page/diagram.html) ·
 [SVG](samples/page/diagram.svg)

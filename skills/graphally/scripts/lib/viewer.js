@@ -19,7 +19,11 @@ export function start(index) {
   const o = { azure: index.azure.base, aws: index.aws.base, font: index.font, ...(globalThis.graphallyOptions || {}) };
   const faces = Object.entries(WEIGHTS).map(([w, name]) => `@font-face { font-family: Inter; font-weight: ${w}; font-display: block; src: url("${o.font}Inter-${name}.woff2") format("woff2"), local("Inter ${name}"), local("Inter"); }`).join('\n');
   const style = document.createElement('style');
+  // A diagram follows the reader's light or dark setting unless it names a theme; the page
+  // around it follows too.
+  const prefersDark = () => globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches;
   style.textContent = `${faces}\n${THEME}\ndiagram { display: none; }
+@media (prefers-color-scheme: dark) { html:not([data-graphally-theme="light"]) body { background: #0f131e; color: #e3e8f3; } }
 .graphally-view { margin: 16px auto; width: max-content; max-width: 100%; overflow: auto; }
 .graphally-view svg { display: block; }
 .graphally-problems { font: 12px/1.5 Inter, "Segoe UI", system-ui, sans-serif; color: var(--rust, #b4472a); margin: 6px 0 0; padding: 0 0 0 18px; }`;
@@ -53,7 +57,8 @@ export function start(index) {
       let out = el.nextElementSibling?.classList.contains('graphally-view') ? el.nextElementSibling : null;
       if (!out) { out = document.createElement('div'); out.className = 'graphally-view'; el.after(out); }
       try {
-        const opts = { standalone: false, css: THEME, theme: el.getAttribute('theme') || 'light', source: location.pathname.split('/').pop() };
+        const opts = { standalone: false, css: THEME, theme: el.getAttribute('theme') || (prefersDark() ? 'dark' : 'light'), source: location.pathname.split('/').pop() };
+        if (el.getAttribute('theme')) document.documentElement.dataset.graphallyTheme = el.getAttribute('theme');
         let r = compile(el, opts);
         // The first pass names the icons the diagram draws; the second draws them.
         if (used.size) { const want = [...used]; used.clear(); await fetchIcons(want); r = compile(el, opts); }
@@ -72,5 +77,7 @@ export function start(index) {
   }
 
   globalThis.graphally = { render };
+  // Switching the system theme redraws the diagrams in the other one.
+  globalThis.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', () => render());
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', render, { once: true }); else render();
 }
