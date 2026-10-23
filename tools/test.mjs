@@ -461,6 +461,29 @@ await test('page-sequence', () => {
   check(/alt/.test(svg) && /\[ok\]/.test(svg), 'fragment tab missing');
 });
 
+await test('page-depend', () => {
+  const d = folder('page-depend'), out = path.join(d, 'out');
+  // a ends where c starts two rows down; b sits between them across that date, so the
+  // dependency must go around b, never through it.
+  const body = `<style>.r { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; height: 40px; align-items: center } .r > i { height: 20px; background: var(--lane-a) }</style>
+<div id=p class=grid>
+<div class=r><i id=a data-start=2026-03-02 data-duration=2w></i></div>
+<div class=r><i id=b data-start=2026-03-09 data-duration=3w></i></div>
+<div class=r><i id=c data-after=a data-duration=1w></i></div>
+</div><script type="graphally" before>schedule(); timeline('#p', { lead: '0px' })</script>`;
+  const r = render(write(d, page(body, "depend('a', 'c')")), out);
+  ok0(r);
+  const svg = svgOf(out), file = path.join(out, 'diagram.svg'), [A, B, C] = ['a', 'b', 'c'].map(id => rect(file, id));
+  const m = svg.match(/<path d="(M[^"]+)"[^>]*marker-end/);
+  check(m, 'no dependency drawn');
+  const pts = pointsOf(m[1]), first = pts[0], last = pts.at(-1);
+  check(Math.abs(first.x - (A[0] + A[2])) < 1 && Math.abs(last.x - C[0]) < 1, `the line does not run from the end of a to the start of c: ${m[1]}`);
+  // No corner or crossing point inside b: every segment stays outside its box.
+  const inside = (x, y) => x > B[0] && x < B[0] + B[2] && y > B[1] && y < B[1] + B[3];
+  for (let k = 1; k < pts.length; k++) for (let t = 0; t <= 1; t += 0.05)
+    check(!inside(pts[k - 1].x + (pts[k].x - pts[k - 1].x) * t, pts[k - 1].y + (pts[k].y - pts[k - 1].y) * t), `the dependency crosses b: ${m[1]}`);
+});
+
 if (table.length) {
   const rows = [['sample', 'stable: nodes', 'in group', 'sides', 'recompute: nodes', 'in group', 'sides'], ...table];
   const w = rows[0].map((_, i) => Math.max(...rows.map(r => String(r[i]).length)));

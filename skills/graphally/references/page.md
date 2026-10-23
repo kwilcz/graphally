@@ -128,6 +128,10 @@ runs from the start of the first month to the month after the last date. Pass `f
 `to` to set the range yourself, or `unit: 'week'` for long plans. It returns `months`,
 `quarters` and `years`, each with a `label` and a `column`, for header cells:
 
+For a Gantt chart, give each task a row of its own (a full-width subgrid row: name in the
+lead column, bar on its dates) and draw its dependencies with `depend()` in the drawing
+script; the names live in the lead column, not beside the bars, so the lines have room.
+
 ```html
 <div id=plan class="grid gap-y-2">
   <div class="pill bg-lane-a" id=disc data-start=2026-03-02 data-duration=6w>Discovery</div>
@@ -214,6 +218,7 @@ also run as a page script when the file is opened in a browser (reported as `pla
 | `connect(a, b, { label, via, out, in, … })` | a line **routed** around the boxes |
 | `arrow(a, b, { label, … })` | a straight arrow; boxes connect at their facing sides; the label sits beside its middle |
 | `curve(a, b, { bend, label, … })` | a curved arrow |
+| `depend(a, b, { color, dashed })` | a dependency on a time chart: from the end of a to the start of b, clear of every other dated element and of other dependencies |
 | `draw.moveTo(p).lineTo(p).quadraticCurveTo(c, p).bezierCurveTo(c1, c2, p).closePath()` | any path, as on a canvas |
 | `draw.arc(centre, r, fromDeg, toDeg)` | an arc; degrees clockwise from the right |
 | `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path |
