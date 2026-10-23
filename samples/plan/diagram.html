@@ -43,21 +43,21 @@
 
   <div class="lane bg-lane-c">Applications</div>
   <div class=row><div class=cells><b>Pilot: tracking service</b><span>App team A</span><b class="st planned">Planned</b></div>
-    <i class="bar critical" id=pilot data-after="aks pg fw" data-duration=3w></i></div>
+    <i class="bar critical" id=pilot data-after="aks fw" data-duration=3w></i></div>
   <div class=row><div class=cells><b>Data migration rehearsal</b><span>Data team</span><b class="st planned">Planned</b></div>
     <i class=bar id=rehearse data-after=pg data-duration=3w></i></div>
   <div class=row><div class=cells><b>Move remaining services</b><span>App teams A, B</span><b class="st planned">Planned</b></div>
     <i class="bar critical" id=rest data-after="pilot rehearse" data-duration=5w></i></div>
   <div class=row><div class=cells><b>Go-live</b><span>Steering group</span><b class="st planned">Milestone</b></div>
-    <b shape=diamond class=ms id=live data-after="rest pen load" data-duration=0d></b></div>
+    <b shape=diamond class=ms id=live data-after=rest data-duration=0d></b></div>
 
   <div class="lane bg-lane-d">Operations and security</div>
   <div class=row><div class=cells><b>Runbooks and on-call training</b><span>Operations</span><b class="st planned">Planned</b></div>
-    <i class=bar id=runbooks data-after=mon data-duration=4w></i></div>
+    <i class=bar id=runbooks data-start=2026-03-20 data-duration=4w></i></div>
   <div class=row><div class=cells><b>Go / no-go review</b><span>Steering group</span><b class="st planned">Milestone</b></div>
     <b shape=diamond class=ms id=gonogo data-at=2026-04-24></b></div>
   <div class=row><div class=cells><b>Load testing</b><span>Platform team</span><b class="st planned">Planned</b></div>
-    <i class=bar id=load data-after=pilot data-duration=2w></i></div>
+    <i class=bar id=load data-start=2026-04-10 data-duration=2w></i></div>
   <div class="row border-b-0"><div class=cells><b>External pen test</b><span>Security vendor</span><b class="st planned">Planned</b></div>
     <i class="bar external" id=pen data-start=2026-05-04 data-duration=1w></i></div>
 
