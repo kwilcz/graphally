@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// graphally render <file.html> [--png | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]
+// graphally render <file.html>... [--png | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer] [--jobs n]
 //
 // Writes <name>.svg next to the source (or in --out). Prints one short line per
 // diagram, then one line per problem. --png also writes a preview image; --dark draws the
 // dark theme, --themes writes both (<name>.svg and <name>-dark.svg). The layout of
 // the earlier renders is reused unless --recompute is given. A diagram file without the
-// viewer header gets it (unless --no-viewer), so it opens in any browser.
+// viewer header gets it (unless --no-viewer), so it opens in any browser. Several files
+// render in one browser, --jobs at a time (by default one fewer than the processors, at most
+// four), and print in the order given.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -16,24 +18,33 @@ import { readLayout } from './lib/snapshot.mjs';
 import { PACKS, fetchPacks, findPack } from './lib/iconpack.mjs';
 import { withViewer } from './lib/viewerheader.mjs';
 
+const USAGE = 'usage: node graphally.mjs render <file.html>... [--png | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer] [--jobs n]';
 const argv = process.argv.slice(2);
 if (argv[0] === 'render') argv.shift();
 const flag = f => argv.includes(f);
 const opt = f => (argv.includes(f) ? argv[argv.indexOf(f) + 1] : null);
-const file = argv.find((a, i) => !a.startsWith('--') && argv[i - 1] !== '--out');
-if (!file) { console.error('usage: node graphally.mjs render <file.html> [--png | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer]'); process.exit(2); }
-if (!fs.existsSync(file)) { console.log(`error: no such file: ${file}`); process.exit(2); }
-if (!flag('--no-viewer') && addViewer(file)) console.log(`${file}: added the viewer header; the file now opens in a browser`);
-const outDir = opt('--out') || path.dirname(file);
-const base = path.basename(file).replace(/\.html?$/, '');
+const files = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--out' && argv[i - 1] !== '--jobs');
+if (!files.length) { console.error(USAGE); process.exit(2); }
+for (const f of files) if (!fs.existsSync(f)) { console.log(`error: no such file: ${f}`); process.exit(2); }
+const outOpt = opt('--out');
+const baseOf = f => path.basename(f).replace(/\.html?$/, '');
+if (outOpt && new Set(files.map(baseOf)).size < files.length) { console.log('error: two sources share a name, so their files would overwrite each other in --out: render them separately, or without --out'); process.exit(2); }
 const skillRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-fs.mkdirSync(outDir, { recursive: true });
-const source = path.relative(outDir, file).split(path.sep).join('/');
 const recompute = flag('--recompute');
-const previous = recompute ? [] : readPrevious(outDir, base, source);
-
 // The PNG is a preview for checking the layout; --png2x renders it sharp enough to publish.
 const scale = flag('--png2x') ? 2 : 1;
+const dark = flag('--themes') && !flag('--dark');
+
+// One job per file: where it writes, and the layouts of its earlier renders.
+const jobs = files.map((file, n) => {
+  const outDir = outOpt || path.dirname(file), base = baseOf(file);
+  fs.mkdirSync(outDir, { recursive: true });
+  const source = path.relative(outDir, file).split(path.sep).join('/');
+  const out = [];
+  if (!flag('--no-viewer') && addViewer(file)) out.push(`${file}: added the viewer header; the file now opens in a browser`);
+  return { n, file, outDir, base, source, previous: recompute ? [] : readPrevious(outDir, base, source), out, exit: 0, done: false };
+});
+
 // First run: download the cloud icon packs. Without a network the diagram still renders,
 // and icons it names are reported with the command to fetch them later.
 for (const name of PACKS.filter(n => !findPack(skillRoot, n))) {
@@ -42,75 +53,89 @@ for (const name of PACKS.filter(n => !findPack(skillRoot, n))) {
   try { await fetchPacks(skillRoot, [name]); }
   catch (e) { console.log(`note: ${name} icons not downloaded (${e.message.split('\n')[0]}); run node ${path.join(skillRoot, 'scripts/fetch-icons.mjs')} when online`); }
 }
-const iconFiles = Object.fromEntries(PACKS.map(n => [`/icons/${n}.json`, findPack(skillRoot, n)]).filter(([, f]) => f));
 
-let browser, server, prevFile = null;
+let browser, server;
 try {
-  const files = { ...iconFiles };
-  if (!recompute) {
-    prevFile = path.join(os.tmpdir(), `graphally-previous-${process.pid}.json`);
-    fs.writeFileSync(prevFile, JSON.stringify(previous));
-    files['/previous.json'] = prevFile;
-  }
-  server = await serve(skillRoot, path.dirname(path.resolve(file)), files);
+  const served = Object.fromEntries(PACKS.map(n => [`/icons/${n}.json`, findPack(skillRoot, n)]).filter(([, f]) => f));
+  for (const j of jobs) if (!recompute) served[`/previous/${j.n}.json`] = { body: JSON.stringify(j.previous) };
+  server = await serve(skillRoot, jobs.map(j => path.dirname(path.resolve(j.file))), served);
   browser = await launch();
-  // Compile at scale 1 whatever the PNG's scale: text metrics differ at 2x, and the SVG must not.
-  const page = await openPage(browser);
-  const q = new URLSearchParams({ src: `${server.origin}/src/${encodeURIComponent(path.basename(file))}`, source, theme: flag('--dark') ? 'dark' : '', inline: flag('--inline') ? '1' : '', debug: flag('--debug') ? '1' : '' });
-  await page.goto(`${server.origin}/scripts/lib/harness.html?${q}`);
-  await page.waitFor('document.body && document.body.dataset.ready === "1"');
-  const error = await page.evaluate('window.__error || null');
-  if (error || page.errors.length) throw new Error(error || page.errors.join('; '));
-  const results = await page.evaluate('window.__results.map(({ id, svg, width, height, problems, stats, snapshot }) => ({ id, svg, width, height, problems, stats, snapshot }))');
-  if (flag('--debug')) console.log(JSON.stringify(await page.evaluate('window.__debug || null')));
-  let exit = 0;
-  const taken = new Map();
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i];
-    // The k-th diagram with this id gets the k-th previous snapshot with it (same as run.js).
-    const id = r.id || '', k = taken.get(id) || 0;
-    taken.set(id, k + 1);
-    const prev = previous.filter(s => (s.id || '') === id)[k];
-    const name = results.length === 1 ? base : `${base}.${r.id || i + 1}`;
-    const svgPath = path.join(outDir, `${name}.svg`);
-    fs.writeFileSync(svgPath, r.svg + '\n');
-    // --themes: the dark copy beside it (<name>-dark.svg). Same layout, the dark tokens.
-    const dark = flag('--themes') && !flag('--dark');
-    if (dark) fs.writeFileSync(path.join(outDir, `${name}-dark.svg`), r.svg.replace(/^<svg ([^>]*?)class="graphally"(?! data-theme)/, '<svg $1class="graphally" data-theme="dark"') + '\n');
-    if (flag('--png') || flag('--png2x')) {
-      await page.viewport(Math.max(800, r.width), Math.max(600, r.height), scale);
-      const sel = `document.querySelectorAll('.out svg')[${i}]`;
-      const box = await page.evaluate(`(() => { const b = ${sel}.getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);
-      fs.writeFileSync(path.join(outDir, `${name}.png`), await page.screenshot(box));
-      if (dark) {
-        await page.evaluate(`${sel}.setAttribute('data-theme', 'dark')`);
-        fs.writeFileSync(path.join(outDir, `${name}-dark.png`), await page.screenshot(box));
-        await page.evaluate(`${sel}.removeAttribute('data-theme')`);
-      }
+  const want = Number(opt('--jobs')) || Math.min(4, Math.max(1, (os.availableParallelism?.() ?? os.cpus().length) - 1));
+  const pages = await Promise.all(Array.from({ length: Math.max(1, Math.min(jobs.length, want)) }, () => openPage(browser)));
+  // Each file's lines print once it and every file before it are done.
+  let printed = 0;
+  const flush = () => { while (printed < jobs.length && jobs[printed].done) { for (const line of jobs[printed].out) console.log(line); printed++; } };
+  let next = 0;
+  await Promise.all(pages.map(async page => {
+    while (next < jobs.length) {
+      const job = jobs[next++];
+      try { await renderJob(page, job); }
+      catch (e) { job.out.push(`error: ${jobs.length > 1 ? `${job.file}: ` : ''}${e.message}`); job.exit = 1; }
+      job.done = true;
+      flush();
     }
-    if (flag('--json')) { console.log(JSON.stringify({ ...r, svg: svgPath })); continue; }
-    // Icons from a pack that is not downloaded are one note, not a problem to fix.
-    const offline = r.problems.filter(p => p.rule === 'unknown-icon' && /not downloaded/.test(p.hint || ''));
-    r.problems = r.problems.filter(p => !offline.includes(p));
-    const s = r.stats;
-    console.log(`${svgPath}  ${r.width}×${r.height}  ${s.nodes} nodes, ${s.edges} edges, ${s.crossings} crossings  ${r.problems.length ? r.problems.length + ' problem(s):' : 'ok'}`);
-    const now = r.snapshot || readLayout(r.svg);
-    if (prev && now) for (const line of droppedOverrides(prev, now)) console.log(line);
-    if (offline.length) console.log(`  note: drawn without ${offline.length} icon(s) (${[...new Set(offline.map(p => p.icon))].slice(0, 6).join(', ')}): the icon packs are not downloaded; run node ${path.join(skillRoot, 'scripts/fetch-icons.mjs')} when online`);
-    for (const p of r.problems) {
-      const { rule, hint, ...rest } = p;
-      console.log(`  ${rule}: ${Object.entries(rest).map(([k, v]) => `${k}=${Array.isArray(v) ? v.join('|') : v}`).join(' ')}${hint ? `  (${hint})` : ''}`);
-    }
-    if (r.problems.length) exit = 1;
-  }
-  process.exitCode = exit;
+  }));
+  process.exitCode = Math.max(...jobs.map(j => j.exit));
 } catch (e) {
   console.log(`error: ${e.message}`);
   process.exitCode = 1;
 } finally {
   await browser?.close();
   server?.close();
-  if (prevFile) fs.rmSync(prevFile, { force: true });
+}
+
+// Compiles one file in a page and writes its SVG (and PNG) files; its lines go to job.out.
+async function renderJob(page, job) {
+  const log = line => job.out.push(line);
+  // Compile at scale 1 whatever the PNG's scale: text metrics differ at 2x, and the SVG must not.
+  await page.viewport(1400, 900, 1);
+  const q = new URLSearchParams({ src: `${server.origin}/src/${job.n}/${encodeURIComponent(path.basename(job.file))}`, source: job.source, theme: flag('--dark') ? 'dark' : '', inline: flag('--inline') ? '1' : '', debug: flag('--debug') ? '1' : '', prev: recompute ? '' : `/previous/${job.n}.json` });
+  await page.goto(`${server.origin}/scripts/lib/harness.html?${q}`);
+  await page.ready();
+  const error = await page.evaluate('window.__error || null');
+  if (error || page.errors.length) throw new Error(error || page.errors.join('; '));
+  const results = await page.evaluate('window.__results.map(({ id, svg, width, height, problems, stats, snapshot }) => ({ id, svg, width, height, problems, stats, snapshot }))');
+  if (flag('--debug')) log(JSON.stringify(await page.evaluate('window.__debug || null')));
+  const taken = new Map();
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    // The k-th diagram with this id gets the k-th previous snapshot with it (same as run.js).
+    const id = r.id || '', k = taken.get(id) || 0;
+    taken.set(id, k + 1);
+    const prev = job.previous.filter(s => (s.id || '') === id)[k];
+    const name = results.length === 1 ? job.base : `${job.base}.${r.id || i + 1}`;
+    const svgPath = path.join(job.outDir, `${name}.svg`);
+    fs.writeFileSync(svgPath, r.svg + '\n');
+    // --themes: the dark copy beside it (<name>-dark.svg). Same layout, the dark tokens.
+    if (dark) fs.writeFileSync(path.join(job.outDir, `${name}-dark.svg`), r.svg.replace(/^<svg ([^>]*?)class="graphally"(?! data-theme)/, '<svg $1class="graphally" data-theme="dark"') + '\n');
+    if (flag('--png') || flag('--png2x')) {
+      // --png is a preview, encoded for speed; --png2x is for publishing, encoded small.
+      const fast = scale === 1;
+      await page.viewport(Math.max(800, r.width), Math.max(600, r.height), scale);
+      const sel = `document.querySelectorAll('.out svg')[${i}]`;
+      const box = await page.evaluate(`(() => { const b = ${sel}.getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);
+      fs.writeFileSync(path.join(job.outDir, `${name}.png`), await page.screenshot(box, { fast }));
+      if (dark) {
+        await page.evaluate(`${sel}.setAttribute('data-theme', 'dark')`);
+        fs.writeFileSync(path.join(job.outDir, `${name}-dark.png`), await page.screenshot(box, { fast }));
+        await page.evaluate(`${sel}.removeAttribute('data-theme')`);
+      }
+    }
+    if (flag('--json')) { log(JSON.stringify({ ...r, svg: svgPath })); continue; }
+    // Icons from a pack that is not downloaded are one note, not a problem to fix.
+    const offline = r.problems.filter(p => p.rule === 'unknown-icon' && /not downloaded/.test(p.hint || ''));
+    r.problems = r.problems.filter(p => !offline.includes(p));
+    const s = r.stats;
+    log(`${svgPath}  ${r.width}×${r.height}  ${s.nodes} nodes, ${s.edges} edges, ${s.crossings} crossings  ${r.problems.length ? r.problems.length + ' problem(s):' : 'ok'}`);
+    const now = r.snapshot || readLayout(r.svg);
+    if (prev && now) for (const line of droppedOverrides(prev, now)) log(line);
+    if (offline.length) log(`  note: drawn without ${offline.length} icon(s) (${[...new Set(offline.map(p => p.icon))].slice(0, 6).join(', ')}): the icon packs are not downloaded; run node ${path.join(skillRoot, 'scripts/fetch-icons.mjs')} when online`);
+    for (const p of r.problems) {
+      const { rule, hint, ...rest } = p;
+      log(`  ${rule}: ${Object.entries(rest).map(([k, v]) => `${k}=${Array.isArray(v) ? v.join('|') : v}`).join(' ')}${hint ? `  (${hint})` : ''}`);
+    }
+    if (r.problems.length) job.exit = 1;
+  }
 }
 
 // The layouts of the earlier renders, read from <base>.svg and <base>.<id>.svg in dir, in

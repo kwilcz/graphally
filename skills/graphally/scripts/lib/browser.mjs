@@ -2,7 +2,7 @@
 // The browser graphally lays out and measures in: whatever Chrome, Chromium or Edge is
 // installed, driven over the DevTools protocol through a pipe (no npm packages). Pages
 // are served from 127.0.0.1, so sandboxed browsers (a snap, for example) can read them.
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { StringDecoder } from 'node:string_decoder';
 import http from 'node:http';
 import fs from 'node:fs';
@@ -22,9 +22,11 @@ export function findBrowser() {
       [path.join(d, 'Google/Chrome/Application/chrome.exe'), path.join(d, 'Chromium/Application/chrome.exe'), path.join(d, 'Microsoft/Edge/Application/msedge.exe')]),
   }[process.platform] || [];
   for (const f of fixed) if (exists(f)) return f;
+  // On the PATH, looked up here rather than by running `which` once per name.
   if (process.platform !== 'win32') {
+    const dirs = (process.env.PATH || '').split(path.delimiter).filter(Boolean);
     for (const name of ['google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser', 'chrome', 'microsoft-edge', 'microsoft-edge-stable']) {
-      try { const p = execFileSync('which', [name], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); if (exists(p)) return p; } catch {}
+      for (const d of dirs) { const p = path.join(d, name); if (exists(p)) return p; }
     }
   }
   // Browsers downloaded by Playwright (`npx playwright install chromium`), newest first.
@@ -38,15 +40,19 @@ export function findBrowser() {
   return null;
 }
 
-// Serve the skill directory at /, the diagram's directory at /src/, and single files at
-// the paths given in `files` (the icon packs, wherever they were downloaded to).
+// Serve the skill directory at /, the diagram's directory at /src/ (several directories at
+// /src/0/, /src/1/ … when srcDir is a list), and single files at the paths given in `files`:
+// a path on disk (the icon packs, wherever they were downloaded to), or { body, type }.
 export function serve(skillRoot, srcDir, files = {}) {
   const types = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml' };
   const server = http.createServer((req, res) => {
     const url = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-    const [root, rel] = url.startsWith('/src/') ? [srcDir, url.slice(5)] : [skillRoot, url.slice(1)];
-    const file = files[url] || path.resolve(root, rel);
-    if ((!files[url] && !file.startsWith(path.resolve(root) + path.sep)) || !fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404); res.end(); return; }
+    const hit = files[url];
+    if (hit && typeof hit === 'object') { res.writeHead(200, { 'content-type': `${hit.type || 'application/json'}; charset=utf-8` }); res.end(hit.body); return; }
+    const many = Array.isArray(srcDir) && /^\/src\/(\d+)\//.exec(url);
+    const [root, rel] = many ? [srcDir[many[1]] || '', url.slice(many[0].length)] : url.startsWith('/src/') && !Array.isArray(srcDir) ? [srcDir, url.slice(5)] : [skillRoot, url.slice(1)];
+    const file = hit || path.resolve(root, rel);
+    if ((!hit && (!root || !file.startsWith(path.resolve(root) + path.sep))) || !fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404); res.end(); return; }
     res.writeHead(200, { 'content-type': (types[path.extname(file)] || 'application/octet-stream') + '; charset=utf-8' });
     fs.createReadStream(file).pipe(res);
   });
@@ -62,7 +68,11 @@ export async function launch() {
   const profile = fs.mkdtempSync(path.join(base, 'graphally-'));
   const args = ['--headless=new', '--remote-debugging-pipe', `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check',
     '--disable-gpu', '--hide-scrollbars', '--mute-audio', '--disable-extensions', '--disable-background-networking', '--disable-sync',
-    '--disable-component-update', '--password-store=basic', '--use-mock-keychain', 'about:blank'];
+    '--disable-component-update', '--password-store=basic', '--use-mock-keychain',
+    // Several pages render at once, and Chrome would throttle all but the one in front: their
+    // timers slow down and a screenshot waits for a frame that comes seconds late, or never.
+    '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding',
+    'about:blank'];
   if (process.platform === 'linux' && process.getuid?.() === 0) args.unshift('--no-sandbox');   // Chrome refuses to run as root otherwise
   const proc = spawn(exe, args, { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'], ...(base !== os.tmpdir() ? { env: { ...process.env, TMPDIR: base } } : {}) });
   let stderr = '';
@@ -93,15 +103,21 @@ export async function launch() {
     out.write(JSON.stringify(sessionId ? { id, method, params, sessionId } : { id, method, params }) + '\0');
   });
   await send('Browser.getVersion');
+  // The tab Chrome opened at start (about:blank): the first page uses it instead of a new one.
+  const { targetInfos = [] } = await send('Target.getTargets').catch(() => ({}));
+  let spare = targetInfos.find(t => t.type === 'page')?.targetId || null;
   return {
     send,
     on: l => listeners.push(l),
+    takeSpare() { const t = spare; spare = null; return t; },
+    // Every page is done by now and its files written, so the browser is stopped outright
+    // rather than asked to shut down, which takes it about 100 ms; its child processes go
+    // with it. Then its profile is removed.
     async close() {
       proc.removeAllListeners('exit');
       const exited = new Promise(r => proc.once('exit', r));
-      send('Browser.close').catch(() => {});
+      proc.kill('SIGKILL');
       await Promise.race([exited, new Promise(r => setTimeout(r, 2000).unref())]);
-      proc.kill();
       for (const stream of [out, inp, proc.stdio[2]]) stream.destroy();
       proc.unref();
       try { fs.rmSync(profile, { recursive: true, force: true }); } catch {}
@@ -110,13 +126,28 @@ export async function launch() {
 }
 
 export async function openPage(browser, { width = 1400, height = 900, scale = 1 } = {}) {
-  const { targetId } = await browser.send('Target.createTarget', { url: 'about:blank' });
+  // Each page beyond the first gets a window of its own, so none sits behind another.
+  const targetId = browser.takeSpare?.() || (await browser.send('Target.createTarget', { url: 'about:blank', newWindow: true })).targetId;
   const { sessionId } = await browser.send('Target.attachToTarget', { targetId, flatten: true });
-  const s = (method, params) => browser.send(method, params, sessionId);
+  // A call that gets no answer within a minute fails, so a stuck page ends the render with
+  // an error instead of hanging it.
+  const s = (method, params) => {
+    let timer;
+    const late = new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`the browser did not answer ${method} within 60 s`)), 60000); timer.unref?.(); });
+    return Promise.race([browser.send(method, params, sessionId), late]).finally(() => clearTimeout(timer));
+  };
   const errors = [];
-  browser.on(m => { if (m.sessionId === sessionId && m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text); });
+  // A page signals that it is done by calling graphallyReady(): the event arrives here, with no
+  // polling. A navigation starts a new wait.
+  let done, ready = new Promise(r => { done = r; });
+  browser.on(m => {
+    if (m.sessionId !== sessionId) return;
+    if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text);
+    else if (m.method === 'Runtime.bindingCalled' && m.params.name === 'graphallyReady') done(m.params.payload);
+  });
   await s('Page.enable');
   await s('Runtime.enable');
+  await s('Runtime.addBinding', { name: 'graphallyReady' });
   const viewport = (w, h, sc = scale) => s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
   await viewport(width, height);
   const evaluate = async expression => {
@@ -126,14 +157,20 @@ export async function openPage(browser, { width = 1400, height = 900, scale = 1 
   };
   return {
     errors, viewport, evaluate,
-    goto: url => s('Page.navigate', { url }),
+    goto: url => { errors.length = 0; ready = new Promise(r => { done = r; }); return s('Page.navigate', { url }); },
+    // Resolves when the page calls graphallyReady() after the last goto.
+    ready(timeout = 60000) {
+      let timer;
+      return Promise.race([ready, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('timed out waiting for the page')), timeout); timer.unref?.(); })]).finally(() => clearTimeout(timer));
+    },
     async waitFor(expression, timeout = 60000) {
       const end = Date.now() + timeout;
       while (Date.now() < end) { if (await evaluate(expression).catch(() => false)) return; await new Promise(r => setTimeout(r, 50)); }
       throw new Error('timed out waiting for the page');
     },
-    async screenshot(clip) {
-      const { data } = await s('Page.captureScreenshot', { format: 'png', clip: { ...clip, scale: 1 }, captureBeyondViewport: true });
+    // fast: a quicker PNG encoding, about a third faster and a third larger, for previews.
+    async screenshot(clip, { fast = false } = {}) {
+      const { data } = await s('Page.captureScreenshot', { format: 'png', clip: { ...clip, scale: 1 }, captureBeyondViewport: true, ...(fast ? { optimizeForSpeed: true } : {}) });
       return Buffer.from(data, 'base64');
     },
   };

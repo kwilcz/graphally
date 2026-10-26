@@ -13,19 +13,30 @@ node skills/graphally/scripts/fetch-icons.mjs || exit 2
 node tools/build-viewer.mjs || exit 2
 
 status=0
+# Sources that take the same flags render in one call: one browser, several pages at a time.
+# A PNG next to a source is kept, drawn at 2x so it can be published; so is a dark copy
+# (<name>-dark.svg), for pages that show the reader's theme.
+both=(); png=(); dark=(); plain=()
 for src in samples/*/diagram.html docs/diagrams/*.html; do
-  args=(render "$src")
-  # A PNG next to the source is kept, drawn at 2x so it can be published.
-  [ -f "${src%.html}.png" ] && args+=(--png2x)
-  # So is a dark copy (<name>-dark.svg), for pages that show the reader's theme.
-  [ -f "${src%.html}-dark.svg" ] && args+=(--themes)
-  echo "== $src"
-  out=$(node skills/graphally/scripts/graphally.mjs "${args[@]}" 2>&1)
+  p=0; d=0
+  [ -f "${src%.html}.png" ] && p=1
+  [ -f "${src%.html}-dark.svg" ] && d=1
+  case "$p$d" in 11) both+=("$src") ;; 10) png+=("$src") ;; 01) dark+=("$src") ;; *) plain+=("$src") ;; esac
+done
+batch() {
+  local flags=$1; shift
+  [ "$#" -gt 0 ] || return 0
+  # shellcheck disable=SC2086 # the flags are words
+  out=$(node skills/graphally/scripts/graphally.mjs render "$@" $flags 2>&1)
   code=$?
   printf '%s\n' "$out"
   # A render that cannot start (no browser, unreadable source) prints "error:" and exits 1.
   if [ "$code" -ge 2 ] || grep -q -e '^error:' -e 'not downloaded' <<< "$out"; then
     status=2
   fi
-done
+}
+batch "--png2x --themes" ${both[@]+"${both[@]}"}
+batch "--png2x" ${png[@]+"${png[@]}"}
+batch "--themes" ${dark[@]+"${dark[@]}"}
+batch "" ${plain[@]+"${plain[@]}"}
 exit "$status"
