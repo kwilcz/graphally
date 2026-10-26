@@ -159,9 +159,7 @@ pull request is open: the next minor version, or the next major one when the pul
 has the label `breaking`. On merge, the version is tagged and published with the skill
 attached. The version lives in `SKILL.md` and both plugin manifests;
 `node tools/version.mjs` prints it, and `node tools/version.mjs --check` checks that they
-agree. A rendered diagram loads the viewer of the exact release that drew it
-(`…/graphally@v<version>/…`), so it opens the same in a browser years later; rendering it again
-moves it to the current release.
+agree.
 
 ## Repository
 

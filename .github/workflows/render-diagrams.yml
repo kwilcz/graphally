@@ -1,8 +1,8 @@
 # Prepares a pull request into main for release. It sets the version the merge will release
 # (tools/version.mjs: the next minor one, or the next major one when the pull request has the
 # label "breaking"), then re-renders every diagram under samples/ and docs/diagrams/, so the
-# pull request carries SVG and PNG files that match their sources, with viewer headers that
-# name its release, and rebuilds the viewer bundle (graphally.js). A branch of this repository
+# pull request carries SVG and PNG files that match their sources, and rebuilds the viewer
+# bundle (graphally.js). A branch of this repository
 # gets the files committed back to it. A fork cannot be pushed to, so there the job only fails
 # when its diagram files are out of date, and its version is set after the merge.
 name: Render diagrams
@@ -63,7 +63,6 @@ jobs:
           fc-cache -f >/dev/null
           test "$(fc-match -f '%{family}' sans-serif)" = Inter
 
-      # Before the render, so the diagrams' viewer headers load the release this merge makes.
       - name: Set the version this pull request releases
         if: ${{ (github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch') && (github.head_ref || github.ref_name) != 'main' }}
         env:

@@ -5,9 +5,9 @@
 // node tools/version.mjs --check               exits 1 unless every place agrees
 // node tools/version.mjs --next minor|major    prints the version a pull request releases
 //
-// The version is kept in three places, which must agree: SKILL.md (metadata.version, read by
-// the render to pin the viewer, since the skill folder ships on its own), and the plugin and
-// marketplace manifests (read by plugin updates). The release is tagged v<version>.
+// The version is kept in three places, which must agree: SKILL.md (metadata.version, which
+// ships with the skill folder on its own), and the plugin and marketplace manifests (read by
+// plugin updates). The release is tagged v<version>.
 // --next steps up from the newer of the last v-tag and the version on origin/main, so a pull
 // request opened before a release still gets a version of its own.
 import { execFileSync } from 'node:child_process';
