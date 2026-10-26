@@ -7,7 +7,7 @@ allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs *) Bash(node 
 metadata:
   author: Kamil Wilczyński (kwilcz)
   repository: https://github.com/kwilcz/graphally
-  version: "1.0.0"
+  version: "2.3.3"
 ---
 
 # graphally

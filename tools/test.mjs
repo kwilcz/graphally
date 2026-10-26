@@ -19,6 +19,7 @@ import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
 import { applyEdits, readLines } from '../skills/graphally/scripts/lib/edits.mjs';
 import { launch, openPage, serve } from '../skills/graphally/scripts/lib/browser.mjs';
 import { findPack } from '../skills/graphally/scripts/lib/iconpack.mjs';
+import { MAJOR, VIEWER } from '../skills/graphally/scripts/lib/viewerheader.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cli = path.join(root, 'skills/graphally/scripts/graphally.mjs');
@@ -431,6 +432,17 @@ later('viewer', async () => {
   ok0(await render(h, path.join(path.dirname(h), 'out'))); ok0(await render(h, path.join(path.dirname(h), 'out')));
   const text = fs.readFileSync(h, 'utf8');
   check(text.startsWith('<!doctype html>') && text.split('graphally.js').length === 2, `header: ${text.slice(0, 200)}`);
+  // It loads the skill's major version (@2 for 2.x); a header on an older major moves
+  // forward, a pinned commit stays.
+  check(VIEWER.includes(`/gh/kwilcz/graphally@${MAJOR}/`) && text.includes(VIEWER), `the header does not load @${MAJOR}: ${text.slice(0, 300)}`);
+  fs.writeFileSync(h, text.replace(VIEWER, VIEWER.replace(`@${MAJOR}/`, `@${MAJOR - 1}/`)));
+  const up = await render(h, path.join(path.dirname(h), 'out'));
+  const moved = fs.readFileSync(h, 'utf8');
+  check(up.code === 0 && /the viewer header now loads/.test(up.text) && moved.includes(VIEWER) && moved.split('graphally.js').length === 2, `an older major's header was not moved forward: ${tail(up.text)}`);
+  const pinned = VIEWER.replace(`@${MAJOR}/`, '@0ae0df1/');
+  fs.writeFileSync(h, moved.replace(VIEWER, pinned));
+  ok0(await render(h, path.join(path.dirname(h), 'out')));
+  check(fs.readFileSync(h, 'utf8').includes(pinned), 'a header pinned to a commit was changed');
   const r = await render(write(folder('viewer-plain'), page('<div class=card id=a>A</div>', '').replace('<script type="graphally">', '<script>')), path.join(work, 'viewer-plain', 'out'));
   check(r.code === 1 && /plain-script/.test(r.text), `expected plain-script: ${tail(r.text)}`);
 });
@@ -533,6 +545,17 @@ later('page-depend', async () => {
 
 // The skill's own examples: every complete <diagram> in SKILL.md and the references renders
 // with no problem, so what an agent copies works.
+later('version', async () => {
+  // The version is the same in SKILL.md and both manifests. The next one steps up from the
+  // last release: the build number, the minor one or the major one.
+  const run = (...args) => new Promise(resolve => { const c = spawn(process.execPath, [path.join(root, 'tools/version.mjs'), ...args]); let t = ''; c.stdout.on('data', d => { t += d; }); c.stderr.on('data', d => { t += d; }); c.on('close', code => resolve({ code, text: t.trim() })); });
+  const now = await run('--check'), version = /^  version: "(.+)"$/m.exec(fs.readFileSync(path.join(root, 'skills/graphally/SKILL.md'), 'utf8'))?.[1];
+  check(now.code === 0 && now.text === version, `the versions differ: ${now.text}`);
+  const build = await run('--next', 'build'), minor = await run('--next', 'minor'), major = await run('--next', 'major');
+  const [p, q, r] = build.text.split('.').map(Number), [a, b, c] = minor.text.split('.').map(Number), [x, y, z] = major.text.split('.').map(Number);
+  check([build, minor, major].every(v => v.code === 0) && a === p && b === q + 1 && c === 0 && r > 0 && x === a + 1 && y === 0 && z === 0, `--next gave ${build.text} (build), ${minor.text} (minor) and ${major.text} (major)`);
+});
+
 later('batch', async () => {
   const a = folder('batch-a'), b = folder('batch-b'), solo = folder('batch-solo');
   const fa = write(a, page('<div class=card id=x>X</div><div class="card mt-10" id=y>Y</div>', "arrow('x', 'y')"));
