@@ -93,7 +93,8 @@ jobs:
           git config user.email "25964560+kwilcz@users.noreply.github.com"
           # [skip ci]: the version commit starts no workflow run of its own.
           git commit -qam "Release $version [skip ci]"
-          git push origin HEAD:main
+          # If main moved meanwhile, the version commit goes on top of it.
+          git push origin HEAD:main || { git pull -q --rebase origin main && git push origin HEAD:main; }
           (cd skills && zip -qr ../graphally-skill.zip graphally)
           gh release create "v$version" graphally-skill.zip --target "$(git rev-parse HEAD)" --title "v$version" --generate-notes
 

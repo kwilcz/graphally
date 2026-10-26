@@ -554,6 +554,9 @@ later('version', async () => {
   const build = await run('--next', 'build'), minor = await run('--next', 'minor'), major = await run('--next', 'major');
   const [p, q, r] = build.text.split('.').map(Number), [a, b, c] = minor.text.split('.').map(Number), [x, y, z] = major.text.split('.').map(Number);
   check([build, minor, major].every(v => v.code === 0) && a === p && b === q + 1 && c === 0 && r > 0 && x === a + 1 && y === 0 && z === 0, `--next gave ${build.text} (build), ${minor.text} (minor) and ${major.text} (major)`);
+  // A pull request's labels choose the kind: major, else minor, else build.
+  const kinds = await Promise.all([[], ['docs'], ['minor'], ['docs minor'], ['minor', 'major']].map(l => run('--kind', ...l)));
+  check(kinds.map(k => k.text).join() === 'build,build,minor,minor,major', `--kind gave ${kinds.map(k => k.text).join(', ')}`);
 });
 
 later('batch', async () => {
