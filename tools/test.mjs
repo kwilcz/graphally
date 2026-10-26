@@ -5,10 +5,11 @@
 // then small diagrams written here: the layout each SVG carries, connection sides, blocked,
 // bad and dropped overrides, how far a layout moves when a box is added (a stable re-render
 // against --recompute), shapes, script errors, routing, problems, connections as data, the
-// viewer, utility classes, dates, sequences, dependencies and the skill's own examples.
+// viewer, utility classes, dates, sequences, dependencies, batches, the harness's module
+// list, icon packs on demand and the skill's own examples.
 // Works in a fresh folder under os.tmpdir(), removed at the end unless --keep, which prints
 // its path. Exits 1 when a test fails.
-import { spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
@@ -16,7 +17,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
 import { applyEdits, readLines } from '../skills/graphally/scripts/lib/edits.mjs';
-import { launch, openPage } from '../skills/graphally/scripts/lib/browser.mjs';
+import { launch, openPage, serve } from '../skills/graphally/scripts/lib/browser.mjs';
 import { findPack } from '../skills/graphally/scripts/lib/iconpack.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -31,10 +32,28 @@ const folder = name => { const d = path.join(work, name); fs.mkdirSync(d, { recu
 const write = (dir, text) => { const f = path.join(dir, 'diagram.html'); fs.writeFileSync(f, text); return f; };
 const pct = x => `${Math.round(100 * x)}%`;
 
-// One CLI run: its exit code and what it printed.
+// One CLI run: its exit code and what it printed, when it ends. file may be a list (one
+// batch); out may be null, to write next to each source.
 function render(file, out, flags = []) {
-  const r = spawnSync(process.execPath, [cli, 'render', file, '--out', out, ...flags], { encoding: 'utf8', timeout: 600000 });
-  return { code: r.status, text: (r.stdout || '') + (r.stderr || '') + (r.error ? r.error.message : '') };
+  return new Promise(resolve => {
+    const child = spawn(process.execPath, [cli, 'render', ...[].concat(file), ...(out ? ['--out', out] : []), ...flags], { timeout: 600000 });
+    let text = '';
+    child.stdout.on('data', d => { text += d; });
+    child.stderr.on('data', d => { text += d; });
+    child.on('error', e => { text += e.message; });
+    child.on('close', code => resolve({ code, text }));
+  });
+}
+// The diagrams of a render that failed or reported problems, one entry each, with their lines.
+function trouble(text) {
+  const out = [];
+  let open = false;
+  for (const line of text.split('\n')) {
+    if (/^error:/.test(line) || /problem\(s\):$/.test(line)) { out.push(line); open = true; }
+    else if (open && /^  \S/.test(line)) out[out.length - 1] += ` | ${line.trim()}`;
+    else open = false;
+  }
+  return out;
 }
 // The summary line of each diagram in a render: "<svg path>  WxH  N nodes, …".
 const summaries = text => [...text.matchAll(/^(.+?\.svg)\s+[\d.]+×[\d.]+\s+(\d+) nodes,/gm)].map(m => ({ svg: m[1], nodes: Number(m[2]) }));
@@ -112,19 +131,40 @@ async function test(name, fn) {
   try { await fn(); console.log(`ok  ${name}`); }
   catch (e) { failed++; console.log(`FAIL ${name}: ${e.message}`); }
 }
+// The tests after the samples and their layout run a few at a time (TEST_JOBS, by default one
+// fewer than the processors, at most three); their lines print in the order they are written.
+const queue = [];
+const later = (name, fn) => { queue.push({ name, fn }); };
+async function runQueue() {
+  const width = Number(process.env.TEST_JOBS) || Math.max(1, Math.min(3, (os.availableParallelism?.() ?? os.cpus().length) - 1));
+  const lines = [];
+  let next = 0, printed = 0;
+  await Promise.all(Array.from({ length: width }, async () => {
+    while (next < queue.length) {
+      const i = next++, { name, fn } = queue[i];
+      total++;
+      try { await fn(); lines[i] = `ok  ${name}`; }
+      catch (e) { failed++; lines[i] = `FAIL ${name}: ${e.message}`; }
+      while (printed < queue.length && lines[printed]) console.log(lines[printed++]);
+    }
+  }));
+}
 
-await test('samples', () => {
-  const bad = [];
-  for (const p of sources) {
-    const out = folder(path.join('out', p.replace(/\.html$/, '').split(/[\\/]/).join('-')));
-    const r = render(path.join(root, p), out, ['--no-viewer']);
-    renders.set(p, { ...r, summaries: summaries(r.text) });
-    if (r.code !== 0) bad.push(`${p} exit ${r.code} (${tail(r.text)})`);
-  }
-  check(!bad.length, bad.join('; '));
+await test('samples', async () => {
+  // One render for all of them: each source is copied into a folder of its own, where its
+  // files land.
+  const copies = sources.map(p => {
+    const d = folder(path.join('out', p.replace(/\.html$/, '').split(/[\\/]/).join('-'))), f = path.join(d, path.basename(p));
+    fs.copyFileSync(path.join(root, p), f);
+    return { p, d, f };
+  });
+  const r = await render(copies.map(c => c.f), null, ['--no-viewer']);
+  const all = summaries(r.text);
+  for (const c of copies) renders.set(c.p, { summaries: all.filter(s => path.dirname(s.svg) === c.d) });
+  check(r.code === 0, `exit ${r.code}: ${trouble(r.text).join('; ') || tail(r.text)}`);
 });
 
-await test('layout', () => {
+await test('layout', async () => {
   const bad = [];
   for (const [p, r] of renders) {
     if (!r.summaries.length) bad.push(`${p}: no diagram in the output`);
@@ -140,47 +180,47 @@ await test('layout', () => {
   check(!bad.length, bad.join('; '));
 });
 
-await test('sides', () => {
+later('sides', async () => {
   const d = folder('sides'), out = path.join(d, 'out');
   // a2 is the lower box of its stack, so its bottom side is free.
-  ok0(render(write(d, doc({ line: '{ "from": "a2", "to": "b1", "out": "bottom", "in": "bottom" }' })), out));
+  ok0(await render(write(d, doc({ line: '{ "from": "a2", "to": "b1", "out": "bottom", "in": "bottom" }' })), out));
   const e = readSnapshot(path.join(out, 'diagram.svg')).edges?.['a2->b1'];
   check(e && e.out === 'bottom' && e.in === 'bottom', `connection a2->b1 is ${JSON.stringify(e)}`);
 });
 
-await test('bad-sides', () => {
+later('bad-sides', async () => {
   const d = folder('bad-sides'), out = path.join(d, 'out');
   // a1's bottom is blocked by a2 right under it; "diagonal" is no side.
-  const blocked = render(write(d, doc({ line: '{ "from": "a1", "to": "b1", "out": "bottom" }' }).replace('class=group id=ga', 'class="group gap-0" id=ga')), out);
+  const blocked = await render(write(d, doc({ line: '{ "from": "a1", "to": "b1", "out": "bottom" }' }).replace('class=group id=ga', 'class="group gap-0" id=ga')), out);
   check(blocked.code === 1 && /override-ignored: id=a1->b1 attr=out/.test(blocked.text), `expected override-ignored for a1->b1 out: ${tail(blocked.text)}`);
-  const bad = render(write(d, doc({ line: '{ "from": "a1", "to": "b1", "out": "diagonal" }' })), out);
+  const bad = await render(write(d, doc({ line: '{ "from": "a1", "to": "b1", "out": "diagonal" }' })), out);
   check(bad.code === 1 && /diagonal/.test(bad.text), `expected a problem naming "diagonal": ${tail(bad.text)}`);
 });
 
-await test('dropped', () => {
+later('dropped', async () => {
   const d = folder('dropped'), out = path.join(d, 'out'), f = write(d, doc({ attr: NUDGE }));
-  ok0(render(f, out));
+  ok0(await render(f, out));
   write(d, doc());
-  const r = render(f, out);
+  const r = await render(f, out);
   ok0(r);
   check(r.text.includes('override dropped: nudge on b1 (attribute removed)'), `no "override dropped: nudge on b1 (attribute removed)" line: ${tail(r.text)}`);
-  const fresh = render(f, out, ['--recompute']);
+  const fresh = await render(f, out, ['--recompute']);
   ok0(fresh);
   check(!fresh.text.includes('override dropped'), 'a --recompute render still reports a dropped override');
 });
 
-await test('stability', () => {
+later('stability', async () => {
   const bad = [];
   for (const [name, { id, pairs }] of Object.entries(EDITS)) {
     try {
       const src = fs.readFileSync(path.join(root, 'samples', name, 'diagram.html'), 'utf8');
       const edited = pairs.reduce((s, [a, b]) => replaceOnce(s, a, b), src);
       const warmDir = folder(`stability-${name}`), coldDir = folder(`stability-${name}-recompute`);
-      ok0(render(write(warmDir, src), path.join(warmDir, 'out')));
+      ok0(await render(write(warmDir, src), path.join(warmDir, 'out')));
       const before = readSnapshot(path.join(warmDir, 'out', 'diagram.svg'));
-      ok0(render(write(warmDir, edited), path.join(warmDir, 'out')));
+      ok0(await render(write(warmDir, edited), path.join(warmDir, 'out')));
       const warm = readSnapshot(path.join(warmDir, 'out', 'diagram.svg'));
-      ok0(render(write(coldDir, edited), path.join(coldDir, 'out'), ['--recompute']));
+      ok0(await render(write(coldDir, edited), path.join(coldDir, 'out'), ['--recompute']));
       const cold = readSnapshot(path.join(coldDir, 'out', 'diagram.svg'));
       check(Object.hasOwn(warm.nodes, id), `new node ${id} is not in the layout`);
       const s = shares(before, warm), c = shares(before, cold);
@@ -199,53 +239,53 @@ const edgePath = (svg, key) => { const m = svg.match(new RegExp(`<g data-edge="$
 const corners = d => (d.match(/Q/g) || []).length;
 const pointsOf = d => [...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: Number(m[1]), y: Number(m[2]) }));
 
-await test('page-shapes', () => {
+later('page-shapes', async () => {
   const d = folder('page-shapes'), out = path.join(d, 'out');
   const names = ['cylinder', 'document', 'note', 'cloud', 'hexagon', 'chevron', 'task loop', 'gateway parallel', 'event timer', 'end message', 'start', 'semicircle'];
-  ok0(render(write(d, page(names.map((n, i) => `<div shape="${n}" id=s${i}></div>`).join('\n'))), out));
+  ok0(await render(write(d, page(names.map((n, i) => `<div shape="${n}" id=s${i}></div>`).join('\n'))), out));
   const svg = svgOf(out);
   check(names.every((_, i) => svg.includes(`data-id="s${i}"`)), 'a shape is missing from the SVG');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
-  const bad = render(write(d, page('<div shape=cylindr>x</div>')), out);
+  const bad = await render(write(d, page('<div shape=cylindr>x</div>')), out);
   check(bad.code === 1 && /unknown-shape: shape=cylindr suggest=cylinder/.test(bad.text), `expected unknown-shape with a suggestion: ${tail(bad.text)}`);
 });
 
-await test('page-drawing-reach', () => {
+later('page-drawing-reach', async () => {
   const d = folder('page-drawing-reach'), out = path.join(d, 'out');
   // The figure grows to hold what the script draws below the page.
   const size = () => svgOf(out).match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/).slice(1).map(Number);
-  ok0(render(write(d, page('<div class=card id=a>A</div>', "draw.moveTo(el('a').bottom).lineTo(el('a').bottom.down(300)).style({ width: 2 })")), out));
+  ok0(await render(write(d, page('<div class=card id=a>A</div>', "draw.moveTo(el('a').bottom).lineTo(el('a').bottom.down(300)).style({ width: 2 })")), out));
   const a = rect(path.join(out, 'diagram.svg'), 'a');
   check(size()[1] >= a[1] + a[3] + 300, `the figure (${size().join('x')}) cuts off the drawing below`);
   // Beside the page too, and a drawing wider than the page is reported like wide content.
-  const wide = render(write(d, page('<div class=card id=a>A</div>', "arrow(el('a').right, el('a').right.right(900))")), out);
+  const wide = await render(write(d, page('<div class=card id=a>A</div>', "arrow(el('a').right, el('a').right.right(900))")), out);
   check(wide.code === 1 && /page-overflow/.test(wide.text), `expected page-overflow: ${tail(wide.text)}`);
   check(size()[0] >= a[0] + a[2] + 900, `the figure (${size().join('x')}) cuts off the drawing beside it`);
   // Underline and line-through are drawn, from the text's element or one around it.
-  ok0(render(write(d, page('<p class="line-through" id=a>gone <b>too</b></p><p class=underline>kept</p>')), out));
+  ok0(await render(write(d, page('<p class="line-through" id=a>gone <b>too</b></p><p class=underline>kept</p>')), out));
   const t = svgOf(out);
   check((t.match(/text-decoration: line-through/g) || []).length === 2 && /text-decoration: underline/.test(t), 'text decoration is not drawn');
 });
 
-await test('page-script-errors', () => {
+later('page-script-errors', async () => {
   const d = folder('page-script'), out = path.join(d, 'out'), body = '<div class=card id=a>A</div><div class=card id=b>B</div>';
-  const r1 = render(write(d, page(body, "arrow('a', 'b')\narrow('nope', 'b')")), out);
+  const r1 = await render(write(d, page(body, "arrow('a', 'b')\narrow('nope', 'b')")), out);
   check(r1.code === 1 && /script-error: message=no element "nope" line=3/.test(r1.text), `expected a script error for "nope" on line 3: ${tail(r1.text)}`);
-  const r2 = render(write(d, page(body, "arrow({ x: 3 }, 'b')")), out);
+  const r2 = await render(write(d, page(body, "arrow({ x: 3 }, 'b')")), out);
   check(r2.code === 1 && /is not an element or a point line=2/.test(r2.text), `expected a script error for a non-point on line 2: ${tail(r2.text)}`);
 });
 
-await test('page-routing', () => {
+later('page-routing', async () => {
   const d = folder('page-routing'), out = path.join(d, 'out');
   // A lane's background, laid in the same grid cells, does not wall in the tasks on it.
-  ok0(render(write(d, page(`<style>.l { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 60px } .bg { grid-column: 1 / -1; grid-row: 1; background: var(--wash) } .t { grid-row: 1; margin: 30px 0 }</style>
+  ok0(await render(write(d, page(`<style>.l { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 60px } .bg { grid-column: 1 / -1; grid-row: 1; background: var(--wash) } .t { grid-row: 1; margin: 30px 0 }</style>
 <div class=l><div class=bg></div><div class="card t" id=a style="grid-column: 1">A</div><div class="card t" id=b style="grid-column: 3">B</div></div>`, "connect('a', 'b')")), out));
   check(corners(edgePath(svgOf(out), 'a->b')) === 0, 'the line from a to b bends round the lane background');
   // Lines that share a side split it evenly: three lines into t's left side at a quarter, a
   // half and three quarters of its height, in order.
-  ok0(render(write(d, page(`<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
+  ok0(await render(write(d, page(`<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
 <div class=g><div class=card id=a style="grid-row: 1">A</div><div class=card id=b style="grid-row: 2">B</div><div class=card id=c style="grid-row: 3">C</div><div class="card tall" id=t>T</div></div>`,
     "connect('a', 't'); connect('b', 't'); connect('c', 't')")), out));
   const svg = svgOf(out), T = rect(path.join(out, 'diagram.svg'), 't');
@@ -253,13 +293,13 @@ await test('page-routing', () => {
   const want = [1, 2, 3].map(k => T[1] + T[3] * k / 4);
   check(ys.every((y, i) => Math.abs(y - want[i]) < 1.5), `lines into t at ${ys.map(Math.round)}, not at a quarter, a half and three quarters (${want.map(Math.round)})`);
   // A via line passes through its waypoint, far below the straight path.
-  ok0(render(write(d, page(`<style>.r { display: flex; gap: 200px; padding-bottom: 120px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>`,
+  ok0(await render(write(d, page(`<style>.r { display: flex; gap: 200px; padding-bottom: 120px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>`,
     "connect('a', 'b', { via: [mid(el('a').bottom, el('b').bottom).down(80)] })")), out));
   const low = Math.max(...pointsOf(edgePath(svgOf(out), 'a->b')).map(p => p.y)), a = readLayout(svgOf(out)).nodes.a;
   check(Math.abs(low - (a[1] + a[3] + 80)) <= 1.5, `the via line's lowest point is ${low}, expected ${a[1] + a[3] + 80}`);
 });
 
-await test('bundles', () => {
+later('bundles', async () => {
   // Lines into one box with the same label merge into one trunk, written in one statement or
   // not, and end on one long straight stretch with one label; unlabelled ones stay apart.
   const merged = (svg, keys) => {
@@ -270,35 +310,35 @@ await test('bundles', () => {
     check(svg.split('>copy</text>').length === 2, `${svg.split('>copy</text>').length - 1} copy labels`);
   };
   const c = folder('bundles-data'), cOut = path.join(c, 'out');
-  ok0(render(write(c, doc({ line: '["a1", "b1", "copy"], ["a2", "b1", "copy"]' })), cOut, ['--recompute']));
+  ok0(await render(write(c, doc({ line: '["a1", "b1", "copy"], ["a2", "b1", "copy"]' })), cOut, ['--recompute']));
   merged(svgOf(cOut), ['a1->b1', 'a2->b1']);
   const d = folder('bundles-page'), out = path.join(d, 'out');
   const grid = `<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
 <div class=g><div class=card id=a style="grid-row: 1">A</div><div class=card id=b style="grid-row: 2">B</div><div class=card id=c style="grid-row: 3">C</div><div class="card tall" id=t>T</div></div>`;
-  ok0(render(write(d, page(grid, "for (const k of ['a', 'b', 'c']) connect(k, 't', { label: 'copy' })")), out));
+  ok0(await render(write(d, page(grid, "for (const k of ['a', 'b', 'c']) connect(k, 't', { label: 'copy' })")), out));
   merged(svgOf(out), ['a->t', 'b->t', 'c->t']);
 });
 
-await test('page-problems', () => {
+later('page-problems', async () => {
   const d = folder('page-problems'), out = path.join(d, 'out');
-  const r1 = render(write(d, page('<div class=card>A</div>', '', 'width=12px')), out);
+  const r1 = await render(write(d, page('<div class=card>A</div>', '', 'width=12px')), out);
   check(r1.code === 1 && /bad-attribute: attr=width value=12px/.test(r1.text), `expected bad-attribute for width: ${tail(r1.text)}`);
-  const r2 = render(write(d, page('<style>.r { display: flex; gap: 14px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>',
+  const r2 = await render(write(d, page('<style>.r { display: flex; gap: 14px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>',
     "connect('a', 'b', { label: 'a label far too long for this gap' })")), out);
   check(r2.code === 1 && /label-crowded: edge=a -> b/.test(r2.text), `expected label-crowded: ${tail(r2.text)}`);
   // Two lines squeezed through one narrow gap share a stretch.
-  const r3 = render(write(d, page(`<style>.g { display: grid; grid-template-columns: 1fr 1fr; gap: 60px 16px } .top { grid-column: 1 / -1; justify-self: center; width: 160px } .h { height: 60px }</style>
+  const r3 = await render(write(d, page(`<style>.g { display: grid; grid-template-columns: 1fr 1fr; gap: 60px 16px } .top { grid-column: 1 / -1; justify-self: center; width: 160px } .h { height: 60px }</style>
 <div class=g><div class="card top" id=a>A</div><div class="card h" id=x>X</div><div class="card h" id=y>Y</div><div class=card id=b>B</div><div class=card id=c>C</div></div>`,
     "const gap = mid(el('x').right, el('y').left); connect('a', 'b', { via: [gap] }); connect('a', 'c', { via: [gap] })")), out);
   check(r3.code === 1 && /lines-overlap: a=a->b b=a->c/.test(r3.text), `expected lines-overlap: ${tail(r3.text)}`);
   // An arrowhead on a too-short end is reported; a BPMN fragment routes with full-length ends.
-  const r5 = render(write(d, page('<div class=card id=a>A</div>', "arrow(el('a').bottom.down(20), el('a').bottom.down(28))")), out);
+  const r5 = await render(write(d, page('<div class=card id=a>A</div>', "arrow(el('a').bottom.down(20), el('a').bottom.down(28))")), out);
   check(r5.code === 1 && /short-end: line=a drawn line end=head/.test(r5.text), `expected short-end: ${tail(r5.text)}`);
-  ok0(render(write(d, page(`<style>.p { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 110px 110px; gap: 0 50px; align-items: center; justify-items: center }</style>
+  ok0(await render(write(d, page(`<style>.p { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 110px 110px; gap: 0 50px; align-items: center; justify-items: center }</style>
 <div class=p><i shape=start id=s style="grid-area: 1 / 1"></i><div shape=task id=t1 style="grid-area: 1 / 2">Submit</div><div shape=task id=t2 style="grid-area: 2 / 2">Validate</div>
 <i shape="gateway exclusive" id=g style="grid-area: 2 / 3"></i><div shape="task loop" id=t3 style="grid-area: 1 / 4">Correct</div><i shape=end id=e style="grid-area: 2 / 4"></i></div>`,
     "connect('s', 't1'); connect('t1', 't2'); connect('t2', 'g'); connect('g', 't3', { label: 'invalid' }); connect('g', 'e', { label: 'valid' }); connect('t3', 't1', { label: 'resubmit' })")), out));
-  const r4 = render(write(d, page('<div style="width: 900px" class=card>wide</div>', '', 'width=600')), out);
+  const r4 = await render(write(d, page('<div style="width: 900px" class=card>wide</div>', '', 'width=600')), out);
   check(r4.code === 1 && /page-overflow: width=600 content=9\d\d/.test(r4.text), `expected page-overflow: ${tail(r4.text)}`);
 });
 
@@ -322,9 +362,9 @@ const DATA = `<diagram width=760>
 `;
 const sidesOf = svg => Object.fromEntries([...svg.matchAll(/data-edge="([^"]+)" data-sides="([^"]+)"/g)].map(m => [m[1].replace(/&gt;/g, '>'), m[2]]));
 
-await test('page-data', () => {
+later('page-data', async () => {
   const d = folder('page-data'), out = path.join(d, 'out'), f = write(d, DATA);
-  ok0(render(f, out));
+  ok0(await render(f, out));
   const svg0 = svgOf(out), lay0 = readLayout(svg0), sides0 = sidesOf(svg0);
   check(Object.keys(sides0).length === 5, `expected 5 routed connections, got ${Object.keys(sides0).join(', ')}`);
   check(readLines(DATA).map(l => l.key).join(' ') === 'web->api api->db api->queue queue->worker worker->db', 'connection keys');
@@ -336,7 +376,7 @@ await test('page-data', () => {
   check(!r.errors.length, `edits failed: ${JSON.stringify(r.errors)}`);
   check(/id=queue nudge="10,20"/.test(r.source) && /\{ "from": "worker", "to": "audit", "label": "records" \}/.test(r.source) && /"label": "orders in"/.test(r.source), 'edits not in the source');
   fs.writeFileSync(f, r.source);
-  ok0(render(f, out));
+  ok0(await render(f, out));
   const svg1 = svgOf(out), lay1 = readLayout(svg1), sides1 = sidesOf(svg1);
   const moved = Object.keys(lay0.nodes).filter(k => k !== 'queue' && JSON.stringify(lay0.nodes[k]) !== JSON.stringify(lay1.nodes[k]));
   check(!moved.length, `boxes moved by an unrelated edit: ${moved.join(', ')}`);
@@ -344,13 +384,13 @@ await test('page-data', () => {
   check(!flipped.length, `lines changed sides: ${flipped.join(', ')}`);
   check(sides1['worker->audit'], 'the new connection is not routed');
   // a broken entry is reported, the rest still renders
-  const bad = render(write(d, DATA.replace('["queue", "worker"],', '["queue"],')), out);
+  const bad = await render(write(d, DATA.replace('["queue", "worker"],', '["queue"],')), out);
   check(bad.code === 1 && /bad-line: line=4 message=needs "from" and "to"/.test(bad.text), `expected bad-line: ${tail(bad.text)}`);
 });
 
 // The viewer: a diagram file opened from disk renders itself as the CLI renders it. A local
 // server stands in for the icon CDNs, serving each icon back from the downloaded packs.
-await test('viewer', async () => {
+later('viewer', async () => {
   const d = folder('viewer'), skill = path.join(root, 'skills/graphally');
   fs.copyFileSync(path.join(skill, 'viewer/graphally.js'), path.join(d, 'graphally.js'));
   const packs = Object.fromEntries(['azure', 'aws'].map(v => [v, Object.values(JSON.parse(fs.readFileSync(findPack(skill, v), 'utf8')))]));
@@ -370,7 +410,7 @@ await test('viewer', async () => {
       const src = fs.readFileSync(path.join(root, 'samples', name, 'diagram.html'), 'utf8').replace(/<script src="[^"]*graphally\.js"><\/script>\n?/, '');
       const f = path.join(d, `${name}.html`), out = path.join(d, `out-${name}`);
       fs.writeFileSync(f, `<!doctype html>\n<script>graphallyOptions = { azure: '${base}/azure/', aws: '${base}/aws/', font: '${base}/font/' }</script>\n<script src="graphally.js"></script>\n${src}`);
-      ok0(render(f, out, ['--recompute']));
+      ok0(await render(f, out, ['--recompute']));
       const cli = readLayout(fs.readFileSync(path.join(out, `${name}.svg`), 'utf8'));
       const page = await openPage(browser, { width: 2000, height: 1400 });
       await page.goto(pathToFileURL(f).href);
@@ -388,20 +428,20 @@ await test('viewer', async () => {
   } finally { await browser.close(); srv.close(); }
   // The render adds the header once; a plain drawing script is reported.
   const h = write(folder('viewer-header'), page('<div class=card id=a>A</div>', ''));
-  ok0(render(h, path.join(path.dirname(h), 'out'))); ok0(render(h, path.join(path.dirname(h), 'out')));
+  ok0(await render(h, path.join(path.dirname(h), 'out'))); ok0(await render(h, path.join(path.dirname(h), 'out')));
   const text = fs.readFileSync(h, 'utf8');
   check(text.startsWith('<!doctype html>') && text.split('graphally.js').length === 2, `header: ${text.slice(0, 200)}`);
-  const r = render(write(folder('viewer-plain'), page('<div class=card id=a>A</div>', '').replace('<script type="graphally">', '<script>')), path.join(work, 'viewer-plain', 'out'));
+  const r = await render(write(folder('viewer-plain'), page('<div class=card id=a>A</div>', '').replace('<script type="graphally">', '<script>')), path.join(work, 'viewer-plain', 'out'));
   check(r.code === 1 && /plain-script/.test(r.text), `expected plain-script: ${tail(r.text)}`);
 });
 
-await test('page-utilities', () => {
+later('page-utilities', async () => {
   const d = folder('page-utilities'), out = path.join(d, 'out');
   const body = `<style>.wobble { color: red }</style>
 <div class="flex justify-center gap-6 p-4"><div class=card id=a>A</div><div class=card id=b>B</div><div class=card id=c>C</div></div>
 <div class="grid grid-cols-[100px_1fr_100px] gap-x-[20px] mt-10"><div class="card col-start-3" id=r>R</div><div class="card col-span-full mx-auto w-40" id=w>W</div></div>
 <p class="wobble text-muted">note</p>`;
-  const r = render(write(d, page(body, '')), out);
+  const r = await render(write(d, page(body, '')), out);
   ok0(r);
   const svg = path.join(out, 'diagram.svg'), [a, b, c] = ['a', 'b', 'c'].map(id => rect(svg, id));
   // The content box is 700px wide and starts 24px in, so its middle is at 374.
@@ -413,12 +453,12 @@ await test('page-utilities', () => {
   check(Math.abs(W[2] - 160) < 0.5 && Math.abs(W[0] + W[2] / 2 - 374) < 1, `w-40 mx-auto: ${W}`);
   check(R[1] - (a[1] + a[3]) > 40 + 16 - 1, `mt-10 and p-4: ${R[1] - (a[1] + a[3])}px below the row`);
   // A class that reads like a utility and means nothing is reported; the author's own is not.
-  const bad = render(write(d, page('<div class="flex bg-blue-500 md:flex jusitfy-center wobble">x</div>', '')), out);
+  const bad = await render(write(d, page('<div class="flex bg-blue-500 md:flex jusitfy-center wobble">x</div>', '')), out);
   check(bad.code === 1 && /unknown-utility: class=bg-blue-500/.test(bad.text) && /class=md:flex/.test(bad.text), `expected unknown-utility: ${tail(bad.text)}`);
   check(!/wobble/.test(bad.text), 'an author class was reported as a utility');
 });
 
-await test('page-before-and-dates', () => {
+later('page-before-and-dates', async () => {
   const d = folder('page-dates'), out = path.join(d, 'out');
   const body = `<div id=plan class="grid gap-y-2">
 <div class=card id=t1 data-start=2026-03-02 data-duration=2w>One</div>
@@ -430,7 +470,7 @@ schedule();
 const t = timeline('#plan');
 for (const m of t.months) root.querySelector('#plan').append(make('div', { id: 'm' + m.month, style: 'grid-row: 4; grid-column: ' + m.column }, m.label));
 </script>`;
-  const r = render(write(d, page(body + before, '')), out);
+  const r = await render(write(d, page(body + before, '')), out);
   ok0(r);
   const svg = path.join(out, 'diagram.svg'), [t1, t2, t3] = ['t1', 't2', 't3'].map(id => rect(svg, id));
   // Two weeks then ten days: t2 starts where t1 ends, t3 where t2 ends; day widths agree.
@@ -441,11 +481,11 @@ for (const m of t.months) root.querySelector('#plan').append(make('div', { id: '
   check(Math.abs(t3[2] / day - 35) < 0.2, `t3 from 2026-03-26 to 2026-04-30 is ${t3[2] / day} days wide`);
   const mar = rect(svg, 'm2026-03'), apr = rect(svg, 'm2026-04');
   check(Math.abs(mar[0] - (t1[0] - day)) < 1 && Math.abs(apr[0] - (mar[0] + 31 * day)) < 1, `month headers off the day grid: ${mar} ${apr}`);
-  const loop = render(write(d, page('<div id=p><div id=x data-after=y data-duration=1d></div><div id=y data-after=x data-duration=1d></div></div>', '').replace('</diagram>', '<script type="graphally" before>schedule()</script></diagram>')), out);
+  const loop = await render(write(d, page('<div id=p><div id=x data-after=y data-duration=1d></div><div id=y data-after=x data-duration=1d></div></div>', '').replace('</diagram>', '<script type="graphally" before>schedule()</script></diagram>')), out);
   check(loop.code === 1 && /schedule-loop/.test(loop.text), `expected schedule-loop: ${tail(loop.text)}`);
 });
 
-await test('page-sequence', () => {
+later('page-sequence', async () => {
   const d = folder('page-sequence'), out = path.join(d, 'out');
   const body = `<div class=seq id=seq>
 <div class=node id=a data-who>A</div><div class=node id=b data-who>B</div><div class=node id=c data-who>C</div>
@@ -453,7 +493,7 @@ await test('page-sequence', () => {
 <div class=frag data-kind=alt data-guard=ok><p class=msg id=m2 data-from=c data-to=b>ask</p><div class=else></div><p class="msg reply" id=m3 data-from=b data-to=c>told</p></div>
 <p class="msg reply" id=m4 data-from=c data-to=a>done</p>
 </div><script type="graphally" before>sequence('#seq')</script>`;
-  const r = render(write(d, page(body, '', 'width=900')), out);
+  const r = await render(write(d, page(body, '', 'width=900')), out);
   ok0(r);
   const svgFile = path.join(out, 'diagram.svg'), [a, b, c, m1, m2, m3, m4] = ['a', 'b', 'c', 'm1', 'm2', 'm3', 'm4'].map(id => rect(svgFile, id));
   check(a[0] < b[0] && b[0] < c[0] && a[1] === c[1], `participants not in one row, in order: ${a} ${b} ${c}`);
@@ -465,7 +505,7 @@ await test('page-sequence', () => {
   check(/alt/.test(svg) && /\[ok\]/.test(svg), 'fragment tab missing');
 });
 
-await test('page-depend', () => {
+later('page-depend', async () => {
   const d = folder('page-depend'), out = path.join(d, 'out');
   // a ends where c starts two rows down; b sits between them across that date, so the
   // dependency must go around b, never through it.
@@ -475,7 +515,7 @@ await test('page-depend', () => {
 <div class=r><i id=b data-start=2026-03-09 data-duration=3w></i></div>
 <div class=r><i id=c data-after=a data-duration=1w></i></div>
 </div><script type="graphally" before>schedule(); timeline('#p', { lead: '0px' })</script>`;
-  const r = render(write(d, page(body, "depend('a', 'c')")), out);
+  const r = await render(write(d, page(body, "depend('a', 'c')")), out);
   ok0(r);
   const svg = svgOf(out), file = path.join(out, 'diagram.svg'), [A, B, C] = ['a', 'b', 'c'].map(id => rect(file, id));
   const m = svg.match(/<path d="(M[^"]+)"[^>]*marker-end/);
@@ -493,21 +533,69 @@ await test('page-depend', () => {
 
 // The skill's own examples: every complete <diagram> in SKILL.md and the references renders
 // with no problem, so what an agent copies works.
-await test('doc-examples', () => {
+later('batch', async () => {
+  const a = folder('batch-a'), b = folder('batch-b'), solo = folder('batch-solo');
+  const fa = write(a, page('<div class=card id=x>X</div><div class="card mt-10" id=y>Y</div>', "arrow('x', 'y')"));
+  const fb = write(b, page('<div class=card id=z>Z</div>'));
+  // Several files in one call print in the order given, whichever finishes first.
+  const r = await render([fa, fb], null, ['--jobs', '2']);
+  ok0(r);
+  const svgs = summaries(r.text).map(x => x.svg);
+  check(svgs.join() === [path.join(a, 'diagram.svg'), path.join(b, 'diagram.svg')].join(), `files out of order: ${svgs.join(', ')}`);
+  // A file comes out of a batch as it does alone.
+  fs.copyFileSync(fa, path.join(solo, 'diagram.html'));
+  ok0(await render(path.join(solo, 'diagram.html'), null));
+  check(fs.readFileSync(path.join(a, 'diagram.svg'), 'utf8') === fs.readFileSync(path.join(solo, 'diagram.svg'), 'utf8'), 'a file rendered in a batch differs from the same file rendered alone');
+  // Two sources of one name would overwrite each other's files in --out.
+  const clash = await render([fa, fb], path.join(work, 'batch-out'));
+  check(clash.code === 2 && /share a name/.test(clash.text), `expected a name clash: ${tail(clash.text)}`);
+});
+
+later('harness-preload', async () => {
+  // harness.html preloads every module run.js imports, directly or not, and nothing else.
+  const lib = path.join(root, 'skills/graphally/scripts/lib'), seen = new Set();
+  const visit = f => { if (seen.has(f)) return; seen.add(f); for (const m of fs.readFileSync(path.join(lib, f), 'utf8').matchAll(/^(?:import|export)\b[^'"\n]*from '\.\/([^']+)'/gm)) visit(m[1]); };
+  visit('run.js');
+  const pre = [...fs.readFileSync(path.join(lib, 'harness.html'), 'utf8').matchAll(/rel="modulepreload" href="([^"]+)"/g)].map(m => m[1]);
+  check([...seen].sort().join() === [...pre].sort().join(), `harness.html preloads ${[...pre].sort().join(', ')}; run.js needs ${[...seen].sort().join(', ')}`);
+});
+
+later('icon-packs', async () => {
+  // The cloud icon packs (3 MB) are fetched only for a diagram that may name a cloud icon.
+  const skill = path.join(root, 'skills/graphally');
+  const packs = Object.fromEntries(['azure', 'aws'].map(n => [`/icons/${n}.json`, findPack(skill, n)]).filter(([, f]) => f));
+  check(Object.keys(packs).length, 'the icon packs are not downloaded');
+  const d = folder('icon-packs');
+  fs.writeFileSync(path.join(d, 'plain.html'), page('<div class=node id=a><icon name=user></icon>User</div>'));
+  fs.writeFileSync(path.join(d, 'cloud.html'), page('<div class=node id=a><icon name="app service"></icon>Web</div>'));
+  const server = await serve(skill, d, packs), browser = await launch();
+  try {
+    const tab = await openPage(browser);
+    const fetched = async name => {
+      await tab.goto(`${server.origin}/scripts/lib/harness.html?${new URLSearchParams({ src: `${server.origin}/src/${name}`, prev: '' })}`);
+      await tab.ready();
+      return tab.evaluate(`performance.getEntriesByType('resource').filter(e => e.name.includes('/icons/')).length`);
+    };
+    check(await fetched('plain.html') === 0, 'the packs were fetched for a diagram with generic icons only');
+    check(await fetched('cloud.html') === Object.keys(packs).length, 'the packs were not fetched for a diagram with an Azure icon');
+  } finally { await browser.close(); server.close(); }
+});
+
+later('doc-examples', async () => {
   const docs = [path.join(root, 'skills/graphally/SKILL.md'), ...fs.readdirSync(path.join(root, 'skills/graphally/references')).filter(f => f.endsWith('.md')).sort().map(f => path.join(root, 'skills/graphally/references', f))];
-  const bad = [];
-  let n = 0;
+  const made = [];
   for (const md of docs) {
     const examples = [...fs.readFileSync(md, 'utf8').matchAll(/```html\n(<diagram[\s\S]*?<\/diagram>)\n```/g)].map(m => m[1]);
-    examples.forEach((html, k) => {
-      n++;
-      const d = folder(`doc-${path.basename(md, '.md')}-${k}`), r = render(write(d, html + '\n'), path.join(d, 'out'), ['--no-viewer']);
-      if (r.code !== 0) bad.push(`${path.basename(md)} example ${k + 1}: ${tail(r.text)}`);
-    });
+    examples.forEach((html, k) => made.push({ name: `${path.basename(md)} example ${k + 1}`, f: write(folder(`doc-${path.basename(md, '.md')}-${k}`), html + '\n') }));
   }
-  check(n >= 8, `only ${n} examples found`);
-  check(!bad.length, bad.join('; '));
+  check(made.length >= 8, `only ${made.length} examples found`);
+  // One render for all of them.
+  const r = await render(made.map(m => m.f), null, ['--no-viewer']);
+  const bad = trouble(r.text).map(line => `${made.find(m => line.includes(path.dirname(m.f) + path.sep))?.name || '?'}: ${line}`);
+  check(r.code === 0 && !bad.length, bad.join('; ') || `exit ${r.code}: ${tail(r.text)}`);
 });
+
+await runQueue();
 
 if (table.length) {
   const rows = [['sample', 'stable: nodes', 'in group', 'sides', 'recompute: nodes', 'in group', 'sides'], ...table];

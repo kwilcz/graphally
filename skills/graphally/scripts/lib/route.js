@@ -300,6 +300,15 @@ function overlap(a0, al, b0, bl) {
 
 // ---------- grid ----------
 
+// The index range [a, b) of the sorted values strictly between lo and hi.
+function between(vals, lo, hi) {
+  let a = 0, b = vals.length;
+  while (a < b) { const m = (a + b) >> 1; if (vals[m] > lo) b = m; else a = m + 1; }
+  let c = a, d = vals.length;
+  while (c < d) { const m = (c + d) >> 1; if (vals[m] >= hi) d = m; else c = m + 1; }
+  return [a, c];
+}
+
 function buildGrid(geo, hard, groupsList, extraX, extraY) {
   const xsSet = new Set([2, geo.width - 2, ...extraX]), ysSet = new Set([2, geo.height - 2, ...extraY]);
   for (const o of hard) { xsSet.add(o.x); xsSet.add(o.x + o.w); ysSet.add(o.y); ysSet.add(o.y + o.h); }
@@ -314,36 +323,54 @@ function buildGrid(geo, hard, groupsList, extraX, extraY) {
   const ys = [...ysSet].map(v => Math.round(v * 2) / 2).filter(v => v >= 0 && v <= geo.height).sort((a, b) => a - b);
   const ux = [...new Set(xs)], uy = [...new Set(ys)];
   const nx = ux.length, ny = uy.length;
-  const inside = (x, y) => {
-    for (const o of hard) if (x > o.x + 0.01 && x < o.x + o.w - 0.01 && y > o.y + 0.01 && y < o.y + o.h - 0.01) return true;
-    return false;
+  // Segments are tested at their midpoints.
+  const mx = [], my = [];
+  for (let i = 0; i + 1 < nx; i++) mx.push((ux[i] + ux[i + 1]) / 2);
+  for (let j = 0; j + 1 < ny; j++) my.push((uy[j] + uy[j + 1]) / 2);
+  // Each box is marked on the cells it covers, found by binary search, instead of every cell
+  // being tested against every box. The tests are the same comparisons as before: a point
+  // is inside an obstacle when it is more than 0.01 within it, inside a group when strictly
+  // within it, and runs along a group's border when within 5px of it.
+  const inP = new Uint8Array(nx * ny), inH = new Uint8Array(nx * ny), inV = new Uint8Array(nx * ny);
+  const mark = (arr, xv, yv, x0, x1, y0, y1) => {
+    const [i0, i1] = between(xv, x0, x1), [j0, j1] = between(yv, y0, y1);
+    for (let j = j0; j < j1; j++) for (let i = i0; i < i1; i++) arr[j * nx + i] = 1;
   };
-  const innermost = (x, y) => {
-    let best = -1, depth = -1;
-    groupsList.forEach((g, i) => { if (x > g.x && x < g.x + g.w && y > g.y && y < g.y + g.h && g.depth > depth) { best = i; depth = g.depth; } });
-    return best;
+  for (const o of hard) {
+    const x0 = o.x + 0.01, x1 = o.x + o.w - 0.01, y0 = o.y + 0.01, y1 = o.y + o.h - 0.01;
+    mark(inP, ux, uy, x0, x1, y0, y1); mark(inH, mx, uy, x0, x1, y0, y1); mark(inV, ux, my, x0, x1, y0, y1);
+  }
+  // The innermost group around each segment: the deepest, the first of equals.
+  const grpH = new Int16Array(nx * ny).fill(-1), grpV = new Int16Array(nx * ny).fill(-1);
+  const depH = new Float64Array(nx * ny).fill(-1), depV = new Float64Array(nx * ny).fill(-1);
+  const deepest = (grp, dep, xv, yv, g, gi) => {
+    const [i0, i1] = between(xv, g.x, g.x + g.w), [j0, j1] = between(yv, g.y, g.y + g.h);
+    for (let j = j0; j < j1; j++) for (let i = i0; i < i1; i++) { const k = j * nx + i; if (g.depth > dep[k]) { dep[k] = g.depth; grp[k] = gi; } }
   };
   // Running along a group's border reads as part of the box: flag those segments.
-  const hugH = (x, y) => groupsList.some(g => x > g.x - 2 && x < g.x + g.w + 2 && (Math.abs(y - g.y) < 5 || Math.abs(y - g.y - g.h) < 5));
-  const hugV = (x, y) => groupsList.some(g => y > g.y - 2 && y < g.y + g.h + 2 && (Math.abs(x - g.x) < 5 || Math.abs(x - g.x - g.w) < 5));
+  const hugsH = new Uint8Array(nx * ny), hugsV = new Uint8Array(nx * ny);
+  groupsList.forEach((g, gi) => {
+    deepest(grpH, depH, mx, uy, g, gi);
+    deepest(grpV, depV, ux, my, g, gi);
+    const [hi0, hi1] = between(mx, g.x - 2, g.x + g.w + 2);
+    for (const [a, b] of [between(uy, g.y - 6, g.y + 6), between(uy, g.y + g.h - 6, g.y + g.h + 6)]) for (let j = a; j < b; j++) {
+      const y = uy[j];
+      if (Math.abs(y - g.y) < 5 || Math.abs(y - g.y - g.h) < 5) for (let i = hi0; i < hi1; i++) hugsH[j * nx + i] = 1;
+    }
+    const [vj0, vj1] = between(my, g.y - 2, g.y + g.h + 2);
+    for (const [a, b] of [between(ux, g.x - 6, g.x + 6), between(ux, g.x + g.w - 6, g.x + g.w + 6)]) for (let i = a; i < b; i++) {
+      const x = ux[i];
+      if (Math.abs(x - g.x) < 5 || Math.abs(x - g.x - g.w) < 5) for (let j = vj0; j < vj1; j++) hugsV[j * nx + i] = 1;
+    }
+  });
   const okP = new Uint8Array(nx * ny), okH = new Uint8Array(nx * ny), okV = new Uint8Array(nx * ny);
   const bH = new Uint8Array(nx * ny), bV = new Uint8Array(nx * ny);
   const gH = new Int16Array(nx * ny), gV = new Int16Array(nx * ny);
-  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) okP[j * nx + i] = inside(ux[i], uy[j]) ? 0 : 1;
+  for (let k = 0; k < nx * ny; k++) okP[k] = inP[k] ? 0 : 1;
   for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
     const k = j * nx + i;
-    if (i + 1 < nx && okP[k] && okP[k + 1]) {
-      const mx = (ux[i] + ux[i + 1]) / 2;
-      okH[k] = inside(mx, uy[j]) ? 0 : 1;
-      gH[k] = innermost(mx, uy[j]);
-      bH[k] = hugH(mx, uy[j]) ? 1 : 0;
-    }
-    if (j + 1 < ny && okP[k] && okP[k + nx]) {
-      const my = (uy[j] + uy[j + 1]) / 2;
-      okV[k] = inside(ux[i], my) ? 0 : 1;
-      gV[k] = innermost(ux[i], my);
-      bV[k] = hugV(ux[i], my) ? 1 : 0;
-    }
+    if (i + 1 < nx && okP[k] && okP[k + 1]) { okH[k] = inH[k] ? 0 : 1; gH[k] = grpH[k]; bH[k] = hugsH[k]; }
+    if (j + 1 < ny && okP[k] && okP[k + nx]) { okV[k] = inV[k] ? 0 : 1; gV[k] = grpV[k]; bV[k] = hugsV[k]; }
   }
   // Lines drawn by other means (the drawing script) are taken: running along one costs as
   // overlap, crossing one as a crossing.
@@ -433,21 +460,25 @@ const marksOf = e => (e.ends ? { head: e.ends.head !== 'none', tail: e.ends.tail
 
 function astar(grid, starts, goals, allowed, gIndex, bundle = 0, marks = { head: true, tail: false }) {
   if (!starts.length || !goals.length) return null;
-  const { nx, ny, xs, ys } = grid, N = nx * ny;
-  const dist = new Float64Array(N * 4).fill(Infinity), prev = new Int32Array(N * 4).fill(-1);
-  const heap = new Heap();
+  const { nx, ny, xs, ys, okH, okV, gH, gV, bH, bV, useH, useV, ownH, ownV } = grid, N = nx * ny;
+  // The search's arrays are made once per grid and reused: a state is unseen unless it
+  // carries this search's stamp, so nothing is cleared between searches.
+  const mem = grid.search ||= { dist: new Float64Array(N * 4), prev: new Int32Array(N * 4), stamp: new Uint32Array(N * 4), gen: 0, heap: new Heap() };
+  const { dist, prev, stamp, heap } = mem, gen = ++mem.gen;
+  heap.clear();
   const goalAt = new Map();
   for (const g of goals) goalAt.set(g.j * nx + g.i, g);
+  const gxs = goals.map(g => xs[g.i]), gys = goals.map(g => ys[g.j]);
   const h = k => { const x = xs[k % nx], y = ys[(k / nx) | 0]; let best = Infinity;
-    for (const g of goals) best = Math.min(best, Math.abs(xs[g.i] - x) + Math.abs(ys[g.j] - y)); return best; };
+    for (let t = 0; t < gxs.length; t++) best = Math.min(best, Math.abs(gxs[t] - x) + Math.abs(gys[t] - y)); return best; };
   for (const s of starts) {
     const k = s.j * nx + s.i, st = k * 4 + s.dir;
     const d0 = s.pen || 0;
-    if (dist[st] > d0) { dist[st] = d0; prev[st] = -2 - starts.indexOf(s); heap.push(d0 + h(k), st); }
+    if ((stamp[st] === gen ? dist[st] : Infinity) > d0) { dist[st] = d0; prev[st] = -2 - starts.indexOf(s); stamp[st] = gen; heap.push(d0 + h(k), st); }
   }
   let best = Infinity, bestState = -1, bestGoal = null;
   while (heap.size) {
-    const [f, st] = heap.pop();
+    const st = heap.pop(), f = heap.key;
     if (f >= best) break;
     const g0 = dist[st];
     if (f - h((st / 4) | 0) > g0 + 1e-6) continue;
@@ -464,11 +495,11 @@ function astar(grid, starts, goals, allowed, gIndex, bundle = 0, marks = { head:
       if (ni < 0 || nj < 0 || ni >= nx || nj >= ny) continue;
       const seg = nd === 0 ? k : nd === 2 ? k - 1 : nd === 1 ? k : k - nx;
       const horizontal = nd % 2 === 0;
-      if (!(horizontal ? grid.okH[seg] : grid.okV[seg])) continue;
+      if (!(horizontal ? okH[seg] : okV[seg])) continue;
       const nk = nj * nx + ni;
       const len = horizontal ? Math.abs(xs[ni] - xs[i]) : Math.abs(ys[nj] - ys[j]);
-      const grp = horizontal ? grid.gH[seg] : grid.gV[seg];
-      let c = len * ((grp >= 0 && !allowed.has(grp) ? 1 + FOREIGN : 1) + ((horizontal ? grid.bH[seg] : grid.bV[seg]) ? 2 : 0));
+      const grp = horizontal ? gH[seg] : gV[seg];
+      let c = len * ((grp >= 0 && !allowed.has(grp) ? 1 + FOREIGN : 1) + ((horizontal ? bH[seg] : bV[seg]) ? 2 : 0));
       if (nd !== d) {
         c += BEND;
         // A turn one short step before the box leaves too short an end.
@@ -476,16 +507,16 @@ function astar(grid, starts, goals, allowed, gIndex, bundle = 0, marks = { head:
         if (grid.end && g && marks.head && nd === (g.dir + 2) % 4 && len + g.out < MIN_END) c += STUB;
         if (grid.end && prev[st] < -1 && starts[-2 - prev[st]].out < MIN_END) c += marks.tail ? 3 * STUB : STUB / 2;   // a turn right at the start
       }
-      const own = bundle && (horizontal ? grid.ownH[seg] : grid.ownV[seg]) === bundle;
+      const own = bundle && (horizontal ? ownH[seg] : ownV[seg]) === bundle;
       if (own) c = len * 0.35;                              // ride the bundle's trunk
-      else c += (horizontal ? grid.useH[seg] : grid.useV[seg]) * OVERLAP;
+      else c += (horizontal ? useH[seg] : useV[seg]) * OVERLAP;
       // Crossing an earlier route at the point we arrive at.
       if (!own) {
-        if (horizontal) { if ((nj > 0 && grid.useV[nk - nx] && grid.ownV[nk - nx] !== bundle) || (nj < ny - 1 && grid.useV[nk] && grid.ownV[nk] !== bundle)) c += CROSS; }
-        else if ((ni > 0 && grid.useH[nk - 1] && grid.ownH[nk - 1] !== bundle) || (ni < nx - 1 && grid.useH[nk] && grid.ownH[nk] !== bundle)) c += CROSS;
+        if (horizontal) { if ((nj > 0 && useV[nk - nx] && ownV[nk - nx] !== bundle) || (nj < ny - 1 && useV[nk] && ownV[nk] !== bundle)) c += CROSS; }
+        else if ((ni > 0 && useH[nk - 1] && ownH[nk - 1] !== bundle) || (ni < nx - 1 && useH[nk] && ownH[nk] !== bundle)) c += CROSS;
       }
       const ns = nk * 4 + nd, g1 = g0 + c;
-      if (g1 < dist[ns]) { dist[ns] = g1; prev[ns] = st; heap.push(g1 + h(nk), ns); }
+      if (g1 < (stamp[ns] === gen ? dist[ns] : Infinity)) { dist[ns] = g1; prev[ns] = st; stamp[ns] = gen; heap.push(g1 + h(nk), ns); }
     }
   }
   if (bestState < 0) return null;
@@ -508,17 +539,46 @@ function markUse(grid, cells, delta = 1, bundle = 0) {
   }
 }
 
+// A binary min-heap of (key, value) pairs in two typed arrays, so a push allocates nothing.
+// pop() returns the value and leaves its key in .key. Equal keys come out in the same order
+// as from any heap that sifts the same way, which keeps routes the same.
 class Heap {
-  constructor() { this.a = []; }
-  get size() { return this.a.length; }
-  push(f, v) { const a = this.a; a.push([f, v]); let i = a.length - 1;
-    while (i > 0) { const p = (i - 1) >> 1; if (a[p][0] <= a[i][0]) break; [a[p], a[i]] = [a[i], a[p]]; i = p; } }
-  pop() { const a = this.a, top = a[0], last = a.pop();
-    if (a.length) { a[0] = last; let i = 0;
-      for (;;) { const l = 2 * i + 1, r = l + 1; let s = i;
-        if (l < a.length && a[l][0] < a[s][0]) s = l; if (r < a.length && a[r][0] < a[s][0]) s = r;
-        if (s === i) break; [a[s], a[i]] = [a[i], a[s]]; i = s; } }
-    return top; }
+  constructor() { this.keys = new Float64Array(1024); this.vals = new Int32Array(1024); this.size = 0; this.key = 0; }
+  clear() { this.size = 0; }
+  push(f, v) {
+    if (this.size === this.keys.length) {
+      const k = new Float64Array(this.size * 2), w = new Int32Array(this.size * 2);
+      k.set(this.keys); w.set(this.vals); this.keys = k; this.vals = w;
+    }
+    const K = this.keys, V = this.vals;
+    let i = this.size++;
+    K[i] = f; V[i] = v;
+    while (i > 0) {
+      const p = (i - 1) >> 1;
+      if (K[p] <= K[i]) break;
+      const tk = K[p]; K[p] = K[i]; K[i] = tk; const tv = V[p]; V[p] = V[i]; V[i] = tv;
+      i = p;
+    }
+  }
+  pop() {
+    const K = this.keys, V = this.vals, v = V[0];
+    this.key = K[0];
+    const n = --this.size;
+    if (n > 0) {
+      K[0] = K[n]; V[0] = V[n];
+      let i = 0;
+      for (;;) {
+        const l = 2 * i + 1, r = l + 1;
+        let s = i;
+        if (l < n && K[l] < K[s]) s = l;
+        if (r < n && K[r] < K[s]) s = r;
+        if (s === i) break;
+        const tk = K[s]; K[s] = K[i]; K[i] = tk; const tv = V[s]; V[s] = V[i]; V[i] = tv;
+        i = s;
+      }
+    }
+    return v;
+  }
 }
 
 function simplify(pts) {

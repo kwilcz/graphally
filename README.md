@@ -114,6 +114,7 @@ node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG a
 node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG to publish
 node skills/graphally/scripts/graphally.mjs render diagram.html --themes  # also diagram-dark.svg, the dark theme
 node skills/graphally/scripts/graphally.mjs render diagram.html --recompute  # lay out afresh, ignoring the previous SVG
+node skills/graphally/scripts/graphally.mjs render a.html b.html c.html  # several files in one browser, in parallel
 node skills/graphally/scripts/edit.mjs diagram.html --move db 0,20 --connect api cache "reads"  # patch moves and connections
 node skills/graphally/scripts/tf2graphally.mjs ./infra --out diagram.html  # a Terraform configuration, drafted
 node skills/graphally/scripts/fetch-icons.mjs                            # download or refresh the icon packs

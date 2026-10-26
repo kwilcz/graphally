@@ -156,9 +156,10 @@ Read the one for the kind of diagram you draw; each starts with a complete examp
 
 ## Scripts
 
-- `scripts/graphally.mjs render <file.html> [--png | --png2x] [--themes | --dark] [--out dir] [--recompute]`:
+- `scripts/graphally.mjs render <file.html>... [--png | --png2x] [--themes | --dark] [--out dir] [--recompute]`:
   compiles every `<diagram>` in the file to SVG; `--png` adds a preview, `--png2x` a sharp
-  PNG to publish, `--themes` a dark copy, `--recompute` ignores the previous layout.
+  PNG to publish, `--themes` a dark copy, `--recompute` ignores the previous layout. Several
+  files render in one call, in parallel; render them together rather than one by one.
 - `scripts/edit.mjs <file.html> --move id dx,dy | --connect from to [label] | --line 'a->b' json | --unline 'a->b' | --lines`:
   patches moves and connections and keeps the rest of the file as written.
 - `scripts/tf2graphally.mjs <terraform dir> [--out file.html] [--title "…"]`: drafts a

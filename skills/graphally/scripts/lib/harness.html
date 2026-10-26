@@ -2,5 +2,11 @@
 <!-- Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. -->
 <html><head><meta charset="utf-8">
 <link rel="stylesheet" href="../../assets/theme.css">
+<!-- Every module run.js imports, fetched at once instead of one level of imports at a time.
+     tools/test.mjs checks that this list matches the imports. -->
+<link rel="modulepreload" href="run.js"><link rel="modulepreload" href="index.js"><link rel="modulepreload" href="measure.js">
+<link rel="modulepreload" href="page.js"><link rel="modulepreload" href="icons.js"><link rel="modulepreload" href="style.js">
+<link rel="modulepreload" href="time.js"><link rel="modulepreload" href="seq.js"><link rel="modulepreload" href="utilities.js">
+<link rel="modulepreload" href="route.js"><link rel="modulepreload" href="shapes.js">
 <style>body { margin: 0; padding: 0; background: var(--bg); } svg.graphally { display: block; }</style>
 </head><body><script type="module" src="run.js"></script></body></html>

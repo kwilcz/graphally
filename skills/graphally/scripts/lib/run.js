@@ -1,25 +1,33 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Browser side of the CLI: load a diagram file, resolve parts, compile every <diagram>.
 import { compile, registerPack } from './index.js';
+import { resolveIcon } from './icons.js';
 
 const NS_ATTRS = ['id'];
 try {
   const q = new URLSearchParams(location.search);
   const src = new URL(q.get('src'));
   if (q.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
-  // Icon packs are served at /icons/<vendor>.json when downloaded (scripts/fetch-icons.mjs).
-  for (const vendor of ['azure', 'aws']) {
-    try { const res = await fetch(new URL(`/icons/${vendor}.json`, location.href)); if (res.ok) registerPack(vendor, await res.json()); } catch {}
-  }
-  // Layout snapshots of the earlier renders, served by the CLI (none with --recompute).
-  let previous = [];
-  try { const res = await fetch(new URL('/previous.json', location.href)); if (res.ok) previous = await res.json(); } catch {}
-  if (!Array.isArray(previous)) previous = [];
-  const css = await (await fetch(new URL('../../assets/theme.css', import.meta.url))).text();
+  // Layout snapshots of the earlier renders, served by the CLI at prev (none with --recompute).
+  const prevAt = q.get('prev') ?? '/previous.json';
+  const [previousIn, css, text] = await Promise.all([
+    prevAt ? fetch(new URL(prevAt, location.href)).then(r => (r.ok ? r.json() : [])).catch(() => []) : [],
+    fetch(new URL('../../assets/theme.css', import.meta.url)).then(r => r.text()),
+    fetch(src).then(r => r.text()),
+  ]);
+  const previous = Array.isArray(previousIn) ? previousIn : [];
 
   const host = document.createElement('div');
-  host.innerHTML = await (await fetch(src)).text();
+  host.innerHTML = text;
   await resolveIncludes(host, src);
+  // Icon packs are served at /icons/<vendor>.json when downloaded (scripts/fetch-icons.mjs).
+  // They weigh 3 MB, so they are fetched only when the diagram may need them: an <icon> that
+  // is not a generic one, or a script, which can draw or make icons.
+  const generic = name => resolveIcon(name)?.kind === 'generic';
+  if ([...host.querySelectorAll('icon')].some(i => !generic(i.getAttribute('name') || '')) || [...host.querySelectorAll('script[type="graphally"]')].some(s => /icon/i.test(s.textContent))) {
+    const packs = await Promise.all(['azure', 'aws'].map(vendor => fetch(new URL(`/icons/${vendor}.json`, location.href)).then(r => (r.ok ? r.json() : null)).catch(() => null)));
+    ['azure', 'aws'].forEach((vendor, i) => { if (packs[i]) registerPack(vendor, packs[i]); });
+  }
   // A part file (no <diagram>) renders on its own, wrapped in a diagram.
   if (!host.querySelector('diagram')) {
     const d = document.createElement('diagram');
@@ -45,6 +53,8 @@ try {
   window.__error = String(e.stack || e);
 }
 document.body.dataset.ready = '1';
+// The CLI waits for this call (a binding it adds to the page); opened elsewhere, it is absent.
+window.graphallyReady?.('1');
 
 // <include src="parts/app.html"> is replaced by the part. The part's root group id becomes
 // its namespace: ids inside are prefixed ("app.web"), and links inside resolve locally.
