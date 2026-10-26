@@ -1,6 +1,6 @@
 # Prepares a pull request into main for release. It sets the version the merge will release
-# (tools/version.mjs: the next minor one, or the next major one when the pull request has the
-# label "breaking"), then re-renders every diagram under samples/ and docs/diagrams/, so the
+# (tools/version.mjs), chosen by the pull request's label: "build" (the default, also with no
+# label), "minor" or "major"; with several, the largest wins. Then it re-renders every diagram under samples/ and docs/diagrams/, so the
 # pull request carries SVG and PNG files that match their sources, and rebuilds the viewer
 # bundle (graphally.js). A branch of this repository
 # gets the files committed back to it. A fork cannot be pushed to, so there the job only fails
@@ -16,6 +16,7 @@ on:
 permissions:
   contents: write
   pull-requests: read
+  issues: write   # labels belong to the issues API
 
 # A newer run for the same branch replaces an older run that is still going.
 concurrency:
@@ -63,22 +64,33 @@ jobs:
           fc-cache -f >/dev/null
           test "$(fc-match -f '%{family}' sans-serif)" = Inter
 
+      # The labels that choose the release, so they can be picked on any pull request.
+      - name: Make sure the release labels exist
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create build --color c5def5 --description "Release the next build version (the default)" --force
+          gh label create minor --color 1d76db --description "Release the next minor version" --force
+          gh label create major --color b60205 --description "Release the next major version: a breaking change" --force
+
       - name: Set the version this pull request releases
         if: ${{ (github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch') && (github.head_ref || github.ref_name) != 'main' }}
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: ${{ github.head_ref || github.ref_name }}
-          BREAKING: ${{ contains(github.event.pull_request.labels.*.name, 'breaking') }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
         run: |
           git fetch --quiet --tags origin main
           # A pull request event carries its labels; a manual run looks its pull request up.
-          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
-            labels=$(gh pr view "$BRANCH" --json labels --jq '.labels[].name')
-            if grep -qx breaking <<< "$labels"; then BREAKING=true; fi
-          fi
-          kind=minor
-          if [ "$BREAKING" = true ]; then kind=major; fi
-          node tools/version.mjs "$(node tools/version.mjs --next "$kind")"
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then LABELS=$(gh pr view "$BRANCH" --json labels --jq '[.labels[].name] | join(" ")'); fi
+          kind=build
+          for l in $LABELS; do
+            case "$l" in major) kind=major ;; minor) [ "$kind" = major ] || kind=minor ;; esac
+          done
+          version=$(node tools/version.mjs --next "$kind")
+          echo "This pull request releases $version ($kind)." | tee -a "$GITHUB_STEP_SUMMARY"
+          node tools/version.mjs "$version"
 
       - name: Render every diagram
         run: bash tools/render-diagrams.sh

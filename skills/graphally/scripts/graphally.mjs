@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { launch, openPage, serve } from './lib/browser.mjs';
 import { readLayout } from './lib/snapshot.mjs';
 import { PACKS, fetchPacks, findPack } from './lib/iconpack.mjs';
-import { withViewer } from './lib/viewerheader.mjs';
+import { VIEWER, withViewer } from './lib/viewerheader.mjs';
 
 const USAGE = 'usage: node graphally.mjs render <file.html>... [--png | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer] [--jobs n]';
 const argv = process.argv.slice(2);
@@ -41,7 +41,9 @@ const jobs = files.map((file, n) => {
   fs.mkdirSync(outDir, { recursive: true });
   const source = path.relative(outDir, file).split(path.sep).join('/');
   const out = [];
-  if (!flag('--no-viewer') && addViewer(file)) out.push(`${file}: added the viewer header; the file now opens in a browser`);
+  const header = flag('--no-viewer') ? null : addViewer(file);
+  if (header === 'added') out.push(`${file}: added the viewer header; the file now opens in a browser`);
+  else if (header === 'updated') out.push(`${file}: the viewer header now loads ${VIEWER.split('/')[5]}, the major version that drew it`);
   return { n, file, outDir, base, source, previous: recompute ? [] : readPrevious(outDir, base, source), out, exit: 0, done: false };
 });
 
@@ -168,10 +170,11 @@ function droppedOverrides(prev, next) {
   return lines;
 }
 
-// Adds the viewer header to the file when it lacks one; true when it did.
+// Adds the viewer header to the file when it lacks one, or moves an older major range
+// forward: 'added', 'updated', or null when the file is left as it was.
 function addViewer(f) {
   const text = fs.readFileSync(f, 'utf8'), out = withViewer(text);
-  if (out === text) return false;
+  if (out === text) return null;
   fs.writeFileSync(f, out);
-  return true;
+  return /graphally\.js["']/.test(text) ? 'updated' : 'added';
 }

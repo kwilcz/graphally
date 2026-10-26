@@ -3,7 +3,7 @@
 // node tools/version.mjs                       prints the version
 // node tools/version.mjs 2.4.0                 writes it everywhere it is kept
 // node tools/version.mjs --check               exits 1 unless every place agrees
-// node tools/version.mjs --next minor|major    prints the version a pull request releases
+// node tools/version.mjs --next build|minor|major   prints the version a pull request releases
 //
 // The version is kept in three places, which must agree: SKILL.md (metadata.version, which
 // ships with the skill folder on its own), and the plugin and marketplace manifests (read by
@@ -33,12 +33,12 @@ else if (arg === '--check') {
   if (new Set(PLACES.map(read)).size > 1) { console.log(`the versions differ:\n  ${found.join('\n  ')}\nset them with: node tools/version.mjs <version>`); process.exit(1); }
   console.log(read(PLACES[0]));
 } else if (arg === '--next') {
-  if (kind !== 'minor' && kind !== 'major') { console.error('usage: node tools/version.mjs --next minor|major'); process.exit(2); }
+  if (!['build', 'minor', 'major'].includes(kind)) { console.error('usage: node tools/version.mjs --next build|minor|major'); process.exit(2); }
   const tags = git('tag', '--list', 'v*').split('\n').map(t => t.trim().slice(1)).filter(t => SEMVER.test(t));
   const onMain = /^  version: "(\d+\.\d+\.\d+)"$/m.exec(git('show', 'origin/main:skills/graphally/SKILL.md'))?.[1];
   const base = [...tags, onMain].filter(Boolean).reduce(newer, '0.0.0');
-  const [major, minor] = base.split('.').map(Number);
-  console.log(kind === 'major' ? `${major + 1}.0.0` : `${major}.${minor + 1}.0`);
+  const [major, minor, build] = base.split('.').map(Number);
+  console.log(kind === 'major' ? `${major + 1}.0.0` : kind === 'minor' ? `${major}.${minor + 1}.0` : `${major}.${minor}.${build + 1}`);
 } else if (SEMVER.test(arg)) {
   for (const p of PLACES) {
     const f = path.join(root, p.file), text = fs.readFileSync(f, 'utf8');
