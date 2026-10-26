@@ -152,6 +152,17 @@ was given and the source it wrote.
   [scope target](samples/README.md#scope-target),
   [solution stack](samples/README.md#solution-stack).
 
+## Releases
+
+Every pull request merged into `main` is a release. Its workflow sets the version while the
+pull request is open: the next minor version, or the next major one when the pull request
+has the label `breaking`. On merge, the version is tagged and published with the skill
+attached. The version lives in `SKILL.md` and both plugin manifests;
+`node tools/version.mjs` prints it, and `node tools/version.mjs --check` checks that they
+agree. A rendered diagram loads the viewer of the exact release that drew it
+(`…/graphally@v<version>/…`), so it opens the same in a browser years later; rendering it again
+moves it to the current release.
+
 ## Repository
 
 | Path | Contains |

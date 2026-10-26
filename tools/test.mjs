@@ -19,6 +19,7 @@ import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
 import { applyEdits, readLines } from '../skills/graphally/scripts/lib/edits.mjs';
 import { launch, openPage, serve } from '../skills/graphally/scripts/lib/browser.mjs';
 import { findPack } from '../skills/graphally/scripts/lib/iconpack.mjs';
+import { VERSION, VIEWER } from '../skills/graphally/scripts/lib/viewerheader.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cli = path.join(root, 'skills/graphally/scripts/graphally.mjs');
@@ -431,6 +432,13 @@ later('viewer', async () => {
   ok0(await render(h, path.join(path.dirname(h), 'out'))); ok0(await render(h, path.join(path.dirname(h), 'out')));
   const text = fs.readFileSync(h, 'utf8');
   check(text.startsWith('<!doctype html>') && text.split('graphally.js').length === 2, `header: ${text.slice(0, 200)}`);
+  // It loads the viewer of this release, by its exact tag; a header of another release is
+  // pointed at this one.
+  check(VIEWER.includes(`/gh/kwilcz/graphally@v${VERSION}/`) && text.includes(VIEWER), `the header does not load v${VERSION}: ${text.slice(0, 300)}`);
+  fs.writeFileSync(h, text.replace(VIEWER, 'https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js'));
+  const up = await render(h, path.join(path.dirname(h), 'out'));
+  const again = fs.readFileSync(h, 'utf8');
+  check(up.code === 0 && /the viewer header now loads graphally/.test(up.text) && again.includes(VIEWER) && again.split('graphally.js').length === 2, `an older header was not updated: ${tail(up.text)}`);
   const r = await render(write(folder('viewer-plain'), page('<div class=card id=a>A</div>', '').replace('<script type="graphally">', '<script>')), path.join(work, 'viewer-plain', 'out'));
   check(r.code === 1 && /plain-script/.test(r.text), `expected plain-script: ${tail(r.text)}`);
 });
@@ -533,6 +541,17 @@ later('page-depend', async () => {
 
 // The skill's own examples: every complete <diagram> in SKILL.md and the references renders
 // with no problem, so what an agent copies works.
+later('version', async () => {
+  // The version is the same in SKILL.md and both manifests. The next one steps up from the
+  // last release: the minor number, or the major one.
+  const run = (...args) => new Promise(resolve => { const c = spawn(process.execPath, [path.join(root, 'tools/version.mjs'), ...args]); let t = ''; c.stdout.on('data', d => { t += d; }); c.stderr.on('data', d => { t += d; }); c.on('close', code => resolve({ code, text: t.trim() })); });
+  const now = await run('--check');
+  check(now.code === 0 && now.text === VERSION, `the versions differ: ${now.text}`);
+  const minor = await run('--next', 'minor'), major = await run('--next', 'major');
+  const [a, b, c] = minor.text.split('.').map(Number), [x, y, z] = major.text.split('.').map(Number);
+  check(minor.code === 0 && major.code === 0 && c === 0 && y === 0 && z === 0 && x === a + 1 && b > 0, `--next gave ${minor.text} (minor) and ${major.text} (major)`);
+});
+
 later('batch', async () => {
   const a = folder('batch-a'), b = folder('batch-b'), solo = folder('batch-solo');
   const fa = write(a, page('<div class=card id=x>X</div><div class="card mt-10" id=y>Y</div>', "arrow('x', 'y')"));
