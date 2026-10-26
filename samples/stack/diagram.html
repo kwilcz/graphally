@@ -1,0 +1,62 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<diagram width=1300 title="The solution, layer by layer" subtitle="Northwind claims platform on Azure: what each layer does and the services it is built from">
+<style>
+  .stack { display: grid; grid-template-columns: 340px 1fr 210px; grid-template-rows: repeat(5, 100px); column-gap: 28px; }
+  .slab { grid-column: 1; }
+  .layer { grid-column: 2; align-self: center; display: flex; flex-direction: column; gap: 7px; padding: 10px 16px; border-radius: 8px; background: var(--card); border-left: 4px solid; }
+  .layer h3 { font-size: 14px; line-height: 18px; }
+  .layer h3 span { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 8px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { display: flex; align-items: center; gap: 6px; padding: 3px 10px 3px 5px; border-radius: 999px; background: var(--wash); font-size: 11.5px; }
+  .chip icon { width: 16px; height: 16px; }
+  .ops { grid-column: 3; grid-row: 1 / -1; align-self: stretch; margin: 12px 0; padding: 16px; border-radius: 10px; background: var(--ink); color: var(--card); display: flex; flex-direction: column; gap: 12px; }
+  .ops h3 { font-size: 14px; } .ops p { font-size: 11.5px; line-height: 15px; opacity: .8; }
+  .ops .chip { background: none; padding: 0; font-size: 12px; gap: 9px; }
+  .ops .chip icon { width: 20px; height: 20px; }
+</style>
+<div class=stack>
+  <i class="slab row-[1]"></i><div class="layer row-[1] border-woad"><h3>Experience<span>how customers and staff reach the platform</span></h3>
+    <div class=chips><span class=chip><icon name=mobile></icon>Mobile app</span><span class=chip><icon name=browser></icon>Customer portal</span><span class=chip><icon name="front door"></icon>Front Door</span><span class=chip><icon name="entra id"></icon>Customer sign-in</span></div></div>
+  <i class="slab row-[2]"></i><div class="layer row-[2] border-purple"><h3>Applications<span>claims handling, rules and letters</span></h3>
+    <div class=chips><span class=chip><icon name="app service"></icon>Claims service</span><span class=chip><icon name="function app"></icon>Rules engine</span><span class=chip><icon name="logic app"></icon>Letters and emails</span></div></div>
+  <i class="slab row-[3]"></i><div class="layer row-[3] border-amber"><h3>Integration<span>APIs and events to the policy and payment systems</span></h3>
+    <div class=chips><span class=chip><icon name="api management"></icon>API Management</span><span class=chip><icon name="service bus"></icon>Service Bus</span><span class=chip><icon name="event grid"></icon>Event Grid</span></div></div>
+  <i class="slab row-[4]"></i><div class="layer row-[4] border-teal"><h3>Data<span>claims, documents and reporting</span></h3>
+    <div class=chips><span class=chip><icon name="azure sql"></icon>Claims database</span><span class=chip><icon name="blob storage"></icon>Document store</span><span class=chip><icon name="data factory"></icon>Migration pipelines</span></div></div>
+  <i class="slab row-[5]"></i><div class="layer row-[5] border-muted"><h3>Landing zone<span>network, identity and policy, shared by every workload</span></h3>
+    <div class=chips><span class=chip><icon name="virtual network"></icon>Hub and spoke</span><span class=chip><icon name="azure firewall"></icon>Firewall</span><span class=chip><icon name="key vault"></icon>Key Vault</span><span class=chip><icon name="management group"></icon>Policies</span></div></div>
+  <div class=ops>
+    <div><h3>Run and secure</h3><p>across every layer, from day one</p></div>
+    <span class=chip><icon name="app insights"></icon>Monitoring, 24/7</span>
+    <span class=chip><icon name="log analytics"></icon>Central logs</span>
+    <span class=chip><icon name=shield></icon>Threat protection</span>
+    <span class=chip><icon name=lock></icon>Backup and recovery</span>
+    <span class=chip><icon name=users></icon>Service desk</span>
+  </div>
+</div>
+<script type="graphally">
+// An isometric slab per layer, drawn from the bottom up so each one sits on the one below.
+const A = 150, B = 56, T = 20;            // half width, half depth, thickness
+const tone = [['woad', 'lane-a'], ['purple', 'lane-c'], ['amber', 'lane-d'], ['teal', 'lane-b'], ['muted', 'wash']];
+const hero = ['mobile', 'app service', 'api management', 'azure sql', 'virtual network'];
+const face = (pts, fill) => {
+  let p = draw.moveTo(pts[0]);
+  for (const q of pts.slice(1)) p = p.lineTo(q);
+  p.closePath().style({ fill, color: 'card', width: 1.2 });
+};
+const slabs = all('.slab');
+for (let i = slabs.length - 1; i >= 0; i--) {
+  const c = slabs[i].center.move(10, -8), [side, top] = tone[i];
+  face([c.left(A), c.up(B), c.right(A), c.down(B)], `var(--${top})`);
+  face([c.left(A), c.down(B), c.down(B + T), c.left(A).down(T)], `var(--${side})`);
+  face([c.down(B), c.right(A), c.right(A).down(T), c.down(B + T)], `color-mix(in srgb, var(--${side}) 65%, var(--ink))`);
+  icon(c.down(i ? 18 : 0), hero[i], { size: 30 });
+  // A leader from the slab's right corner to its layer.
+  const card = all('.layer')[i];
+  draw.moveTo(c.right(A + 8).down(T / 2)).lineTo(pt(card.x - 4, c.y + T / 2)).style({ color: 'line', width: 1.3, tail: 'dot' });
+}
+</script>
+</diagram>

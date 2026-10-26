@@ -1,6 +1,6 @@
 ---
 name: graphally
-description: Draws professional diagrams as SVG and PNG from HTML and CSS - architecture with Azure and AWS icons, networks (VNets, subnets, peering, private endpoints), hierarchies and org charts, BPMN processes and flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, and diagrams of Terraform repositories drafted from the code. The browser lays the figure out and graphally routes the connections, so nobody writes a coordinate. Use it whenever the user asks for a diagram, an architecture or network picture, a flow, a process map, a sequence, a timeline, a plan or a roadmap, or wants to visualise infrastructure, even without the word "diagram". Not for charts of numeric data (bar, line, pie).
+description: Draws professional diagrams as SVG and PNG from HTML and CSS - architecture with Azure and AWS icons, networks (VNets, subnets, peering, private endpoints), hierarchies and org charts, BPMN processes and flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, figures for proposals and solution designs (governance, scope, layered solution stacks), and diagrams of Terraform repositories drafted from the code. The browser lays the figure out and graphally routes the connections, so nobody writes a coordinate. Use it whenever the user asks for a diagram, an architecture or network picture, a flow, a process map, a sequence, a timeline, a plan or a roadmap, or wants to visualise infrastructure, even without the word "diagram". Not for charts of numeric data (bar, line, pie).
 license: Apache-2.0. Copyright (c) 2026 Kamil Wilczyński (kwilcz), https://github.com/kwilcz/graphally. LICENSE.txt has the terms.
 compatibility: Requires Node.js 18 or later and Chrome, Chromium or Edge (or `npx playwright install chromium`). Internet once, to download the Azure and AWS icon packs.
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/tf2graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/fetch-icons.mjs *)
@@ -106,8 +106,9 @@ the previous SVG, so what you did not change stays where it was. Keep `nudge`, `
   name), `band` (a strip of shared services), `key` with `swatch` (a legend), `card`,
   `box`, `pill`, `tag`, `banner`. These class names are taken: name your own differently.
 - **Shapes**: `shape="cylinder"` on any element draws it as that shape: `diamond`,
-  `hexagon`, `chevron`, `document`, `cloud`, BPMN `task`, `start`, `end`,
-  `gateway exclusive`, `event timer` and more.
+  `hexagon`, `chevron`, `semicircle`, `document`, `cloud`, BPMN `task`, `start`, `end`,
+  `gateway exclusive`, `event timer` and more. `clip-path: polygon(…)` cuts any other
+  straight-edged shape.
 - **Icons**: `<icon name="app service">`. Loose names work for every service of both
   packs; an unknown name is reported with suggestions.
 - **Connections**: `<script type="application/json">`, a list of `["from", "to", "label"]`
@@ -149,6 +150,7 @@ Read the one for the kind of diagram you draw; each starts with a complete examp
 | Sequence diagrams: calls, replies, loops, alternatives | [references/sequence.md](references/sequence.md) |
 | Plans: Gantt charts, roadmaps, milestones, dependencies | [references/plan.md](references/plan.md) |
 | Phase and role charts, matrices, step cards, anything else | [references/charts.md](references/charts.md) |
+| Figures for proposals and solution designs: governance pyramids, scope targets, layered solution stacks; custom shapes, radial layouts, drawing on the layout | [references/documents.md](references/documents.md) |
 | A diagram of a Terraform repository, drafted from the code | [references/terraform.md](references/terraform.md) |
 | The whole format | [references/format.md](references/format.md) |
 

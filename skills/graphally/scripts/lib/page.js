@@ -369,10 +369,14 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     }
     const tt = cs.textTransform, transform = s => tt === 'uppercase' ? s.toUpperCase() : tt === 'lowercase' ? s.toLowerCase() : s;
     const ls = cs.letterSpacing !== 'normal' ? `; letter-spacing: ${cs.letterSpacing}` : '';
+    // Underline and line-through reach the text from its own element or any one around it.
+    const deco = new Set();
+    for (let a = owner; a && a !== root; a = a.parentElement) for (const d of getComputedStyle(a).textDecorationLine.split(' ')) if (d === 'underline' || d === 'line-through') deco.add(d);
+    const td = deco.size ? `; text-decoration: ${[...deco].join(' ')}` : '';
     for (const l of lines) {
       const str = transform(l.words.join(' '));
       texts.push({ x: l.left, y: l.top, w: l.right - l.left, h: l.h, owner, str });
-      out.push(`<text x="${fmt(l.left)}" y="${fmt(l.top + asc)}" style="font-family: ${esc(cs.fontFamily)}; font-size: ${cs.fontSize}; font-weight: ${cs.fontWeight}${cs.fontStyle !== 'normal' ? `; font-style: ${cs.fontStyle}` : ''}${ls}; fill: ${fill}">${esc(str)}</text>`);
+      out.push(`<text x="${fmt(l.left)}" y="${fmt(l.top + asc)}" style="font-family: ${esc(cs.fontFamily)}; font-size: ${cs.fontSize}; font-weight: ${cs.fontWeight}${cs.fontStyle !== 'normal' ? `; font-style: ${cs.fontStyle}` : ''}${ls}${td}; fill: ${fill}">${esc(str)}</text>`);
     }
   };
   // clip-path: polygon(…) with %, px and calc(), resolved against the element's own box.
@@ -453,8 +457,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
   }
 
   // ---------- connectors: route.js on the page's boxes ----------
-  const W = Math.ceil(Math.max(root.scrollWidth, ...boxes.map(x => x.b.x + x.b.w + S.pad), ...texts.map(t => t.x + t.w + S.pad)));
-  const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), 2 * S.pad));
+  const far = drawingsReach(drawings);
+  const W = Math.ceil(Math.max(root.scrollWidth, ...boxes.map(x => x.b.x + x.b.w + S.pad), ...texts.map(t => t.x + t.w + S.pad), far.x + S.pad));
+  const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), far.y + S.pad, 2 * S.pad));
   const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H, opts.previous);
   for (const r of routes) if (r.labelCrowded) problems.push({ rule: 'label-crowded', edge: `${r.edge.from} -> ${r.edge.to}`, label: r.edge.label, hint: 'widen the gap the line runs through, or shorten the label' });
   overlaps(routes, problems);
@@ -555,18 +560,45 @@ const MARKER = {
 
 const arcPoint = (c, r, deg) => ({ x: c.x + r * Math.cos(deg * Math.PI / 180), y: c.y + r * Math.sin(deg * Math.PI / 180) });
 
+// How far right and down the script's drawings reach, so the figure grows to hold them. A
+// path counts its points and control points (a curve stays inside them); text is measured
+// roughly, from its size.
+function drawingsReach(drawings) {
+  let x = 0, y = 0;
+  const reach = (px, py) => { if (px > x) x = px; if (py > y) y = py; };
+  for (const d of drawings) {
+    const o = d.o || {};
+    if (d.kind === 'path') {
+      const w = (o.width || 1.5) / 2 + 5;
+      const pts = d.pts || [...d.d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: Number(m[1]), y: Number(m[2]) }));
+      for (const p of pts) reach(p.x + w, p.y + w);
+    } else if (d.kind === 'text') {
+      const size = o.size || 12, wide = d.str.length * size * 0.6, anchor = o.anchor || 'middle';
+      reach(d.p.x + (anchor === 'start' ? wide : anchor === 'middle' ? wide / 2 : 0), d.p.y + size);
+    } else if (d.kind === 'gate' || d.kind === 'icon') {
+      const s = (o.size || (d.kind === 'gate' ? 30 : 24)) / 2;
+      reach(d.p.x + s, d.p.y + s);
+    } else if (d.kind === 'shape') {
+      const size = o.size || 44, w = o.w || size, h = o.h || (o.w ? w : size);
+      reach(d.p.x + w / 2, d.p.y + h / 2);
+    }
+  }
+  return { x, y };
+}
+
 function pathBuilder(start, drawings, point) {
-  const d = [`M${fmt(start.x)},${fmt(start.y)}`], item = { kind: 'path', d: '', o: {} };
+  const d = [`M${fmt(start.x)},${fmt(start.y)}`], item = { kind: 'path', d: '', o: {}, pts: [start] };
   drawings.push(item);
   const sync = () => { item.d = d.join(' '); return api; };
   const api = {
-    lineTo: p => { p = point(p); d.push(`L${fmt(p.x)},${fmt(p.y)}`); return sync(); },
-    quadraticCurveTo: (c, p) => { [c, p] = [point(c), point(p)]; d.push(`Q${fmt(c.x)},${fmt(c.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
-    bezierCurveTo: (c1, c2, p) => { [c1, c2, p] = [point(c1), point(c2), point(p)]; d.push(`C${fmt(c1.x)},${fmt(c1.y)} ${fmt(c2.x)},${fmt(c2.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    lineTo: p => { p = point(p); item.pts.push(p); d.push(`L${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    quadraticCurveTo: (c, p) => { [c, p] = [point(c), point(p)]; item.pts.push(c, p); d.push(`Q${fmt(c.x)},${fmt(c.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
+    bezierCurveTo: (c1, c2, p) => { [c1, c2, p] = [point(c1), point(c2), point(p)]; item.pts.push(c1, c2, p); d.push(`C${fmt(c1.x)},${fmt(c1.y)} ${fmt(c2.x)},${fmt(c2.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
     // arc(centre, radius, startDeg, endDeg): degrees clockwise from the right, as in canvas.
     arc: (c, r, a0, a1) => {
       c = point(c);
       const p = arcPoint(c, r, a0), q = arcPoint(c, r, a1), sweep = a1 > a0 ? 1 : 0, large = Math.abs(a1 - a0) > 180 ? 1 : 0;
+      for (let k = 0; k <= 24; k++) item.pts.push(arcPoint(c, r, a0 + (a1 - a0) * k / 24));
       d.push(`L${fmt(p.x)},${fmt(p.y)} A${fmt(r)},${fmt(r)} 0 ${large} ${sweep} ${fmt(q.x)},${fmt(q.y)}`);
       return sync();
     },
