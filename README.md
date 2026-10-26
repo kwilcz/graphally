@@ -7,8 +7,9 @@ in a browser, routes the connections around the boxes, places the labels, applie
 theme, and writes an SVG. Nobody writes a coordinate.
 
 It draws architecture (with Azure and AWS icons), networks, hierarchies, BPMN processes,
-flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts and any
-other figure a grid can hold, and drafts diagrams of Terraform repositories from the code.
+flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, figures
+for proposals and solution designs, and any other figure a grid can hold, and drafts
+diagrams of Terraform repositories from the code.
 
 > **Licence.** graphally is open source under the [Apache License 2.0](LICENSE).
 > Copyright © 2026 Kamil Wilczyński ([kwilcz](https://github.com/kwilcz)).
@@ -134,123 +135,21 @@ set, so a brand theme only redefines them.
 
 ## Samples
 
-Each sample folder holds the brief an agent was given, the source it wrote
-(`diagram.html`), and the result (`diagram.svg`).
+[The showcase](samples/README.md) has every sample, in your theme, with the brief the agent
+was given and the source it wrote.
 
-| Sample | Brief |
-|---|---|
-| [Architecture](#architecture) | [Azure field-service platform, 23 components](samples/architecture/brief.md) |
-| [AWS](#aws) | [serverless photo sharing on AWS](samples/aws/brief.md) |
-| [Network](#network) | [hub and two spokes with private endpoints](samples/network/brief.md) |
-| [Terraform](#terraform-repository) | [a Terraform repository, plus its users](samples/terraform/brief.md) |
-| [Process](#process-bpmn) | [expense approval across four lanes](samples/process/brief.md) |
-| [Flowchart](#flowchart) | [release pipeline with approvals and rollback](samples/flowchart/brief.md) |
-| [Sequence](#sequence) | [checkout payment with 3-D Secure](samples/sequence/brief.md) |
-| [Hierarchy](#hierarchy) | [management groups and subscriptions](samples/hierarchy/brief.md) |
-| [Plan](#plan-gantt) | [six-month migration plan](samples/plan/brief.md) |
-| [Icon diagram](#icon-diagram) | [Microsoft Entra application proxy](samples/icons/brief.md) |
-| [Phase and role chart](#phase-and-role-chart) | [who does what, phase by phase, in a move to AKS](samples/page/brief.md) |
-
-### Architecture
-
-The diagram at the top of this page. Tiers as columns, a platform band, async traffic
-dashed, external systems dashed. Shared services (Key Vault, App Insights, the registry)
-appear as badges in the headers of the tiers that use them, instead of wires.
-[Brief](samples/architecture/brief.md) · [source](samples/architecture/diagram.html) ·
-[SVG](samples/architecture/diagram.svg)
-
-### AWS
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/aws/diagram-dark.png"><img alt="Serverless photo sharing on AWS" src="samples/aws/diagram.png"></picture>
-
-The same kind of diagram with the AWS pack: CloudFront and WAF at the edge, Lambda
-functions behind API Gateway, and the asynchronous path from S3 through SQS and SNS
-drawn dashed. CloudWatch and Secrets Manager are badges on the two function groups.
-[Brief](samples/aws/brief.md) · [source](samples/aws/diagram.html) ·
-[SVG](samples/aws/diagram.svg)
-
-### Network
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/network/diagram-dark.png"><img alt="Hub-and-spoke network" src="samples/network/diagram.png"></picture>
-
-VNets, subnets with their address ranges, resources inside their subnets, peering, a
-default route to the firewall, private endpoints to the PaaS services below.
-[Brief](samples/network/brief.md) · [source](samples/network/diagram.html) ·
-[SVG](samples/network/diagram.svg)
-
-### Terraform repository
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/terraform/diagram-dark.png"><img alt="Diagram of a Terraform repository" src="samples/terraform/diagram.png"></picture>
-
-`tf2graphally` read the configuration in [`repo/`](samples/terraform/repo) and wrote
-[`draft.html`](samples/terraform/draft.html) ([rendered](samples/terraform/draft.svg)),
-without the agent reading the HCL. The agent then added what Terraform cannot know, the
-users and the VPN from head office, and rearranged the services.
-[Brief](samples/terraform/brief.md) · [source](samples/terraform/diagram.html) ·
-[SVG](samples/terraform/diagram.svg)
-
-### Process (BPMN)
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/process/diagram-dark.png"><img alt="BPMN swimlanes" src="samples/process/diagram.png"></picture>
-
-Four lanes, one column per step in the order the flow runs, gateways with labelled
-branches, a three-day timer on the review task, notices between lanes dashed.
-[Brief](samples/process/brief.md) · [source](samples/process/diagram.html) ·
-[SVG](samples/process/diagram.svg)
-
-### Flowchart
-
-The happy path runs along the middle; every failure branches up, and the expired
-approval drops below.
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/flowchart/diagram-dark.png"><img alt="Release pipeline flowchart" src="samples/flowchart/diagram.png"></picture>
-
-[Brief](samples/flowchart/brief.md) · [source](samples/flowchart/diagram.html) ·
-[SVG](samples/flowchart/diagram.svg)
-
-### Sequence
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/sequence/diagram-dark.png"><img alt="Checkout sequence" src="samples/sequence/diagram.png"></picture>
-
-Numbered steps, activation bars, an `alt` for 3-D Secure, a `par` with a polling `loop`.
-[Brief](samples/sequence/brief.md) · [source](samples/sequence/diagram.html) ·
-[SVG](samples/sequence/diagram.svg)
-
-### Hierarchy
-
-One column per leaf and one row per level: each parent spans its children, and one
-connection per parent draws its bus.
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/hierarchy/diagram-dark.png"><img alt="Management group hierarchy" src="samples/hierarchy/diagram.png"></picture>
-
-[Brief](samples/hierarchy/brief.md) · [source](samples/hierarchy/diagram.html) ·
-[SVG](samples/hierarchy/diagram.svg)
-
-### Plan (Gantt)
-
-A task table beside the chart, a critical path, a blocked approval holding back the
-pilot, parallel work, and only the dependencies that tell the story.
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/plan/diagram-dark.png"><img alt="Migration plan" src="samples/plan/diagram.png"></picture>
-
-[Brief](samples/plan/brief.md) · [source](samples/plan/diagram.html) ·
-[SVG](samples/plan/diagram.svg)
-
-### Icon diagram
-
-Figures: an icon over its name, in plain groups.
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/icons/diagram-dark.png"><img alt="Entra application proxy" src="samples/icons/diagram.png"></picture>
-
-[Brief](samples/icons/brief.md) · [source](samples/icons/diagram.html) ·
-[SVG](samples/icons/diagram.svg)
-
-### Phase and role chart
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/page/diagram-dark.png"><img alt="Who does what in the move to AKS" src="samples/page/diagram.png"></picture>
-
-[Brief](samples/page/brief.md) · [source](samples/page/diagram.html) ·
-[SVG](samples/page/diagram.svg)
+- **Basic**, the everyday technical diagrams: [architecture](samples/README.md#architecture),
+  [AWS](samples/README.md#aws), [network](samples/README.md#network),
+  [Terraform repository](samples/README.md#terraform-repository),
+  [BPMN process](samples/README.md#process-bpmn), [flowchart](samples/README.md#flowchart),
+  [sequence](samples/README.md#sequence), [hierarchy](samples/README.md#hierarchy),
+  [icon diagram](samples/README.md#icon-diagram).
+- **Advanced**, figures that go past boxes and lines, most of them for proposals and
+  solution designs: [Gantt plan](samples/README.md#plan-gantt),
+  [phase and role chart](samples/README.md#phase-and-role-chart),
+  [governance pyramid](samples/README.md#governance-pyramid),
+  [scope target](samples/README.md#scope-target),
+  [solution stack](samples/README.md#solution-stack).
 
 ## Repository
 
@@ -258,7 +157,7 @@ Figures: an icon over its name, in plain groups.
 |---|---|
 | [`skills/graphally/`](skills/graphally) | the skill: `SKILL.md`, `references/`, `scripts/` (the engine), `assets/` (theme, icons) |
 | [`.claude-plugin/`](.claude-plugin) | the Claude Code plugin and marketplace manifests |
-| [`samples/`](samples) | briefs and the diagrams drawn from them |
+| [`samples/`](samples) | briefs and the diagrams drawn from them; [the showcase](samples/README.md) |
 | [`docs/design.md`](docs/design.md) | how graphally works, illustrated with diagrams it drew ([sources](docs/diagrams)) |
 | [`tools/`](tools) | maintenance scripts, such as rebuilding the icon pack |
 

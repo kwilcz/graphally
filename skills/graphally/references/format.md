@@ -43,12 +43,13 @@ grid columns and messages into rows. A script draws only what has no box.
 ## The page
 
 - `width` on `<diagram>` sets the page width (default 1200); the SVG adds a 24px margin on
-  each side. The height follows the content.
+  each side. The height follows the content, the script's drawings included.
 - Any CSS for layout works: grid (with `grid-column: span 2`, `subgrid`), flexbox,
   `position: absolute` inside a `position: relative` box, margins, padding.
 - What is drawn: background colours, borders (solid, dashed, dotted, per side),
   `border-radius`, `clip-path: polygon(…)`, shapes, text with its font, size, weight,
-  style, colour, `text-transform` and `letter-spacing`, list bullets, and `<icon>`.
+  style, colour, `text-transform`, `letter-spacing`, underline and line-through, list
+  bullets, and `<icon>`.
 - What is not drawn: shadows, gradients, transforms, rotated or vertical text, images,
   `::before` and `::after`. Draw such marks in the script instead.
 - Colours: any CSS colour, or the theme tokens, which follow the dark theme: `var(--ink)`
@@ -73,6 +74,7 @@ a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a
 |---|---|
 | `rect`, `rounded`, `stadium` (`pill`, `terminator`), `ellipse`, `circle` | basic |
 | `diamond` (`decision`), `hexagon`, `triangle`, `parallelogram` (`io`), `trapezoid` | geometric |
+| `semicircle` | the top half of an ellipse filling the box: twice as wide as high is a half disc |
 | `chevron`, `chevron-start` | phase bars: a notch and a point; a flat start and a point |
 | `arrow-right`, `arrow-left`, `arrow-up`, `arrow-down` | block arrows |
 | `cylinder` (`database`, `data-store`), `cylinder-h` (`queue`) | stores |
@@ -249,7 +251,7 @@ also run as a page script when the file is opened in a browser (reported as `pla
 | `depend(a, b, { color, dashed })` | a dependency on a time chart: from the end of a to the start of b, clear of every other dated element and of other dependencies |
 | `draw.moveTo(p).lineTo(p).quadraticCurveTo(c, p).bezierCurveTo(c1, c2, p).closePath()` | any path, as on a canvas |
 | `draw.arc(centre, r, fromDeg, toDeg)` | an arc; degrees clockwise from the right |
-| `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path |
+| `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path; `fill` takes a token or any CSS colour, `color-mix()` of tokens included |
 | `shape('gateway parallel', p, { size, w, h, fill, stroke, width, dashed })` | a shape centred on a point, from the list above |
 | `gate(p, 'G1', { fill, size })` | a red decision diamond with a label, for phase charts |
 | `text(p, 'str', { size, weight, italic, color, anchor })` | text centred on a point; `anchor`: `start`, `middle`, `end` |
@@ -312,4 +314,5 @@ The render's summary counts crossings: lines crossing lines. A crossing is not a
 but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 
 Recipes for each kind of diagram, each with a complete example: `network.md`,
-`hierarchy.md`, `process.md`, `sequence.md`, `plan.md`, `charts.md`, `terraform.md`.
+`hierarchy.md`, `process.md`, `sequence.md`, `plan.md`, `charts.md`, `documents.md`,
+`terraform.md`.

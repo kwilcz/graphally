@@ -1,0 +1,77 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<diagram width=1300 title="What this proposal covers" subtitle="Northwind claims platform: the closer to the centre, the more certain. Phase 2 is priced as an option; the outer ring is not part of this work.">
+<style>
+  .fan { position: relative; height: 600px; }
+  .fan > [shape=semicircle] { position: absolute; bottom: 0; left: 50%; translate: -50% 0; }
+  .r3 { width: 1140px; height: 570px; background: var(--wash); border: 1.5px dashed var(--line); }
+  .r2 { width: 900px; height: 450px; border: 0; background: var(--icon-soft); }
+  .r1 { width: 660px; height: 330px; border: 0; background: var(--woad); }
+  .core { width: 240px; height: 120px; border: 0; background: var(--ink); color: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 20px; font-size: 15px; font-weight: 700; }
+  .core small { font-size: 11.5px; font-weight: 400; opacity: .8; }
+  /* Placed by the before-script: data-r is the distance from the centre, data-a the angle (0 right, 90 up). */
+  .fan [data-r] { position: absolute; translate: -50% -50%; white-space: nowrap; }
+  .chip { display: flex; align-items: center; gap: 6px; padding: 5px 11px 5px 7px; border-radius: 999px; background: var(--card); font-size: 12px; font-weight: 600; }
+  .chip icon { width: 18px; height: 18px; }
+  .p2 { border: 1.3px dashed var(--woad); font-weight: 500; }
+  .out { background: none; color: var(--muted); font-weight: 400; text-decoration: line-through; }
+  .sector { font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--woad); }
+  .ruler { display: grid; grid-template-columns: 80px 120px 120px 210px 240px 210px 120px 120px 80px; margin-top: 8px; font-size: 11.5px; font-weight: 600; color: var(--muted); text-align: center; }
+  .ruler > span { border-top: 2px solid var(--line); padding-top: 6px; }
+  .stat b { display: block; font-size: 26px; line-height: 30px; color: var(--woad); }
+  .stat { position: absolute; top: 0; width: 250px; font-size: 12px; line-height: 16px; color: var(--muted); }
+</style>
+<div class=fan>
+  <div class=r3 shape=semicircle></div>
+  <div class=r2 shape=semicircle></div>
+  <div class=r1 shape=semicircle></div>
+  <div class=core shape=semicircle id=core>Claims platform<small>on Azure</small></div>
+
+  <div class=stat style="left: 0"><b>8 capabilities</b>in scope, fixed price, live in nine months</div>
+  <div class=stat style="right: 0; text-align: right"><b>4 options</b>for phase 2, each priced and planned separately</div>
+
+  <span class=sector data-r=605 data-a=157.5>ENGAGE</span>
+  <span class=sector data-r=605 data-a=112.5>PROCESS</span>
+  <span class=sector data-r=605 data-a=67.5>DATA</span>
+  <span class=sector data-r=605 data-a=22.5>RUN</span>
+
+  <span class=chip data-r=225 data-a=166><icon name=mobile></icon>Mobile app</span>
+  <span class=chip data-r=225 data-a=148><icon name=browser></icon>Customer portal</span>
+  <span class=chip data-r=190 data-a=112.5><icon name=api></icon>Claims intake</span>
+  <span class=chip data-r=280 data-a=112.5><icon name=gear></icon>Auto-triage</span>
+  <span class=chip data-r=190 data-a=67.5><icon name=file></icon>Documents</span>
+  <span class=chip data-r=280 data-a=67.5><icon name=database></icon>Data migration</span>
+  <span class=chip data-r=225 data-a=32><icon name=timer></icon>24/7 monitoring</span>
+  <span class=chip data-r=225 data-a=14><icon name=lock></icon>Security</span>
+
+  <span class="chip p2" data-r=392 data-a=157.5><icon name=message></icon>Chat assistant</span>
+  <span class="chip p2" data-r=392 data-a=112.5><icon name=shield></icon>Fraud scoring</span>
+  <span class="chip p2" data-r=392 data-a=67.5><icon name=laptop></icon>Dashboards</span>
+  <span class="chip p2" data-r=392 data-a=22.5><icon name=cloud></icon>Cost control</span>
+
+  <span class="chip out" data-r=510 data-a=157.5>Broker portal</span>
+  <span class="chip out" data-r=510 data-a=112.5>Underwriting</span>
+  <span class="chip out" data-r=510 data-a=67.5>Data warehouse</span>
+  <span class="chip out" data-r=510 data-a=22.5>Office laptops</span>
+</div>
+<div class=ruler>
+  <i></i><span>out of scope</span><span>phase 2 option</span><span>in scope</span><span>core</span><span>in scope</span><span>phase 2 option</span><span>out of scope</span><i></i>
+</div>
+<script type="graphally" before>
+for (const e of all('.fan [data-r]')) {
+  const r = Number(e.dataset.r), a = e.dataset.a * Math.PI / 180;
+  e.style.left = `calc(50% + ${r * Math.cos(a)}px)`;
+  e.style.top = `calc(100% - ${r * Math.sin(a)}px)`;
+}
+</script>
+<script type="graphally">
+// Spokes between the four areas, from the core to the outer ring.
+const c = el('core').bottom;
+for (const a of [45, 90, 135]) {
+  const d = { x: Math.cos(a * Math.PI / 180), y: -Math.sin(a * Math.PI / 180) };
+  draw.moveTo(c.move(d.x * 120, d.y * 120)).lineTo(c.move(d.x * 570, d.y * 570)).style({ color: 'card', width: 3 });
+}
+</script>
+</diagram>

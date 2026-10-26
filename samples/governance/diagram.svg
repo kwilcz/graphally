@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1348 498" width="1348" height="498" role="img" aria-label="How we work together. Governance of the Northwind claims programme: who meets whom, how often, and which way issues travel">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="8.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><circle cx="5" cy="5" r="3.3" style="fill: var(--line)"></circle></marker>
+<marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--rust)"></path></marker>
+<marker id="pg-m2" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--green)"></path></marker>
+<symbol id="pg-g-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 20c0-3.8 2.9-6 6.5-6s6.5 2.2 6.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.5" cy="7.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 13.5c2.8.3 4.8 2.3 4.8 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-file" viewBox="0 0 24 24"><path d="M6 2.5h8l4.5 4.5v14.5H6z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M6 2.5h8l4.5 4.5v14.5H6zM14 2.5V7h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 9v4l2.5 2M10 2.5h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
+<rect class="g-bg" width="1348" height="498" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">How we work together</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Governance of the Northwind claims programme: who meets whom, how often, and which way issues travel</text>
+<rect x="673" y="101.9" width="2" height="352" rx="0" style="fill: var(--line)"></rect>
+<text x="60" y="101.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 21px; font-weight: 600; fill: var(--ink)">Northwind Insurance</text>
+<text x="60" y="123.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">The client: owns the outcome, the</text>
+<text x="60" y="140.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">budget and the business decisions.</text>
+<text x="1132.9" y="101.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 21px; font-weight: 600; fill: var(--ink)">Contoso Digital</text>
+<text x="1114.4" y="123.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">The delivery partner: owns the</text>
+<text x="1110.1" y="140.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">solution, the plan and the team.</text>
+<g data-id="c1" data-box="60,82,489,92">
+<polygon points="373,81.9 549,81.9 549,173.9 299.6,173.9" style="fill: var(--ink)"></polygon>
+<text x="400.5" y="125.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Executive sponsor</text>
+<text x="386.5" y="141.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">Chief Information Officer</text>
+</g>
+<g data-id="c2" data-box="60,182,489,92">
+<polygon points="293.3,181.9 549,181.9 549,273.9 219.9,273.9" style="fill: var(--woad)"></polygon>
+<text x="390.5" y="225.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Programme director</text>
+<text x="440.3" y="241.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">Head of Claims</text>
+</g>
+<g data-id="c3" data-box="60,282,489,92">
+<polygon points="213.1,281.9 549,281.9 549,373.9 139.7,373.9" style="fill: var(--icon-soft)"></polygon>
+<text x="418.9" y="325.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Product owners</text>
+<text x="375.9" y="341.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">Claims, Customer, Finance</text>
+</g>
+<g data-id="c4" data-box="60,382,489,92">
+<polygon points="133.4,381.9 549,381.9 549,473.9 60,473.9" style="fill: var(--lane-a)"></polygon>
+<text x="373.5" y="425.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Business and IT teams</text>
+<text x="311.3" y="441.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">claims handlers, IT operations, testers</text>
+</g>
+<g data-id="f1" data-box="576,102,196,51.5">
+<rect x="576.5" y="102.6" width="195" height="50.5" rx="25.3" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<use href="#pg-g-users" x="591" y="115.9" width="24" height="24" style="color: var(--ink)"></use>
+<text x="625" y="123.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Steering committee</text>
+<text x="625" y="140.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--woad)">every quarter</text>
+</g>
+<g data-id="f2" data-box="576,202,196,51.5">
+<rect x="576.5" y="202.6" width="195" height="50.5" rx="25.3" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<use href="#pg-g-file" x="591" y="215.9" width="24" height="24" style="color: var(--ink)"></use>
+<text x="625" y="223.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Programme board</text>
+<text x="625" y="240.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--woad)">every month</text>
+</g>
+<g data-id="f3" data-box="576,302,196,51.5">
+<rect x="576.5" y="302.6" width="195" height="50.5" rx="25.3" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<use href="#pg-g-timer" x="591" y="315.9" width="24" height="24" style="color: var(--ink)"></use>
+<text x="625" y="323.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Sprint review</text>
+<text x="625" y="340.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--woad)">every two weeks</text>
+</g>
+<g data-id="f4" data-box="576,402,196,51.5">
+<rect x="576.5" y="402.6" width="195" height="50.5" rx="25.3" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<use href="#pg-g-message" x="591" y="415.9" width="24" height="24" style="color: var(--ink)"></use>
+<text x="625" y="423.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Stand-up</text>
+<text x="625" y="440.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 600; fill: var(--woad)">every day</text>
+</g>
+<g data-id="p1" data-box="799,82,489,92">
+<polygon points="799,81.9 975,81.9 1048.4,173.9 799,173.9" style="fill: var(--ink)"></polygon>
+<text x="821" y="125.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Account executive</text>
+<text x="821" y="141.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">Partner, insurance practice</text>
+</g>
+<g data-id="p2" data-box="799,182,489,92">
+<polygon points="799,181.9 1054.7,181.9 1128.1,273.9 799,273.9" style="fill: var(--woad)"></polygon>
+<text x="821" y="225.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Engagement manager</text>
+<text x="821" y="241.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">plan, budget, risks</text>
+</g>
+<g data-id="p3" data-box="799,282,489,92">
+<polygon points="799,281.9 1134.9,281.9 1208.3,373.9 799,373.9" style="fill: var(--icon-soft)"></polygon>
+<text x="821" y="325.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Delivery lead and architects</text>
+<text x="821" y="341.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">solution, quality, backlog</text>
+</g>
+<g data-id="p4" data-box="799,382,489,92">
+<polygon points="799,381.9 1214.7,381.9 1288,473.9 799,473.9" style="fill: var(--lane-a)"></polygon>
+<text x="821" y="425.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Engineering squads</text>
+<text x="821" y="441.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">two squads of six, plus a platform engineer</text>
+</g>
+
+<path d="M549,127.9 L576,127.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M772,127.9 L799,127.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M549,227.9 L576,227.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M772,227.9 L799,227.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M549,327.9 L576,327.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M772,327.9 L799,327.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M549,427.9 L576,427.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M772,427.9 L799,427.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>
+<path d="M50.8,450.4 L251.1,199.5" style="fill: none; stroke: var(--rust)" stroke-width="2" marker-end="url(#pg-m1)"></path>
+<text x="225.1" y="203.7" text-anchor="end" style="font: 700 12px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--rust)">Escalation</text>
+<text x="225.1" y="219.5" text-anchor="end" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">two working days per level</text>
+<path d="M1096.9,199.5 L1297.2,450.4" style="fill: none; stroke: var(--green)" stroke-width="2" marker-end="url(#pg-m2)"></path>
+<text x="1122.9" y="203.7" text-anchor="start" style="font: 700 12px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--green)">Decisions</text>
+<text x="1122.9" y="219.5" text-anchor="start" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">and priorities, top down</text>
+
+</g>
+</svg>

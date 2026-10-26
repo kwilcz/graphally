@@ -44,6 +44,8 @@ const BASES = {
   stadium: { path: stadium },
   ellipse: { path: ({ x, y, w, h }) => `M${f(x)},${f(y + h / 2)} A${f(w / 2)},${f(h / 2)} 0 1 1 ${f(x + w)},${f(y + h / 2)} A${f(w / 2)},${f(h / 2)} 0 1 1 ${f(x)},${f(y + h / 2)} Z`, round: true },
   circle: { path: ({ x, y, w, h }) => circle(x + w / 2, y + h / 2, Math.min(w, h) / 2), round: true },
+  // The top half of an ellipse filling the box: a box twice as wide as it is high is a half disc.
+  semicircle: { path: ({ x, y, w, h }) => `M${f(x)},${f(y + h)} A${f(w / 2)},${f(h)} 0 0 1 ${f(x + w)},${f(y + h)} Z` },
   diamond: { path: ({ x, y, w, h }) => poly([[x + w / 2, y], [x + w, y + h / 2], [x + w / 2, y + h], [x, y + h / 2]]), round: true },
   hexagon: { path: ({ x, y, w, h }) => { const k = Math.min(h * 0.29, w / 4); return poly([[x + k, y], [x + w - k, y], [x + w, y + h / 2], [x + w - k, y + h], [x + k, y + h], [x, y + h / 2]]); } },
   triangle: { path: ({ x, y, w, h }) => poly([[x + w / 2, y], [x + w, y + h], [x, y + h]]) },

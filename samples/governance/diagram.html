@@ -1,0 +1,72 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<diagram width=1300 title="How we work together" subtitle="Governance of the Northwind claims programme: who meets whom, how often, and which way issues travel">
+<style>
+  .gov { display: grid; grid-template-columns: 1fr 250px 1fr; grid-template-rows: repeat(4, 92px); row-gap: 8px; margin: 0 36px; }
+  .tier { display: flex; flex-direction: column; justify-content: center; padding: 0 22px; font-size: 12px; line-height: 16px; }
+  .tier b { font-size: 14px; line-height: 19px; }
+  .tier span { opacity: .8; }
+  .client { align-items: flex-end; text-align: right; }
+  .l1 { background: var(--ink); color: var(--card); }
+  .l2 { background: var(--woad); color: var(--card); }
+  .l3 { background: var(--icon-soft); }
+  .l4 { background: var(--lane-a); }
+  /* One pyramid: every tier's slant continues the slant of the tier above it. */
+  .client.l1 { clip-path: polygon(64% 0, 100% 0, 100% 100%, 49% 100%); }
+  .client.l2 { clip-path: polygon(47.7% 0, 100% 0, 100% 100%, 32.7% 100%); }
+  .client.l3 { clip-path: polygon(31.3% 0, 100% 0, 100% 100%, 16.3% 100%); }
+  .client.l4 { clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); }
+  .partner.l1 { clip-path: polygon(0 0, 36% 0, 51% 100%, 0 100%); }
+  .partner.l2 { clip-path: polygon(0 0, 52.3% 0, 67.3% 100%, 0 100%); }
+  .partner.l3 { clip-path: polygon(0 0, 68.7% 0, 83.7% 100%, 0 100%); }
+  .partner.l4 { clip-path: polygon(0 0, 85% 0, 100% 100%, 0 100%); }
+  .forum { justify-self: center; align-self: center; width: 196px; display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; background: var(--card); border: 1.5px solid var(--line); }
+  .forum icon { width: 24px; height: 24px; flex: none; }
+  .forum b { display: block; font-size: 12.5px; line-height: 16px; }
+  .forum span { font-size: 11.5px; color: var(--woad); font-weight: 600; }
+  .org { grid-row: 1 / 3; align-self: start; max-width: 215px; }
+  .org h3 { font-size: 21px; line-height: 26px; }
+  .org p { margin-top: 4px; font-size: 12px; color: var(--muted); }
+  .rail { grid-column: 2; grid-row: 1 / -1; justify-self: center; width: 2px; background: var(--line); margin: 20px 0; }
+</style>
+<div class=gov>
+  <div class=rail></div>
+  <div class="org col-[1] justify-self-start"><h3>Northwind Insurance</h3><p>The client: owns the outcome, the budget and the business decisions.</p></div>
+  <div class="org col-[3] justify-self-end text-right"><h3>Contoso Digital</h3><p>The delivery partner: owns the solution, the plan and the team.</p></div>
+
+  <div class="tier client l1 col-[1] row-[1]" id=c1><b>Executive sponsor</b><span>Chief Information Officer</span></div>
+  <div class="tier client l2 col-[1] row-[2]" id=c2><b>Programme director</b><span>Head of Claims</span></div>
+  <div class="tier client l3 col-[1] row-[3]" id=c3><b>Product owners</b><span>Claims, Customer, Finance</span></div>
+  <div class="tier client l4 col-[1] row-[4]" id=c4><b>Business and IT teams</b><span>claims handlers, IT operations, testers</span></div>
+
+  <div class="forum col-[2] row-[1]" id=f1><icon name=users></icon><div><b>Steering committee</b><span>every quarter</span></div></div>
+  <div class="forum col-[2] row-[2]" id=f2><icon name=file></icon><div><b>Programme board</b><span>every month</span></div></div>
+  <div class="forum col-[2] row-[3]" id=f3><icon name=timer></icon><div><b>Sprint review</b><span>every two weeks</span></div></div>
+  <div class="forum col-[2] row-[4]" id=f4><icon name=message></icon><div><b>Stand-up</b><span>every day</span></div></div>
+
+  <div class="tier partner l1 col-[3] row-[1]" id=p1><b>Account executive</b><span>Partner, insurance practice</span></div>
+  <div class="tier partner l2 col-[3] row-[2]" id=p2><b>Engagement manager</b><span>plan, budget, risks</span></div>
+  <div class="tier partner l3 col-[3] row-[3]" id=p3><b>Delivery lead and architects</b><span>solution, quality, backlog</span></div>
+  <div class="tier partner l4 col-[3] row-[4]" id=p4><b>Engineering squads</b><span>two squads of six, plus a platform engineer</span></div>
+</div>
+<script type="graphally">
+// Each forum joins the two tiers that sit in it.
+for (const n of [1, 2, 3, 4]) {
+  arrow(el('c' + n).right, el('f' + n).left, { head: 'dot', tail: 'dot', color: 'line', width: 2 });
+  arrow(el('f' + n).right, el('p' + n).left, { head: 'dot', tail: 'dot', color: 'line', width: 2 });
+}
+// Along the outer slants: issues climb the client side, decisions come down the partner side.
+const top = el('c1'), base = el('c4');
+const lo = base.bottomLeft.move(-28, 0), hi = top.topLeft.move(top.w * 0.64 - 28, 0);
+arrow(lerp(lo, hi, 0.06), lerp(lo, hi, 0.7), { color: 'rust', width: 2 });
+text(lerp(lo, hi, 0.7).move(-26, 0), 'Escalation', { anchor: 'end', color: 'rust', weight: 700 });
+text(lerp(lo, hi, 0.7).move(-26, 16), 'two working days per level', { anchor: 'end', color: 'muted', size: 11.5 });
+const ptop = el('p1'), pbase = el('p4');
+const phi = ptop.topLeft.move(ptop.w * 0.36 + 28, 0), plo = pbase.bottomRight.move(28, 0);
+arrow(lerp(phi, plo, 0.3), lerp(phi, plo, 0.94), { color: 'green', width: 2 });
+text(lerp(phi, plo, 0.3).move(26, 0), 'Decisions', { anchor: 'start', color: 'green', weight: 700 });
+text(lerp(phi, plo, 0.3).move(26, 16), 'and priorities, top down', { anchor: 'start', color: 'muted', size: 11.5 });
+</script>
+</diagram>

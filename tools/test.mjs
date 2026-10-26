@@ -201,12 +201,32 @@ const pointsOf = d => [...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: N
 
 await test('page-shapes', () => {
   const d = folder('page-shapes'), out = path.join(d, 'out');
-  const names = ['cylinder', 'document', 'note', 'cloud', 'hexagon', 'chevron', 'task loop', 'gateway parallel', 'event timer', 'end message', 'start'];
+  const names = ['cylinder', 'document', 'note', 'cloud', 'hexagon', 'chevron', 'task loop', 'gateway parallel', 'event timer', 'end message', 'start', 'semicircle'];
   ok0(render(write(d, page(names.map((n, i) => `<div shape="${n}" id=s${i}></div>`).join('\n'))), out));
   const svg = svgOf(out);
   check(names.every((_, i) => svg.includes(`data-id="s${i}"`)), 'a shape is missing from the SVG');
+  // A semicircle is one arc over a flat base.
+  const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
+  check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
   const bad = render(write(d, page('<div shape=cylindr>x</div>')), out);
   check(bad.code === 1 && /unknown-shape: shape=cylindr suggest=cylinder/.test(bad.text), `expected unknown-shape with a suggestion: ${tail(bad.text)}`);
+});
+
+await test('page-drawing-reach', () => {
+  const d = folder('page-drawing-reach'), out = path.join(d, 'out');
+  // The figure grows to hold what the script draws below the page.
+  const size = () => svgOf(out).match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/).slice(1).map(Number);
+  ok0(render(write(d, page('<div class=card id=a>A</div>', "draw.moveTo(el('a').bottom).lineTo(el('a').bottom.down(300)).style({ width: 2 })")), out));
+  const a = rect(path.join(out, 'diagram.svg'), 'a');
+  check(size()[1] >= a[1] + a[3] + 300, `the figure (${size().join('x')}) cuts off the drawing below`);
+  // Beside the page too, and a drawing wider than the page is reported like wide content.
+  const wide = render(write(d, page('<div class=card id=a>A</div>', "arrow(el('a').right, el('a').right.right(900))")), out);
+  check(wide.code === 1 && /page-overflow/.test(wide.text), `expected page-overflow: ${tail(wide.text)}`);
+  check(size()[0] >= a[0] + a[2] + 900, `the figure (${size().join('x')}) cuts off the drawing beside it`);
+  // Underline and line-through are drawn, from the text's element or one around it.
+  ok0(render(write(d, page('<p class="line-through" id=a>gone <b>too</b></p><p class=underline>kept</p>')), out));
+  const t = svgOf(out);
+  check((t.match(/text-decoration: line-through/g) || []).length === 2 && /text-decoration: underline/.test(t), 'text decoration is not drawn');
 });
 
 await test('page-script-errors', () => {
@@ -346,7 +366,7 @@ await test('viewer', async () => {
   const base = `http://127.0.0.1:${srv.address().port}`;
   const browser = await launch();
   try {
-    for (const name of ['architecture', 'aws', 'page']) {
+    for (const name of ['architecture', 'aws', 'phases']) {
       const src = fs.readFileSync(path.join(root, 'samples', name, 'diagram.html'), 'utf8').replace(/<script src="[^"]*graphally\.js"><\/script>\n?/, '');
       const f = path.join(d, `${name}.html`), out = path.join(d, `out-${name}`);
       fs.writeFileSync(f, `<!doctype html>\n<script>graphallyOptions = { azure: '${base}/azure/', aws: '${base}/aws/', font: '${base}/font/' }</script>\n<script src="graphally.js"></script>\n${src}`);
@@ -362,7 +382,7 @@ await test('viewer', async () => {
       check(!moved.length, `${name}: the viewer placed ${moved.join(', ')} elsewhere than the render`);
       check(!problems, `${name}: the viewer reported ${problems}`);
       check(!page.errors.length, `${name}: page errors: ${page.errors.join(' | ')}`);
-      if (name !== 'page') check(/<symbol id="[^"]+" viewBox="[^"]+"><(?:path|g|defs|rect|circle|ellipse|polygon)/.test(svg), `${name}: icons drawn empty`);
+      if (name !== 'phases') check(/<symbol id="[^"]+" viewBox="[^"]+"><(?:path|g|defs|rect|circle|ellipse|polygon)/.test(svg), `${name}: icons drawn empty`);
     }
     check(fetched > 10, `the viewer fetched only ${fetched} icons`);
   } finally { await browser.close(); srv.close(); }
