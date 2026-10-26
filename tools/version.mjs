@@ -3,13 +3,14 @@
 // node tools/version.mjs                       prints the version
 // node tools/version.mjs 2.4.0                 writes it everywhere it is kept
 // node tools/version.mjs --check               exits 1 unless every place agrees
-// node tools/version.mjs --next build|minor|major   prints the version a pull request releases
+// node tools/version.mjs --kind [label...]          prints the release the labels ask for: build, minor or major
+// node tools/version.mjs --next build|minor|major   prints the next version of that kind
 //
 // The version is kept in three places, which must agree: SKILL.md (metadata.version, which
 // ships with the skill folder on its own), and the plugin and marketplace manifests (read by
 // plugin updates). The release is tagged v<version>.
-// --next steps up from the newer of the last v-tag and the version on origin/main, so a pull
-// request opened before a release still gets a version of its own.
+// A pull request's label chooses its release: "major", else "minor", else "build" (also with no
+// label). --next steps up from the newer of the last v-tag and the version on origin/main.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -32,6 +33,9 @@ else if (arg === '--check') {
   const found = PLACES.map(p => `${p.file} ${read(p)}`);
   if (new Set(PLACES.map(read)).size > 1) { console.log(`the versions differ:\n  ${found.join('\n  ')}\nset them with: node tools/version.mjs <version>`); process.exit(1); }
   console.log(read(PLACES[0]));
+} else if (arg === '--kind') {
+  const labels = process.argv.slice(3).flatMap(a => a.split(/[\s,]+/));
+  console.log(labels.includes('major') ? 'major' : labels.includes('minor') ? 'minor' : 'build');
 } else if (arg === '--next') {
   if (!['build', 'minor', 'major'].includes(kind)) { console.error('usage: node tools/version.mjs --next build|minor|major'); process.exit(2); }
   const tags = git('tag', '--list', 'v*').split('\n').map(t => t.trim().slice(1)).filter(t => SEMVER.test(t));
