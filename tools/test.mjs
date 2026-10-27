@@ -254,6 +254,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div id=m style="background: color-mix(in srgb, var(--woad) 15%, transparent); border: 2px solid color-mix(in oklab, var(--woad), var(--rust)); color: oklch(0.5 0.1 30)">mixed</div>')), out));
   const mixed = svgOf(out);
   check(!/color\(|oklab\(|oklch\(|\blab\(/.test(mixed) && /fill: rgba\(\d+, \d+, \d+, 0\.15\)/.test(mixed), 'a computed colour reached the SVG in a form SVG readers do not know');
+  // A script's mix of theme tokens stays as written (it follows the dark theme); it is never black.
+  ok0(await render(write(d, page('<div class=card id=m>A</div>', "shape('circle', el('m').center, { size: 30, fill: 'color-mix(in srgb, var(--woad) 30%, white)' })")), out));
+  const tokens = svgOf(out);
+  check(tokens.includes('fill: color-mix(in srgb, var(--woad) 30%, white)') && !tokens.includes('rgb(0, 0, 0)'), 'a script fill mixed from theme tokens was lost');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);

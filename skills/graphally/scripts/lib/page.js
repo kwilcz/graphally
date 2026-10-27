@@ -625,11 +625,13 @@ function tokenColors(root) {
 // A colour every SVG reader knows. The browser computes color-mix() to color(srgb …) and the
 // newer spaces to oklab(), lab() or color(display-p3 …), which Office, Inkscape and most
 // converters do not read: those become rgb(). srgb is read exactly; any other space is
-// painted on a pixel and read back.
+// painted on a pixel and read back. A colour made of the theme's tokens (var(--woad), or a
+// color-mix() of them, as a drawing script may give) stays as written, so it follows the dark
+// theme like every other token; so does anything the pixel cannot read.
 const portableMemo = new Map();
 let pixel;
 function portable(c) {
-  if (/^(rgba?\(|#|var\()/.test(c)) return c;
+  if (/^(rgba?\(|#)/.test(c) || c.includes('var(')) return c;
   if (portableMemo.has(c)) return portableMemo.get(c);
   let out;
   const s = /^color\(srgb ([\d.e-]+) ([\d.e-]+) ([\d.e-]+)(?: \/ ([\d.e-]+))?\)$/.exec(c);
@@ -638,11 +640,15 @@ function portable(c) {
     out = a >= 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${+a.toFixed(3)})`;
   } else {
     pixel ||= document.createElement('canvas').getContext('2d', { willReadFrequently: true });
-    pixel.clearRect(0, 0, 1, 1);
+    pixel.fillStyle = '#010203';
     pixel.fillStyle = c;
-    pixel.fillRect(0, 0, 1, 1);
-    const [r, g, b, a] = pixel.getImageData(0, 0, 1, 1).data;
-    out = a === 255 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${+(a / 255).toFixed(3)})`;
+    if (pixel.fillStyle === '#010203') out = c;
+    else {
+      pixel.clearRect(0, 0, 1, 1);
+      pixel.fillRect(0, 0, 1, 1);
+      const [r, g, b, a] = pixel.getImageData(0, 0, 1, 1).data;
+      out = a === 255 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${+(a / 255).toFixed(3)})`;
+    }
   }
   portableMemo.set(c, out);
   return out;
