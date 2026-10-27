@@ -1,0 +1,109 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+DESIGN
+Point: a new engineer should see that four checkpoints stand between a change and the customers, that the
+change reaches real users only at checkpoint 4 (1 in 20 of them first), and that a failure anywhere sends it back to the developer.
+Three metaphors considered:
+ 1. Reader's world: airport security, a queue of checkpoints before boarding.
+ 2. Content's own shape: a road through the four checkpoints, with the customers who have the change counted under each stop (0, 0, 0, 5, 100 %).
+ 3. Different: rings of exposure around the developer, each gate letting the change out one ring further, failures falling back to the centre.
+Kept: the road (2). Left to right is time, the numbered stops are the checkpoints, one red rail underneath is the single
+way back (drawn once, not four times), and the tint changes where customers start to be involved.
+Encoding: position (order; the return path under the road), size (the stops and the numbers that matter are large),
+colour (blue = the way forward, red = failure and the way back, green = customers), value (grey zone = nobody affected,
+green zone = customers), texture (dashed red exits), count (20 dots stand for the customers: 1 filled is 5%), length (the time bars are to scale).
+Focal point: the four large numbered stops on the road.
+-->
+<diagram width=1200 title="Four checkpoints stand between your code and every customer" subtitle="How a change reaches production here. If any step fails, the change goes back to the developer.">
+<style>
+  .pipe { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: 46px 124px 52px 66px 112px 100px; }
+  .zone { grid-row: 1 / -1; border-radius: 14px; }
+  .zone.safe { grid-column: 1 / 5; background: var(--wash); }
+  .zone.live { grid-column: 5 / 7; background: var(--lane-b); }
+  .zl { grid-row: 1; padding: 14px 18px 0; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .zl.safe { grid-column: 1 / 5; }
+  .zl.live { grid-column: 5 / 7; color: var(--green); }
+  .st { grid-row: 2; justify-self: center; align-self: center; }
+  .st .figure { width: 170px; }
+  .track { grid-row: 3; align-self: center; height: 30px; }
+  .track.a { grid-column: 1 / 5; margin-left: 12.5%; background: var(--icon-soft); }
+  .track.b { grid-column: 5 / 7; margin-right: 6px; background: color-mix(in srgb, var(--green) 28%, var(--lane-b)); clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 50%, calc(100% - 26px) 100%, 0 100%); }
+  .stop { grid-row: 3; align-self: center; justify-self: center; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--woad); color: var(--card); font-size: 17px; font-weight: 700; }
+  .stop.start { width: 20px; height: 20px; background: var(--ink); }
+  .stop.end { width: 40px; height: 40px; background: var(--green); }
+  .rail { grid-row: 4; grid-column: 3; align-self: start; justify-self: center; margin-top: 16px; white-space: nowrap; padding: 5px 14px; border-radius: 999px; background: var(--card); border: 1.5px solid var(--rust); color: var(--rust); font-size: 12.5px; font-weight: 600; text-align: center; }
+  .rowlab { grid-column: 1; padding: 0 14px 0 18px; align-self: center; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .rowlab small { display: block; margin-top: 3px; font-size: 11px; font-weight: 400; letter-spacing: 0; text-transform: none; }
+  .rowlab.f { grid-row: 5; }
+  .rowlab.m { grid-row: 6; }
+  .fact { grid-row: 5; align-self: center; justify-self: center; text-align: center; width: 160px; font-size: 12px; line-height: 16px; color: var(--muted); }
+  .fact b { display: block; font-size: 26px; line-height: 30px; font-weight: 700; color: var(--woad); }
+  .fact.end b { color: var(--green); }
+  .tbar { display: block; height: 8px; margin: 10px 0 0; border-radius: 4px; background: var(--woad); }
+  .tbar.none { background: none; }
+  .meter { grid-row: 6; align-self: start; margin-top: 10px; justify-self: center; text-align: center; width: 150px; font-size: 12px; line-height: 16px; color: var(--muted); }
+  .meter b { display: block; font-size: 22px; line-height: 28px; font-weight: 700; color: var(--muted); }
+  .meter.on b { color: var(--green); }
+  .dots { display: grid; grid-template-columns: repeat(10, 10px); gap: 5px; margin: 6px 0 0; justify-content: center; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--card); }
+  .dots i.on { background: var(--green); border-color: var(--green); }
+  .total { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 12px 18px; border-radius: 10px; background: var(--card); border: 1.5px solid var(--line); font-size: 13px; color: var(--muted); }
+  .total b { font-size: 24px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+</style>
+
+<div class=pipe>
+  <div class="zone safe"></div>
+  <div class="zone live"></div>
+  <div class="zl safe">No customer sees your change yet</div>
+  <div class="zl live">Customers get your change</div>
+
+  <div class="st col-[1]"><div class=figure id=dev><icon name=laptop></icon>Developer<small>opens a pull request</small></div></div>
+  <div class="st col-[2]"><div class=figure><icon name=users></icon>Code review<small>of the pull request</small></div></div>
+  <div class="st col-[3]"><div class=figure><icon name=shield></icon>Tests<small>automated, in CI</small></div></div>
+  <div class="st col-[4]"><div class=figure><icon name=server></icon>Staging<small>last stop before customers</small></div></div>
+  <div class="st col-[5]"><div class=figure><icon name=user></icon>Canary release<small>a small slice of users</small></div></div>
+  <div class="st col-[6]"><div class=figure><icon name=globe></icon>Production<small>all users</small></div></div>
+
+  <i class="track a"></i>
+  <i class="track b"></i>
+  <b class="stop start col-[1]" id=s0></b>
+  <b class="stop col-[2]" id=s1>1</b>
+  <b class="stop col-[3]" id=s2>2</b>
+  <b class="stop col-[4]" id=s3>3</b>
+  <b class="stop col-[5]" id=s4>4</b>
+  <b class="stop end col-[6]" id=s5></b>
+
+  <div class=rail id=rail>Any step fails: back to the developer to fix</div>
+
+  <div class="rowlab f">What each step takes<small>bar length = time, to scale</small></div>
+  <div class="fact col-[2]"><b>2</b>reviewers must approve<i class="tbar none"></i></div>
+  <div class="fact col-[3]"><b>~20 min</b>for CI to run the tests<i class=tbar style="width:1.4%;min-width:2px"></i></div>
+  <div class="fact col-[4]"><b>1 day</b>sitting in staging<i class=tbar style="width:100%"></i></div>
+  <div class="fact col-[5]"><b>2 hours</b>before it goes to everyone<i class=tbar style="width:8.3%"></i></div>
+  <div class="fact end col-[6]"><b>Live</b>your change is released<i class="tbar none"></i></div>
+
+  <div class="rowlab m">Customers who have your change<small>each dot is 5% of users</small></div>
+  <div class="meter col-[2]"><b>0%</b><div class=dots data-on=0></div></div>
+  <div class="meter col-[3]"><b>0%</b><div class=dots data-on=0></div></div>
+  <div class="meter col-[4]"><b>0%</b><div class=dots data-on=0></div></div>
+  <div class="meter on col-[5]"><b>5%</b><div class=dots data-on=1></div>1 user in 20</div>
+  <div class="meter on col-[6]"><b>100%</b><div class=dots data-on=20></div></div>
+</div>
+
+<div class=total><b>about 26 hours</b>from CI starting to everyone having it: 20 minutes of tests, a day in staging, 2 hours in canary. Review time comes on top.</div>
+
+<script type="graphally" before>
+// Twenty dots per meter: each stands for 5% of users, the first ones filled.
+for (const d of all('.dots')) for (let k = 0; k < 20; k++) d.append(make('i', { class: k < Number(d.dataset.on) ? 'on' : '' }));
+</script>
+<script type="graphally">
+// The way back: one rail under the road. Each stop drops a dashed red exit to it, the rail runs left and rises into the developer.
+const ry = el('rail').y - 12;
+const stops = ['s1', 's2', 's3', 's4'].map(id => el(id));
+for (const s of stops) draw.moveTo(s.bottom).lineTo(pt(s.center.x, ry)).style({ color: 'rust', dashed: true, width: 1.8, head: 'dot' });
+draw.moveTo(pt(stops[3].center.x, ry)).lineTo(pt(el('s0').center.x, ry)).lineTo(el('s0').bottom).style({ color: 'rust', width: 2.4, head: 'arrow' });
+</script>
+</diagram>

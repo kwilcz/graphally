@@ -1,0 +1,88 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+Design
+1. The point: engineers reading the wiki must see that the Lambda is the one sorting station. Every record is
+   validated there once, then goes to exactly one of three places: live dashboards, the lake, or the dead-letter
+   queue. Plus: the validation step runs in both availability zones of eu-west-1.
+2. The metaphor: a left-to-right pipeline into a sorting station that fans out into three tinted lanes
+   (blue-green live path, blue lake, orange rejects). The reject lane and its line are the only red.
+3. The build: grid for the ingest stages, a subgrid so the three lanes share columns, one routed line per hop,
+   the two AZs as dashed groups inside the Lambda group.
+-->
+<diagram width=1800 icons=aws title="Telemetry is validated once, then split three ways" subtitle="Ingestion platform on AWS, eu-west-1, running in two availability zones">
+<style>
+  .figure { width: 132px; }
+  .reg { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 72px; row-gap: 22px; align-items: center; justify-items: center; }
+  .ing { grid-row: 1 / 4; }
+  .lane { grid-column: 4 / -1; display: grid; grid-template-columns: subgrid; row-gap: 14px; align-items: center; justify-items: center; align-self: stretch; }
+  .lane h4 { grid-column: 1 / -1; justify-self: start; }
+  .live { background: var(--lane-b); }
+  .lake { background: var(--lane-a); }
+  .rejects { background: var(--lane-d); }
+  .proc { align-items: center; gap: 12px; }
+  .az { align-items: center; }
+  .avail { grid-column: 1 / -1; justify-self: stretch; }
+  .avail p { margin: 0; line-height: 18px; }
+  .avail b { font-weight: 700; }
+</style>
+<div class="grid grid-cols-[auto_1fr] gap-x-16 items-center">
+  <div class="group external" id=field><h4>Field</h4>
+    <div class="figure external" id=dev><icon name="aws:aws-io-t-sensor"></icon>Devices<small>telemetry sources</small></div>
+  </div>
+  <div class="group region" id=region><h4>AWS Cloud <small>eu-west-1 (Ireland)</small></h4>
+    <div class=reg>
+      <div class="figure ing" id=iot style="grid-column:1"><icon name="aws:aws-io-t-core"></icon>IoT Core<small>MQTT broker + rule</small></div>
+      <div class="figure ing" id=kin style="grid-column:2"><icon name="kinesis data streams"></icon>Kinesis Data Streams<small>telemetry stream</small></div>
+
+      <div class="group proc ing" id=proc style="grid-column:3"><h4>Validate and enrich</h4>
+        <div class="group dashed az"><h4>AZ eu-west-1a</h4>
+          <div class="figure accent" id=lama><icon name=lambda></icon>Lambda<small>validate + enrich</small></div></div>
+        <div class="group dashed az"><h4>AZ eu-west-1b</h4>
+          <div class="figure accent" id=lamb><icon name=lambda></icon>Lambda<small>validate + enrich</small></div></div>
+      </div>
+
+      <div class="group lane live" id=live><h4>Live dashboards</h4>
+        <div class=figure id=ts><icon name=timestream></icon>Timestream<small>time-series store</small></div>
+        <div class=figure id=graf><icon name="managed grafana"></icon>Grafana<small>live dashboards</small></div>
+      </div>
+
+      <div class="group lane lake" id=lake><h4>Data lake and analytics</h4>
+        <div class=figure id=raw style="grid-area:2/1"><icon name="aws:amazon-simple-storage-service-bucket"></icon>S3 raw<small>raw bucket</small></div>
+        <p class="note text-muted text-sm" style="grid-area:2/2/3/5; margin:0; justify-self:start">Glue's crawler registers the curated bucket's tables; Athena queries them in place.</p>
+        <div class=figure id=cur style="grid-area:3/1"><icon name="aws:amazon-simple-storage-service-bucket"></icon>S3 curated<small>curated bucket</small></div>
+        <div class=figure id=glue style="grid-area:3/2"><icon name=glue></icon>Glue<small>crawler</small></div>
+        <div class=figure id=ath style="grid-area:3/3"><icon name=athena></icon>Athena<small>ad-hoc queries</small></div>
+        <div class=figure id=qs style="grid-area:3/4"><icon name="aws:amazon-quick-suite"></icon>QuickSight<small>reports</small></div>
+      </div>
+
+      <div class="group lane rejects" id=rej><h4>Failed validation</h4>
+        <div class=figure id=dlq><icon name=sqs></icon>SQS DLQ<small>dead-letter queue</small></div>
+        <div class=figure id=alarm><icon name="aws:amazon-cloud-watch-alarm"></icon>CloudWatch alarm<small>on the queue</small></div>
+      </div>
+
+      <div class="band avail" id=avail><h4>Two availability zones</h4>
+        <p><b>Lambda</b> runs in both eu-west-1a and eu-west-1b. Every other AWS service here is regional and managed: AWS spreads it across the zones, so there is nothing per-zone to deploy.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="application/json">
+[
+  ["dev", "iot", "MQTT"],
+  ["iot", "kin", "rule"],
+  ["kin", "proc", "records"],
+  ["proc", "ts", "valid"],
+  ["proc", "raw", "valid"],
+  ["proc", "cur", "valid"],
+  { "from": "proc", "to": "dlq", "label": "failed", "color": "rust" },
+  ["ts", "graf", "feeds"],
+  ["cur", "glue", "crawls"],
+  ["glue", "ath", "catalog"],
+  ["ath", "qs", "reports"],
+  { "from": "dlq", "to": "alarm", "label": "metric", "color": "rust" }
+]
+</script>
+</diagram>

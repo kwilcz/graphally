@@ -1,0 +1,95 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+DESIGN
+Point: the CFO knows the bill went 60k -> 84k a month. The figure must make obvious that 14k of the
+24k extra is compute that follows new customers, and the other 10k is two things we keep around
+(two years of logs, a test environment nobody switched off).
+Metaphors considered: (1) the invoice itself as a strip; (2) a waterfall/staircase from 60k to 84k;
+(3) a zoom: the bill drawn to scale, the extra 24k magnified into its causes.
+Kept: the bill strip + zoom fan-out. Nothing is hidden by a cut axis (the 60k base is drawn at its
+true width), yet the three causes still get room, because the 24k slice fans out into cards.
+Encoding: width = amount (strip and cards, same proportions); hue = what drives it (blue follows
+customers, warm follows what we keep); value = solid for the biggest cause, tint for the rest;
+dashed outline = the test environment that is only still running.
+Focal point: the +14k compute card, the only solid fill and the largest number.
+-->
+<diagram width=1116 title="Most of the 24k rise is compute that grew with new customers" subtitle="Monthly cloud bill, from 60k to 84k this year, split by what caused the extra">
+<style>
+  .fig { display: flex; flex-direction: column; width: 1100px; }
+  .zone { display: grid; grid-template-columns: 60fr 14fr 6fr 4fr; }
+  .head { grid-column: 2 / 5; text-align: center; align-self: end; padding-bottom: 16px; line-height: 20px; }
+  .head b { display: block; font-size: 22px; line-height: 26px; }
+  .head span { font-size: 12px; color: var(--muted); }
+  .seg { height: 60px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: var(--card); border-left: 2px solid var(--bg); }
+  .base { justify-content: flex-start; padding-left: 18px; border-left: 0; background: var(--wash); color: var(--muted); font-weight: 400; font-size: 13px; border-radius: 6px 0 0 6px; }
+  .base b { font-size: 22px; font-weight: 700; margin-right: 8px; color: var(--ink); }
+  .z1 { background: var(--woad); font-size: 22px; }
+  .z2 { background: var(--amber); }
+  .z3 { background: var(--rust); border-radius: 0 6px 6px 0; }
+  .fan { position: relative; height: 84px; }
+  /* Each ribbon is the slice's footprint on top and its card's footprint at the bottom (strip: 60/14/6/4 of the width; cards: 630, 270 and 180 px with 10px gaps). */
+  .rib { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+  .r1 { background: color-mix(in srgb, var(--woad) 24%, var(--card)); clip-path: polygon(71.43% 0, 88.1% 0, 57.27% 100%, 0 100%); }
+  .r2 { background: color-mix(in srgb, var(--amber) 24%, var(--card)); clip-path: polygon(88.1% 0, 95.24% 0, 82.73% 100%, 58.18% 100%); }
+  .r3 { background: color-mix(in srgb, var(--rust) 24%, var(--card)); clip-path: polygon(95.24% 0, 100% 0, 100% 100%, 83.64% 100%); }
+  .causes { display: grid; grid-template-columns: 14fr 6fr 4fr; column-gap: 10px; }
+  .cause { padding: 16px 16px 18px; border-radius: 8px; border-top: 5px solid; }
+  .cause .big { font-weight: 700; line-height: 1; margin-bottom: 10px; }
+  .cause .ttl { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .cause p { margin: 0; font-size: 13px; line-height: 18px; }
+  .c1 { background: var(--woad); border-color: var(--woad); color: var(--card); }
+  .c1 .big { font-size: 56px; }
+  .c1 .ttl { font-size: 20px; }
+  .c1 p { font-size: 15px; line-height: 20px; }
+  .c2 { background: var(--lane-d); border-color: var(--amber); }
+  .c2 .big { font-size: 36px; color: var(--amber); }
+  .c3 { background: var(--card); border: 2px dashed var(--rust); border-top: 5px solid var(--rust); }
+  .c3 .big { font-size: 30px; color: var(--rust); }
+  .keeps { display: grid; grid-template-columns: 14fr 6fr 4fr; column-gap: 10px; padding-top: 22px; }
+  .k { display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 13px; line-height: 18px; color: var(--muted); }
+  .k > div { text-align: left; }
+  .k b { font-size: 40px; line-height: 44px; font-weight: 700; }
+  .k1 { grid-column: 1; } .k1 b { color: var(--woad); }
+  .k2 { grid-column: 2 / 4; } .k2 b { color: var(--amber); }
+  .k1 > div { width: 230px; } .k2 > div { width: 300px; }
+  .cap { position: absolute; left: 0; top: 22px; font-size: 12px; color: var(--muted); }
+  .note { margin-top: 18px; font-size: 12px; color: var(--muted); }
+</style>
+<div class=fig>
+  <div class=zone>
+    <div class=head><b>+24k a month</b><span>40% more than before: 84k a month now</span></div>
+    <div class="seg base" id=s0><b>60k</b>a month before</div>
+    <div class="seg z1" id=s1>+14k</div>
+    <div class="seg z2" id=s2>+6k</div>
+    <div class="seg z3" id=s3>+4k</div>
+  </div>
+  <div class=fan id=fan><span class=cap>The extra 24k, magnified</span><i class="rib r1"></i><i class="rib r2"></i><i class="rib r3"></i></div>
+  <div class=causes>
+    <div class="cause c1" id=b1><div class=big>+14k</div><div class=ttl><icon name=server></icon>Compute</div><p>Grew with new customers</p></div>
+    <div class="cause c2" id=b2><div class=big>+6k</div><div class=ttl>Storage</div><p>Logs are now kept for two years</p></div>
+    <div class="cause c3" id=b3><div class=big>+4k</div><div class=ttl>Test environment</div><p>Nobody switched it off</p></div>
+  </div>
+  <div class=keeps>
+    <div class="k k1"><b>58%</b><div>of the rise follows new customers: the 14k of compute</div></div>
+    <div class="k k2"><b>42%</b><div>of the rise follows what we keep: the 10k of logs and a test environment</div></div>
+  </div>
+  <div class=note>The bar and the cards are drawn to scale: the whole bar is the 84k bill, and each card is as wide as its share of the 24k.</div>
+</div>
+<script type="graphally">
+// A bracket over the three slices: this is the part being explained.
+{
+  const y = el('s1').y - 8, x1 = el('s1').x, x2 = el('s3').right.x;
+  draw.moveTo(pt(x1, y + 6)).lineTo(pt(x1, y)).lineTo(pt(x2, y)).lineTo(pt(x2, y + 6)).style({ color: 'ink', width: 1.5 });
+}
+// Brackets under the cards: which causes follow customers and which follow what we keep.
+const under = (l, r) => {
+  const y = el(l).bottom.y + 10, x1 = el(l).x, x2 = el(r).right.x;
+  draw.moveTo(pt(x1, y - 6)).lineTo(pt(x1, y)).lineTo(pt(x2, y)).lineTo(pt(x2, y - 6)).style({ color: 'ink', width: 1.5 });
+};
+under('b1', 'b1');
+under('b2', 'b3');
+</script>
+</diagram>

@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-theme="dark" data-source="diagram.html" viewBox="0 0 1548 499" width="1548" height="499" role="img" aria-label="Your dashboards run on customer data that was cleaned three times. Where customer data comes from, and what happens to it before it reaches Power BI">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
+<marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--woad)"></path></marker>
+<symbol id="pg-azure-my-customers" viewBox="0 0 18.026663 14.72"><defs id="pg-azure-my-customers-0"> <linearGradient id="pg-azure-my-customers-1" x1="6.6999998" y1="7.2600002" x2="6.6999998" y2="18.360001" gradientUnits="userSpaceOnUse"> <stop offset="0.22" stop-color="#32d4f5" id="pg-azure-my-customers-2" /> <stop offset="1" stop-color="#198ab3" id="pg-azure-my-customers-3" /> </linearGradient> <linearGradient id="pg-azure-my-customers-4" x1="6.4200001" y1="1.3200001" x2="7.23" y2="11.39" gradientUnits="userSpaceOnUse"> <stop offset="0.22" stop-color="#32d4f5" id="pg-azure-my-customers-5" /> <stop offset="1" stop-color="#198ab3" id="pg-azure-my-customers-6" /> </linearGradient> </defs> <path d="m 17.225664,12.28 a 0.79,0.79 0 0 0 0.8,-0.79 0.28,0.28 0 0 0 -0.02,-0.13 c -0.31,-2.4999999 -1.74,-4.5399999 -4.46,-4.5399999 -2.72,0 -4.1899995,1.76 -4.4699995,4.5399999 a 0.81,0.81 0 0 0 0.72,0.88 h 7.4299995 z" id="pg-azure-my-customers-7" style="fill:#0078d4" /> <path d="m 13.555664,7.4500001 a 2.44,2.44 0 0 1 -1.36,-0.4 l 1.35,3.5199999 1.33,-3.4899999 a 2.54,2.54 0 0 1 -1.32,0.37 z" id="pg-azure-my-customers-8" style="opacity:0.8;fill:#ffffff" /> <circle cx="13.555665" cy="4.9400001" r="2.51" id="pg-azure-my-customers-9" style="fill:#0078d4" /> <path d="m 12.195664,14.72 a 1.19,1.19 0 0 0 1.19,-1.19 0.66,0.66 0 0 0 0,-0.14 c -0.47,-3.7399999 -2.6,-6.7799999 -6.6599995,-6.7799999 -4.06,0 -6.28000003,2.58 -6.72000003,6.7499999 A 1.2,1.2 0 0 0 1.0756645,14.67 H 12.175664 Z" id="pg-azure-my-customers-10" style="fill:url(#pg-azure-my-customers-1)" /> <path d="m 6.7756645,7.5000001 a 3.72,3.72 0 0 1 -2,-0.6 l 2,5.2499999 2,-5.2099999 a 3.81,3.81 0 0 1 -2,0.56 z" id="pg-azure-my-customers-11" style="opacity:0.8;fill:#ffffff" /> <circle cx="6.7456641" cy="3.75" r="3.75" id="pg-azure-my-customers-12" style="fill:url(#pg-azure-my-customers-4)" /></symbol>
+<symbol id="pg-g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-azure-cost-management-and-billing" viewBox="0 0 16.98 17.010151"><defs id="pg-azure-cost-management-and-billing-0"> <radialGradient gradientUnits="userSpaceOnUse" cx="7.1799998" r="7.3800001" id="pg-azure-cost-management-and-billing-1" cy="9.5"> <stop offset="0" stop-color="#76bc2d" id="pg-azure-cost-management-and-billing-2"/> <stop offset="0.41" stop-color="#74b92c" id="pg-azure-cost-management-and-billing-3"/> <stop offset="0.66" stop-color="#6fb12a" id="pg-azure-cost-management-and-billing-4"/> <stop offset="0.88" stop-color="#66a227" id="pg-azure-cost-management-and-billing-5"/> <stop offset="1" stop-color="#5e9624" id="pg-azure-cost-management-and-billing-6"/> </radialGradient> </defs> <path style="fill:#258277" d="m 9.48,9.7600054 a 1,1 0 0 1 -0.31,0.7899996 1.49,1.49 0 0 1 -0.89,0.37 v 0.6 H 7.84 v  -0.62 a 2.36,2.36 0 0 1 -1.1,-0.28 V 9.8100054 a 1.8,1.8 0 0 0 0.5,0.2499996 2.49,2.49 0 0 0 0.6,0.14 V  9.1600054 a 2.42,2.42 0 0 1 -0.91,-0.53 1.15,1.15 0 0 1 0.06,-1.55 1.41,1.41 0 0 1 0.85,-0.38 v -0.55 h 0.43 v  0.54 a 2.21,2.21 0 0 1 0.92,0.2 v 0.8 a 2.28,2.28 0 0 0 -0.92,-0.31 v 1.14 a 2.34,2.34 0 0 1 0.92,0.54 1,1 0 0 1  0.29,0.7 z m -1.64,-1.43 v -0.93 a 0.4,0.4 0 0 0 -0.36,0.42 c 0,0.21 0.13,0.38 0.4,0.51 z m 0.85,1.47 c 0,-0.19  -0.14,-0.34 -0.42,-0.47 v 0.8999996 c 0.28,-0.05 0.42,-0.19 0.42,-0.4299996 z"/> <path style="fill:#ffca00" d="m 16.02,9.0100054 h -3.6 a 4.43,4.43 0 0 1 -1.48,3.2999996 l 2.39,2.69 a 8,8 0 0 0  2.69,-5.9999996"/> <path style="fill:url(#pg-azure-cost-management-and-billing-1)" d="M 8,13.450005 A 4.43,4.43 0 0 1 8,4.5900054 v -3.58  a 8,8 0 0 0 -8,8 v 0 a 8,8 0 0 0 8,7.9999996 v 0 a 8,8 0 0 0 5.34,-2 l -2.4,-2.69 a 4.38,4.38 0 0 1 -2.94,1.13  z"/> <path style="fill:#cccccc" d="m 7.63,5.3533206e-6 v 0 V 4.1600054 v 0 a 5.09,5.09 0 0 1 5.17,5.18 h 4.18 A 9.34,9.34  0 0 0 7.63,5.3533206e-6 Z"/> <path style="fill:#999999" d="m 12.82,9.3400054 a 5.13,5.13 0 0 0 -5.06,-5.18 H 7.63 l 0.33,0.62 a 4.5,4.5 0 0 1  4.23,4.25 z"/></symbol>
+<symbol id="pg-azure-help-and-support" viewBox="0 0 14.609425 18.01613"><defs id="pg-azure-help-and-support-0"> <linearGradient id="pg-azure-help-and-support-1" x1="8.6700001" y1="8.0900002" x2="8.6700001" y2="20.18" gradientUnits="userSpaceOnUse"> <stop offset="0.22" stop-color="#32d4f5" id="pg-azure-help-and-support-2" /> <stop offset="1" stop-color="#198ab3" id="pg-azure-help-and-support-3" /> </linearGradient> <linearGradient id="pg-azure-help-and-support-4" x1="8.3299999" y1="1.61" x2="9.21" y2="12.59" gradientUnits="userSpaceOnUse"> <stop offset="0.22" stop-color="#32d4f5" id="pg-azure-help-and-support-5" /> <stop offset="1" stop-color="#198ab3" id="pg-azure-help-and-support-6" /> </linearGradient> </defs> <path d="m 13.259424,18.015167 a 1.3,1.3 0 0 0 1.35,-1.29 v -0.16 c -0.51,-4.07 -2.84,-7.3799997 -7.2699996,-7.3799997 -4.43,0 -6.88,2.8299997 -7.33,7.3899997 a 1.29,1.29 0 0 0 1.16,1.44 z" id="pg-azure-help-and-support-7" style="fill:url(#pg-azure-help-and-support-1)" /> <path d="m 7.2894244,10.145167 a 4,4 0 0 1 -2.21,-0.6499997 l 2.19,5.7199997 2.18,-5.6799997 a 4.09,4.09 0 0 1 -2.16,0.6099997 z" id="pg-azure-help-and-support-8" style="opacity:0.8;fill:#ffffff" /> <circle cx="7.2894249" cy="6.0651674" r="4.0799999" id="pg-azure-help-and-support-9" style="fill:url(#pg-azure-help-and-support-4)" /> <path d="m 13.409424,7.2451673 a 6.26,6.26 0 0 0 -0.09,-2.55 6.19,6.19 0 0 0 -5.8199996,-4.68 5.53,5.53 0 0 0 -5.21,2.77 0.59,0.59 0 0 0 0.18,0.81 v 0 a 0.54,0.54 0 0 0 0.74,-0.16 4.53,4.53 0 0 1 4.22,-2.29 5.1,5.1 0 0 1 4.7599996,3.68 5.34,5.34 0 0 1 0.13,2.19 0.93,0.93 0 0 0 -0.54,0.59 l -0.27,0.9 a 0.94,0.94 0 0 0 0.62,1.17 1,1 0 0 0 1.18,-0.66 l 0.27,-0.9 a 0.92,0.92 0 0 0 -0.17,-0.87 z" id="pg-azure-help-and-support-10" style="fill:#767676" /></symbol>
+<symbol id="pg-azure-powerbi" viewBox="0 0 72 96"><defs id="pg-azure-powerbi-0"> <filter id="pg-azure-powerbi-1" x="-0.03" y="-0.013333334" width="1.06" height="1.0266667"> <feFlood flood-opacity="0" result="BackgroundImageFix" id="pg-azure-powerbi-2" /> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" id="pg-azure-powerbi-3" /> <feGaussianBlur stdDeviation="0.4" result="effect1_foregroundBlur" id="pg-azure-powerbi-4" /> </filter> <filter id="pg-azure-powerbi-5" x="-0.3" y="-0.13333333" width="1.6" height="1.2666667"> <feFlood flood-opacity="0" result="BackgroundImageFix" id="pg-azure-powerbi-6" /> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" id="pg-azure-powerbi-7" /> <feGaussianBlur stdDeviation="4" result="effect1_foregroundBlur" id="pg-azure-powerbi-8" /> </filter> <linearGradient id="pg-azure-powerbi-9" x1="46.666698" y1="-8.9779502e-07" x2="88.865303" y2="89.446602" gradientUnits="userSpaceOnUse"> <stop stop-color="#E6AD10" id="pg-azure-powerbi-10" /> <stop offset="1" stop-color="#C87E0E" id="pg-azure-powerbi-11" /> </linearGradient> <linearGradient id="pg-azure-powerbi-12" x1="31.9974" y1="24" x2="67.485901" y2="92.826202" gradientUnits="userSpaceOnUse"> <stop stop-color="#F6D751" id="pg-azure-powerbi-13" /> <stop offset="1" stop-color="#E6AD10" id="pg-azure-powerbi-14" /> </linearGradient> <linearGradient id="pg-azure-powerbi-15" x1="11.9974" y1="48" x2="31.608299" y2="94.477501" gradientUnits="userSpaceOnUse"> <stop stop-color="#F9E589" id="pg-azure-powerbi-16" /> <stop offset="1" stop-color="#F6D751" id="pg-azure-powerbi-17" /> </linearGradient> <clipPath id="pg-azure-powerbi-18"> <rect width="96" height="96" fill="#ffffff" id="pg-azure-powerbi-19" x="0" y="0" /> </clipPath> </defs> <g clip-path="url(#pg-azure-powerbi-18)" id="pg-azure-powerbi-20" transform="translate(-12)"> <mask id="pg-azure-powerbi-21" mask-type="alpha" maskUnits="userSpaceOnUse" x="12" y="0" width="72" height="96"> <path d="m 52,4 c 0,-2.20914 1.7909,-4 4,-4 h 24 c 2.2091,0 4,1.79086 4,4 v 88 c 0,2.2091 -1.7909,4 -4,4 H 16 c -2.2091,0 -4,-1.7909 -4,-4 V 52 c 0,-2.2091 1.7909,-4 4,-4 H 32.0001 V 28 c 0,-2.2091 1.7909,-4 4,-4 H 52 Z" fill="#ffffff" id="pg-azure-powerbi-22" /> </mask> <g mask="url(#pg-azure-powerbi-21)" id="pg-azure-powerbi-23"> <path d="M 84,0 V 96 H 52 V 0 Z" fill="url(#pg-azure-powerbi-9)" id="pg-azure-powerbi-24" style="fill:url(#pg-azure-powerbi-9)" /> <g filter="url(#pg-azure-powerbi-1)" id="pg-azure-powerbi-25"> <path d="m 64,28.4 v 68 H 32 v -72 h 28 c 2.2091,0 4,1.7909 4,4 z" fill="#000000" fill-opacity="0.2" id="pg-azure-powerbi-26" /> </g> <g filter="url(#pg-azure-powerbi-5)" id="pg-azure-powerbi-27"> <path d="M 64,30 V 98 H 32 V 26 h 28 c 2.2091,0 4,1.7909 4,4 z" fill="#000000" fill-opacity="0.18" id="pg-azure-powerbi-28" /> </g> <path d="M 64,28 V 96 H 32 V 24 h 28 c 2.2091,0 4,1.7909 4,4 z" fill="url(#pg-azure-powerbi-12)" id="pg-azure-powerbi-29" style="fill:url(#pg-azure-powerbi-12)" /> <path d="M 12,48 V 96 H 44 V 52 c 0,-2.2091 -1.7909,-4 -4,-4 z" fill="url(#pg-azure-powerbi-15)" id="pg-azure-powerbi-30" style="fill:url(#pg-azure-powerbi-15)" /> </g> </g></symbol>
+<symbol id="pg-azure-machine-learning" viewBox="0 0 15.8 17"><defs id="pg-azure-machine-learning-0"> <linearGradient id="pg-azure-machine-learning-1" x1="1.1" y1="169" x2="11.12" y2="169" gradientTransform="translate(0,-160)" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#50c7e8" id="pg-azure-machine-learning-2" /> <stop offset="0.25" stop-color="#4cc3e4" id="pg-azure-machine-learning-3" /> <stop offset="0.51" stop-color="#41b6da" id="pg-azure-machine-learning-4" /> <stop offset="0.77" stop-color="#2fa2c8" id="pg-azure-machine-learning-5" /> <stop offset="1" stop-color="#1989b2" id="pg-azure-machine-learning-6" /> </linearGradient> </defs> <path id="pg-azure-machine-learning-7" d="M 14.7,17 H 1.1 L 0,12.9 h 15.8 z" fill="#198ab3" /> <polygon points="1.1,13.4 2.2,17.5 11.1,6.9 11.1,0.5 6.9,0.5 6.9,6.9 " fill="url(#pg-azure-machine-learning-1)" id="pg-azure-machine-learning-8" style="fill:url(#pg-azure-machine-learning-1)" transform="translate(-1.1,-0.5)" /> <path id="pg-azure-machine-learning-9" d="m 14.7,17 -6.2,-6.4 2.6,-3 4.7,5.3 z" fill="#32bedd" /></symbol></defs>
+<rect class="g-bg" width="1548" height="499" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Your dashboards run on customer data that was cleaned three times</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Where customer data comes from, and what happens to it before it reaches Power BI</text>
+<text x="24" y="126.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.72px; fill: var(--muted)">FOUR SOURCE SYSTEMS</text>
+<g data-id="crm" data-box="24,146.5,240,63.5">
+<rect x="24" y="146.7" width="240" height="63.3" rx="10" style="fill: var(--card)"></rect>
+<line x1="24" y1="147.2" x2="264" y2="147.2" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="263.5" y1="146.7" x2="263.5" y2="209.9" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="24" y1="209.4" x2="264" y2="209.4" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="27.5" y1="146.7" x2="27.5" y2="209.9" style="stroke: var(--woad)" stroke-width="7"></line>
+<use href="#pg-azure-my-customers" x="45" y="163.3" width="30" height="30" style="color: var(--ink)"></use>
+<text x="87" y="174.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">CRM</text>
+<text x="87" y="192.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">who our customers are</text>
+</g>
+<g data-id="web" data-box="24,224,240,63.5">
+<rect x="24" y="223.9" width="240" height="63.3" rx="10" style="fill: var(--card)"></rect>
+<line x1="24" y1="224.4" x2="264" y2="224.4" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="263.5" y1="223.9" x2="263.5" y2="287.2" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="24" y1="286.7" x2="264" y2="286.7" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="27.5" y1="223.9" x2="27.5" y2="287.2" style="stroke: var(--teal)" stroke-width="7"></line>
+<use href="#pg-g-globe" x="45" y="243.6" width="24" height="24" style="color: var(--ink)"></use>
+<text x="81" y="251.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">Web analytics</text>
+<text x="81" y="270.2" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">what they do on our site</text>
+</g>
+<g data-id="bill" data-box="24,301,240,63.5">
+<rect x="24" y="301.2" width="240" height="63.3" rx="10" style="fill: var(--card)"></rect>
+<line x1="24" y1="301.7" x2="264" y2="301.7" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="263.5" y1="301.2" x2="263.5" y2="364.4" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="24" y1="363.9" x2="264" y2="363.9" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="27.5" y1="301.2" x2="27.5" y2="364.4" style="stroke: var(--purple)" stroke-width="7"></line>
+<use href="#pg-azure-cost-management-and-billing" x="45" y="320.8" width="24" height="24" style="color: var(--ink)"></use>
+<text x="81" y="329.2" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">Billing system</text>
+<text x="81" y="347.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">what they pay</text>
+</g>
+<g data-id="sup" data-box="24,378.5,240,63.5">
+<rect x="24" y="378.4" width="240" height="63.3" rx="10" style="fill: var(--card)"></rect>
+<line x1="24" y1="378.9" x2="264" y2="378.9" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="263.5" y1="378.4" x2="263.5" y2="441.7" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="24" y1="441.2" x2="264" y2="441.2" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="27.5" y1="378.4" x2="27.5" y2="441.7" style="stroke: var(--amber)" stroke-width="7"></line>
+<use href="#pg-azure-help-and-support" x="45" y="398.1" width="24" height="24" style="color: var(--ink)"></use>
+<text x="81" y="406.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">Support tickets</text>
+<text x="81" y="424.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">what goes wrong for them</text>
+</g>
+<rect x="336.5" y="82.4" width="865" height="391.4" rx="9.5" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<text x="355" y="110.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 600; fill: var(--muted)">The lakehouse</text>
+<text x="467.9" y="109.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">our central store for customer data, cleaned in three stages</text>
+<g data-id="raw" data-box="355,128,246.5,288">
+<rect x="355.5" y="128.3" width="245.7" height="287" rx="11.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="364" y="136.8" width="228.7" height="46" rx="8" style="fill: var(--lane-d)"></rect>
+<rect x="376" y="147.8" width="24" height="24" rx="12" style="fill: var(--card)"></rect>
+<text x="385.2" y="164" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; font-style: italic; fill: var(--ink)">1</text>
+<text x="416" y="157.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">Raw</text>
+<text x="416" y="173.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">exactly as it arrived</text>
+<g data-id="v1" data-box="364,191,228.5,130">
+<rect x="364" y="190.8" width="228.7" height="130" rx="8" style="fill: var(--wash)"></rect>
+</g>
+<text x="368" y="342.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 700; fill: var(--ink)">An untouched copy.</text>
+<text x="368" y="362.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">Records from every system, side</text>
+<text x="368" y="380.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">by side. Duplicates and odd</text>
+<text x="368" y="398.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">formats included.</text>
+</g>
+<g data-id="clean" data-box="645.5,128,246.5,288">
+<rect x="646.2" y="128.3" width="245.7" height="287" rx="11.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="654.7" y="136.8" width="228.7" height="46" rx="8" style="fill: var(--lane-a)"></rect>
+<rect x="666.7" y="147.8" width="24" height="24" rx="12" style="fill: var(--card)"></rect>
+<text x="674.5" y="164" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; font-style: italic; fill: var(--ink)">2</text>
+<text x="706.7" y="157.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">Cleaned</text>
+<text x="706.7" y="173.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">tidied up</text>
+<g data-id="v2" data-box="654.5,191,228.5,130">
+<rect x="654.7" y="190.8" width="228.7" height="130" rx="8" style="fill: var(--wash)"></rect>
+</g>
+<text x="658.7" y="342.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 700; fill: var(--ink)">Fit to compare.</text>
+<text x="658.7" y="362.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">Duplicates removed, dates and</text>
+<text x="658.7" y="380.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">names in one format, records</text>
+<text x="658.7" y="398.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">sorted.</text>
+</g>
+<g data-id="ready" data-box="936.5,128,246.5,288">
+<rect x="937.8" y="129.3" width="243.7" height="285" rx="10.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="3"></rect>
+<rect x="945.8" y="137.3" width="227.7" height="46" rx="8" style="fill: var(--woad)"></rect>
+<rect x="957.8" y="148.3" width="24" height="24" rx="12" style="fill: var(--card)"></rect>
+<text x="965.6" y="164.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; font-style: italic; fill: var(--ink)">3</text>
+<text x="997.8" y="157.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--card)">Business-ready</text>
+<text x="997.8" y="173.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--card)">ready to use</text>
+<g data-id="v3" data-box="946,191.5,227.5,130">
+<rect x="945.8" y="191.3" width="227.7" height="130" rx="8" style="fill: var(--wash)"></rect>
+</g>
+<text x="949.8" y="343.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 700; fill: var(--ink)">One picture per customer.</text>
+<text x="949.8" y="363.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">Four systems joined up; figures</text>
+<text x="949.8" y="381.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 400; fill: var(--ink)">calculated one agreed way.</text>
+</g>
+<text x="536.9" y="456.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">Each dot is one record. Its colour shows which source system it came from.</text>
+<text x="1274" y="181.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.72px; fill: var(--muted)">WHERE IT ENDS UP</text>
+<rect x="1274" y="201.8" width="160.2" height="22.2" rx="11.1" style="fill: var(--rust)"></rect>
+<text x="1284" y="216.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: var(--card)">Where marketing works</text>
+<g data-id="pbi" data-box="1274,230,250,67.5">
+<rect x="1274" y="230" width="250" height="67.3" rx="10" style="fill: var(--lane-a)"></rect>
+<line x1="1274" y1="231.5" x2="1524" y2="231.5" style="stroke: var(--woad)" stroke-width="3"></line>
+<line x1="1522.5" y1="230" x2="1522.5" y2="297.3" style="stroke: var(--woad)" stroke-width="3"></line>
+<line x1="1274" y1="295.8" x2="1524" y2="295.8" style="stroke: var(--woad)" stroke-width="3"></line>
+<line x1="1277.5" y1="230" x2="1277.5" y2="297.3" style="stroke: var(--woad)" stroke-width="7"></line>
+<use href="#pg-azure-powerbi" x="1295" y="247.7" width="32" height="32" style="color: var(--ink)"></use>
+<text x="1339" y="260" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">Power BI dashboards</text>
+<text x="1339" y="278.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">the reports marketing uses</text>
+</g>
+<g data-id="churn" data-box="1274,323.5,250,63.5">
+<rect x="1274" y="323.3" width="250" height="63.3" rx="10" style="fill: var(--card)"></rect>
+<line x1="1274" y1="323.8" x2="1524" y2="323.8" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="1523.5" y1="323.3" x2="1523.5" y2="386.5" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="1274" y1="386" x2="1524" y2="386" style="stroke: var(--line)" stroke-width="1"></line>
+<line x1="1277.5" y1="323.3" x2="1277.5" y2="386.5" style="stroke: var(--line)" stroke-width="7"></line>
+<use href="#pg-azure-machine-learning" x="1295" y="338.9" width="32" height="32" style="color: var(--ink)"></use>
+<text x="1339" y="351.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--ink)">Churn model</text>
+<text x="1339" y="369.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">predicts who may leave</text>
+</g>
+<g data-edge="raw-&gt;clean" data-sides="right,left"><path d="M602,272 L646,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="clean-&gt;ready" data-sides="right,left"><path d="M892,272 L936,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ready-&gt;pbi" data-sides="right,left"><path d="M1183,224 L1254,224 Q1260,224 1260,230 L1260,257 Q1260,263 1266,263 L1274,263" style="fill: none; stroke: var(--woad)" stroke-width="3.5" marker-end="url(#pg-m1)"></path></g>
+<g data-edge="web-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,255 L313,255 Q319,255 319,261 L319,266 Q319,272 325,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="bill-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,332 L313,332 Q319,332 319,326 L319,278 Q319,272 325,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ready-&gt;churn" data-sides="right,left"><path d="M1183,320 L1254,320 Q1260,320 1260,326 L1260,349 Q1260,355 1266,355 L1274,355" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="crm-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,178 L313,178 Q319,178 319,184 L319,266 Q319,272 325,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="sup-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,410 L313,410 Q319,410 319,404 L319,278 Q319,272 325,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<path d="M372.5,242.2 A4.4,4.4 0 1 1 381.3,242.2 A4.4,4.4 0 1 1 372.5,242.2 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M381.2,255.2 A4.4,4.4 0 1 1 390,255.2 A4.4,4.4 0 1 1 381.2,255.2 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M386.2,269.3 A4.4,4.4 0 1 1 395,269.3 A4.4,4.4 0 1 1 386.2,269.3 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M388.5,295.7 A4.4,4.4 0 1 1 397.3,295.7 A4.4,4.4 0 1 1 388.5,295.7 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M392.5,298.7 A4.4,4.4 0 1 1 401.3,298.7 A4.4,4.4 0 1 1 392.5,298.7 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M404.2,235.7 A4.4,4.4 0 1 1 413,235.7 A4.4,4.4 0 1 1 404.2,235.7 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M398.4,262 A4.4,4.4 0 1 1 407.2,262 A4.4,4.4 0 1 1 398.4,262 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M412.8,210.9 A4.4,4.4 0 1 1 421.6,210.9 A4.4,4.4 0 1 1 412.8,210.9 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M414.5,236.9 A4.4,4.4 0 1 1 423.3,236.9 A4.4,4.4 0 1 1 414.5,236.9 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M418.5,239.9 A4.4,4.4 0 1 1 427.3,239.9 A4.4,4.4 0 1 1 418.5,239.9 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M431,245.6 A4.4,4.4 0 1 1 439.8,245.6 A4.4,4.4 0 1 1 431,245.6 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M432,272.4 A4.4,4.4 0 1 1 440.8,272.4 A4.4,4.4 0 1 1 432,272.4 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M448,224 A4.4,4.4 0 1 1 456.8,224 A4.4,4.4 0 1 1 448,224 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M438.2,237 A4.4,4.4 0 1 1 447,237 A4.4,4.4 0 1 1 438.2,237 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M442.2,240 A4.4,4.4 0 1 1 451,240 A4.4,4.4 0 1 1 442.2,240 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M440.2,284.9 A4.4,4.4 0 1 1 449,284.9 A4.4,4.4 0 1 1 440.2,284.9 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M464.7,217.2 A4.4,4.4 0 1 1 473.5,217.2 A4.4,4.4 0 1 1 464.7,217.2 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M462.3,243.6 A4.4,4.4 0 1 1 471.1,243.6 A4.4,4.4 0 1 1 462.3,243.6 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M470.1,255.9 A4.4,4.4 0 1 1 478.9,255.9 A4.4,4.4 0 1 1 470.1,255.9 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M474.1,258.9 A4.4,4.4 0 1 1 482.9,258.9 A4.4,4.4 0 1 1 474.1,258.9 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M454.5,283.9 A4.4,4.4 0 1 1 463.3,283.9 A4.4,4.4 0 1 1 454.5,283.9 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M481.6,212.8 A4.4,4.4 0 1 1 490.4,212.8 A4.4,4.4 0 1 1 481.6,212.8 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M485.7,256.8 A4.4,4.4 0 1 1 494.5,256.8 A4.4,4.4 0 1 1 485.7,256.8 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M494,287.4 A4.4,4.4 0 1 1 502.8,287.4 A4.4,4.4 0 1 1 494,287.4 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M498,290.4 A4.4,4.4 0 1 1 506.8,290.4 A4.4,4.4 0 1 1 498,290.4 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M481.5,305.8 A4.4,4.4 0 1 1 490.3,305.8 A4.4,4.4 0 1 1 481.5,305.8 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M500.7,214.1 A4.4,4.4 0 1 1 509.5,214.1 A4.4,4.4 0 1 1 500.7,214.1 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M506,243.3 A4.4,4.4 0 1 1 514.8,243.3 A4.4,4.4 0 1 1 506,243.3 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M500.3,305.1 A4.4,4.4 0 1 1 509.1,305.1 A4.4,4.4 0 1 1 500.3,305.1 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M504.3,308.1 A4.4,4.4 0 1 1 513.1,308.1 A4.4,4.4 0 1 1 504.3,308.1 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M524.8,213.6 A4.4,4.4 0 1 1 533.6,213.6 A4.4,4.4 0 1 1 524.8,213.6 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M531.2,242.5 A4.4,4.4 0 1 1 540,242.5 A4.4,4.4 0 1 1 531.2,242.5 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M521.8,263.4 A4.4,4.4 0 1 1 530.6,263.4 A4.4,4.4 0 1 1 521.8,263.4 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M515.3,267.1 A4.4,4.4 0 1 1 524.1,267.1 A4.4,4.4 0 1 1 515.3,267.1 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M519.3,270.1 A4.4,4.4 0 1 1 528.1,270.1 A4.4,4.4 0 1 1 519.3,270.1 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M531.4,294.3 A4.4,4.4 0 1 1 540.2,294.3 A4.4,4.4 0 1 1 531.4,294.3 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M545.4,218.8 A4.4,4.4 0 1 1 554.2,218.8 A4.4,4.4 0 1 1 545.4,218.8 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M540.3,250.8 A4.4,4.4 0 1 1 549.1,250.8 A4.4,4.4 0 1 1 540.3,250.8 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M544.7,272.8 A4.4,4.4 0 1 1 553.5,272.8 A4.4,4.4 0 1 1 544.7,272.8 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M548.7,275.8 A4.4,4.4 0 1 1 557.5,275.8 A4.4,4.4 0 1 1 548.7,275.8 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M537.7,300.9 A4.4,4.4 0 1 1 546.5,300.9 A4.4,4.4 0 1 1 537.7,300.9 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M567.3,207.3 A4.4,4.4 0 1 1 576.1,207.3 A4.4,4.4 0 1 1 567.3,207.3 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M557.9,236.1 A4.4,4.4 0 1 1 566.7,236.1 A4.4,4.4 0 1 1 557.9,236.1 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M566.3,264.7 A4.4,4.4 0 1 1 575.1,264.7 A4.4,4.4 0 1 1 566.3,264.7 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M570.3,267.7 A4.4,4.4 0 1 1 579.1,267.7 A4.4,4.4 0 1 1 570.3,267.7 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M572.9,284 A4.4,4.4 0 1 1 581.7,284 A4.4,4.4 0 1 1 572.9,284 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M561.6,292.6 A4.4,4.4 0 1 1 570.4,292.6 A4.4,4.4 0 1 1 561.6,292.6 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M669.3,207 A4.4,4.4 0 1 1 678.1,207 A4.4,4.4 0 1 1 669.3,207 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M707.4,207 A4.4,4.4 0 1 1 716.2,207 A4.4,4.4 0 1 1 707.4,207 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M745.5,207 A4.4,4.4 0 1 1 754.3,207 A4.4,4.4 0 1 1 745.5,207 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M783.6,207 A4.4,4.4 0 1 1 792.4,207 A4.4,4.4 0 1 1 783.6,207 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M821.8,207 A4.4,4.4 0 1 1 830.6,207 A4.4,4.4 0 1 1 821.8,207 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M859.9,207 A4.4,4.4 0 1 1 868.7,207 A4.4,4.4 0 1 1 859.9,207 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M669.3,239.5 A4.4,4.4 0 1 1 678.1,239.5 A4.4,4.4 0 1 1 669.3,239.5 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M707.4,239.5 A4.4,4.4 0 1 1 716.2,239.5 A4.4,4.4 0 1 1 707.4,239.5 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M745.5,239.5 A4.4,4.4 0 1 1 754.3,239.5 A4.4,4.4 0 1 1 745.5,239.5 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M783.6,239.5 A4.4,4.4 0 1 1 792.4,239.5 A4.4,4.4 0 1 1 783.6,239.5 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M821.8,239.5 A4.4,4.4 0 1 1 830.6,239.5 A4.4,4.4 0 1 1 821.8,239.5 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M859.9,239.5 A4.4,4.4 0 1 1 868.7,239.5 A4.4,4.4 0 1 1 859.9,239.5 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M669.3,272 A4.4,4.4 0 1 1 678.1,272 A4.4,4.4 0 1 1 669.3,272 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M707.4,272 A4.4,4.4 0 1 1 716.2,272 A4.4,4.4 0 1 1 707.4,272 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M745.5,272 A4.4,4.4 0 1 1 754.3,272 A4.4,4.4 0 1 1 745.5,272 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M783.6,272 A4.4,4.4 0 1 1 792.4,272 A4.4,4.4 0 1 1 783.6,272 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M821.8,272 A4.4,4.4 0 1 1 830.6,272 A4.4,4.4 0 1 1 821.8,272 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M859.9,272 A4.4,4.4 0 1 1 868.7,272 A4.4,4.4 0 1 1 859.9,272 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M669.3,304.5 A4.4,4.4 0 1 1 678.1,304.5 A4.4,4.4 0 1 1 669.3,304.5 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M707.4,304.5 A4.4,4.4 0 1 1 716.2,304.5 A4.4,4.4 0 1 1 707.4,304.5 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M745.5,304.5 A4.4,4.4 0 1 1 754.3,304.5 A4.4,4.4 0 1 1 745.5,304.5 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M783.6,304.5 A4.4,4.4 0 1 1 792.4,304.5 A4.4,4.4 0 1 1 783.6,304.5 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M821.8,304.5 A4.4,4.4 0 1 1 830.6,304.5 A4.4,4.4 0 1 1 821.8,304.5 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M859.9,304.5 A4.4,4.4 0 1 1 868.7,304.5 A4.4,4.4 0 1 1 859.9,304.5 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M994.7,194.9 H1124.7 Q1134.1,194.9 1134.1,204.3 V204.3 Q1134.1,213.7 1124.7,213.7 H994.7 Q985.3,213.7 985.3,204.3 V204.3 Q985.3,194.9 994.7,194.9 Z" style="fill: var(--card); stroke: var(--line)" stroke-width="1.2"></path>
+<path d="M1002.7,204.3 L1116.7,204.3" style="fill: none; stroke: var(--line)" stroke-width="1.5"></path>
+<path d="M998.3,204.3 A4.4,4.4 0 1 1 1007.1,204.3 A4.4,4.4 0 1 1 998.3,204.3 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1036.3,204.3 A4.4,4.4 0 1 1 1045.1,204.3 A4.4,4.4 0 1 1 1036.3,204.3 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1074.3,204.3 A4.4,4.4 0 1 1 1083.1,204.3 A4.4,4.4 0 1 1 1074.3,204.3 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1112.3,204.3 A4.4,4.4 0 1 1 1121.1,204.3 A4.4,4.4 0 1 1 1112.3,204.3 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M994.7,220.9 H1124.7 Q1134.1,220.9 1134.1,230.3 V230.3 Q1134.1,239.7 1124.7,239.7 H994.7 Q985.3,239.7 985.3,230.3 V230.3 Q985.3,220.9 994.7,220.9 Z" style="fill: var(--card); stroke: var(--line)" stroke-width="1.2"></path>
+<path d="M1002.7,230.3 L1116.7,230.3" style="fill: none; stroke: var(--line)" stroke-width="1.5"></path>
+<path d="M998.3,230.3 A4.4,4.4 0 1 1 1007.1,230.3 A4.4,4.4 0 1 1 998.3,230.3 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1036.3,230.3 A4.4,4.4 0 1 1 1045.1,230.3 A4.4,4.4 0 1 1 1036.3,230.3 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1074.3,230.3 A4.4,4.4 0 1 1 1083.1,230.3 A4.4,4.4 0 1 1 1074.3,230.3 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1112.3,230.3 A4.4,4.4 0 1 1 1121.1,230.3 A4.4,4.4 0 1 1 1112.3,230.3 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M994.7,246.9 H1124.7 Q1134.1,246.9 1134.1,256.3 V256.3 Q1134.1,265.7 1124.7,265.7 H994.7 Q985.3,265.7 985.3,256.3 V256.3 Q985.3,246.9 994.7,246.9 Z" style="fill: var(--card); stroke: var(--line)" stroke-width="1.2"></path>
+<path d="M1002.7,256.3 L1116.7,256.3" style="fill: none; stroke: var(--line)" stroke-width="1.5"></path>
+<path d="M998.3,256.3 A4.4,4.4 0 1 1 1007.1,256.3 A4.4,4.4 0 1 1 998.3,256.3 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1036.3,256.3 A4.4,4.4 0 1 1 1045.1,256.3 A4.4,4.4 0 1 1 1036.3,256.3 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1074.3,256.3 A4.4,4.4 0 1 1 1083.1,256.3 A4.4,4.4 0 1 1 1074.3,256.3 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1112.3,256.3 A4.4,4.4 0 1 1 1121.1,256.3 A4.4,4.4 0 1 1 1112.3,256.3 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M994.7,272.9 H1124.7 Q1134.1,272.9 1134.1,282.3 V282.3 Q1134.1,291.7 1124.7,291.7 H994.7 Q985.3,291.7 985.3,282.3 V282.3 Q985.3,272.9 994.7,272.9 Z" style="fill: var(--card); stroke: var(--line)" stroke-width="1.2"></path>
+<path d="M1002.7,282.3 L1116.7,282.3" style="fill: none; stroke: var(--line)" stroke-width="1.5"></path>
+<path d="M998.3,282.3 A4.4,4.4 0 1 1 1007.1,282.3 A4.4,4.4 0 1 1 998.3,282.3 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1036.3,282.3 A4.4,4.4 0 1 1 1045.1,282.3 A4.4,4.4 0 1 1 1036.3,282.3 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1074.3,282.3 A4.4,4.4 0 1 1 1083.1,282.3 A4.4,4.4 0 1 1 1074.3,282.3 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1112.3,282.3 A4.4,4.4 0 1 1 1121.1,282.3 A4.4,4.4 0 1 1 1112.3,282.3 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M994.7,298.9 H1124.7 Q1134.1,298.9 1134.1,308.3 V308.3 Q1134.1,317.7 1124.7,317.7 H994.7 Q985.3,317.7 985.3,308.3 V308.3 Q985.3,298.9 994.7,298.9 Z" style="fill: var(--card); stroke: var(--line)" stroke-width="1.2"></path>
+<path d="M1002.7,308.3 L1116.7,308.3" style="fill: none; stroke: var(--line)" stroke-width="1.5"></path>
+<path d="M998.3,308.3 A4.4,4.4 0 1 1 1007.1,308.3 A4.4,4.4 0 1 1 998.3,308.3 Z" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1036.3,308.3 A4.4,4.4 0 1 1 1045.1,308.3 A4.4,4.4 0 1 1 1036.3,308.3 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1074.3,308.3 A4.4,4.4 0 1 1 1083.1,308.3 A4.4,4.4 0 1 1 1074.3,308.3 Z" style="fill: var(--purple); stroke: var(--card)" stroke-width="1.2"></path>
+<path d="M1112.3,308.3 A4.4,4.4 0 1 1 1121.1,308.3 A4.4,4.4 0 1 1 1112.3,308.3 Z" style="fill: var(--amber); stroke: var(--card)" stroke-width="1.2"></path>
+
+</g>
+</svg>

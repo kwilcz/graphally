@@ -1,0 +1,113 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+Design
+1. The point: the steering committee reading the approach section should see that we start with the
+   easiest 70 apps and leave the 10 mainframe-bound core apps for last, so the mainframe can be
+   switched off at the end of month 18.
+2. The metaphor: a staircase on a month ruler. Each step is as wide as its wave is long, and rises with
+   its risk. The steps stand on the landing zone and team routine built in wave 1. The mainframe is a
+   bar above them that the top step reaches, and it ends in a red "switched off" cap. One dot is one app.
+3. The build: one grid (label column, 18 month columns, a gutter), blocks bottom-aligned with different
+   heights, dots made by a before-script, a dependency line from wave 3 up to the mainframe.
+-->
+<diagram width=1200 title="Easiest first, mainframe last: 120 applications in three waves" subtitle="Move to Azure over 18 months; the mainframe is switched off at the end of month 18">
+<style>
+  .fig { display: grid; grid-template-columns: 96px repeat(18, minmax(0, 1fr)) 92px; row-gap: 4px; }
+  .lab { grid-column: 1; align-self: center; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+  /* The mainframe: a bar over every month, ending in a red cap. */
+  .mf { grid-column: 2 / 20; height: 60px; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; border-radius: 10px 0 0 10px; background: var(--ink); color: var(--card); font-size: 12px; }
+  .mf b { font-size: 16px; }
+  .off { grid-column: 20; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 0 10px 10px 0; background: var(--rust); color: var(--card); font-size: 11px; line-height: 14px; text-align: center; }
+  .off b { font-size: 14px; }
+
+  /* The steps. */
+  .col1 { grid-column: 2 / 7; align-self: stretch; display: flex; flex-direction: column; }
+  .legend { margin: 0 0 auto 0; padding-top: 4px; font-size: 12px; line-height: 20px; color: var(--muted); }
+  .legend b { color: var(--ink); }
+  .legend i { display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 2px; background: var(--woad); }
+  .wave { display: flex; flex-direction: column; padding: 14px 16px; margin: 0 3px; border-radius: 10px 10px 0 0; }
+  .w1 { height: 276px; background: var(--lane-a); color: var(--ink); --dot: var(--woad); --track: var(--card); --fill: var(--woad); --soft: var(--muted); }
+  .w2 { grid-column: 7 / 14; align-self: end; height: 330px; background: var(--icon-soft); color: var(--ink); --dot: var(--woad); --track: var(--card); --fill: var(--woad); --soft: var(--ink); }
+  .w3 { grid-column: 14 / 20; align-self: end; height: 384px; margin-top: 44px; background: var(--woad); color: var(--card); --dot: var(--card); --track: color-mix(in srgb, var(--card) 30%, var(--woad)); --fill: var(--card); --soft: var(--card); }
+  .eye { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); }
+  .count { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .count b { font-size: 54px; line-height: 54px; font-weight: 700; }
+  .count span { font-size: 14px; line-height: 18px; font-weight: 600; }
+  .goal { margin-top: 10px; font-size: 12.5px; line-height: 17px; color: var(--soft); }
+  .dots { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; }
+  .dot { width: 10px; height: 10px; border-radius: 2px; background: var(--dot); }
+  .foot { margin-top: 14px; }
+  .meter { height: 8px; border-radius: 4px; background: var(--track); }
+  .meter > i { display: block; height: 8px; border-radius: 4px; background: var(--fill); }
+  .moved { margin-top: 6px; font-size: 12px; font-weight: 600; }
+
+  /* The foundation the steps stand on. */
+  .base1 { grid-column: 2 / 7; margin-right: 3px; }
+  .base2 { grid-column: 7 / 20; margin-left: 3px; }
+  .base1, .base2 { display: flex; align-items: center; height: 44px; padding: 0 16px; font-size: 12.5px; }
+  .base1 { background: var(--teal); color: var(--card); font-weight: 600; border-radius: 0 0 0 10px; }
+  .base2 { background: var(--lane-b); color: var(--ink); border-radius: 0 0 10px 0; }
+
+  /* The month ruler. */
+  .m { text-align: center; font-size: 11.5px; color: var(--muted); }
+  .m.end { color: var(--ink); font-weight: 700; }
+</style>
+
+<div class=fig>
+  <div class=lab>Legacy</div>
+  <div class=mf id=mf><b>Mainframe</b>stays in service through all three waves</div>
+  <div class=off><b>Switched off</b>end of month 18</div>
+
+  <div class=lab>Waves</div>
+  <div class=col1>
+    <div class=legend>
+      <div><b>Width</b> = months</div>
+      <div><b>Height</b> = risk</div>
+      <div><i></i>= one application</div>
+    </div>
+    <div class="wave w1" id=w1>
+      <div class=eye>Wave 1 · months 1-5</div>
+      <div class=count><b>70</b><span>low-risk<br>internal apps</span></div>
+      <div class=goal>Build the landing zone and the team's routine</div>
+      <div class=dots data-n=70></div>
+      <div class=foot><div class=meter><i style="width: 58.3%"></i></div><div class=moved>70 of 120 moved</div></div>
+    </div>
+  </div>
+  <div class="wave w2" id=w2>
+    <div class=eye>Wave 2 · months 6-12</div>
+    <div class=count><b>40</b><span>customer-facing<br>apps</span></div>
+    <div class=goal>Run on the landing zone and routine from wave 1</div>
+    <div class=dots data-n=40></div>
+    <div class=foot><div class=meter><i style="width: 91.7%"></i></div><div class=moved>110 of 120 moved</div></div>
+  </div>
+  <div class="wave w3" id=w3>
+    <div class=eye>Wave 3 · months 13-18</div>
+    <div class=count><b>10</b><span>core apps that depend<br>on the mainframe</span></div>
+    <div class=goal>Moved last; then the mainframe is switched off</div>
+    <div class=dots data-n=10></div>
+    <div class=foot><div class=meter><i style="width: 100%"></i></div><div class=moved>120 of 120 moved</div></div>
+  </div>
+
+  <div class=lab>Foundation</div>
+  <div class=base1>Landing zone and routine are built</div>
+  <div class=base2>The same landing zone and team routine carry waves 2 and 3</div>
+
+  <div class=lab>Month</div>
+  <div class=m>1</div><div class=m>2</div><div class=m>3</div><div class=m>4</div><div class="m end">5</div>
+  <div class=m>6</div><div class=m>7</div><div class=m>8</div><div class=m>9</div><div class=m>10</div><div class=m>11</div><div class="m end">12</div>
+  <div class=m>13</div><div class=m>14</div><div class=m>15</div><div class=m>16</div><div class=m>17</div><div class="m end">18</div>
+</div>
+
+<script type="application/json">
+[
+  { "from": "w3", "to": "mf", "label": "10 core apps depend on it", "dashed": true, "out": "top", "in": "bottom" }
+]
+</script>
+<script type="graphally" before>
+for (const d of all('.dots')) for (let i = 0; i < Number(d.dataset.n); i++) d.append(make('i', { class: 'dot' }));
+</script>
+</diagram>

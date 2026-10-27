@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-theme="dark" data-source="diagram.html" viewBox="0 0 1248 683" width="1248" height="683" role="img" aria-label="Four checkpoints stand between your code and every customer. How a change reaches production here. If any step fails, the change goes back to the developer.">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="8.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><circle cx="5" cy="5" r="3.3" style="fill: var(--rust)"></circle></marker>
+<marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--rust)"></path></marker>
+<symbol id="pg-g-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.5" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="4" y="5" width="16" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 19h20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 20c0-3.8 2.9-6 6.5-6s6.5 2.2 6.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.5" cy="7.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 13.5c2.8.3 4.8 2.3 4.8 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.2 7.5 9.5 4.4-1.3 7.5-4.9 7.5-9.5V6z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.2 7.5 9.5 4.4-1.3 7.5-4.9 7.5-9.5V6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-server" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="7" rx="1.5" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="4" y="13.5" width="16" height="7" rx="1.5" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="4" y="3.5" width="16" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="13.5" width="16" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7h.01M7.5 17h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="pg-g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
+<rect class="g-bg" width="1248" height="683" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Four checkpoints stand between your code and every customer</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">How a change reaches production here. If any step fails, the change goes back to the developer.</text>
+<rect x="24" y="81.9" width="800" height="500" rx="14" style="fill: var(--wash)"></rect>
+<rect x="824" y="81.9" width="400" height="500" rx="14" style="fill: var(--lane-b)"></rect>
+<text x="42" y="106.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.88px; fill: var(--muted)">NO CUSTOMER SEES YOUR CHANGE YET</text>
+<text x="842" y="106.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.88px; fill: var(--green)">CUSTOMERS GET YOUR CHANGE</text>
+<g data-id="dev" data-box="39,145,170,90">
+<use href="#pg-g-laptop" x="100" y="144.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="93.5" y="210.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Developer</text>
+<text x="68.8" y="230.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">opens a pull request</text>
+</g>
+<use href="#pg-g-users" x="300" y="144.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="286.7" y="210.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Code review</text>
+<text x="274.6" y="230.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">of the pull request</text>
+<use href="#pg-g-shield" x="500" y="144.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="507.9" y="210.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Tests</text>
+<text x="479.7" y="230.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">automated, in CI</text>
+<use href="#pg-g-server" x="700" y="144.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="701.2" y="210.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Staging</text>
+<text x="651.5" y="230.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">last stop before customers</text>
+<use href="#pg-g-user" x="900" y="144.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="878.9" y="210.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Canary release</text>
+<text x="867.2" y="230.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">a small slice of users</text>
+<use href="#pg-g-globe" x="1100" y="144.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="1091.4" y="210.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Production</text>
+<text x="1101.4" y="230.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">all users</text>
+<rect x="124" y="262.9" width="700" height="30" rx="0" style="fill: var(--icon-soft)"></rect>
+<polygon points="824,262.9 1192,262.9 1218,277.9 1192,292.9 824,292.9" style="fill: rgb(178, 216, 192)"></polygon>
+<g data-id="s0" data-box="114,268,20,20">
+<rect x="114" y="267.9" width="20" height="20" rx="10" style="fill: var(--ink)"></rect>
+</g>
+<g data-id="s1" data-box="306,260,36,36">
+<rect x="306" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
+<text x="320.3" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">1</text>
+</g>
+<g data-id="s2" data-box="506,260,36,36">
+<rect x="506" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
+<text x="518.6" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">2</text>
+</g>
+<g data-id="s3" data-box="706,260,36,36">
+<rect x="706" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
+<text x="718.5" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">3</text>
+</g>
+<g data-id="s4" data-box="906,260,36,36">
+<rect x="906" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
+<text x="918.3" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">4</text>
+</g>
+<g data-id="s5" data-box="1104,258,40,40">
+<rect x="1104" y="257.9" width="40" height="40" rx="20" style="fill: var(--green)"></rect>
+</g>
+<g data-id="rail" data-box="382.5,320,283,29">
+<rect x="382.9" y="320.4" width="282.2" height="27.9" rx="13.9" style="fill: var(--card); stroke: var(--rust)" stroke-width="1"></rect>
+<text x="397.4" y="337.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 600; fill: var(--rust)">Any step fails: back to the developer to fix</text>
+</g>
+<text x="42" y="420.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.66px; fill: var(--muted)">WHAT EACH STEP TAKES</text>
+<text x="42" y="438.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">bar length = time, to scale</text>
+<text x="315.8" y="417.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--woad)">2</text>
+<text x="256.1" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">reviewers must approve</text>
+<text x="471.9" y="417.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--woad)">~20 min</text>
+<text x="464.2" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">for CI to run the tests</text>
+<rect x="444" y="449.9" width="2.2" height="8" rx="1.1" style="fill: var(--woad)"></rect>
+<text x="692" y="417.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--woad)">1 day</text>
+<text x="677.7" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">sitting in staging</text>
+<rect x="644" y="449.9" width="160" height="8" rx="4" style="fill: var(--woad)"></rect>
+<text x="876" y="417.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--woad)">2 hours</text>
+<text x="849.5" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">before it goes to everyone</text>
+<rect x="844" y="449.9" width="13.3" height="8" rx="4" style="fill: var(--woad)"></rect>
+<text x="1097.8" y="417.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--green)">Live</text>
+<text x="1056.2" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">your change is released</text>
+<text x="42" y="519.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.66px; fill: var(--muted)">CUSTOMERS WHO HAVE</text>
+<text x="42" y="534" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.66px; fill: var(--muted)">YOUR CHANGE</text>
+<text x="42" y="551.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">each dot is 5% of users</text>
+<text x="305.4" y="513.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--muted)">0%</text>
+<rect x="252" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="267" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="282" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="297" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="312" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="327" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="342" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="357" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="372" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="387" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="252" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="267" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="282" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="297" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="312" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="327" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="342" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="357" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="372" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="387" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<text x="505.4" y="513.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--muted)">0%</text>
+<rect x="452" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="467" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="482" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="497" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="512" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="527" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="542" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="557" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="572" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="587" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="452" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="467" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="482" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="497" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="512" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="527" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="542" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="557" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="572" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="587" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<text x="705.4" y="513.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--muted)">0%</text>
+<rect x="652" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="667" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="682" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="697" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="712" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="727" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="742" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="757" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="772" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="787" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="652" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="667" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="682" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="697" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="712" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="727" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="742" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="757" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="772" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="787" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<text x="905.8" y="513.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--green)">5%</text>
+<rect x="852" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="867" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="882" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="897" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="912" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="927" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="942" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="957" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="972" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="987" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="852" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="867" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="882" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="897" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="912" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="927" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="942" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="957" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="972" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="987" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<text x="891.6" y="562.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">1 user in 20</text>
+<text x="1093.3" y="513.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--green)">100%</text>
+<rect x="1052" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1067" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1082" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1097" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1112" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1127" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1142" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1157" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1172" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1187" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1052" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1067" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1082" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1097" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1112" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1127" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1142" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1157" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1172" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="1187" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
+<rect x="24.5" y="600.4" width="1199" height="57.4" rx="9.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<text x="43" y="636.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 700; fill: var(--ink)">about 26 hours</text>
+<text x="234.4" y="633.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">from CI starting to everyone having it: 20 minutes of tests, a day in staging, 2 hours in canary. Review time comes on top.</text>
+
+<path d="M324,295.9 L324,307.9" style="fill: none; stroke: var(--rust)" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
+<path d="M524,295.9 L524,307.9" style="fill: none; stroke: var(--rust)" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
+<path d="M724,295.9 L724,307.9" style="fill: none; stroke: var(--rust)" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
+<path d="M924,295.9 L924,307.9" style="fill: none; stroke: var(--rust)" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
+<path d="M924,307.9 L124,307.9 L124,287.9" style="fill: none; stroke: var(--rust)" stroke-width="2.4" marker-end="url(#pg-m1)"></path>
+
+</g>
+</svg>

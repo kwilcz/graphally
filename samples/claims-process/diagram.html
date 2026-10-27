@@ -1,0 +1,102 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+Design
+1. The point: a reader of the process handbook must see who owns each step (seven lanes) and that a
+   claim leaves the process in exactly four ways: paid, rejected, closed for missing documents,
+   or handed to the special investigations unit.
+2. The visual metaphor: a BPMN pool with swim lanes (who) and one column per step (when). The four
+   end events are the only coloured marks, each with a bold coloured caption, so the outcomes are
+   found before any task is read.
+3. The build: grid with a label column and 11 step columns, lanes as subgrid rows, shape=task /
+   start message / gateway exclusive / event timer / end, a boundary timer on the customer's task.
+-->
+<diagram width=1720 title="Insurance claims: who decides, and the four ways a claim ends" subtitle="Claim handling process, BPMN 2.0 · amounts in EUR · the SIU investigation itself is described in its own procedure">
+<style>
+  .lane { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .lane > h4 { grid-column: 1; align-self: stretch; display: flex; align-items: center; margin: -22px 0; padding: 0 12px; font-size: 12px; }
+  [shape=task] { width: 128px; min-height: 56px; font-weight: 500; font-size: 12px; line-height: 15px; position: relative; }
+  [shape=task] small { display: block; font-size: 10.5px; line-height: 13px; font-weight: 400; color: var(--muted); }
+  .ev, .gw { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 104px; text-align: center; font-size: 11px; line-height: 14px; translate: 0 16px; }
+  .ev.up, .gw.up { flex-direction: column-reverse; translate: 0 -16px; }
+  .cap { display: block; height: 28px; }
+  .up .cap { display: flex; flex-direction: column; justify-content: flex-end; }
+  .cap b { display: block; font-weight: 700; }
+  .ask { position: absolute; left: calc(50% + 14px); top: 36px; font-size: 11px; line-height: 14px; }
+  .ok { color: var(--green); } .bad { color: var(--rust); } .warn { color: var(--amber); } .hand { color: var(--purple); }
+</style>
+<div class="grid grid-cols-[100px_repeat(11,auto)] justify-between gap-x-6 pr-3 border border-line">
+
+  <div class=lane><h4 class=bg-lane-d>Customer</h4>
+    <div class="ev col-[2]"><i shape="start message" id=s></i><span class=cap>Customer submits claim online</span></div>
+    <div shape=task class="col-[6]" id=prov style="width:150px; padding-bottom:12px">Provide missing documents<i shape="event timer" class="absolute -bottom-[16px] right-[8px]" style="width:32px;height:32px" id=tim></i></div>
+  </div>
+
+  <div class=lane><h4 class=bg-lane-a>Claims intake</h4>
+    <div shape=task class="col-[3]" id=check>Check claim for completeness</div>
+    <div class="gw up col-[4]"><i shape="gateway exclusive" id=g1></i><span class=cap>Documents complete?</span></div>
+    <div shape=task class="col-[5]" id=req>Request missing documents</div>
+    <div shape=task class="col-[7]" id=close>Close claim</div>
+    <div class="ev col-[8]"><i shape=end id=endClosed style="border-color: var(--amber)"></i><span class="cap warn"><b>Claim closed</b>no documents</span></div>
+  </div>
+
+  <div class=lane><h4 class=bg-lane-c>Claims system</h4>
+    <div shape=task class="col-[5]" id=score>Score fraud risk<small>automatic</small></div>
+    <div class="gw up col-[6]"><i shape="gateway exclusive" id=g2></i><span class=cap>High fraud risk?</span></div>
+    <div shape=task class="col-[9]" id=ntRej>Notify customer of rejection, with the reason</div>
+    <div class="ev col-[10]"><i shape=end id=endRej style="border-color: var(--rust)"></i><span class="cap bad"><b>Claim rejected</b>customer informed</span></div>
+    <div shape=task class="col-[11]" id=ntPaid>Notify customer of payment</div>
+    <div class="ev col-[12]"><i shape=end id=endPaid style="border-color: var(--green)"></i><span class="cap ok"><b>Claim paid</b>customer informed</span></div>
+  </div>
+
+  <div class=lane><h4 class=bg-lane-a>Special investigations unit</h4>
+    <div shape=task class="col-[7]" id=inv>Investigate suspected fraud</div>
+    <div class="ev up col-[8]"><i shape=end id=endSiu style="border-color: var(--purple)"></i><span class="cap hand"><b>Handed to SIU</b>own procedure</span></div>
+  </div>
+
+  <div class=lane><h4 class=bg-lane-a>Adjuster</h4>
+    <div shape=task class="col-[7]" id=assess>Assess damage and decide on the claim</div>
+    <div class="gw up col-[8]"><i shape="gateway exclusive" id=g3></i><span class=cap>Over 10,000 EUR?</span></div>
+    <div class="col-[9] flex justify-center relative"><i shape="gateway exclusive" id=g4></i><span class=ask>Approved?</span></div>
+  </div>
+
+  <div class=lane><h4 class=bg-lane-a>Team lead</h4>
+    <div shape=task class="col-[9]" id=lead>Review the decision<small>approve or reject</small></div>
+  </div>
+
+  <div class="lane border-b-0"><h4 class=bg-lane-b>Finance</h4>
+    <div shape=task class="col-[10]" id=pay>Pay claim</div>
+  </div>
+
+</div>
+<script type="application/json">
+[
+  { "from": "s", "to": "check", "out": "right", "in": "left" },
+  ["check", "g1"],
+  { "from": "g1", "to": "req", "label": "no", "out": "right" },
+  { "from": "g1", "to": "score", "label": "yes", "out": "bottom", "in": "left" },
+  ["req", "prov"],
+  { "from": "prov", "to": "check", "label": "documents received", "out": "top", "in": "top" },
+  { "from": "tim", "to": "close", "label": "after 14 days", "out": "bottom" },
+  ["close", "endClosed"],
+  ["score", "g2"],
+  { "from": "g2", "to": "inv", "label": "yes", "out": "right", "in": "top" },
+  { "from": "g2", "to": "assess", "label": "no", "out": "bottom", "in": "left" },
+  ["inv", "endSiu"],
+  ["assess", "g3"],
+  { "from": "g3", "to": "lead", "label": "yes", "out": "bottom", "in": "left" },
+  { "from": "g3", "to": "g4", "label": "no", "out": "right", "in": "left" },
+  { "from": "lead", "to": "g4", "out": "top", "in": "bottom" },
+  { "from": "g4", "to": "pay", "label": "approved", "out": "right", "in": "top" },
+  { "from": "g4", "to": "ntRej", "label": "rejected", "out": "top", "in": "bottom" },
+  ["ntRej", "endRej"],
+  ["ntPaid", "endPaid"]
+]
+</script>
+<script type="graphally">
+// Payment confirmation: out of Pay claim to the right, then straight up into the notification.
+connect('pay', 'ntPaid', { out: 'right', in: 'bottom', via: [pt(el('ntPaid').center.x, el('pay').center.y), el('ntPaid').bottom.down(40)] });
+</script>
+</diagram>
