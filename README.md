@@ -62,13 +62,20 @@ On versions of Claude Code without the one-step form, run
 and the other agents it supports:
 
 ```sh
-gh skill install kwilcz/graphally graphally --agent claude-code --scope user
+gh skill install kwilcz/graphally graphally --scope user
+```
+
+**GitHub Copilot CLI**
+
+```sh
+copilot plugin marketplace add kwilcz/graphally
+copilot plugin install graphally@graphally
 ```
 
 **skills CLI**
 
 ```sh
-npx skills add kwilcz/graphally --skill graphally -a claude-code -g
+npx skills add kwilcz/graphally --skill graphally -g
 ```
 
 **Claude.ai and Claude Desktop**: download `graphally-skill.zip` from the

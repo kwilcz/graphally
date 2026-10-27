@@ -110,7 +110,10 @@ channels between them. A path's cost counts:
 - its bends;
 - crossings, priced above bends;
 - running along another line or along a group's border;
-- passing through groups the line does not belong to.
+- passing through groups the line does not belong to. A lane is not such a group: a box as
+  wide as its parent, with a box of the same width above or below it and no border all
+  round, is a row to cross, so a line between two lanes runs straight over the lanes
+  between them.
 
 Routing runs in two passes. The first picks the side each line leaves from. The second
 fixes where lines meet their boxes: lines that share a side split it evenly, one at the
