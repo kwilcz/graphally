@@ -125,8 +125,9 @@ them:
 - `key` with `swatch`, `swatch dashed` and `swatch box`: a legend.
 - `card`, `box`, `pill`, `tag`, `banner`.
 
-These names are taken. A class of your own with one of them gets their look too, so name
-yours differently (`lane`, not `band`).
+These names are taken, and so are the sequence helper's: `seq`, `msg`, `num`, `guard`,
+`lifeline`, `activation` and `frag-…`. A class of your own with one of them gets their look
+too, so name yours differently (`lane`, not `band`; `amount`, not `num`).
 
 `<icon name="app service">` places an icon inline. Loose names work for every service of
 both packs (`elasticache`, `glue`, `purview`), for example:
