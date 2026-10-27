@@ -133,7 +133,7 @@
 <g data-id="dlq" data-box="995,588.5,132,90">
 <use href="#pg-aws-amazon-simple-queue-service" x="1037" y="588.6" width="48" height="48" style="color: var(--ink)"></use>
 <text x="1033.8" y="654.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">SQS DLQ</text>
-<text x="1012.2" y="674.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">dead-letter queue</text>
+<text x="1012" y="674.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">dead-letter queue</text>
 </g>
 <g data-id="alarm" data-box="1202.5,588.5,132,90">
 <use href="#pg-aws-amazon-cloud-watch-alarm" x="1244.7" y="588.6" width="48" height="48" style="color: var(--ink)"></use>
@@ -164,7 +164,7 @@
 <text class="g-edge" x="1149.8" y="195" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-b); stroke-width: 4px; stroke-linejoin: round">feeds</text>
 <text class="g-edge" x="1147.2" y="463" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-a); stroke-width: 4px; stroke-linejoin: round">crawls</text>
 <text class="g-edge" x="1582.5" y="463" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-a); stroke-width: 4px; stroke-linejoin: round">reports</text>
-<text class="g-edge" x="1147.6" y="628" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-d); stroke-width: 4px; stroke-linejoin: round">metric</text>
+<text class="g-edge" x="1147.8" y="628" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-d); stroke-width: 4px; stroke-linejoin: round">metric</text>
 <text class="g-edge" x="1363.4" y="463" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-a); stroke-width: 4px; stroke-linejoin: round">catalog</text>
 <text class="g-edge" x="656.7" y="402" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">records</text>
 <text class="g-edge" x="454.5" y="402" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">rule</text>

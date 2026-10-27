@@ -96,7 +96,7 @@
 <text x="464.2" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">for CI to run the tests</text>
 <rect x="444" y="449.9" width="2.2" height="8" rx="1.1" style="fill: var(--woad)"></rect>
 <text x="692" y="417.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--woad)">1 day</text>
-<text x="677.7" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">sitting in staging</text>
+<text x="677.5" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">sitting in staging</text>
 <rect x="644" y="449.9" width="160" height="8" rx="4" style="fill: var(--woad)"></rect>
 <text x="876" y="417.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--woad)">2 hours</text>
 <text x="849.5" y="435.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">before it goes to everyone</text>
@@ -169,7 +169,7 @@
 <rect x="757" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="772" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="787" y="541.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
-<text x="905.8" y="513.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--green)">5%</text>
+<text x="906" y="513.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; fill: var(--green)">5%</text>
 <rect x="852" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--green); stroke: var(--green)" stroke-width="1"></rect>
 <rect x="867" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="882" y="526.4" width="9" height="9" rx="4.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>

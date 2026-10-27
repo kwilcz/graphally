@@ -82,9 +82,9 @@
 <text x="962" y="365.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; fill: var(--ink)">Test environment</text>
 <text x="962" y="389.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Nobody switched it off</text>
 </g>
-<text x="170.9" y="502.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 40px; font-weight: 700; fill: var(--woad)">58%</text>
-<text x="277.1" y="484.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">of the rise follows new customers:</text>
-<text x="277.1" y="502.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">the 14k of compute</text>
+<text x="171.2" y="502.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 40px; font-weight: 700; fill: var(--woad)">58%</text>
+<text x="276.8" y="484.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">of the rise follows new customers:</text>
+<text x="276.8" y="502.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">the 14k of compute</text>
 <text x="690.6" y="502.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 40px; font-weight: 700; fill: var(--amber)">42%</text>
 <text x="797.4" y="484.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">of the rise follows what we keep: the 10k of logs</text>
 <text x="797.4" y="502.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--muted)">and a test environment</text>

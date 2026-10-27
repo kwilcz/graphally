@@ -259,7 +259,7 @@
 <text class="g-edge" x="206.9" y="360" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
 <text class="g-edge" x="822" y="274" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">order placed</text>
 <text class="g-edge" x="877.1" y="514" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">products</text>
-<text class="g-edge" x="1148.9" y="405" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">SAP sync</text>
+<text class="g-edge" x="1149.1" y="405" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">SAP sync</text>
 <text class="g-edge" x="1231.2" y="463" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
 <text class="g-edge" x="931" y="274" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">consume</text>
 </g>
