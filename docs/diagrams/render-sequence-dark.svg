@@ -89,7 +89,7 @@
 <text x="604.5" y="308.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">launch over a DevTools pipe</text>
 <rect x="592.7" y="334" width="167.1" height="15" rx="0" style="fill: var(--bg)"></rect>
 <rect x="596.7" y="333.2" width="17" height="17" rx="8.5" style="fill: var(--ink)"></rect>
-<text x="602" y="345" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 10px; font-weight: 700; fill: var(--card)">5</text>
+<text x="602.1" y="345" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 10px; font-weight: 700; fill: var(--card)">5</text>
 <text x="619.7" y="346" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">open the harness page</text>
 <rect x="689.7" y="371.6" width="237.5" height="15" rx="0" style="fill: var(--bg)"></rect>
 <rect x="693.7" y="370.8" width="17" height="17" rx="8.5" style="fill: var(--ink)"></rect>
