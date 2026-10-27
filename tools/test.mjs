@@ -250,6 +250,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div class="figure external" id=fx><icon name=user></icon>Outside</div><div class="figure accent" id=fa><icon name=user></icon>Main</div>')), out));
   const figs = svgOf(out);
   check(!/data-id="f[xa]"[^>]*>\s*<(rect|path|polygon)/.test(figs) && /fill: var\(--muted\)">Outside/.test(figs) && /fill: var\(--woad\)">Main/.test(figs), 'an external or accented figure got a frame, or kept its colour');
+  // color-mix() and the newer colour spaces reach the SVG as rgb(), which every reader knows.
+  ok0(await render(write(d, page('<div id=m style="background: color-mix(in srgb, var(--woad) 15%, transparent); border: 2px solid color-mix(in oklab, var(--woad), var(--rust)); color: oklch(0.5 0.1 30)">mixed</div>')), out));
+  const mixed = svgOf(out);
+  check(!/color\(|oklab\(|oklch\(|\blab\(/.test(mixed) && /fill: rgba\(\d+, \d+, \d+, 0\.15\)/.test(mixed), 'a computed colour reached the SVG in a form SVG readers do not know');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
