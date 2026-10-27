@@ -116,6 +116,9 @@ async function renderJob(page, job) {
       await page.viewport(Math.max(800, r.width), Math.max(600, r.height), scale);
       const sel = `document.querySelectorAll('.out svg')[${i}]`;
       const box = await page.evaluate(`(() => { const b = ${sel}.getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);
+      // A later diagram of the file sits below the first: the window grows to hold it, so the
+      // capture stays inside the window.
+      if (box.y + box.height > Math.max(600, r.height)) await page.viewport(Math.max(800, r.width), box.y + box.height, scale);
       fs.writeFileSync(path.join(job.outDir, `${name}.png`), await page.screenshot(box, { fast }));
       if (dark) {
         await page.evaluate(`${sel}.setAttribute('data-theme', 'dark')`);

@@ -148,7 +148,14 @@ export async function openPage(browser, { width = 1400, height = 900, scale = 1 
   await s('Page.enable');
   await s('Runtime.enable');
   await s('Runtime.addBinding', { name: 'graphallyReady' });
-  const viewport = (w, h, sc = scale) => s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
+  // The window is as large as the page it shows. Headless windows open at 780×580, and a
+  // capture reaching beyond the window now and then repeated what was inside it: a PNG with
+  // the figure drawn a second time from x = 780.
+  const { windowId } = await browser.send('Browser.getWindowForTarget', { targetId });
+  const viewport = async (w, h, sc = scale) => {
+    await browser.send('Browser.setWindowBounds', { windowId, bounds: { width: Math.ceil(w), height: Math.ceil(h) } });
+    return s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
+  };
   await viewport(width, height);
   const evaluate = async expression => {
     const r = await s('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
