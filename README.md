@@ -65,10 +65,11 @@ and the other agents it supports:
 gh skill install kwilcz/graphally graphally --scope user
 ```
 
-**GitHub CLI, as a plugin** (through the Copilot CLI, which `gh copilot` downloads on first use):
+**GitHub Copilot CLI**
 
 ```sh
-gh copilot -- plugin install kwilcz/graphally
+copilot plugin marketplace add kwilcz/graphally
+copilot plugin install graphally@graphally
 ```
 
 **skills CLI**
