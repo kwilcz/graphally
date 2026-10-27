@@ -193,7 +193,7 @@
 <text class="g-edge" x="1426" y="531.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
 <text class="g-edge" x="644.5" y="349" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
 <text class="g-edge" x="367" y="354" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
-<text class="g-edge" x="1188.9" y="670" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="1189" y="670" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
 <text class="g-edge" x="1182.6" y="523" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">AcrPull</text>
 </g>
 </svg>

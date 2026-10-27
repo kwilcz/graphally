@@ -154,13 +154,13 @@ was given and the source it wrote.
 
 ## Releases
 
-Every pull request merged into `main` is a release. Its workflow sets the version while the
-pull request is open, by the pull request's label: `build` (the default, also with no label),
-`minor` or `major`. On merge, the version is tagged and published with the skill attached.
-Diagrams load the viewer of their major version (`…/graphally@2/…`), which follows its
-latest release. The version lives in `SKILL.md` and both plugin manifests;
-`node tools/version.mjs` prints it, and `node tools/version.mjs --check` checks that they
-agree.
+Every pull request merged into `main` is a release, and its label chooses which: `build` (the
+default, also with no label), `minor` or `major`. At the merge, the release workflow works out
+the next version from the last tag, commits it to `main`, tags it and publishes the release
+with the skill attached; on the pull request, its summary says which version the merge will
+make. The version lives in `SKILL.md` and both plugin manifests: `node tools/version.mjs`
+prints it, and `--check` checks that they agree. Diagrams load the viewer of their major
+version (`…/graphally@2/…`), which follows its latest release.
 
 ## Repository
 

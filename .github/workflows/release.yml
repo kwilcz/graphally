@@ -1,31 +1,36 @@
-# Every merge into main is a release. The version its pull request set (tools/version.mjs) is
-# tagged v<version> and published, with notes from the merged pull requests and the skill
-# attached as a zip for clients that install skills by upload (Claude.ai, Claude Desktop).
-# A release published by hand gets its zip too.
+# Every merge into main is a release, and the merged pull request's label chooses which:
+# "build" (the default, also with no label), "minor" or "major"; with several, the largest.
+# The version is decided at the merge, from the last tag, so a label changed late or a merge
+# made in a hurry cannot ship the wrong one. The release commits the version to main
+# (SKILL.md and both plugin manifests, through tools/version.mjs), tags it v<version> and
+# publishes it, with notes from the merged pull requests and the skill attached as a zip for
+# clients that install skills by upload (Claude.ai, Claude Desktop). On a pull request, the
+# run's summary says which release its merge will make. A release published by hand gets its
+# zip too.
 name: Release
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
   release:
     types: [published]
 
 permissions:
   contents: write
-
-# One release at a time, none cancelled.
-concurrency:
-  group: release
-  cancel-in-progress: false
+  pull-requests: read
+  issues: write   # labels belong to the issues API
 
 jobs:
-  release:
+  preview:
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.release.tag_name || github.sha }}
-          # The tags, to tell whether this version is out already.
+          # The tags and main, to work out the next version.
           fetch-depth: 0
 
       - name: Set up Node 22
@@ -33,28 +38,72 @@ jobs:
         with:
           node-version: 22
 
-      - name: Package the skill
-        run: cd skills && zip -qr ../graphally-skill.zip graphally
+      - name: Say which release the merge will make
+        env:
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
+        run: |
+          kind=$(node tools/version.mjs --kind $LABELS)
+          echo "Merging this pull request releases $(node tools/version.mjs --next "$kind") ($kind). Labels choose: build (the default), minor, major." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # A release made with GITHUB_TOKEN starts no workflow run, so the zip goes up here rather
-      # than from the release event.
-      - name: Tag and publish the release, unless this version is out already
+  release:
+    if: ${{ github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    # One release at a time, none cancelled: each starts from the one before.
+    concurrency:
+      group: release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # main as it is now (an earlier release may have committed to it), or the tag
+          # published by hand. The tags, to work out the next version.
+          ref: ${{ github.event.release.tag_name || 'main' }}
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Make sure the release labels exist
         if: ${{ github.event_name == 'push' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          node tools/version.mjs --check
-          tag="v$(node tools/version.mjs)"
-          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
-            if [ "$(git rev-list -n 1 "$tag")" = "$GITHUB_SHA" ]; then echo "$tag is this commit already."; exit 0; fi
-            # A pull request that was open while another one merged still carries that one's version.
-            echo "::error::$tag was released from another commit, so this merge has no version of its own. Open a pull request: its workflow sets the next version, and this change ships with it."
-            exit 1
-          fi
-          gh release create "$tag" graphally-skill.zip --target "$GITHUB_SHA" --title "$tag" --generate-notes
+          gh label create build --color c5def5 --description "Release the next build version (the default)" --force
+          gh label create minor --color 1d76db --description "Release the next minor version" --force
+          gh label create major --color b60205 --description "Release the next major version: a breaking change" --force
+
+      - name: Commit the version, tag it and publish the release
+        if: ${{ github.event_name == 'push' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A run that started after an earlier one released this commit has nothing to do.
+          if git tag --points-at HEAD | grep -q '^v'; then echo "main is released already."; exit 0; fi
+          # The pull request this push merged, and its labels; a push without one is a build.
+          pr=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '.[0].number // empty')
+          labels=""
+          if [ -n "$pr" ]; then labels=$(gh pr view "$pr" --json labels --jq '[.labels[].name] | join(" ")'); fi
+          kind=$(node tools/version.mjs --kind $labels)
+          version=$(node tools/version.mjs --next "$kind")
+          echo "Releasing v$version ($kind)${pr:+ for #$pr}." | tee -a "$GITHUB_STEP_SUMMARY"
+          node tools/version.mjs "$version"
+          git config user.name "Kamil Wilczynski"
+          git config user.email "25964560+kwilcz@users.noreply.github.com"
+          # The workflow's token starts no workflow run with this push; one that did start would
+          # wait for this run (the concurrency group) and find main released. No skip keyword:
+          # a squash merge copies commit messages, and one in a merge would skip its release.
+          git commit -qam "Release $version"
+          # If main moved meanwhile, the version commit goes on top of it.
+          git push origin HEAD:main || { git pull -q --rebase origin main && git push origin HEAD:main; }
+          (cd skills && zip -qr ../graphally-skill.zip graphally)
+          gh release create "v$version" graphally-skill.zip --target "$(git rev-parse HEAD)" --title "v$version" --generate-notes
 
       - name: Attach the zip to a release published by hand
         if: ${{ github.event_name == 'release' }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${{ github.event.release.tag_name }}" graphally-skill.zip --clobber
+        run: |
+          (cd skills && zip -qr ../graphally-skill.zip graphally)
+          gh release upload "${{ github.event.release.tag_name }}" graphally-skill.zip --clobber
