@@ -8,7 +8,9 @@ coordinate.
 Reach for the tools in this order. HTML structure and utility classes (`flex
 justify-center gap-6`) place almost everything. Plain CSS in a `<style>` covers what a class
 cannot say. The helpers (dates, sequences) do only what CSS cannot: they turn dates into
-grid columns and messages into rows. A script draws only what has no box.
+grid columns and messages into rows. The drawing script draws every mark no box gives:
+tracks, rings, leaders, brackets, slabs. Any form a page can hold renders; `design.md`
+is about choosing one.
 
 ```html
 <diagram width=1000>
@@ -111,12 +113,14 @@ A class that reads like a utility but means nothing is reported as `unknown-util
 
 **Building blocks** look like the rest of graphally. A utility or a rule of your own overrides
 them:
-- `node`: a card with an icon, a name and a `<small>` line under it. Add `external` to dash
-  it, or `accent` to make it blue.
+- `figure`: an icon over its name, with a `<small>` line under it, and no frame: the item
+  of a topology. Add `external` to mute it, or `accent` to colour it blue.
+- `node`: the same in a framed card, the icon beside the name. Add `external` to dash it,
+  or `accent` to make it blue.
 - `group` with an `<h4>` title (an icon and a `<small>` may go in it). Variants: `dashed`
   or `external`, `vnet`, `subnet`, `region`, `plain`. Put `badges` holding `badge` icons
   in the `<h4>`.
-- `tile` and `figure`: an icon over its name.
+- `tile`: an icon over its name in a small frame.
 - `band`: a full-width strip of shared services.
 - `key` with `swatch`, `swatch dashed` and `swatch box`: a legend.
 - `card`, `box`, `pill`, `tag`, `banner`.
@@ -313,6 +317,6 @@ The script's `text`, `gate` and arrow labels are not checked for overlap: look a
 The render's summary counts crossings: lines crossing lines. A crossing is not a problem,
 but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 
-Recipes for each kind of diagram, each with a complete example: `network.md`,
+Designing a figure: `design.md`. Techniques, each with a complete example: `network.md`,
 `hierarchy.md`, `process.md`, `sequence.md`, `plan.md`, `charts.md`, `documents.md`,
 `terraform.md`.

@@ -246,6 +246,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page(names.map((n, i) => `<div shape="${n}" id=s${i}></div>`).join('\n'))), out));
   const svg = svgOf(out);
   check(names.every((_, i) => svg.includes(`data-id="s${i}"`)), 'a shape is missing from the SVG');
+  // A borderless figure stays borderless when external or accented: its text changes colour.
+  ok0(await render(write(d, page('<div class="figure external" id=fx><icon name=user></icon>Outside</div><div class="figure accent" id=fa><icon name=user></icon>Main</div>')), out));
+  const figs = svgOf(out);
+  check(!/data-id="f[xa]"[^>]*>\s*<(rect|path|polygon)/.test(figs) && /fill: var\(--muted\)">Outside/.test(figs) && /fill: var\(--woad\)">Main/.test(figs), 'an external or accented figure got a frame, or kept its colour');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);

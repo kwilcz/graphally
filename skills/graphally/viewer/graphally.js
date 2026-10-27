@@ -65,8 +65,10 @@
 :where(.graphally-page .node:has(> icon)) { grid-template-columns: auto 1fr; }
 :where(.graphally-page .node > icon) { grid-row: 1 / span 2; width: 26px; height: 26px; }
 :where(.graphally-page :is(.node, .tile, .figure) > small) { grid-column: -2; font-size: 11.5px; font-weight: 400; line-height: 15px; color: var(--muted); }
-:where(.graphally-page :is(.node, .tile, .figure).external) { border-style: dashed; border-color: var(--muted); }
+:where(.graphally-page :is(.node, .tile).external) { border-style: dashed; border-color: var(--muted); }
 :where(.graphally-page :is(.node, .tile).accent) { border: 2px solid var(--woad); color: var(--woad); }
+:where(.graphally-page .figure.external) { color: var(--muted); }
+:where(.graphally-page .figure.accent) { color: var(--woad); font-weight: 650; }
 :where(.graphally-page .tile) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 112px; padding: 10px 6px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
 :where(.graphally-page .tile > icon) { width: 40px; height: 40px; }
 :where(.graphally-page .figure) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 104px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
