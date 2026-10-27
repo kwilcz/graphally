@@ -1,0 +1,86 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+Design
+1. The point: for architects reviewing the landing zone, every route out of a spoke runs
+   through the one firewall in the hub, and the hub is the only thing the spokes touch.
+2. The metaphor: a topology laid out as a cross with the firewall at its centre. Internet above,
+   Warsaw and Private DNS beside the hub, the two spokes below; the egress path is the only blue
+   line and it crosses the firewall.
+3. The build: grid map with named areas, hub as a grid of three subnets, spokes as VNets with
+   two subnets each, peering and UDR as connections, the firewall accented.
+-->
+<diagram width=1560 title="All spoke egress passes through the hub firewall" subtitle="Landing zone network, hub and spoke in West Europe, with a site-to-site VPN to the Warsaw office">
+<style>
+  .map { grid-template-areas: ". inet ." "onprem hub dns" ". spokes ."; }
+  .figure { width: 130px; }
+  .figure.wide { width: 210px; }
+</style>
+<div class="map grid grid-cols-[170px_1fr_250px] items-center gap-x-16 gap-y-20">
+  <div class="figure external justify-self-center [grid-area:inet]" id=inet><icon name=globe></icon>Internet<small>egress destination</small></div>
+
+  <div class="group external [grid-area:onprem]" id=onprem><h4>On-premises</h4>
+    <div class="figure external self-center" id=warsaw><icon name=building></icon>Warsaw office<small>192.168.0.0/16</small></div>
+  </div>
+
+  <div class="group vnet grid grid-cols-3 gap-x-4 [grid-area:hub]" id=hub>
+    <h4 class=col-span-full><icon name=vnet></icon>Hub VNet <small>10.0.0.0/16 · West Europe</small></h4>
+    <div class="group subnet"><h4>GatewaySubnet</h4>
+      <div class="figure self-center" id=vpn><icon name="vpn gateway"></icon>VPN gateway<small>site-to-site</small></div></div>
+    <div class="group subnet"><h4>AzureFirewallSubnet</h4>
+      <div class="figure accent self-center" id=fw><icon name=firewall></icon>Azure Firewall<small>all egress</small></div></div>
+    <div class="group subnet"><h4>AzureBastionSubnet</h4>
+      <div class="figure self-center" id=bastion><icon name=bastion></icon>Azure Bastion<small>admin access</small></div></div>
+  </div>
+
+  <div class="group [grid-area:dns]" id=dns><h4>Private DNS zones</h4>
+    <div class="figure wide self-center" id=dnssql><icon name="private dns"></icon>Azure SQL<small>privatelink.database.windows.net</small></div>
+    <div class="figure wide self-center" id=dnskv><icon name="private dns"></icon>Key Vault<small>privatelink.vaultcore.azure.net</small></div>
+  </div>
+
+  <div class="grid grid-cols-2 items-start gap-x-6 [grid-area:spokes]">
+    <div class="group vnet" id=prod><h4><icon name=vnet></icon>Production <small>10.1.0.0/16</small></h4>
+      <div class="grid grid-cols-2 gap-x-3">
+        <div class="group subnet"><h4>App subnet</h4>
+          <div class="figure self-center"><icon name=server></icon>App tier<small>workloads</small></div></div>
+        <div class="group subnet"><h4>Data subnet</h4>
+          <div class="figure self-center"><icon name=database></icon>Data tier<small>workloads</small></div></div>
+      </div>
+    </div>
+    <div class="group vnet" id=nonprod><h4><icon name=vnet></icon>Non-production <small>10.2.0.0/16</small></h4>
+      <div class="grid grid-cols-2 gap-x-3">
+        <div class="group subnet"><h4>App subnet</h4>
+          <div class="figure self-center"><icon name=server></icon>App tier<small>workloads</small></div></div>
+        <div class="group subnet"><h4>Data subnet</h4>
+          <div class="figure self-center"><icon name=database></icon>Data tier<small>workloads</small></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="application/json">
+[
+  { "from": "warsaw", "to": "vpn", "both": true },
+  { "from": "dns", "to": "hub", "label": "VNet link", "dashed": true, "arrow": false }
+]
+</script>
+<script type="graphally">
+// Peering: a straight two-way arrow up the outer side of each spoke into the hub.
+// UDR: a dashed blue path up the inner side, along the gap, and into the firewall.
+const hub = el('hub'), fw = el('fw');
+const ym = (el('prod').y + hub.bottom.y) / 2;
+[['prod', 0.2, 0.6], ['nonprod', 0.8, 0.4]].forEach(([id, outer, inner]) => {
+  const s = el(id);
+  arrow(pt(s.x + s.w * outer, s.y), pt(s.x + s.w * outer, hub.bottom.y), { both: true, label: 'peering' });
+  const xu = s.x + s.w * inner;
+  draw.moveTo(pt(xu, s.y)).lineTo(pt(xu, ym)).lineTo(pt(fw.center.x, ym)).style({ color: 'woad', width: 2, dashed: true, head: 'none' });
+  text(pt((xu + fw.center.x) / 2, ym - 10), 'UDR 0.0.0.0/0', { size: 11, color: 'woad' });
+});
+arrow(pt(fw.center.x, ym), fw.bottom, { color: 'woad', width: 2, dashed: true });
+// The VPN label sits in the gap between the office and the hub, clear of the borders.
+text(pt((el('onprem').right.x + hub.left.x) / 2, el('warsaw').center.y - 8), 'VPN', { size: 11 });
+// Egress: straight up from the firewall to the internet, clear of the subnet title.
+arrow(fw.top, el('inet').bottom, { color: 'woad', width: 2, label: 'egress' });
+</script>
+</diagram>

@@ -148,7 +148,16 @@ export async function openPage(browser, { width = 1400, height = 900, scale = 1 
   await s('Page.enable');
   await s('Runtime.enable');
   await s('Runtime.addBinding', { name: 'graphallyReady' });
-  const viewport = (w, h, sc = scale) => s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
+  // The window holds the whole page it shows. Headless windows open at 780×580, of which the
+  // browser's own frame takes a strip (166 to 192px of the height, varying), and a capture
+  // reaching beyond what the window draws now and then repeated what was inside it: a PNG
+  // with the figure drawn a second time from x = 780, or from partway down. So the window is
+  // the page with room to spare for any frame.
+  const { windowId } = await browser.send('Browser.getWindowForTarget', { targetId });
+  const viewport = async (w, h, sc = scale) => {
+    await browser.send('Browser.setWindowBounds', { windowId, bounds: { width: Math.ceil(w) + 64, height: Math.ceil(h) + 320 } });
+    return s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
+  };
   await viewport(width, height);
   const evaluate = async expression => {
     const r = await s('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });

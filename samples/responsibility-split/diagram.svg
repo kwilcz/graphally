@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1148 566" width="1148" height="566" role="img" aria-label="The provider runs the service, the client owns the business, both share security and change. IT outsourcing contract, appendix: who is responsible for what">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs></defs>
+<rect class="g-bg" width="1148" height="566" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">The provider runs the service, the client owns the business, both share security and change</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">IT outsourcing contract, appendix: who is responsible for what</text>
+<rect x="25" y="82.9" width="754.3" height="457.6" rx="33" style="fill: var(--lane-a); stroke: var(--woad)" stroke-width="2"></rect>
+<rect x="368.8" y="82.9" width="754.3" height="457.6" rx="33" style="fill: var(--lane-d); stroke: rgb(150, 96, 14)" stroke-width="2"></rect>
+<rect x="368.8" y="82.9" width="410.5" height="457.6" rx="33" style="fill: var(--lane-b); stroke: var(--green)" stroke-width="2"></rect>
+<rect x="110.8" y="105.9" width="170.1" height="34" rx="17" style="fill: var(--woad)"></rect>
+<text x="134.8" y="127.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.3px; fill: var(--card)">PROVIDER RUNS</text>
+<rect x="519.2" y="105.9" width="109.6" height="34" rx="17" style="fill: rgb(150, 96, 14)"></rect>
+<polygon points="574,105.9 536.2,105.9 529.7,107.2 524.2,110.9 520.5,116.4 519.2,122.9 519.2,122.9 520.5,129.4 524.2,134.9 529.7,138.6 536.2,139.9 574,139.9" style="fill: var(--woad)"></polygon>
+<text x="543.2" y="127.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.3px; fill: var(--card)">SHARED</text>
+<rect x="874.2" y="105.9" width="155.9" height="34" rx="17" style="fill: rgb(150, 96, 14)"></rect>
+<text x="898.2" y="127.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.3px; fill: var(--card)">CLIENT KEEPS</text>
+<rect x="51" y="154.9" width="289.8" height="74" rx="13" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></rect>
+<text x="145.8" y="197.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Service desk</text>
+<rect x="51" y="249.4" width="289.8" height="74" rx="13" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></rect>
+<text x="153.8" y="291.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Monitoring</text>
+<rect x="51" y="343.9" width="289.8" height="74" rx="13" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></rect>
+<text x="161.9" y="386.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Patching</text>
+<rect x="51" y="438.5" width="289.8" height="74" rx="13" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></rect>
+<text x="162.5" y="480.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Backups</text>
+<rect x="394.8" y="154.9" width="358.5" height="74" rx="13" style="fill: var(--card); stroke: var(--green)" stroke-width="2"></rect>
+<rect x="395.8" y="155.9" width="356.5" height="72" rx="12" style="fill: var(--lane-d)"></rect>
+<polygon points="574,155.9 407.8,155.9 403.2,156.8 399.3,159.4 396.7,163.3 395.8,167.9 395.8,215.9 396.7,220.5 399.3,224.4 403.2,227 407.8,227.9 574,227.9" style="fill: var(--lane-a)"></polygon>
+<text x="541.5" y="197.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Security</text>
+<rect x="394.8" y="242.9" width="358.5" height="269.6" rx="13" style="fill: var(--card); stroke: var(--green)" stroke-width="2"></rect>
+<rect x="395.8" y="243.9" width="356.5" height="267.6" rx="12" style="fill: var(--lane-d)"></rect>
+<polygon points="574,243.9 407.8,243.9 403.2,244.8 399.3,247.4 396.7,251.3 395.8,255.9 395.8,499.5 396.7,504.1 399.3,508 403.2,510.6 407.8,511.5 574,511.5" style="fill: var(--lane-a)"></polygon>
+<text x="491.3" y="279.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Change management</text>
+<g data-id="board" data-box="492,321.5,164,164">
+<rect x="492" y="321.5" width="164" height="164" rx="82" style="fill: var(--ink)"></rect>
+<text x="518.5" y="387.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--card)">Joint change board</text>
+<text x="512.1" y="423.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 34px; font-weight: 700; fill: var(--card)">Weekly</text>
+</g>
+<rect x="807.3" y="208.7" width="289.8" height="74" rx="13" style="fill: var(--card); stroke: rgb(150, 96, 14)" stroke-width="2"></rect>
+<text x="867.9" y="250.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Business applications</text>
+<rect x="807.3" y="296.7" width="289.8" height="74" rx="13" style="fill: var(--card); stroke: rgb(150, 96, 14)" stroke-width="2"></rect>
+<text x="891.6" y="338.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Data ownership</text>
+<rect x="807.3" y="384.7" width="289.8" height="74" rx="13" style="fill: var(--card); stroke: rgb(150, 96, 14)" stroke-width="2"></rect>
+<text x="858.6" y="426.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--ink)">Approval of user access</text>
+
+<path d="M574,490.5 L574,490.5 A87,87 0 0 1 574,316.5" style="fill: none; stroke: var(--woad)" stroke-width="8"></path>
+<path d="M574,316.5 L574,316.5 A87,87 0 0 1 574,490.5" style="fill: none; stroke: #96600e" stroke-width="8"></path>
+<path d="M557.8,316.5 A16.3,16.3 0 1 1 590.3,316.5 A16.3,16.3 0 1 1 557.8,316.5 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
+<path d="M565.7,313.4 A8.8,8.8 0 0 1 580.4,310.3" style="fill: none; stroke: var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M583.3,315 L582.9,308.1 L577.6,311.2 Z" style="fill: var(--ink); stroke: none"></path>
+<path d="M582.3,319.5 A8.8,8.8 0 0 1 567.6,322.6" style="fill: none; stroke: var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M564.7,318 L565.1,324.8 L570.4,321.7 Z" style="fill: var(--ink); stroke: none"></path>
+<text x="451" y="407.7" text-anchor="middle" style="font: 600 12px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--ink)">Provider</text>
+<text x="691" y="407.7" text-anchor="middle" style="font: 600 12px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--ink)">Client</text>
+
+</g>
+</svg>

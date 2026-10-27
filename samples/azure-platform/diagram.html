@@ -1,0 +1,133 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+Design
+1. The point: for the reviewers of the solution design, what runs where and what talks to what in
+   production. Customers reach the platform only through Front Door and WAF; the APIs, data and
+   integration sit behind private addressing; email and SAP are reached asynchronously through
+   Service Bus and Functions, with the SAP path forced through the hub firewall and ExpressRoute.
+2. The visual metaphor: a topology. Borderless icon figures; VNets and subnets as nested containers;
+   parties outside our platform dashed; solid lines for calls, dashed lines for events; shared
+   platform services drawn once in a band and badged on their users.
+3. The build: a grid map of named areas, group vnet / group subnet, figures, a JSON list of
+   connections, badges in titles, a key.
+-->
+<diagram width=1540 title="Order platform: production architecture" subtitle="Azure hub-and-spoke. Web and mobile channels, private APIs and data, event-driven email and SAP sync">
+<style>
+  .map { grid-template-columns: auto auto 1fr 1fr 1fr auto;
+         grid-template-areas:
+           ". web . sb sg ."
+           "inet fd spoke spoke spoke hub"
+           "key key data data data onprem"
+           "plat plat plat plat plat plat"; }
+  .figure { width: 140px; }
+  .group.subnet > .figure { align-self: center; }
+  .group > h4 > .badges { margin-left: 8px; }
+</style>
+<div class="map grid items-start justify-between gap-x-14 gap-y-12">
+
+  <!-- Outside: customers -->
+  <div class="group external [grid-area:inet]" id=cust><h4>Customers</h4>
+    <div class="figure external" id=browser><icon name=browser></icon>Web app<small>in the browser</small></div>
+    <div class="figure external" id=mobile><icon name=mobile></icon>Mobile app<small>on the device</small></div>
+  </div>
+
+  <!-- Edge -->
+  <div class="figure justify-self-center [grid-area:fd]" id=fd nudge="0,85"><icon name="front door"></icon>Azure Front Door<small>with WAF</small></div>
+
+  <!-- Web tier -->
+  <div class="group items-center justify-self-center [grid-area:web]" id=web><h4>Web tier<span class=badges><span class=badge><icon name=kv></icon></span><span class=badge><icon name=entra></icon></span><span class=badge><icon name="app insights"></icon></span></span></h4>
+    <div class=figure id=appsvc><icon name="app service"></icon>Web front end<small>App Service</small></div>
+  </div>
+
+  <!-- Messaging -->
+  <div class="figure justify-self-center [grid-area:sb]" id=sb nudge="-39,0"><icon name="service bus"></icon>Service Bus<small>order events</small></div>
+
+  <!-- Spoke VNet -->
+  <div class="group vnet grid grid-cols-[1fr_1fr_1.4fr] gap-x-6 gap-y-5 [grid-area:spoke]" id=spoke>
+    <h4 class=col-span-full><icon name=vnet></icon>Spoke VNet<span class=badges><span class=badge><icon name=kv></icon></span><span class=badge><icon name=entra></icon></span><span class=badge><icon name="app insights"></icon></span></span></h4>
+    <div class="group subnet"><h4>App Gateway subnet</h4>
+      <div class=figure id=agw><icon name="app gateway"></icon>Application Gateway<small>internal</small></div></div>
+    <div class="group subnet" id=snaks><h4>AKS subnet</h4>
+      <div class="figure accent" id=aks><icon name=aks></icon>Order APIs<small>AKS</small></div></div>
+    <div class="group subnet" id=snfunc><h4>Functions subnet</h4>
+      <div class=figure id=func><icon name=functions></icon>Azure Functions<small>email and SAP sync</small></div></div>
+    <div class="group subnet col-span-full" id=pesub><h4>Private endpoint subnet</h4>
+      <div class="flex justify-center gap-x-[80px]">
+        <div class=figure id=pesql><icon name="private endpoint"></icon>Private endpoint<small>Azure SQL</small></div>
+        <div class=figure id=pecos><icon name="private endpoint"></icon>Private endpoint<small>Cosmos DB</small></div></div></div>
+  </div>
+
+  <!-- Hub VNet -->
+  <div class="group vnet gap-y-5 [grid-area:hub]" id=hub><h4><icon name=vnet></icon>Hub VNet</h4>
+    <div class="group subnet w-[250px]"><h4>AzureFirewallSubnet</h4>
+      <div class="figure" id=fw><icon name=firewall></icon>Azure Firewall<small>SAP traffic</small></div></div>
+    <div class="group subnet w-[250px]"><h4>GatewaySubnet</h4>
+      <div class="figure" id=gw><icon name="virtual network gateways"></icon>ExpressRoute gateway<small>to on-premises</small></div></div>
+  </div>
+
+  <!-- Data services -->
+  <div class="group [grid-area:data]" id=data><h4>Data services</h4>
+    <div class="flex justify-center gap-x-[80px]">
+      <div class=figure id=sql><icon name=sql></icon>Azure SQL<small>orders, zone-redundant</small></div>
+      <div class=figure id=cosmos><icon name=cosmos></icon>Cosmos DB<small>product data</small></div></div>
+  </div>
+
+  <!-- Third party -->
+  <div class="group external justify-self-center w-[200px] [grid-area:sg]" id=sgbox><h4>Third party</h4>
+    <div class="figure external" id=sendgrid><icon name=sendgrid></icon>SendGrid<small>email delivery</small></div>
+  </div>
+
+  <!-- On-premises -->
+  <div class="group external justify-self-center w-[240px] [grid-area:onprem]" id=onprem><h4>On-premises</h4>
+    <div class="figure external" id=sap><icon name=server></icon>SAP ERP<small>orders sync</small></div>
+  </div>
+
+  <!-- Key -->
+  <div class="key flex-col items-start gap-[10px] [grid-area:key]"><h4>Key</h4>
+    <span><i class="swatch border-0 h-2" id=k1></i>request or data call</span>
+    <span><i class="swatch border-0 h-2" id=k2></i>asynchronous event</span>
+    <span><i class="swatch border-0 h-2" id=k3></i>SAP sync, inspected by the firewall</span>
+    <span><i class="swatch box"></i>outside our platform</span>
+    <span><span class=badges><span class=badge><icon name=kv></icon></span><span class=badge><icon name=entra></icon></span><span class=badge><icon name="app insights"></icon></span></span>uses the shared services below</span>
+  </div>
+
+  <!-- Shared platform services -->
+  <div class="band justify-center gap-x-32 [grid-area:plat]"><h4>Shared platform services</h4>
+    <div class=figure id=entra><icon name=entra></icon>Entra ID<small>identities</small></div>
+    <div class=figure id=kv><icon name=kv></icon>Key Vault<small>secrets</small></div>
+    <div class=figure id=ai><icon name="app insights"></icon>Application Insights<small>application telemetry</small></div>
+    <div class=figure id=la><icon name="log analytics"></icon>Log Analytics<small>logs and queries</small></div>
+  </div>
+</div>
+
+<script type="application/json">
+[
+  ["browser", "fd", "HTTPS"],
+  ["mobile", "fd", "HTTPS"],
+  ["fd", "appsvc", "web app"],
+  ["fd", "agw", "API calls"],
+  ["agw", "aks"],
+  { "from": "aks", "to": "pesql", "label": "orders", "out": "bottom", "in": "top" },
+  { "from": "aks", "to": "pecos", "label": "products", "out": "bottom", "in": "top" },
+  ["pesql", "sql", "private link"],
+  ["pecos", "cosmos", "private link"],
+  { "from": "aks", "to": "sb", "label": "order placed", "dashed": true },
+  { "from": "func", "to": "sendgrid" },
+  { "from": "func", "to": "fw", "label": "SAP sync", "color": "teal" },
+  { "from": "fw", "to": "gw", "color": "teal" },
+  { "from": "gw", "to": "sap", "label": "ExpressRoute", "color": "teal" },
+  { "from": "spoke", "to": "hub", "label": "peering", "both": true }
+]
+</script>
+<script type="graphally">
+arrow(el('k1').left, el('k1').right);
+arrow(el('k2').left, el('k2').right, { dashed: true });
+arrow(el('k3').left, el('k3').right, { color: 'teal' });
+// Service Bus to Functions: down the corridor between the AKS and Functions subnets, then into Functions from the left.
+const lane = mid(el('snaks').right, el('snfunc').left).x;
+connect('sb', 'func', { label: 'consume', dashed: true, out: 'right', in: 'left', via: [pt(lane, el('sb').center.y), pt(lane, el('func').center.y)] });
+</script>
+</diagram>

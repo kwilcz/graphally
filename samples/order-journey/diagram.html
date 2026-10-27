@@ -1,0 +1,94 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<diagram width=1360 title="An order is saved first; the rest follows in the background" subtitle="What happens, step by step, when a customer places an order on our web shop">
+<!--
+DESIGN
+Point: business readers should see in one glance that the customer only waits while the order is
+  being saved; everything after that happens later, in the background.
+Metaphors considered: (a) a shop - door, order desk, order book, ticket rail, back office (reader's
+  world); (b) one time-line cut in two by a "saved" wall (the content's own shape: before and after
+  the customer is released); (c) a relay of hand-overs between teams. Kept (a)+(b): shop names in
+  plain words, laid on one left-to-right line that a wall cuts in two.
+Encoding: position = time (left to right, numbered); tint and border = who is waiting (solid blue
+  zone vs dashed grey zone); size/value = plain name big, tech name small and grey; line style =
+  dashed for "happens afterwards"; green = saved, the only strong fill.
+Focal point: the green "Order saved" seal on the wall.
+-->
+<style>
+  .story { display: grid; grid-template-columns: repeat(4, 140px) 0 repeat(2, 140px); column-gap: 72px; justify-content: center; }
+  .zone { grid-row: 1 / 4; margin: 0 -16px; border-radius: 14px; }
+  .zone.wait { grid-column: 1 / 5; background: var(--lane-a); }
+  .zone.later { grid-column: 6 / 8; background: var(--wash); border: 2px dashed var(--muted); }
+  .zh { grid-row: 1; display: flex; flex-direction: column; gap: 2px; padding: 16px 0 26px; font-size: 12.5px; line-height: 16px; }
+  .zh .kick { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .zh b { font-size: 24px; line-height: 30px; font-weight: 700; }
+  .zh.wait { grid-column: 1 / 5; color: var(--woad); }
+  .zh.wait span { color: var(--ink); }
+  .zh.later { grid-column: 6 / 8; color: var(--muted); }
+  .st { grid-row: 2; position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px 10px 14px; text-align: center; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; }
+  .st icon { width: 46px; height: 46px; }
+  .st b { font-size: 16px; line-height: 20px; font-weight: 700; }
+  .st .d { font-size: 12.5px; line-height: 17px; color: var(--ink); }
+  .st small { margin-top: auto; padding-top: 6px; font-size: 11.5px; line-height: 14px; color: var(--muted); }
+  .st.saved { border: 2.5px solid var(--green); }
+  .st.bg { border: 1.8px dashed var(--muted); background: var(--card); }
+  .stepno { position: absolute; top: -13px; left: -13px; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--woad); color: var(--card); font-size: 14px; font-weight: 700; }
+  .later .stepno, .st.bg .stepno { background: var(--muted); }
+  .seal { grid-row: 2; grid-column: 5; justify-self: center; align-self: center; width: 112px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: var(--green); font-size: 14px; line-height: 17px; font-weight: 700; }
+  .seal i { width: 58px; height: 58px; border-radius: 50%; background: var(--green); }
+  .room { grid-row: 3; grid-column: 1 / -1; height: 78px; }
+  .sum { grid-row: 4; grid-column: 1 / -1; margin-top: 28px; padding: 14px 22px; display: flex; align-items: center; gap: 28px; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; font-size: 14px; line-height: 21px; }
+  .sum b { color: var(--green); }
+  .sum .key { margin-left: auto; flex-direction: column; align-items: flex-start; gap: 6px; flex: none; }
+</style>
+
+<div class=story>
+  <div class="zone wait"></div>
+  <div class="zone later"></div>
+
+  <div class="zh wait"><span class=kick>While the customer waits</span><b>4 steps</b><span>The customer is waiting on the screen for these.</span></div>
+  <div class="zh later"><span class=kick>Afterwards, in the background</span><b>2 steps</b><span>The customer has their answer; nobody is waiting.</span></div>
+
+  <div class="st col-[1]" id=shopper><b class=stepno>1</b><icon name=user></icon>Customer<span class=d>Places an order on our website</span><small>Web browser</small></div>
+  <div class="st col-[2]" id=fd><b class=stepno>2</b><icon name="front door"></icon>Front door<span class=d>Checks every request is safe before letting it in</span><small>Azure Front Door + WAF</small></div>
+  <div class="st col-[3]" id=api><b class=stepno>3</b><icon name="app service"></icon>Order desk<span class=d>Takes the order and passes it on</span><small>Orders API, App Service</small></div>
+  <div class="st saved col-[4]" id=db><b class=stepno>4</b><icon name=sql></icon>Order book<span class=d>Keeps a safe record of every order</span><small>Orders database, Azure SQL</small></div>
+
+  <div class=seal id=seal><i id=ck></i>Order saved</div>
+
+  <div class="st bg col-[6]" id=sb><b class=stepno>5</b><icon name="service bus"></icon>Ticket rail<span class=d>A &ldquo;new order&rdquo; note waits here in line until it is picked up</span><small>Service Bus, orders topic</small></div>
+  <div class="st bg col-[7]" id=worker><b class=stepno>6</b><icon name=functions></icon>Back-office worker<span class=d>Picks up each note and does the follow-up work</span><small>Azure Functions</small></div>
+
+  <div class=room></div>
+
+  <div class=sum>
+    <div><b>In one sentence:</b> the customer gets their answer once the order is safely saved. The rest is queued as notes and done afterwards, so follow-up work never keeps a customer waiting.</div>
+    <div class=key><span><i class=swatch id=k1></i>customer is waiting on this</span><span><i class="swatch dashed" id=k2></i>happens afterwards, in the background</span></div>
+  </div>
+</div>
+
+<script type="application/json">
+[
+  ["shopper", "fd"],
+  ["fd", "api"],
+  ["api", "db", "saves it"],
+  { "from": "api", "to": "sb", "label": "pins a note: \"new order\"", "dashed": true, "out": "bottom", "in": "bottom" },
+  { "from": "sb", "to": "worker", "label": "hands on", "dashed": true }
+]
+</script>
+
+<script type="graphally">
+// The wall: the line between "the customer waits" and "the background", broken by the seal.
+const s = el('seal'), top = el('.zone.wait').top.y, bottom = el('.zone.wait').bottom.y;
+draw.moveTo(pt(s.center.x, top)).lineTo(pt(s.center.x, el('ck').top.y - 6)).style({ color: 'green', width: 3 });
+draw.moveTo(pt(s.center.x, s.bottom.y + 6)).lineTo(pt(s.center.x, bottom)).style({ color: 'green', width: 3 });
+// A white tick on the green disc.
+const c = el('ck').center;
+draw.moveTo(pt(c.x - 14, c.y + 1)).lineTo(pt(c.x - 4, c.y + 11)).lineTo(pt(c.x + 15, c.y - 11)).style({ color: 'card', width: 5 });
+// The key's two sample lines.
+arrow(el('k1').left, el('k1').right);
+arrow(el('k2').left, el('k2').right, { dashed: true });
+</script>
+</diagram>

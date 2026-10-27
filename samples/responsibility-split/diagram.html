@@ -1,0 +1,120 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+DESIGN
+Point: a contract appendix. Lawyers, service managers and auditors from both sides must see
+at once which duties are the provider's, which are the client's, and that two are shared and
+decided together at a weekly board.
+
+Three metaphors considered
+ 1. Reader's world: the cloud "shared responsibility" stack, layers with a line between.
+    Rejected: the brief gives no layers, so the stack would invent an order.
+ 2. Content's own shape: two territories that overlap. Provider and client each own a
+    territory; security and change management sit where the territories overlap.
+ 3. Different: a meeting table with two sides and the duties on the agenda. Kept as a detail
+    inside 2 (the board is a round table, one half provider, one half client).
+Kept: 2. The overlap is the shared duties, drawn literally, and the table sits in it.
+
+Encoding
+ - position: left territory = provider, right = client, the lens between = shared
+ - hue: blue = provider, amber = client, green = the overlap (blue and amber make green)
+ - fill split: a shared duty is half blue, half amber (it belongs to both); the board's ring
+   is split the same way
+ - value and size: the board is the only dark mark and the largest; "Weekly" is the one
+   number, written large
+Focal point: the dark round table in the lens.
+Build: grid with overlapping zone boxes (rounded), split cards made of two absolute halves,
+a circle for the board, and the drawing script for the two-tone ring and the seat labels.
+-->
+<diagram width=1100 title="The provider runs the service, the client owns the business, both share security and change" subtitle="IT outsourcing contract, appendix: who is responsible for what">
+<style>
+  .map { --prov: var(--woad); --cli: #96600e; --both: var(--green);
+         display: grid; grid-template-columns: 1fr 1.2fr 1fr; }
+
+  /* Two territories that overlap in the middle column. Painted in this order, so the lens
+     covers the part of each territory it shares. */
+  .zone { grid-row: 1 / 3; border-radius: 34px; }
+  .zp   { grid-column: 1 / 3; background: var(--lane-a); border: 2px solid var(--prov); }
+  .zc   { grid-column: 2 / 4; background: var(--lane-d); border: 2px solid var(--cli); }
+  .lens { grid-column: 2;     background: var(--lane-b); border: 2px solid var(--both); }
+
+  .hd   { grid-row: 1; display: flex; justify-content: center; padding: 24px 24px 14px; }
+  .body { grid-row: 2; display: flex; flex-direction: column; gap: 12px; padding: 0 26px 28px; }
+  .c1 { grid-column: 1; } .c2 { grid-column: 2; } .c3 { grid-column: 3; }
+  .mid { justify-content: center; }
+  .spread { justify-content: space-between; }
+
+  /* The label of each territory. */
+  .tag { position: relative; display: flex; align-items: center; justify-content: center; height: 34px; padding: 0 24px; border-radius: 999px; color: var(--card); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; }
+  .tag.p { background: var(--prov); }
+  .tag.c { background: var(--cli); }
+
+  /* A duty: a white card edged in its owner's colour. */
+  .duty { flex: 0 0 76px; display: flex; align-items: center; justify-content: center; padding: 0 18px; border-radius: 14px; background: var(--card); border: 2px solid; font-size: 16px; font-weight: 600; text-align: center; }
+  .duty.p { border-color: var(--prov); }
+  .duty.c { border-color: var(--cli); }
+
+  /* A shared duty is split down the middle: half provider blue, half client amber. */
+  .split { position: relative; }
+  .split > i { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+  .split > .r { border-radius: 12px; background: var(--lane-d); }
+  .split > .l { border-radius: 12px; background: var(--lane-a); clip-path: polygon(50% 0, 12px 0, 7.4px 0.9px, 3.5px 3.5px, 0.9px 7.4px, 0 12px, 0 calc(100% - 12px), 0.9px calc(100% - 7.4px), 3.5px calc(100% - 3.5px), 7.4px calc(100% - 0.9px), 12px 100%, 50% 100%); }
+  .tag.split > .l, .tag.split > .r { border-radius: 17px; }
+  .tag.split > .l { background: var(--prov); clip-path: polygon(50% 0, 17px 0, 10.5px 1.3px, 5px 5px, 1.3px 10.5px, 0 17px, 0 calc(100% - 17px), 1.3px calc(100% - 10.5px), 5px calc(100% - 5px), 10.5px calc(100% - 1.3px), 17px 100%, 50% 100%); }
+  .tag.split > .r { background: var(--cli); }
+  .tag.split { background: none; }
+  .split > span, .split > div { position: relative; }
+  .duty.both { border-color: var(--both); }
+  .security { flex: 0 0 76px; }
+  .change { flex: 1; flex-direction: column; justify-content: flex-start; gap: 30px; padding: 20px 0 26px; }
+
+  /* The board: a round table, the darkest mark in the figure. */
+  .board { width: 164px; height: 164px; border-radius: 50%; background: var(--ink); color: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 6px; }
+  .board small { color: var(--card); font-size: 12px; font-weight: 500; }
+  .board b { font-size: 34px; line-height: 40px; font-weight: 700; }
+</style>
+
+<div class=map>
+  <div class="zone zp"></div>
+  <div class="zone zc"></div>
+  <div class="zone lens"></div>
+
+  <div class="hd c1"><span class="tag p">PROVIDER RUNS</span></div>
+  <div class="hd c2"><span class="tag split"><i class=r></i><i class=l></i><span>SHARED</span></span></div>
+  <div class="hd c3"><span class="tag c">CLIENT KEEPS</span></div>
+
+  <div class="body c1 spread">
+    <div class="duty p">Service desk</div>
+    <div class="duty p">Monitoring</div>
+    <div class="duty p">Patching</div>
+    <div class="duty p">Backups</div>
+  </div>
+
+  <div class="body c2">
+    <div class="duty both split security"><i class=r></i><i class=l></i><span>Security</span></div>
+    <div class="duty both split change"><i class=r></i><i class=l></i><span>Change management</span>
+      <div class=board id=board><small>Joint change board</small><b>Weekly</b></div>
+    </div>
+  </div>
+
+  <div class="body c3 mid">
+    <div class="duty c">Business applications</div>
+    <div class="duty c">Data ownership</div>
+    <div class="duty c">Approval of user access</div>
+  </div>
+</div>
+
+<script type="graphally">
+// The table's rim, split like the cards: provider blue on the left half, client amber on the right.
+const b = el('board'), c = b.center, r = b.w / 2 + 5;
+draw.arc(c, r, 90, 270).style({ color: 'woad', width: 8 });
+draw.arc(c, r, 270, 450).style({ color: '#96600e', width: 8 });
+// A repeat badge where the two halves of the rim meet: the board comes round again every week.
+shape('cycle', c.up(r), { size: 34, fill: 'card', stroke: 'ink', width: 1.5 });
+// Who sits on which side.
+text(c.left(r + 36), 'Provider', { size: 12, weight: 600, color: 'ink' });
+text(c.right(r + 30), 'Client', { size: 12, weight: 600, color: 'ink' });
+</script>
+</diagram>

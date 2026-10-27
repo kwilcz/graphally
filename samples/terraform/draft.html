@@ -8,33 +8,33 @@
     <div class="flex items-start gap-16">
       <div class="group vnet" id=vnet_hub><h4><icon name="vnet"></icon>vnet-fab-prod-hub <small>10.100.0.0/16</small></h4>
         <div class="group subnet" id=snet_gateway><h4>GatewaySubnet <small>10.100.0.0/27</small></h4>
-          <div class="node" id=vgw_vpn><icon name="vpn gateway"></icon>vgw-fab-prod<small>VPN gateway · VpnGw2 · public IP</small></div>
+          <div class="figure" id=vgw_vpn><icon name="vpn gateway"></icon>vgw-fab-prod<small>VPN gateway · VpnGw2 · public IP</small></div>
         </div>
       </div>
-      <div class="node" id=acr_acr><icon name="acr"></icon>acrfabprod<small>Container Registry</small></div>
+      <div class="figure" id=acr_acr><icon name="acr"></icon>acrfabprod<small>Container Registry</small></div>
     </div>
   </div>
   <div class="group" id=rg_workload><h4><icon name="rg"></icon>rg-fab-prod-logistics</h4>
     <div class="flex items-start gap-16">
       <div class="group vnet" id=vnet_spoke><h4><icon name="vnet"></icon>vnet-fab-prod-logistics <small>10.110.0.0/16</small></h4>
         <div class="group subnet" id=snet_this_agw><h4>snet-agw <small>10.110.0.0/24</small></h4>
-          <div class="node" id=agw_ingress><icon name="app gateway"></icon>agw-fab-prod<small>Application Gateway · WAF_v2</small></div>
+          <div class="figure" id=agw_ingress><icon name="app gateway"></icon>agw-fab-prod<small>Application Gateway · WAF_v2</small></div>
         </div>
         <div class="group subnet" id=snet_this_aks><h4>snet-aks <small>10.110.4.0/22</small></h4>
-          <div class="node" id=aks_main><icon name="aks"></icon>aks-fab-prod<small>AKS · work node pool</small></div>
+          <div class="figure" id=aks_main><icon name="aks"></icon>aks-fab-prod<small>AKS · work node pool</small></div>
         </div>
         <div class="group subnet" id=snet_this_db><h4>snet-db <small>10.110.8.0/24</small></h4>
-          <div class="node" id=psql_db><icon name="postgres"></icon>psql-fab-prod<small>PostgreSQL · shipments database</small></div>
+          <div class="figure" id=psql_db><icon name="postgres"></icon>psql-fab-prod<small>PostgreSQL · shipments database</small></div>
         </div>
         <div class="group subnet" id=snet_this_pe><h4>snet-pe <small>10.110.9.0/24</small></h4>
-          <div class="node" id=pe_sb><icon name="private endpoint"></icon>pe-fab-prod-sb<small>Private endpoint</small></div>
+          <div class="figure" id=pe_sb><icon name="private endpoint"></icon>pe-fab-prod-sb<small>Private endpoint</small></div>
         </div>
       </div>
       <div class="group plain" id=rg_workload_services>
-        <div class="node" id=id_aks><icon name="managed identity"></icon>id-fab-prod-aks<small>Managed identity</small></div>
-        <div class="node" id=log_law><icon name="log analytics"></icon>log-fab-prod<small>Log Analytics</small></div>
-        <div class="node" id=sb_events><icon name="service bus"></icon>sb-fab-prod<small>Service Bus · shipments queue · tracking topic</small></div>
-        <div class="node" id=kv_kv><icon name="kv"></icon>kv-fab-prod<small>Key Vault</small></div>
+        <div class="figure" id=id_aks><icon name="managed identity"></icon>id-fab-prod-aks<small>Managed identity</small></div>
+        <div class="figure" id=log_law><icon name="log analytics"></icon>log-fab-prod<small>Log Analytics</small></div>
+        <div class="figure" id=sb_events><icon name="service bus"></icon>sb-fab-prod<small>Service Bus · shipments queue · tracking topic</small></div>
+        <div class="figure" id=kv_kv><icon name="kv"></icon>kv-fab-prod<small>Key Vault</small></div>
       </div>
     </div>
   </div>

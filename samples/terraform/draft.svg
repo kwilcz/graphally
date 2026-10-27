@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="draft.html" viewBox="0 0 1648 1029" width="1648" height="1029" role="img" aria-label="Fabrikam logistics platform. From Terraform: 29 resources in 2 modules">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="draft.html" viewBox="0 0 1648 1254" width="1648" height="1254" role="img" aria-label="Fabrikam logistics platform. From Terraform: 29 resources in 2 modules">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
@@ -37,139 +37,132 @@
 <symbol id="pg-azure-log-analytics-workspaces" viewBox="0 0 16.901033 16.900316"><defs id="pg-azure-log-analytics-workspaces-0"> <linearGradient id="pg-azure-log-analytics-workspaces-1" x1="5.23" y1="17.450001" x2="5.23" y2="8.0900002" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#1988d9" id="pg-azure-log-analytics-workspaces-2" /> <stop offset="0.9" stop-color="#54aef0" id="pg-azure-log-analytics-workspaces-3" /> </linearGradient> <linearGradient id="pg-azure-log-analytics-workspaces-4" x1="11.5" y1="12.45" x2="11.5" y2="0.55000001" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#198ab3" id="pg-azure-log-analytics-workspaces-5" /> <stop offset="0.01" stop-color="#198bb4" id="pg-azure-log-analytics-workspaces-6" /> <stop offset="0.44" stop-color="#27b2d7" id="pg-azure-log-analytics-workspaces-7" /> <stop offset="0.79" stop-color="#2fcbed" id="pg-azure-log-analytics-workspaces-8" /> <stop offset="1" stop-color="#32d4f5" id="pg-azure-log-analytics-workspaces-9" /> </linearGradient> </defs> <path d="m 5.04,12.580316 h 4.32 v 4.32 H 5.04 Z m -4.44,4.32 h 3.72 v -4.32 H 0 v 3.72 a 0.6,0.6 0 0 0 0.6,0.6 z m -0.6,-5 H 4.32 V 7.5403162 H 0 Z" id="pg-azure-log-analytics-workspaces-10" style="fill:url(#pg-azure-log-analytics-workspaces-1)" /> <path d="M 10.95,3.1622647e-4 A 5.89,5.89 0 0 1 16.9,6.0003162 5.89,5.89 0 0 1 10.95,11.950316 H 5 V 5.9503162 A 5.89,5.89 0 0 1 10.95,3.1622647e-4 Z" id="pg-azure-log-analytics-workspaces-11" style="fill:url(#pg-azure-log-analytics-workspaces-4);fill-rule:evenodd" /> <rect x="7.04" y="5.1003165" width="1.36" height="4.0799999" id="pg-azure-log-analytics-workspaces-12" style="fill:#ffffff" /> <rect x="9.7600002" y="6.4603167" width="1.36" height="2.72" id="pg-azure-log-analytics-workspaces-13" style="fill:#ffffff" /> <rect x="12.48" y="3.7403162" width="1.36" height="5.4400001" id="pg-azure-log-analytics-workspaces-14" style="fill:#ffffff" /></symbol>
 <symbol id="pg-azure-service-bus" viewBox="0 0 18 15.376398"><defs id="pg-azure-service-bus-0"> <linearGradient id="pg-azure-service-bus-1" x1="9" y1="14.071" x2="9" y2="1.313" gradientUnits="userSpaceOnUse" gradientTransform="translate(0,1.3106482)"> <stop offset="0" stop-color="#0078d4" id="pg-azure-service-bus-2" /> <stop offset="0.156" stop-color="#1380da" id="pg-azure-service-bus-3" /> <stop offset="0.528" stop-color="#3c91e5" id="pg-azure-service-bus-4" /> <stop offset="0.822" stop-color="#559cec" id="pg-azure-service-bus-5" /> <stop offset="1" stop-color="#5ea0ef" id="pg-azure-service-bus-6" /> </linearGradient> </defs> <g id="pg-azure-service-bus-7" transform="translate(0,-1.3106482)"> <g id="pg-azure-service-bus-8"> <path d="M 18,10.075 A 4.044,4.044 0 0 0 14.49,6.188 5.1,5.1 0 0 0 9.24,1.313 5.229,5.229 0 0 0 4.24,4.721 4.825,4.825 0 0 0 0,9.364 4.9,4.9 0 0 0 5.068,14.071 c 0.151,0 0.3,-0.007 0.447,-0.019 h 8.207 A 0.819,0.819 0 0 0 13.939,14.019 4.093,4.093 0 0 0 18,10.075 Z" id="pg-azure-service-bus-9" style="fill:url(#pg-azure-service-bus-1)" /> <path d="m 12.067,11.806 h -6.36 a 0.276,0.276 0 0 0 -0.282,0.27 v 1.732 a 0.276,0.276 0 0 0 0.281,0.27 h 6.361 a 0.276,0.276 0 0 0 0.281,-0.27 v -1.732 a 0.277,0.277 0 0 0 -0.281,-0.27 z" id="pg-azure-service-bus-10" style="fill:#32bedd" /> <path d="m 12.067,14.415 h -6.36 a 0.276,0.276 0 0 0 -0.282,0.27 v 1.731 a 0.276,0.276 0 0 0 0.281,0.271 h 6.361 a 0.276,0.276 0 0 0 0.281,-0.271 v -1.731 a 0.277,0.277 0 0 0 -0.281,-0.27 z" id="pg-azure-service-bus-11" style="fill:#198ab3" /> <path d="m 11.27,12.231 h 0.373 a 0.072,0.072 0 0 1 0.072,0.072 v 0.356 a 0.069,0.069 0 0 1 -0.069,0.069 H 11.267 A 0.069,0.069 0 0 1 11.198,12.659 V 12.3 a 0.072,0.072 0 0 1 0.072,-0.069 z" id="pg-azure-service-bus-12" style="fill:#b4ec36" /> <path d="m 11.268,13.087 h 0.376 a 0.072,0.072 0 0 1 0.072,0.072 v 0.353 a 0.072,0.072 0 0 1 -0.072,0.072 H 11.27 a 0.072,0.072 0 0 1 -0.072,-0.072 v -0.356 a 0.069,0.069 0 0 1 0.07,-0.069 z" id="pg-azure-service-bus-13" style="fill:#b4ec36" /> <path d="m 11.289,14.827 h 0.376 a 0.072,0.072 0 0 1 0.072,0.072 v 0.356 a 0.069,0.069 0 0 1 -0.069,0.069 H 11.292 A 0.072,0.072 0 0 1 11.22,15.252 V 14.9 a 0.069,0.069 0 0 1 0.069,-0.073 z" id="pg-azure-service-bus-14" style="fill:#b4ec36" /> <path d="m 11.289,15.683 h 0.376 a 0.072,0.072 0 0 1 0.072,0.072 v 0.356 A 0.069,0.069 0 0 1 11.668,16.18 H 11.289 A 0.069,0.069 0 0 1 11.22,16.111 v -0.359 a 0.069,0.069 0 0 1 0.069,-0.069 z" id="pg-azure-service-bus-15" style="fill:#b4ec36" /> <path d="M 12.007,8.993 H 5.647 A 0.276,0.276 0 0 0 5.365,9.264 V 11 a 0.277,0.277 0 0 0 0.281,0.271 h 6.361 A 0.277,0.277 0 0 0 12.288,11 V 9.264 A 0.277,0.277 0 0 0 12.007,8.993 Z" id="pg-azure-service-bus-16" style="fill:#50e6ff" /> <path d="m 11.208,9.419 h 0.376 a 0.072,0.072 0 0 1 0.072,0.072 V 9.847 A 0.069,0.069 0 0 1 11.587,9.916 H 11.21 A 0.072,0.072 0 0 1 11.138,9.844 V 9.488 a 0.069,0.069 0 0 1 0.07,-0.069 z" id="pg-azure-service-bus-17" style="fill:#ffffff" /> <path d="m 11.208,10.275 h 0.376 a 0.072,0.072 0 0 1 0.072,0.072 V 10.7 a 0.069,0.069 0 0 1 -0.069,0.069 H 11.208 A 0.069,0.069 0 0 1 11.139,10.7 v -0.359 a 0.069,0.069 0 0 1 0.069,-0.066 z" id="pg-azure-service-bus-18" style="fill:#ffffff" /> <path d="m 11.635,7.4 -2.43,2.43 a 0.29,0.29 0 0 1 -0.41,0 L 6.365,7.4 A 0.13,0.13 0 0 1 6.457,7.179 H 7.951 A 0.129,0.129 0 0 0 8.08,7.05 V 4.014 a 0.1,0.1 0 0 1 0.1,-0.1 h 1.636 a 0.1,0.1 0 0 1 0.1,0.1 v 3.037 a 0.129,0.129 0 0 0 0.129,0.129 h 1.494 a 0.13,0.13 0 0 1 0.096,0.22 z" id="pg-azure-service-bus-19" style="fill:#ffffff" /> </g> </g></symbol>
 <symbol id="pg-azure-key-vaults" viewBox="0 0 17 17"><defs id="pg-azure-key-vaults-0"> <radialGradient id="pg-azure-key-vaults-1" cx="9" cy="9" r="8.5" gradientUnits="userSpaceOnUse"> <stop offset="0.18" stop-color="#5ea0ef" id="pg-azure-key-vaults-2" /> <stop offset="0.56" stop-color="#5c9fee" id="pg-azure-key-vaults-3" /> <stop offset="0.69" stop-color="#559ced" id="pg-azure-key-vaults-4" /> <stop offset="0.78" stop-color="#4a97e9" id="pg-azure-key-vaults-5" /> <stop offset="0.86" stop-color="#3990e4" id="pg-azure-key-vaults-6" /> <stop offset="0.93" stop-color="#2387de" id="pg-azure-key-vaults-7" /> <stop offset="0.99" stop-color="#087bd6" id="pg-azure-key-vaults-8" /> <stop offset="1" stop-color="#0078d4" id="pg-azure-key-vaults-9" /> </radialGradient> <radialGradient id="pg-azure-key-vaults-10" cx="38.950001" cy="182.07001" r="9.8800001" gradientTransform="matrix(0.94,0,0,0.94,-28.21,-162.74)" gradientUnits="userSpaceOnUse"> <stop offset="0.27" stop-color="#ffd70f" id="pg-azure-key-vaults-11" /> <stop offset="0.49" stop-color="#ffcb12" id="pg-azure-key-vaults-12" /> <stop offset="0.88" stop-color="#feac19" id="pg-azure-key-vaults-13" /> <stop offset="1" stop-color="#fea11b" id="pg-azure-key-vaults-14" /> </radialGradient> </defs> <path id="pg-azure-key-vaults-15" d="M 8.5,0 A 8.5,8.5 0 1 0 17,8.5 8.51,8.51 0 0 0 8.5,0 Z m 0,15.84 A 7.34,7.34 0 1 1 15.84,8.5 7.34,7.34 0 0 1 8.5,15.84 Z" style="fill:url(#pg-azure-key-vaults-1)" /> <circle cx="8.5" cy="8.5" r="7.3400002" id="pg-azure-key-vaults-16" style="fill:#ffffff" /> <g id="pg-azure-key-vaults-17" transform="translate(-0.5,-0.5)"> <path id="pg-azure-key-vaults-18" d="m 13.44,7.33 a 1.84,1.84 0 0 0 0,-2.59 v 0 L 10.29,1.58 a 1.83,1.83 0 0 0 -2.58,0 v 0 L 4.56,4.74 a 1.84,1.84 0 0 0 0,2.59 L 7.18,10 a 0.51,0.51 0 0 1 0.15,0.36 v 4.88 a 0.63,0.63 0 0 0 0.18,0.44 l 1.2,1.2 a 0.41,0.41 0 0 0 0.58,0 l 1.16,-1.16 v 0 l 0.68,-0.68 a 0.25,0.25 0 0 0 0,-0.34 l -0.49,-0.49 a 0.27,0.27 0 0 1 0,-0.37 l 0.49,-0.49 a 0.25,0.25 0 0 0 0,-0.34 l -0.49,-0.49 a 0.27,0.27 0 0 1 0,-0.37 l 0.49,-0.49 a 0.25,0.25 0 0 0 0,-0.34 L 10.45,10.63 V 10.38 Z M 9,2.35 A 1.035,1.035 0 0 1 9,4.42 1.035,1.035 0 1 1 9,2.35 Z" style="fill:url(#pg-azure-key-vaults-10)" /> <path id="pg-azure-key-vaults-19" d="m 8.18,15.3 v 0 a 0.23,0.23 0 0 0 0.38,-0.17 v -4 a 0.24,0.24 0 0 0 -0.11,-0.2 v 0 a 0.22,0.22 0 0 0 -0.34,0.2 v 4 a 0.28,0.28 0 0 0 0.07,0.17 z" style="opacity:0.75;fill:#ff9300" /> <rect id="pg-azure-key-vaults-20" x="6.48" y="5.79" width="5.1700001" height="0.61000001" rx="0.28" style="opacity:0.75;fill:#ff9300" /> <rect id="pg-azure-key-vaults-21" x="6.48" y="6.7800002" width="5.1700001" height="0.61000001" rx="0.28" style="opacity:0.75;fill:#ff9300" /> </g></symbol></defs>
-<rect class="g-bg" width="1648" height="1029" style="fill: var(--bg)"></rect>
+<rect class="g-bg" width="1648" height="1254" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Fabrikam logistics platform</text>
 <text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">From Terraform: 29 resources in 2 modules</text>
-<g data-id="rg_hub" data-box="24,82,539,238">
-<rect x="24.5" y="82.4" width="537.8" height="237.2" rx="9.5" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<g data-id="rg_hub" data-box="24,82,445,277">
+<rect x="24.5" y="82.4" width="444.1" height="276.2" rx="9.5" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
 <use href="#pg-azure-resource-groups" x="41" y="92.9" width="18" height="18" style="color: var(--muted)"></use>
 <text x="65" y="105.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--muted)">rg-fab-prod-hub</text>
-<g data-id="vnet_hub" data-box="41,123,278,180">
-<rect x="41.5" y="123.4" width="277" height="179.2" rx="9.5" style="fill: var(--vnet); stroke: var(--woad)" stroke-width="1"></rect>
+<g data-id="vnet_hub" data-box="41,123,243,219">
+<rect x="41.5" y="123.4" width="242.1" height="218.2" rx="9.5" style="fill: var(--vnet); stroke: var(--woad)" stroke-width="1"></rect>
 <use href="#pg-azure-virtual-networks" x="58" y="133.9" width="18" height="18" style="color: var(--woad)"></use>
 <text x="82" y="146.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">vnet-fab-prod-hub</text>
 <text x="198.1" y="146.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.100.0.0/16</text>
-<g data-id="snet_gateway" data-box="58,164,244,122">
-<rect x="58.5" y="164.4" width="243" height="121.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<g data-id="snet_gateway" data-box="58,164,209,161">
+<rect x="58.5" y="164.4" width="208.1" height="160.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
 <text x="75" y="186.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">GatewaySubnet</text>
 <text x="173" y="186.2" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.100.0.0/27</text>
-<g data-id="vgw_vpn" data-box="75,203,210,66">
-<rect x="75.5" y="203.6" width="209" height="65" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-virtual-network-gateways" x="88" y="223.1" width="26" height="26" style="color: var(--ink)"></use>
-<text x="124" y="226.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">vgw-fab-prod</text>
-<text x="124" y="240.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">VPN gateway · VpnGw2 ·</text>
-<text x="124" y="255.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">public IP</text>
+<g data-id="vgw_vpn" data-box="75,203,104,105">
+<use href="#pg-azure-virtual-network-gateways" x="103" y="203.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="85.2" y="269.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">vgw-fab-prod</text>
+<text x="87.2" y="289.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">VPN gateway ·</text>
+<text x="75.4" y="304.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">VpnGw2 · public IP</text>
 </g>
 </g>
 </g>
-<g data-id="acr_acr" data-box="383,123,163,51">
-<rect x="383.5" y="123.4" width="161.8" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-container-registries" x="396" y="135.4" width="26" height="26" style="color: var(--ink)"></use>
-<text x="432" y="145.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">acrfabprod</text>
-<text x="432" y="159.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Container Registry</text>
+<g data-id="acr_acr" data-box="348,123,104,90">
+<use href="#pg-azure-container-registries" x="376.1" y="122.9" width="48" height="48" style="color: var(--ink)"></use>
+<text x="367" y="188.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">acrfabprod</text>
+<text x="349.7" y="208.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Container Registry</text>
 </g>
 </g>
-<g data-id="rg_workload" data-box="24,376,586,629">
-<rect x="24.5" y="376.6" width="585" height="627.8" rx="9.5" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
-<use href="#pg-azure-resource-groups" x="41" y="387.1" width="18" height="18" style="color: var(--muted)"></use>
-<text x="65" y="400" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--muted)">rg-fab-prod-logistics</text>
-<g data-id="vnet_spoke" data-box="41,417,278,571">
-<rect x="41.5" y="417.6" width="277" height="569.8" rx="9.5" style="fill: var(--vnet); stroke: var(--woad)" stroke-width="1"></rect>
-<use href="#pg-azure-virtual-networks" x="58" y="428.1" width="18" height="18" style="color: var(--woad)"></use>
-<text x="82" y="441" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">vnet-fab-prod-logistics</text>
-<text x="224.5" y="440.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.0.0/16</text>
-<g data-id="snet_this_agw" data-box="58,458,244,122">
-<rect x="58.5" y="458.6" width="243" height="121.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<text x="75" y="481.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-agw</text>
-<text x="136.1" y="480.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.0.0/24</text>
-<g data-id="agw_ingress" data-box="75,497.5,210,66">
-<rect x="75.5" y="497.8" width="209" height="65" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-application-gateways" x="88" y="517.3" width="26" height="26" style="color: var(--ink)"></use>
-<text x="124" y="520.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">agw-fab-prod</text>
-<text x="124" y="534.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Application Gateway ·</text>
-<text x="124" y="549.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">WAF_v2</text>
+<g data-id="rg_workload" data-box="24,415,469,815">
+<rect x="24.5" y="415.6" width="468" height="813.8" rx="9.5" style="fill: var(--wash); stroke: var(--line)" stroke-width="1"></rect>
+<use href="#pg-azure-resource-groups" x="41" y="426.1" width="18" height="18" style="color: var(--muted)"></use>
+<text x="65" y="439" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--muted)">rg-fab-prod-logistics</text>
+<g data-id="vnet_spoke" data-box="41,456,267,757">
+<rect x="41.5" y="456.6" width="266" height="755.8" rx="9.5" style="fill: var(--vnet); stroke: var(--woad)" stroke-width="1"></rect>
+<use href="#pg-azure-virtual-networks" x="58" y="467.1" width="18" height="18" style="color: var(--woad)"></use>
+<text x="82" y="480" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">vnet-fab-prod-logistics</text>
+<text x="224.5" y="479.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.0.0/16</text>
+<g data-id="snet_this_agw" data-box="58,497,233,161">
+<rect x="58.5" y="497.6" width="232" height="160.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<text x="75" y="520.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-agw</text>
+<text x="136.1" y="519.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.0.0/24</text>
+<g data-id="agw_ingress" data-box="75,536.5,104,105">
+<use href="#pg-azure-application-gateways" x="103" y="536.3" width="48" height="48" style="color: var(--ink)"></use>
+<text x="85.1" y="602.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">agw-fab-prod</text>
+<text x="96.5" y="622.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Application</text>
+<text x="77" y="637.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Gateway · WAF_v2</text>
 </g>
 </g>
-<g data-id="snet_this_aks" data-box="58,598.5,244,107">
-<rect x="58.5" y="598.8" width="243" height="106.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<text x="75" y="621.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-aks</text>
-<text x="132" y="620.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.4.0/22</text>
-<g data-id="aks_main" data-box="75,637.5,210,51">
-<rect x="75.5" y="637.9" width="209" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-kubernetes-services" x="88" y="649.9" width="26" height="26" style="color: var(--ink)"></use>
-<text x="124" y="660.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">aks-fab-prod</text>
-<text x="124" y="674.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">AKS · work node pool</text>
+<g data-id="snet_this_aks" data-box="58,676.5,233,161">
+<rect x="58.5" y="676.8" width="232" height="160.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<text x="75" y="699.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-aks</text>
+<text x="132" y="698.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.4.0/22</text>
+<g data-id="aks_main" data-box="75,715.5,104,105">
+<use href="#pg-azure-kubernetes-services" x="103" y="715.4" width="48" height="48" style="color: var(--ink)"></use>
+<text x="87.3" y="781.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">aks-fab-prod</text>
+<text x="81.8" y="801.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">AKS · work node</text>
+<text x="115.2" y="816.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">pool</text>
 </g>
 </g>
-<g data-id="snet_this_db" data-box="58,723.5,244,122">
-<rect x="58.5" y="723.9" width="243" height="121.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<text x="75" y="746.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-db</text>
-<text x="126.6" y="745.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.8.0/24</text>
-<g data-id="psql_db" data-box="75,762.5,210,66">
-<rect x="75.5" y="763.1" width="209" height="65" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-azure-database-postgresql-server" x="88" y="782.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="124" y="785.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">psql-fab-prod</text>
-<text x="124" y="799.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">PostgreSQL · shipments</text>
-<text x="124" y="814.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">database</text>
+<g data-id="snet_this_db" data-box="58,855.5,233,176">
+<rect x="58.5" y="855.9" width="232" height="175.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<text x="75" y="878.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-db</text>
+<text x="126.6" y="877.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.8.0/24</text>
+<g data-id="psql_db" data-box="75,894.5,104,120">
+<use href="#pg-azure-azure-database-postgresql-server" x="103" y="894.6" width="48" height="48" style="color: var(--ink)"></use>
+<text x="85.1" y="960.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">psql-fab-prod</text>
+<text x="91.5" y="980.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">PostgreSQL ·</text>
+<text x="99" y="995.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">shipments</text>
+<text x="101.9" y="1010.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">database</text>
 </g>
 </g>
-<g data-id="snet_this_pe" data-box="58,863.5,244,107">
-<rect x="58.5" y="864.1" width="243" height="106.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<text x="75" y="886.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-pe</text>
-<text x="126.2" y="886" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.9.0/24</text>
-<g data-id="pe_sb" data-box="75,903,210,51">
-<rect x="75.5" y="903.3" width="209" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-private-endpoint" x="88" y="915.3" width="26" height="26" style="color: var(--ink)"></use>
-<text x="124" y="925.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">pe-fab-prod-sb</text>
-<text x="124" y="939.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Private endpoint</text>
+<g data-id="snet_this_pe" data-box="58,1049.5,233,146">
+<rect x="58.5" y="1050.1" width="232" height="145.2" rx="9.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1" stroke-dasharray="5 4"></rect>
+<text x="75" y="1072.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--woad)">snet-pe</text>
+<text x="126.2" y="1072" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--woad)">10.110.9.0/24</text>
+<g data-id="pe_sb" data-box="75,1089,104,90">
+<use href="#pg-azure-private-endpoint" x="103" y="1088.8" width="48" height="48" style="color: var(--ink)"></use>
+<text x="80.1" y="1154.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">pe-fab-prod-sb</text>
+<text x="82.5" y="1174.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Private endpoint</text>
 </g>
 </g>
 </g>
-<g data-id="rg_workload_services" data-box="383,417,210,273">
-<g data-id="id_aks" data-box="383,417,210,51">
-<rect x="383.5" y="417.6" width="209" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-managed-identities" x="396" y="429.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="432" y="440.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">id-fab-prod-aks</text>
-<text x="432" y="454.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Managed identity</text>
+<g data-id="rg_workload_services" data-box="372,456,104,444">
+<g data-id="id_aks" data-box="372,456,104,90">
+<use href="#pg-azure-managed-identities" x="400" y="456.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="376" y="522.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">id-fab-prod-aks</text>
+<text x="376.8" y="542.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Managed identity</text>
 </g>
-<g data-id="log_law" data-box="383,486,210,51">
-<rect x="383.5" y="486.6" width="209" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-log-analytics-workspaces" x="396" y="498.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="432" y="509.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">log-fab-prod</text>
-<text x="432" y="523.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Log Analytics</text>
+<g data-id="log_law" data-box="372,564,104,90">
+<use href="#pg-azure-log-analytics-workspaces" x="400" y="564.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="385.5" y="630.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">log-fab-prod</text>
+<text x="387.2" y="650.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Log Analytics</text>
 </g>
-<g data-id="sb_events" data-box="383,555,210,66">
-<rect x="383.5" y="555.6" width="209" height="65" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-service-bus" x="396" y="575.1" width="26" height="26" style="color: var(--ink)"></use>
-<text x="432" y="578.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">sb-fab-prod</text>
-<text x="432" y="592.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Service Bus · shipments</text>
-<text x="432" y="607.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">queue · tracking topic</text>
+<g data-id="sb_events" data-box="372,672,104,120">
+<use href="#pg-azure-service-bus" x="400" y="672.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="387.5" y="738.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">sb-fab-prod</text>
+<text x="388.4" y="758.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Service Bus ·</text>
+<text x="374.1" y="773.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">shipments queue ·</text>
+<text x="386.9" y="788.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">tracking topic</text>
 </g>
-<g data-id="kv_kv" data-box="383,639,210,51">
-<rect x="383.5" y="639.6" width="209" height="50" rx="5.5" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></rect>
-<use href="#pg-azure-key-vaults" x="396" y="651.6" width="26" height="26" style="color: var(--ink)"></use>
-<text x="432" y="662.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: var(--ink)">kv-fab-prod</text>
-<text x="432" y="676.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Key Vault</text>
+<g data-id="kv_kv" data-box="372,810,104,90">
+<use href="#pg-azure-key-vaults" x="400" y="810.1" width="48" height="48" style="color: var(--ink)"></use>
+<text x="387.9" y="876.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">kv-fab-prod</text>
+<text x="398.6" y="896.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Key Vault</text>
 </g>
 </g>
 </g>
-<g data-edge="agw_ingress-&gt;aks_main" data-sides="left,left"><path d="M75,530 L58,530 Q52,530 52,536 L52,656 Q52,662 58,662 L75,662" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="id_aks-&gt;sb_events" data-sides="left,left"><path d="M383,433.5 L375,433.5 Q369,433.5 369,439.5 L369,571 Q369,577 375,577 L383,577" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="id_aks-&gt;kv_kv" data-sides="right,right"><path d="M593,442 L614,442 Q620,442 620,448 L620,658 Q620,664 614,664 L593,664" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;log_law" data-sides="right,left"><path d="M285,649.5 L345,649.5 Q351,649.5 351,643.5 L351,517 Q351,511 357,511 L383,511" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="vnet_spoke-&gt;vnet_hub" data-sides="top,bottom"><path d="M184.5,417 L184.5,410.8 Q184.5,407 188.3,407 L188.3,407 Q192,407 192,403.3 L192,333.8 Q192,330 188.3,330 L188.3,330 Q184.5,330 184.5,326.3 L184.5,303" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;id_aks" data-sides="right,left"><path d="M285,662 L327,662 Q333,662 333,656 L333,456.5 Q333,450.5 339,450.5 L383,450.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="pe_sb-&gt;sb_events" data-sides="right,left"><path d="M285,928 L363,928 Q369,928 369,922 L369,605 Q369,599 375,599 L383,599" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;acr_acr" data-sides="right,left"><path d="M285,674.5 L323,674.5 Q329,674.5 329,668.5 L329,154 Q329,148 335,148 L383,148" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="agw_ingress-&gt;aks_main" data-sides="left,left"><path d="M75,588 L58,588 Q52,588 52,594 L52,761 Q52,767 58,767 L75,767" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;sb_events" data-sides="left,left"><path d="M372,486 L364,486 Q358,486 358,492 L358,706 Q358,712 364,712 L372,712" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;kv_kv" data-sides="right,right"><path d="M476,501 L497,501 Q503,501 503,507 L503,849 Q503,855 497,855 L476,855" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;log_law" data-sides="right,left"><path d="M179,749.5 L336,749.5 Q342,749.5 342,743.5 L342,615 Q342,609 348,609 L372,609" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;id_aks" data-sides="top,left"><path d="M127,715 L127,710.5 Q127,706 131.5,706 L328,706 Q334,706 334,700 L334,522 Q334,516 340,516 L372,516" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="vnet_spoke-&gt;vnet_hub" data-sides="top,bottom"><path d="M172.5,456 L172.5,451 Q172.5,446 177.5,446 L186,446 Q192,446 192,440 L192,375 Q192,369 186,369 L178.5,369 Q172.5,369 172.5,363 L172.5,342" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
+<g data-edge="pe_sb-&gt;sb_events" data-sides="right,left"><path d="M179,1134 L352,1134 Q358,1134 358,1128 L358,758 Q358,752 364,752 L372,752" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;acr_acr" data-sides="right,left"><path d="M179,784.5 L316,784.5 Q322,784.5 322,778.5 L322,174 Q322,168 328,168 L348,168" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 
-<text class="g-edge" x="59" y="600" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">ingress</text>
-<text class="g-edge" x="297" y="449.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
-<text class="g-edge" x="627" y="557" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">Secrets User</text>
-<text class="g-edge" x="281.7" y="614.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
-<text class="g-edge" x="199" y="366.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
-<text class="g-edge" x="312.6" y="560.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">identity</text>
-<text class="g-edge" x="376" y="767.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="336" y="415.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">AcrPull</text>
+<text class="g-edge" x="59" y="675.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">ingress</text>
+<text class="g-edge" x="286" y="603" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
+<text class="g-edge" x="510" y="682" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">Secrets User</text>
+<text class="g-edge" x="223.4" y="743.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
+<text class="g-edge" x="210.1" y="700" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">identity</text>
+<text class="g-edge" x="199" y="405.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
+<text class="g-edge" x="226.4" y="1128" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="329" y="474.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">AcrPull</text>
 </g>
 </svg>

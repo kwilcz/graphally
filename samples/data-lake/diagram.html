@@ -1,0 +1,125 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<diagram width=1200 title="Your dashboards start in four systems and pass three stages" subtitle="Where the customer data behind marketing's Power BI dashboards comes from">
+<style>
+  /* Point: four sources flow into a lake that clears in three zones; the Power BI card sits at the clear end.
+     Visual metaphor: the lake (raw murky, cleaned cloudy, business-ready clear). Build: a three-column grid,
+     clip-path zones for one lake outline, a drawing script for specks and shoreline, and a 4-3-2 ruler below.
+     The water uses literal colours (the light-theme values), not tokens: the theme tokens invert in dark mode,
+     which would turn raw bright and business-ready dark. Literal colours stay the same in both themes. */
+  .route { display: grid; grid-template-columns: 220px 600px 240px; column-gap: 60px; justify-content: center; }
+  .head { font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); padding-bottom: 14px; }
+  .lakehead { text-align: center; padding-bottom: 14px; }
+  .lakehead b { display: block; font-size: 15px; color: var(--ink); }
+  .lakehead small { display: block; font-size: 12px; color: var(--muted); }
+
+  .sources { height: 380px; display: flex; flex-direction: column; justify-content: space-between; }
+  .figure { width: 200px; }
+  .figure small { color: var(--muted); }
+
+  .lake { display: grid; grid-template-columns: repeat(3, 200px); height: 380px; }
+  .lake-zone { height: 380px; box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding-top: 108px; padding-right: 40px; }
+  .lake-zone > * { max-width: 140px; }
+  .stage-no { width: 26px; height: 26px; border-radius: 50%; background: #ffffff; color: #1b2440; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .stage-name { font-size: 17px; font-weight: 700; }
+  .stage-gloss { font-size: 13px; line-height: 17px; }
+  .raw { background: #7c592b; color: #ffffff; padding-left: 36px; clip-path: polygon(0 50%, 18% 18%, 48% 5%, 100% 0, 100% 100%, 48% 95%, 18% 82%); }
+  .cleaned { background: #fbeee2; color: #1b2440; padding-left: 20px; clip-path: polygon(0 0, 50% 4%, 100% 0, 100% 100%, 50% 96%, 0 100%); }
+  .ready { background: #e7effb; color: #1b2440; padding-left: 20px; clip-path: polygon(0 0, 52% 5%, 82% 18%, 100% 50%, 82% 82%, 52% 95%, 0 100%); }
+
+  .uses { height: 380px; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+  .focal { width: 240px; box-sizing: border-box; padding: 20px; border-radius: 12px; background: var(--woad); color: var(--card); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .glyph { background: var(--card); border-radius: 8px; padding: 8px; }
+  .focal-name { font-size: 17px; font-weight: 700; }
+  .focal-cap { font-size: 13px; }
+
+  .ruler { margin-top: 32px; display: flex; align-items: baseline; gap: 12px; }
+  .r2 { justify-content: center; }
+  .ruler-num { font-size: 44px; font-weight: 700; line-height: 1; color: var(--ink); }
+  .ruler-cap { font-size: 13px; color: var(--muted); }
+</style>
+<div class=route>
+  <div class=head>Where it starts</div>
+  <div class=lakehead><b>The lakehouse</b><small>one shared store that all four systems feed</small></div>
+  <div class=head>Where it ends up</div>
+
+  <div class=sources>
+    <div class=figure id=crm><icon name=users></icon>CRM<small>who the customer is</small></div>
+    <div class=figure id=web><icon name=browser></icon>Web analytics<small>what visitors do on the site</small></div>
+    <div class=figure id=billing><icon name=file></icon>Billing system<small>what customers pay</small></div>
+    <div class=figure id=support><icon name=message></icon>Support tickets<small>what customers ask for help with</small></div>
+  </div>
+
+  <div class=lake>
+    <div class="lake-zone raw" id=z1>
+      <div class=stage-no>1</div>
+      <div class=stage-name>Raw</div>
+      <div class=stage-gloss>exactly as each system sent it</div>
+    </div>
+    <div class="lake-zone cleaned" id=z2>
+      <div class=stage-no>2</div>
+      <div class=stage-name>Cleaned</div>
+      <div class=stage-gloss>tidied up</div>
+    </div>
+    <div class="lake-zone ready" id=z3>
+      <div class=stage-no>3</div>
+      <div class=stage-name>Business-ready</div>
+      <div class=stage-gloss>ready for reports and models</div>
+    </div>
+  </div>
+
+  <div class=uses>
+    <div class=focal id=dash>
+      <div class=glyph><icon name=powerbi></icon></div>
+      <div class=focal-name>Power BI dashboards</div>
+      <div class=focal-cap>the ones marketing uses</div>
+    </div>
+    <div class=figure id=churn><icon name=machine-learning></icon>Churn model<small>predicts which customers may leave</small></div>
+  </div>
+
+  <div class="ruler r1"><span class=ruler-num>4</span><span class=ruler-cap>systems hold the customer data</span></div>
+  <div class="ruler r2"><span class=ruler-num>3</span><span class=ruler-cap>stages make it ready to use</span></div>
+  <div class="ruler r3"><span class=ruler-num>2</span><span class=ruler-cap>places it ends up</span></div>
+</div>
+<script type="application/json">
+[
+  { "from": ["crm", "web", "billing", "support"], "to": "z1", "out": "right", "in": "left", "color": "amber", "width": 3 },
+  { "from": "z3", "to": ["dash", "churn"], "out": "right", "in": "left", "color": "woad", "width": 3 }
+]
+</script>
+<script type="graphally">
+// Specks: a seeded generator, so a re-render does not move them. Only the lower water (60% to 90% of the
+// zone's height), never the text band. z1 starts further right, so none falls in the cut-away tip.
+const rnd = s => () => (s = (s * 16807) % 2147483647) / 2147483647;
+const speck = (id, n, fill, d, x0, x1) => {
+  const z = el(id), r = rnd(n + 11);
+  for (let i = 0; i < n; i++)
+    shape('circle', pt(z.x + z.w * (x0 + (x1 - x0) * r()), z.y + z.h * (0.6 + 0.3 * r())), { size: 3 + d * r(), fill, stroke: fill });
+};
+speck('z1', 30, '#fbeee2', 4, 0.44, 0.9);
+speck('z2', 9, '#b7791f', 2, 0.14, 0.86);
+
+// Seams: two page-coloured bars so the three stages read as zones of one lake.
+const Z1 = el('z1'), Z2 = el('z2'), Z3 = el('z3');
+for (const x of [Z1.x + Z1.w, Z2.x + Z2.w])
+  draw.moveTo(pt(x, Z1.y)).lineTo(pt(x, Z1.y + Z1.h)).style({ color: 'bg', width: 3 });
+
+// Shoreline: the outer edge of each zone, in the same vertices as its clip-path.
+const shore = (z, pts, style) => {
+  const P = ([fx, fy]) => pt(z.x + z.w * fx, z.y + z.h * fy);
+  let p = draw.moveTo(P(pts[0]));
+  for (const q of pts.slice(1)) p = p.lineTo(P(q));
+  p.style(style);
+};
+shore(Z1, [[1, 0], [0.48, 0.05], [0.18, 0.18], [0, 0.5], [0.18, 0.82], [0.48, 0.95], [1, 1]], { color: '#b7791f', width: 1.5, dashed: true });
+shore(Z2, [[0, 0], [0.5, 0.04], [1, 0]], { color: '#5d6680', width: 1.5 });
+shore(Z2, [[1, 1], [0.5, 0.96], [0, 1]], { color: '#5d6680', width: 1.5 });
+shore(Z3, [[0, 0], [0.52, 0.05], [0.82, 0.18], [1, 0.5], [0.82, 0.82], [0.52, 0.95], [0, 1]], { color: '#1f63b6', width: 2 });
+
+// A hairline across the full width, above the 4 3 2 ruler.
+const sources = el(".sources"), uses = el(".uses"), r1 = el(".r1");
+draw.moveTo(pt(sources.x, r1.y - 16)).lineTo(pt(uses.x + uses.w, r1.y - 16)).style({ color: "line", width: 1 });
+</script>
+</diagram>

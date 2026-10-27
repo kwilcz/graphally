@@ -1,6 +1,6 @@
 ---
 name: graphally
-description: Draws professional diagrams as SVG and PNG from HTML and CSS - architecture with Azure and AWS icons, networks (VNets, subnets, peering, private endpoints), hierarchies and org charts, BPMN processes and flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, figures for proposals and solution designs (governance, scope, layered solution stacks), and diagrams of Terraform repositories drafted from the code. The browser lays the figure out and graphally routes the connections, so nobody writes a coordinate. Use it whenever the user asks for a diagram, an architecture or network picture, a flow, a process map, a sequence, a timeline, a plan or a roadmap, or wants to visualise infrastructure, even without the word "diagram". Not for charts of numeric data (bar, line, pie).
+description: Draws professional diagrams and explanatory figures as SVG and PNG from HTML and CSS - architecture with Azure and AWS icons, networks (VNets, subnets, peering, private endpoints), hierarchies and org charts, BPMN processes and flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, figures for proposals and solution designs (governance, scope, layered solution stacks), diagrams of Terraform repositories drafted from the code, and any figure a web page can hold, designed around the point it makes. The browser lays the figure out and graphally routes the connections, so nobody writes a coordinate. Use it whenever the user asks for a diagram, an architecture or network picture, a flow, a process map, a sequence, a timeline, a plan or a roadmap, or wants to visualise infrastructure, even without the word "diagram". Not for charts of numeric data (bar, line, pie).
 license: Apache-2.0. Copyright (c) 2026 Kamil Wilczyński (kwilcz), https://github.com/kwilcz/graphally. LICENSE.txt has the terms.
 compatibility: Requires Node.js 18 or later and Chrome, Chromium or Edge (or `npx playwright install chromium`). Internet once, to download the Azure and AWS icon packs.
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/tf2graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/fetch-icons.mjs *)
@@ -13,68 +13,94 @@ metadata:
 # graphally
 
 A diagram is a small web page: HTML says what exists and what contains what, CSS says
-where it goes, and a JSON list says what connects to what. graphally lays the page out in
-a browser, routes the connections around the boxes, and writes an SVG. Never write
-coordinates, and never hand-write SVG.
+where it goes, a JSON list says what connects to what, and a drawing script traces any
+mark no box gives. graphally lays the page out in a browser, routes the connections around
+the boxes, and writes an SVG. Never write coordinates, and never hand-write SVG.
 
-Reach for the tools in this order:
+**A canvas, not a catalogue.** Whatever a web page can lay out, graphally draws: a pyramid
+cut from grid cells, rings, a track with stations, isometric slabs, a map, a building with
+floors. No figure needs to be supported first. The references teach techniques to combine
+and stretch; none of them lists the figures allowed.
 
-1. **HTML and utility classes** place almost everything: `grid grid-cols-4 gap-x-20`,
-   `flex justify-between`, `col-span-2`.
-2. **CSS in a `<style>`** covers what a class cannot say (`grid-template-areas`).
-3. **The helpers** do only what CSS cannot: dates to grid columns, messages to rows.
-4. **The drawing script** draws only what has no box: a gate on a boundary, a lifeline arrow.
+## Design the figure first
+
+Design each figure for its reader before writing any HTML. Write the design in three lines:
+
+1. **The point**: who reads the figure, and the one thing it must make obvious to them.
+2. **The visual metaphor**: a form, invented for this content, that shows the point before
+   a word is read. A conveyor whose two slow stations are red; the floors of a building for
+   the layers of a platform; walls in rings around what must be protected; a split screen
+   with what changes lit up.
+3. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
+   drawing script.
+
+A topology (icons joined by labelled lines) is the visual metaphor for one point: what runs
+where and what talks to what. When the user asks to explain, present, sell or simplify a
+system whose topology they already have, the point is a different one, and so is the form.
+A request to make a figure better, clearer or more advanced asks for a new visual metaphor,
+built for this content with whatever techniques it needs.
+
+Idea starters by point, and the design moves that make a figure read at a glance:
+[references/design.md](references/design.md).
 
 ## Workflow
 
-Copy this checklist and work through it; render as often as the diagram needs.
+Copy this checklist and work through it; render as often as the figure needs.
 
 ```
-- [ ] 1. Read the reference for the diagram's kind (table below), unless it is a plain architecture diagram
-- [ ] 2. Write diagram.html
-- [ ] 3. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
-- [ ] 4. Fix every reported problem; render again until it prints ok
-- [ ] 5. Look at diagram.png; fix what reads badly; render again
-- [ ] 6. Hand over diagram.svg, diagram.png and diagram.html
+- [ ] 1. Design: write the point, the visual metaphor and the build
+- [ ] 2. Read the references for the techniques the build uses (table below)
+- [ ] 3. Write diagram.html
+- [ ] 4. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
+- [ ] 5. Fix every reported problem; render again until it prints ok
+- [ ] 6. Look at diagram.png: the form shows the point before the labels are read; rework until it does
+- [ ] 7. Hand over diagram.svg, diagram.png and diagram.html
 ```
 
-1. **The reference.** Each kind has a page with a complete example to start from.
-2. **Write.** Start from the example below or the reference's. Ids name what the
-   connections join; text is what the reader sees.
-3. **Render.** The command writes `diagram.svg` (the deliverable) and `diagram.png` (a
+1. **Design.** Three short lines, in your reply or a comment in the file. The design
+   decides the figure; the references only build it.
+2. **The references.** Each teaches its techniques through a complete example. Take what
+   the build needs, from as many as it needs.
+3. **Write.** Start from an example below or in a reference, and change it as far as the
+   design asks. Ids name what the connections and the script refer to; text is what the
+   reader sees.
+4. **Render.** The command writes `diagram.svg` (the deliverable) and `diagram.png` (a
    preview), then prints `ok` or one line per problem. `${CLAUDE_SKILL_DIR}` is this
    skill's directory: Claude Code fills it in; elsewhere, use the path of the folder that
    holds this file.
-4. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
+5. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
    again.
-5. **Look.** `ok` means nothing collides, not that the story reads well: check that the
-   flow runs one way, labels sit by their lines, and nothing important is crowded.
-6. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
+6. **Look.** `ok` means nothing collides, not that the figure works. Read it as its reader
+   would, labels last: the form alone shows the point from step 1. Then check that it reads
+   one way, labels sit by what they name, and one element draws the eye first. When the
+   form misses the point, change the form.
+7. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
    that loads graphally's viewer), so the file itself shows the diagram when opened in a
    browser, with nothing installed. Keep the header; anyone can edit the text and reload.
 
 **Changing an existing diagram:** edit its `.html` in place, then render. The render reads
 the previous SVG, so what you did not change stays where it was. Keep `nudge`, `out` and
-`in`: they are the user's corrections. `--recompute` lays everything out afresh.
+`in`: they are the user's corrections. `--recompute` lays everything out afresh. A request
+to rethink a diagram (clearer, simpler, self-explanatory, more than boxes and arrows) is a
+new design: start again at step 1, and render with `--recompute`.
 
-## Example
+## Examples
+
+A topology: what runs where and what talks to what. Items are icons over their names
+(`figure`), with no frame; groups carry the structure, labelled lines the flow.
 
 ```html
-<diagram width=1300 title="Orders platform" subtitle="Production, West Europe">
-<div class="grid grid-cols-4 items-start justify-between gap-x-20">
-  <div class="group plain"><h4>Users</h4>
-    <div class="node external" id=shopper><icon name=browser></icon>Shopper<small>web browser</small></div>
+<diagram width=1200 title="Orders platform" subtitle="Production, West Europe">
+<div class="grid grid-cols-4 items-center justify-between gap-x-24">
+  <div class=figure id=shopper><icon name=browser></icon>Shopper<small>web browser</small></div>
+  <div class=figure id=fd><icon name="front door"></icon>Front Door<small>WAF</small></div>
+  <div class="group items-center gap-12"><h4>Application</h4>
+    <div class=figure id=api><icon name="app service"></icon>Orders API<small>App Service</small></div>
+    <div class=figure id=worker><icon name=functions></icon>Worker<small>Functions</small></div>
   </div>
-  <div class=group><h4><icon name="front door"></icon>Edge</h4>
-    <div class=node id=fd><icon name="front door"></icon>Front Door<small>WAF</small></div>
-  </div>
-  <div class=group><h4>Application</h4>
-    <div class=node id=api><icon name="app service"></icon>Orders API<small>App Service</small></div>
-    <div class=node id=worker><icon name=functions></icon>Worker<small>Functions</small></div>
-  </div>
-  <div class=group><h4>Data</h4>
-    <div class=node id=db><icon name=sql></icon>Orders DB<small>Azure SQL</small></div>
-    <div class="node accent" id=sb><icon name="service bus"></icon>Service Bus<small>orders topic</small></div>
+  <div class="group items-center gap-12"><h4>Data</h4>
+    <div class=figure id=db><icon name=sql></icon>Orders DB<small>Azure SQL</small></div>
+    <div class=figure id=sb><icon name="service bus"></icon>Service Bus<small>orders topic</small></div>
   </div>
 </div>
 <script type="application/json">
@@ -85,6 +111,39 @@ the previous SVG, so what you did not change stays where it was. Keep `nudge`, `
   { "from": "api", "to": "sb", "label": "order placed", "dashed": true },
   { "from": "sb", "to": "worker", "label": "events", "dashed": true }
 ]
+</script>
+</diagram>
+```
+
+A figure designed for its point, "two stations hold most of the delay". The track is the
+order's path, so no lines join the stations; the red stops and their notes carry the point.
+
+```html
+<diagram width=1200 title="Two stations hold most of the delay" subtitle="What happens to an order, from the web shop to the door">
+<style>
+  .line { display: grid; grid-template-columns: repeat(5, 1fr); justify-items: center; row-gap: 16px; }
+  .figure { width: 150px; }
+  .track { grid-row: 2; grid-column: 1 / -1; justify-self: stretch; height: 36px; background: var(--icon-soft); clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%); }
+  .stop { grid-row: 2; align-self: center; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--woad); color: var(--card); font-weight: 700; }
+  .stop.slow { background: var(--rust); }
+  .stall { grid-row: 3; width: 200px; padding: 8px 12px; border-left: 4px solid var(--rust); background: var(--card); font-size: 12px; line-height: 16px; }
+  .stall b { display: block; font-size: 15px; color: var(--rust); }
+</style>
+<div class=line>
+  <div class=figure><icon name=browser></icon>Order placed<small>web shop</small></div>
+  <div class=figure><icon name=shield></icon>Payment checked<small>fraud rules</small></div>
+  <div class=figure><icon name=database></icon>Stock reserved<small>ERP</small></div>
+  <div class=figure><icon name=building></icon>Packed<small>warehouse</small></div>
+  <div class=figure><icon name=mail></icon>Delivered<small>carrier</small></div>
+  <i class=track></i>
+  <b class="stop col-[1]">1</b><b class="stop slow col-[2]">2</b><b class="stop col-[3]">3</b><b class="stop slow col-[4]">4</b><b class="stop col-[5]">5</b>
+  <div class="stall col-[2]"><b>4 hours</b>payments wait for the nightly fraud check</div>
+  <div class="stall col-[4]"><b>2 days</b>packing waits for a manual stock count</div>
+</div>
+<script type="graphally">
+// A dashed leader from each slow station down to what holds it up.
+const stalls = all('.stall');
+all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stalls[i].y)).style({ color: 'rust', dashed: true }));
 </script>
 </diagram>
 ```
@@ -100,11 +159,14 @@ the previous SVG, so what you did not change stays where it was. Keep `nudge`, `
   Brackets take any value or property: `w-[130px]`, `grid-cols-[160px_1fr]`,
   `[grid-area:edge]`. Colours are the theme's tokens (`bg-wash`, `text-muted`,
   `border-woad`); text sizes follow the diagram's scale (`text-base` is 13px).
-- **Building blocks**: `node` (a card: `<icon>`, a name, a `<small>` line; `external`,
-  `accent`), `group` with an `<h4>` title (`plain`, `dashed`, `external`, `vnet`, `subnet`,
-  `region`; `badges` of `badge` icons in the title), `tile` and `figure` (an icon over its
-  name), `band` (a strip of shared services), `key` with `swatch` (a legend), `card`,
-  `box`, `pill`, `tag`, `banner`. These class names are taken: name your own differently.
+- **Building blocks**: `figure` (an icon over its name and a `<small>` line, with no
+  frame: the item of a topology; `external` mutes it, `accent` colours it), `node` (the
+  same in a framed card), `group` with an `<h4>` title (`plain`, `dashed`, `external`,
+  `vnet`, `subnet`, `region`; `badges` of `badge` icons in the title), `tile` (an icon over
+  its name in a small frame), `band` (a strip of shared services), `key` with `swatch` (a
+  legend), `card`, `box`, `pill`, `tag`, `banner`. These class names are taken, and so are
+  the sequence helper's (`seq`, `msg`, `num`, `guard`, `lifeline`, `activation`, `frag-…`):
+  name your own differently.
 - **Shapes**: `shape="cylinder"` on any element draws it as that shape: `diamond`,
   `hexagon`, `chevron`, `semicircle`, `document`, `cloud`, BPMN `task`, `start`, `end`,
   `gateway exclusive`, `event timer` and more. `clip-path: polygon(…)` cuts any other
@@ -115,7 +177,9 @@ the previous SVG, so what you did not change stays where it was. Keep `nudge`, `
   or objects with `dashed`, `out`/`in` (the sides), `both`, `via`, `color`. A list in `to`
   or `from` draws one bundle with a shared trunk.
 - **Drawing script**: `<script type="graphally">` runs after layout with every element's
-  box: `arrow`, `connect`, `depend`, `draw.moveTo(…).lineTo(…)`, `gate`, `text`, `shape`.
+  box, for marks no box gives (tracks, rings, leaders, brackets, slabs): `arrow`,
+  `connect`, `depend`, `draw.moveTo(…).lineTo(…)`, `draw.arc`, `gate`, `text`, `icon`,
+  `shape`.
 - **Helpers**: `<script type="graphally" before>` calls `schedule()` and `timeline()`
   (plans) or `sequence()` (sequence diagrams) before layout.
 - **Themes**: `--themes` writes `diagram-dark.svg` beside the light one; `--dark` draws
@@ -140,19 +204,21 @@ The whole format, with every class, shape, option and call: [references/format.m
 
 ## References
 
-Read the one for the kind of diagram you draw; each starts with a complete example.
+Each teaches techniques through a complete example; a figure takes what it needs from as
+many as it needs.
 
-| Kind | Reference |
+| Techniques | Reference |
 |---|---|
-| Networks: VNets, subnets, peering, hub and spoke, private endpoints | [references/network.md](references/network.md) |
-| Hierarchies: management groups, org charts, module trees | [references/hierarchy.md](references/hierarchy.md) |
-| BPMN processes with swimlanes, and flowcharts | [references/process.md](references/process.md) |
-| Sequence diagrams: calls, replies, loops, alternatives | [references/sequence.md](references/sequence.md) |
-| Plans: Gantt charts, roadmaps, milestones, dependencies | [references/plan.md](references/plan.md) |
-| Phase and role charts, matrices, step cards, anything else | [references/charts.md](references/charts.md) |
-| Figures for proposals and solution designs: governance pyramids, scope targets, layered solution stacks; custom shapes, radial layouts, drawing on the layout | [references/documents.md](references/documents.md) |
-| A diagram of a Terraform repository, drafted from the code | [references/terraform.md](references/terraform.md) |
-| The whole format | [references/format.md](references/format.md) |
+| Designing a figure: idea starters by point, the moves that make it read at a glance | [references/design.md](references/design.md) |
+| Containers in containers (VNets, subnets), a map of named areas, peering and private links | [references/network.md](references/network.md) |
+| One column per leaf and one row per level; a bus from a parent to its children | [references/hierarchy.md](references/hierarchy.md) |
+| Lanes, events and gateways; a happy path with its branches | [references/process.md](references/process.md) |
+| Participants across, messages down in time, fragments | [references/sequence.md](references/sequence.md) |
+| Dates as grid columns: bars, milestones, dependencies | [references/plan.md](references/plan.md) |
+| Rows lined up across stages (subgrid), phase chevrons, gates on boundaries, matrices | [references/charts.md](references/charts.md) |
+| Shapes cut with `clip-path`, placing by angle and distance, geometry drawn around the layout | [references/documents.md](references/documents.md) |
+| Drafting a diagram of a Terraform repository from the code | [references/terraform.md](references/terraform.md) |
+| The whole format: every class, shape, option and call | [references/format.md](references/format.md) |
 
 ## Scripts
 

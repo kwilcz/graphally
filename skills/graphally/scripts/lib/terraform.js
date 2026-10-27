@@ -548,7 +548,7 @@ export function terraformToDiagram(root, { title, icons } = {}) {
     } else {
       const kind = it.many === 'each' || it.many === 'N' ? `${it.kind} ×N` : Number.isFinite(it.many) ? `${it.kind} ×${it.many}` : it.kind;
       const small = [kind, sub].filter(Boolean).join(' · ');
-      lines.push(`${pad}<div class="node${it.r.type === 'module' ? ' external' : ''}" id=${it.id}>${iconTag(it.icon)}${esc(it.label)}${small ? `<small>${esc(small)}</small>` : ''}</div>`);
+      lines.push(`${pad}<div class="figure${it.r.type === 'module' ? ' external' : ''}" id=${it.id}>${iconTag(it.icon)}${esc(it.label)}${small ? `<small>${esc(small)}</small>` : ''}</div>`);
     }
   };
   // Top-level boxes: the first in the flow on the left, the boxes it reaches stacked on

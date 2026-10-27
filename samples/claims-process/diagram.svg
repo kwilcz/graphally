@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 1768 907" width="1768" height="907" role="img" aria-label="Insurance claims: who decides, and the four ways a claim ends. Claim handling process, BPMN 2.0 · amounts in EUR · the SIU investigation itself is described in its own procedure">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker></defs>
+<rect class="g-bg" width="1768" height="907" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Insurance claims: who decides, and the four ways a claim ends</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Claim handling process, BPMN 2.0 · amounts in EUR · the SIU investigation itself is described in its own procedure</text>
+<rect x="24.5" y="82.4" width="1719" height="800" rx="0" style="fill: none; stroke: var(--line)" stroke-width="1"></rect>
+<line x1="25" y1="195.4" x2="1730.9" y2="195.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="82.9" width="100" height="112" rx="0" style="fill: var(--lane-d)"></rect>
+<text x="37" y="142.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Customer</text>
+<g data-id="s" data-box="183.5,121,36,36">
+<path d="M184.2,138.9 A17.5,17.5 0 1 1 219.2,138.9 A17.5,17.5 0 1 1 184.2,138.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M193.2,133 H210.3 V144.7 H193.2 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M193.2,133 L201.7,139.8 L210.3,133" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linejoin="round"></path>
+</g>
+<text x="154.5" y="171.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Customer submits</text>
+<text x="170.8" y="185.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">claim online</text>
+<g data-id="prov" data-box="712.5,111,150,56">
+<path d="M723.1,111.4 H852.1 Q862.1,111.4 862.1,121.4 V156.4 Q862.1,166.4 852.1,166.4 H723.1 Q713.1,166.4 713.1,156.4 V121.4 Q713.1,111.4 723.1,111.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="742.1" y="134.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Provide missing</text>
+<text x="755.5" y="149.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">documents</text>
+<g data-id="tim" data-box="821.5,150,32,32">
+<path d="M822.1,165.9 A15.5,15.5 0 1 1 853.1,165.9 A15.5,15.5 0 1 1 822.1,165.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M825.6,165.9 A12,12 0 1 1 849.6,165.9 A12,12 0 1 1 825.6,165.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M829.6,165.9 A8,8 0 1 1 845.6,165.9 A8,8 0 1 1 829.6,165.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M837.6,160.3 V165.9 L841.6,167.9" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+</g>
+<line x1="25" y1="316.4" x2="1730.9" y2="316.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="195.9" width="100" height="120" rx="0" style="fill: var(--lane-a)"></rect>
+<text x="37" y="251.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Claims</text>
+<text x="37" y="267.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">intake</text>
+<g data-id="check" data-box="278.5,228,128,56">
+<path d="M288.9,228.4 H395.9 Q405.9,228.4 405.9,238.4 V273.4 Q405.9,283.4 395.9,283.4 H288.9 Q278.9,283.4 278.9,273.4 V238.4 Q278.9,228.4 288.9,228.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="297.6" y="252.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Check claim for</text>
+<text x="302.2" y="267.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">completeness</text>
+</g>
+<g data-id="g1" data-box="461,234,44,44">
+<path d="M483.2,234.4 L504.7,255.9 L483.2,277.4 L461.7,255.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M476.6,249.3 L489.8,262.5 M489.8,249.3 L476.6,262.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<text x="453.6" y="212.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Documents</text>
+<text x="456.2" y="226.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">complete?</text>
+<g data-id="req" data-box="560,228,128,56">
+<path d="M570.4,228.4 H677.4 Q687.4,228.4 687.4,238.4 V273.4 Q687.4,283.4 677.4,283.4 H570.4 Q560.4,283.4 560.4,273.4 V238.4 Q560.4,228.4 570.4,228.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="576.7" y="252.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Request missing</text>
+<text x="591.8" y="267.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">documents</text>
+</g>
+<g data-id="close" data-box="887.5,228,128,56">
+<path d="M897.8,228.4 H1004.8 Q1014.8,228.4 1014.8,238.4 V273.4 Q1014.8,283.4 1004.8,283.4 H897.8 Q887.8,283.4 887.8,273.4 V238.4 Q887.8,228.4 897.8,228.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="918.2" y="260.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Close claim</text>
+</g>
+<g data-id="endClosed" data-box="1074,238,36,36">
+<path d="M1075.5,255.9 A16.5,16.5 0 1 1 1108.5,255.9 A16.5,16.5 0 1 1 1075.5,255.9 Z" style="fill: var(--card); stroke: var(--amber)" stroke-width="3"></path>
+</g>
+<text x="1057.5" y="288.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; fill: var(--amber)">Claim closed</text>
+<text x="1055" y="302.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--amber)">no documents</text>
+<line x1="25" y1="437.4" x2="1730.9" y2="437.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="316.9" width="100" height="120" rx="0" style="fill: var(--lane-c)"></rect>
+<text x="37" y="372.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Claims</text>
+<text x="37" y="388.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">system</text>
+<g data-id="score" data-box="560,349,128,56">
+<path d="M570.4,349.4 H677.4 Q687.4,349.4 687.4,359.4 V394.4 Q687.4,404.4 677.4,404.4 H570.4 Q560.4,404.4 560.4,394.4 V359.4 Q560.4,349.4 570.4,349.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="578.2" y="373.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Score fraud risk</text>
+<text x="599.5" y="389.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 10.5px; font-weight: 400; fill: var(--muted)">automatic</text>
+</g>
+<g data-id="g2" data-box="742.5,355,44,44">
+<path d="M764.6,355.4 L786.1,376.9 L764.6,398.4 L743.1,376.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M758,370.3 L771.2,383.5 M771.2,370.3 L758,383.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<text x="723.4" y="347.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">High fraud risk?</text>
+<g data-id="ntRej" data-box="1169,343.5,128,67">
+<path d="M1179.3,343.9 H1286.3 Q1296.3,343.9 1296.3,353.9 V399.9 Q1296.3,409.9 1286.3,409.9 H1179.3 Q1169.3,409.9 1169.3,399.9 V353.9 Q1169.3,343.9 1179.3,343.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1186.6" y="366.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Notify customer</text>
+<text x="1184.7" y="381.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">of rejection, with</text>
+<text x="1202.3" y="396.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">the reason</text>
+</g>
+<g data-id="endRej" data-box="1355.5,359,36,36">
+<path d="M1357,376.9 A16.5,16.5 0 1 1 1390,376.9 A16.5,16.5 0 1 1 1357,376.9 Z" style="fill: var(--card); stroke: var(--rust)" stroke-width="3"></path>
+</g>
+<text x="1334.8" y="409.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; fill: var(--rust)">Claim rejected</text>
+<text x="1324.2" y="423.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--rust)">customer informed</text>
+<g data-id="ntPaid" data-box="1474,349,128,56">
+<path d="M1484.7,349.4 H1591.7 Q1601.7,349.4 1601.7,359.4 V394.4 Q1601.7,404.4 1591.7,404.4 H1484.7 Q1474.7,404.4 1474.7,394.4 V359.4 Q1474.7,349.4 1484.7,349.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1492" y="373.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Notify customer</text>
+<text x="1505.6" y="388.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">of payment</text>
+</g>
+<g data-id="endPaid" data-box="1661,359,36,36">
+<path d="M1662.4,376.9 A16.5,16.5 0 1 1 1695.4,376.9 A16.5,16.5 0 1 1 1662.4,376.9 Z" style="fill: var(--card); stroke: var(--green)" stroke-width="3"></path>
+</g>
+<text x="1650.7" y="409.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; fill: var(--green)">Claim paid</text>
+<text x="1629.6" y="423.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--green)">customer informed</text>
+<line x1="25" y1="550.4" x2="1730.9" y2="550.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="437.9" width="100" height="112" rx="0" style="fill: var(--lane-a)"></rect>
+<text x="37" y="481.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Special</text>
+<text x="37" y="497.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">investigations</text>
+<text x="37" y="514" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">unit</text>
+<g data-id="inv" data-box="887.5,466,128,56">
+<path d="M897.8,466.4 H1004.8 Q1014.8,466.4 1014.8,476.4 V511.4 Q1014.8,521.4 1004.8,521.4 H897.8 Q887.8,521.4 887.8,511.4 V476.4 Q887.8,466.4 897.8,466.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="919.9" y="490.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Investigate</text>
+<text x="904.4" y="505.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">suspected fraud</text>
+</g>
+<g data-id="endSiu" data-box="1074,476,36,36">
+<path d="M1075.5,493.9 A16.5,16.5 0 1 1 1108.5,493.9 A16.5,16.5 0 1 1 1075.5,493.9 Z" style="fill: var(--card); stroke: var(--purple)" stroke-width="3"></path>
+</g>
+<text x="1054" y="454.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; fill: var(--purple)">Handed to SIU</text>
+<text x="1052.7" y="468.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--purple)">own procedure</text>
+<line x1="25" y1="671.4" x2="1730.9" y2="671.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="550.9" width="100" height="120" rx="0" style="fill: var(--lane-a)"></rect>
+<text x="37" y="614.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Adjuster</text>
+<g data-id="assess" data-box="887.5,577.5,128,67">
+<path d="M897.8,577.9 H1004.8 Q1014.8,577.9 1014.8,587.9 V633.9 Q1014.8,643.9 1004.8,643.9 H897.8 Q887.8,643.9 887.8,633.9 V587.9 Q887.8,577.9 897.8,577.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="905.9" y="600.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Assess damage</text>
+<text x="910.7" y="615.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">and decide on</text>
+<text x="925.3" y="630.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">the claim</text>
+</g>
+<g data-id="g3" data-box="1070,589,44,44">
+<path d="M1092,589.4 L1113.5,610.9 L1092,632.4 L1070.5,610.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M1085.4,604.3 L1098.6,617.5 M1098.6,604.3 L1085.4,617.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<text x="1045.3" y="581.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Over 10,000 EUR?</text>
+<g data-id="g4" data-box="1211,589,44,44">
+<path d="M1232.8,589.4 L1254.3,610.9 L1232.8,632.4 L1211.3,610.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M1226.2,604.3 L1239.4,617.5 M1239.4,604.3 L1226.2,617.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<text x="1246.8" y="635.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Approved?</text>
+<line x1="25" y1="781.4" x2="1730.9" y2="781.4" style="stroke: var(--line)" stroke-width="1"></line>
+<rect x="25" y="671.9" width="100" height="109" rx="0" style="fill: var(--lane-a)"></rect>
+<text x="37" y="730.3" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Team lead</text>
+<g data-id="lead" data-box="1169,694,128,65">
+<path d="M1179.3,694.4 H1286.3 Q1296.3,694.4 1296.3,704.4 V748.4 Q1296.3,758.4 1286.3,758.4 H1179.3 Q1169.3,758.4 1169.3,748.4 V704.4 Q1169.3,694.4 1179.3,694.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1201.4" y="716.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Review the</text>
+<text x="1208.6" y="731.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">decision</text>
+<text x="1190.4" y="744.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 10.5px; font-weight: 400; fill: var(--muted)">approve or reject</text>
+</g>
+<rect x="25" y="781.9" width="100" height="100" rx="0" style="fill: var(--lane-b)"></rect>
+<text x="37" y="835.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Finance</text>
+<g data-id="pay" data-box="1321.5,804,128,56">
+<path d="M1332,804.4 H1439 Q1449,804.4 1449,814.4 V849.4 Q1449,859.4 1439,859.4 H1332 Q1322,859.4 1322,849.4 V814.4 Q1322,804.4 1332,804.4 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<text x="1358" y="836.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--ink)">Pay claim</text>
+</g>
+<g data-edge="lead-&gt;g4" data-sides="top,bottom" data-out="top" data-in="bottom"><path d="M1233,694 L1233,633" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ntRej-&gt;endRej" data-sides="right,left"><path d="M1297,377 L1355,377" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="check-&gt;g1" data-sides="right,left"><path d="M406,256 L461,256" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g1-&gt;req" data-sides="right,left" data-out="right"><path d="M505,256 L560,256" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="close-&gt;endClosed" data-sides="right,left"><path d="M1015,256 L1074,256" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="score-&gt;g2" data-sides="right,left"><path d="M688,377 L743,377" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="inv-&gt;endSiu" data-sides="right,left"><path d="M1015,494 L1074,494" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g3-&gt;g4" data-sides="right,left" data-out="right" data-in="left"><path d="M1114,611 L1211,611" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ntPaid-&gt;endPaid" data-sides="right,left"><path d="M1602,377 L1661,377" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="assess-&gt;g3" data-sides="right,left"><path d="M1015,611 L1070,611" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="tim-&gt;close" data-sides="bottom,left" data-out="bottom"><path d="M838,182 L838,250 Q838,256 844,256 L887,256" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g4-&gt;ntRej" data-sides="top,bottom" data-out="top" data-in="bottom"><path d="M1233,589 L1233,410" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g3-&gt;lead" data-sides="bottom,left" data-out="bottom" data-in="left"><path d="M1092,633 L1092,720 Q1092,726 1098,726 L1169,726" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="s-&gt;check" data-sides="right,left" data-out="right" data-in="left"><path d="M220,139 L258,139 Q264,139 264,145 L264,250 Q264,256 270,256 L278,256" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g1-&gt;score" data-sides="bottom,left" data-out="bottom" data-in="left"><path d="M483,278 L483,371 Q483,377 489,377 L560,377" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="req-&gt;prov" data-sides="top,left"><path d="M624,228 L624,145 Q624,139 630,139 L713,139" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g2-&gt;inv" data-sides="right,top" data-out="right" data-in="top"><path d="M787,377 L945,377 Q951,377 951,383 L951,466" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g4-&gt;pay" data-sides="right,top" data-out="right" data-in="top"><path d="M1255,611 L1379,611 Q1385,611 1385,617 L1385,804" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="g2-&gt;assess" data-sides="bottom,left" data-out="bottom" data-in="left"><path d="M765,399 L765,604 Q765,610 771,610 L887,610" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="prov-&gt;check" data-sides="top,top" data-out="top" data-in="top"><path d="M788,111 L788,103 Q788,97 782,97 L348,97 Q342,97 342,103 L342,228" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="pay-&gt;ntPaid" data-sides="right,bottom" data-out="right" data-in="bottom"><path d="M1449,832 L1532,832 Q1538,832 1538,826 L1538,451 Q1538,445 1538,439 L1538,405" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+
+<text class="g-edge" x="525.6" y="250" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="1155.6" y="605" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="845" y="217" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">after 14 days</text>
+<text class="g-edge" x="1240" y="503.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">rejected</text>
+<text class="g-edge" x="1121" y="720" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="512" y="371" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="859.5" y="371" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">yes</text>
+<text class="g-edge" x="1294.3" y="605" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">approved</text>
+<text class="g-edge" x="819.1" y="604" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
+<text class="g-edge" x="509.6" y="112" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">documents received</text>
+</g>
+</svg>

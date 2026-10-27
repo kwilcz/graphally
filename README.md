@@ -14,7 +14,23 @@ diagrams of Terraform repositories from the code.
 > **Licence.** graphally is open source under the [Apache License 2.0](LICENSE).
 > Copyright © 2026 Kamil Wilczyński ([kwilcz](https://github.com/kwilcz)).
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="samples/architecture/diagram-dark.png"><img alt="An Azure architecture diagram" src="samples/architecture/diagram.png"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="samples/azure-platform/diagram-dark.png"><img alt="An Azure order platform: hub and spoke, private endpoints, the SAP sync through the hub firewall" src="samples/azure-platform/diagram.png"></picture>
+
+Every figure above was drawn by an agent from a brief; the
+[showcase](samples/README.md) has each one with its brief and the source the agent wrote.
+
+| | |
+|---|---|
+| <picture><source media="(prefers-color-scheme: dark)" srcset="samples/cost-rise/diagram-dark.png"><img alt="Why the cloud bill grew: the rise magnified to scale" src="samples/cost-rise/diagram.png"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="samples/data-lineage/diagram-dark.png"><img alt="Where customer data comes from: records tidied stage by stage" src="samples/data-lineage/diagram.png"></picture> |
+| **Why the cloud bill grew.** The 24k rise, magnified to scale. | **Where customer data comes from.** The same records, tidied stage by stage. |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="samples/migration-waves/diagram-dark.png"><img alt="Three waves to Azure: width for months, height for risk" src="samples/migration-waves/diagram.png"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="samples/release-gates/diagram-dark.png"><img alt="How a change reaches production: waits to scale, users as dots" src="samples/release-gates/diagram.png"></picture> |
+| **Three waves to Azure.** Width for months, height for risk, a square per application. | **How a change reaches production.** Waits to scale; the users who have the change, as dots. |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="samples/responsibility-split/diagram-dark.png"><img alt="Who is responsible for what: two territories that overlap" src="samples/responsibility-split/diagram.png"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="samples/data-lake/diagram-dark.png"><img alt="The same data-lineage brief, designed as a lake that clears" src="samples/data-lake/diagram.png"></picture> |
+| **Who is responsible for what.** Two territories that overlap at a weekly round table. | **The same brief, another design.** The lakehouse as water that clears. |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="samples/aws-telemetry/diagram-dark.png"><img alt="Telemetry ingestion on AWS: validated once, split three ways" src="samples/aws-telemetry/diagram.png"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="samples/landing-zone/diagram-dark.png"><img alt="Landing zone network: all spoke egress through the hub firewall" src="samples/landing-zone/diagram.png"></picture> |
+| **Telemetry ingestion on AWS.** Validated once, then split three ways. | **Landing zone network.** Every spoke's egress through the hub firewall. |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="samples/claims-process/diagram-dark.png"><img alt="Insurance claim process in BPMN" src="samples/claims-process/diagram.png"></picture> | <picture><source media="(prefers-color-scheme: dark)" srcset="samples/order-journey/diagram-dark.png"><img alt="An orders topology redrawn for business readers" src="samples/order-journey/diagram.png"></picture> |
+| **Insurance claim process.** BPMN; the four ways a claim ends are the only colour. | **The orders diagram, for business.** An engineer's topology, redrawn around one wall. |
 
 Every diagram comes in a light and a dark theme from the same source: `render --themes`
 writes both, a page shows the one that matches its reader, and a diagram opened in a
@@ -22,7 +38,7 @@ browser follows the system setting.
 
 | Light | Dark |
 |---|---|
-| <img alt="The architecture diagram, light theme" src="samples/architecture/diagram.png"> | <img alt="The architecture diagram, dark theme" src="samples/architecture/diagram-dark.png"> |
+| <img alt="Why the cloud bill grew, light theme" src="samples/cost-rise/diagram.png"> | <img alt="Why the cloud bill grew, dark theme" src="samples/cost-rise/diagram-dark.png"> |
 
 ## Install
 
@@ -151,6 +167,18 @@ was given and the source it wrote.
   [governance pyramid](samples/README.md#governance-pyramid),
   [scope target](samples/README.md#scope-target),
   [solution stack](samples/README.md#solution-stack).
+- **Designed for the point**, from briefs that name no kind of diagram:
+  [why the cloud bill grew](samples/README.md#why-the-cloud-bill-grew),
+  [where customer data comes from](samples/README.md#where-customer-data-comes-from) and
+  [the same brief, another design](samples/README.md#the-same-brief-another-design),
+  [three waves to Azure](samples/README.md#three-waves-to-azure),
+  [how a change reaches production](samples/README.md#how-a-change-reaches-production),
+  [who is responsible for what](samples/README.md#who-is-responsible-for-what),
+  [the orders diagram, for business](samples/README.md#the-orders-diagram-for-business);
+  and, in depth, [an Azure platform](samples/README.md#order-platform-on-azure),
+  [AWS telemetry ingestion](samples/README.md#telemetry-ingestion-on-aws),
+  [a landing zone network](samples/README.md#landing-zone-network) and
+  [a BPMN claim process](samples/README.md#insurance-claim-process).
 
 ## Releases
 

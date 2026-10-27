@@ -71,8 +71,10 @@ const PAGE_CSS = `
 :where(.graphally-page .node:has(> icon)) { grid-template-columns: auto 1fr; }
 :where(.graphally-page .node > icon) { grid-row: 1 / span 2; width: 26px; height: 26px; }
 :where(.graphally-page :is(.node, .tile, .figure) > small) { grid-column: -2; font-size: 11.5px; font-weight: 400; line-height: 15px; color: var(--muted); }
-:where(.graphally-page :is(.node, .tile, .figure).external) { border-style: dashed; border-color: var(--muted); }
+:where(.graphally-page :is(.node, .tile).external) { border-style: dashed; border-color: var(--muted); }
 :where(.graphally-page :is(.node, .tile).accent) { border: 2px solid var(--woad); color: var(--woad); }
+:where(.graphally-page .figure.external) { color: var(--muted); }
+:where(.graphally-page .figure.accent) { color: var(--woad); font-weight: 650; }
 :where(.graphally-page .tile) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 112px; padding: 10px 6px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
 :where(.graphally-page .tile > icon) { width: 40px; height: 40px; }
 :where(.graphally-page .figure) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 104px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
@@ -184,7 +186,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height };
   };
   const colors = tokenColors(root);
-  const paintOf = c => (!c || /rgba\(.*,\s*0\)$/.test(c) || c === 'transparent' ? null : colors.get(c) || c);
+  const paintOf = c => (!c || /rgba\(.*,\s*0\)$/.test(c) || c === 'transparent' ? null : colors.get(c) || portable(c));
 
   // ---------- the script: geometry by name, connections and drawings ----------
   const pt = (x, y) => ({ x, y, down: d => pt(x, y + d), up: d => pt(x, y - d), left: d => pt(x - d, y), right: d => pt(x + d, y), move: (dx, dy) => pt(x + dx, y + dy) });
@@ -618,6 +620,38 @@ function tokenColors(root) {
   for (const t of TOKENS) { probe.style.color = `var(--${t})`; const c = getComputedStyle(probe).color; if (!map.has(c)) map.set(c, `var(--${t})`); }
   probe.remove();
   return map;
+}
+
+// A colour every SVG reader knows. The browser computes color-mix() to color(srgb …) and the
+// newer spaces to oklab(), lab() or color(display-p3 …), which Office, Inkscape and most
+// converters do not read: those become rgb(). srgb is read exactly; any other space is
+// painted on a pixel and read back. A colour made of the theme's tokens (var(--woad), or a
+// color-mix() of them, as a drawing script may give) stays as written, so it follows the dark
+// theme like every other token; so does anything the pixel cannot read.
+const portableMemo = new Map();
+let pixel;
+function portable(c) {
+  if (/^(rgba?\(|#)/.test(c) || c.includes('var(')) return c;
+  if (portableMemo.has(c)) return portableMemo.get(c);
+  let out;
+  const s = /^color\(srgb ([\d.e-]+) ([\d.e-]+) ([\d.e-]+)(?: \/ ([\d.e-]+))?\)$/.exec(c);
+  if (s) {
+    const [r, g, b] = s.slice(1, 4).map(v => Math.round(Math.min(1, Math.max(0, +v)) * 255)), a = s[4] === undefined ? 1 : +s[4];
+    out = a >= 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${+a.toFixed(3)})`;
+  } else {
+    pixel ||= document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    pixel.fillStyle = '#010203';
+    pixel.fillStyle = c;
+    if (pixel.fillStyle === '#010203') out = c;
+    else {
+      pixel.clearRect(0, 0, 1, 1);
+      pixel.fillRect(0, 0, 1, 1);
+      const [r, g, b, a] = pixel.getImageData(0, 0, 1, 1).data;
+      out = a === 255 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${+(a / 255).toFixed(3)})`;
+    }
+  }
+  portableMemo.set(c, out);
+  return out;
 }
 
 // The innermost painted box under a point: its colour is the halo behind a label there.

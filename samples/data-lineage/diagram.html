@@ -1,0 +1,141 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
+<!--
+Design
+1. The point: for marketing, every number on a Power BI dashboard started in one of four
+   systems and was cleaned three times; the dashboards show the last, business-ready version.
+2. The metaphor: a river that clears as it flows. Four coloured streams (the systems) enter the
+   lakehouse, and the same dots (records) go from scattered (raw) to sorted (cleaned) to joined
+   into one card per customer (business-ready). The stage headers tint from murky orange to
+   strong blue; the business-ready panel and the Power BI outlet are the strongest things.
+3. The build: a three-column grid; stage panels with a tinted header; an empty cell per panel
+   that the drawing script fills with dots; two JSON bundles for the flow in and out.
+-->
+<diagram width=1500 title="Your dashboards run on customer data that was cleaned three times" subtitle="Where customer data comes from, and what happens to it before it reaches Power BI">
+<style>
+  .flow { display: grid; grid-template-columns: 240px 1fr 250px; column-gap: 72px; align-items: center; }
+  .col { display: flex; flex-direction: column; gap: 14px; }
+  .colhead { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+
+  /* A source or an outlet: a framed card, with the colour of its dots on the left edge. */
+  .sys { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--card); border: 1.5px solid var(--line); border-left-width: 7px; border-radius: 10px; }
+  .sys b { display: block; font-size: 15px; }
+  .sys small { display: block; font-size: 13px; color: var(--muted); line-height: 17px; }
+  .sys icon { flex: none; }
+
+  .lake { padding: 14px 18px 12px; }
+  .lake h4 { font-size: 14px; }
+  .lake h4 small { font-size: 12.5px; font-weight: 400; color: var(--muted); margin-left: 8px; }
+  .stages { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 44px; }
+  .st { display: flex; flex-direction: column; padding: 8px; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; }
+  .st.last { border: 3px solid var(--woad); padding: 6.5px; }
+  .sh { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 8px; }
+  .sh b { display: block; font-size: 15px; line-height: 18px; }
+  .sh small { display: block; font-size: 12.5px; line-height: 15px; }
+  .num { flex: none; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--card); color: var(--ink); font-weight: 700; font-size: 13px; }
+  .dark { color: var(--card); }
+  .vis { display: block; height: 130px; margin: 8px 0; border-radius: 8px; background: var(--wash); }
+  .st p { margin: 0; padding: 0 4px 4px; font-size: 13.5px; line-height: 18px; }
+  .st p b { display: block; margin-bottom: 2px; }
+  .cap { margin-top: 10px; font-size: 13px; color: var(--muted); text-align: center; }
+
+  .tagwrap { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .here { padding: 3px 10px; border-radius: 999px; background: var(--rust); color: var(--card); font-size: 12px; font-weight: 700; }
+  .sys.focus { background: var(--lane-a); border-color: var(--woad); border-width: 3px 3px 3px 7px; }
+</style>
+
+<div class=flow>
+  <div class=col>
+    <div class=colhead>Four source systems</div>
+    <div class=sys id=crm style="border-left-color: var(--woad)"><icon name="my-customers" size=30></icon><div><b>CRM</b><small>who our customers are</small></div></div>
+    <div class=sys id=web style="border-left-color: var(--teal)"><icon name=globe></icon><div><b>Web analytics</b><small>what they do on our site</small></div></div>
+    <div class=sys id=bill style="border-left-color: var(--purple)"><icon name="cost-management-and-billing"></icon><div><b>Billing system</b><small>what they pay</small></div></div>
+    <div class=sys id=sup style="border-left-color: var(--amber)"><icon name="help-and-support"></icon><div><b>Support tickets</b><small>what goes wrong for them</small></div></div>
+  </div>
+
+  <div class="group lake">
+    <h4>The lakehouse <small>our central store for customer data, cleaned in three stages</small></h4>
+    <div class=stages>
+      <div class=st id=raw>
+        <div class="sh bg-lane-d"><i class=num>1</i><div><b>Raw</b><small>exactly as it arrived</small></div></div>
+        <i class=vis id=v1></i>
+        <p><b>An untouched copy.</b>Records from every system, side by side. Duplicates and odd formats included.</p>
+      </div>
+      <div class=st id=clean>
+        <div class="sh bg-lane-a"><i class=num>2</i><div><b>Cleaned</b><small>tidied up</small></div></div>
+        <i class=vis id=v2></i>
+        <p><b>Fit to compare.</b>Duplicates removed, dates and names in one format, records sorted.</p>
+      </div>
+      <div class="st last" id=ready>
+        <div class="sh bg-woad dark"><i class=num>3</i><div><b>Business-ready</b><small>ready to use</small></div></div>
+        <i class=vis id=v3></i>
+        <p><b>One picture per customer.</b>Four systems joined up; figures calculated one agreed way.</p>
+      </div>
+    </div>
+    <div class=cap>Each dot is one record. Its colour shows which source system it came from.</div>
+  </div>
+
+  <div class=col>
+    <div class=colhead>Where it ends up</div>
+    <div class=tagwrap>
+      <span class=here>Where marketing works</span>
+      <div class="sys focus w-full" id=pbi><icon name="powerbi" size=32></icon><div><b>Power BI dashboards</b><small>the reports marketing uses</small></div></div>
+    </div>
+    <div class="sys" id=churn style="margin-top: 12px"><icon name="machine-learning" size=32></icon><div><b>Churn model</b><small>predicts who may leave</small></div></div>
+  </div>
+</div>
+
+<script type="application/json">
+[
+  { "from": ["crm", "web", "bill", "sup"], "to": "raw", "out": "right", "in": "left", "width": 2 },
+  { "from": "raw", "to": "clean", "width": 2 },
+  { "from": "clean", "to": "ready", "width": 2 },
+  { "from": "ready", "to": "pbi", "color": "woad", "width": 3.5 },
+  { "from": "ready", "to": "churn", "width": 2 }
+]
+</script>
+
+<script type="graphally">
+// The same records in each stage: scattered, then sorted by system, then joined per customer.
+const hue = ['woad', 'teal', 'purple', 'amber'];
+let seed = 11;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const dot = (p, c) => shape('circle', p, { size: 10, fill: `var(--${c})`, stroke: 'card', width: 1.2 });
+
+// 1. Raw: scattered across the panel, with duplicates sitting on top of each other.
+{
+  const v = el('v1'), pad = 12, nx = 10, ny = 5, made = [];
+  let n = 0;
+  for (let i = 0; i < nx; i++)
+    for (let j = 0; j < ny; j++) {
+      if (rnd() < 0.2) continue;
+      const c = hue[Math.floor(rnd() * 4)];
+      const p = pt(v.x + pad + (i + rnd()) * (v.w - 2 * pad) / nx, v.y + pad + (j + rnd()) * (v.h - 2 * pad) / ny);
+      made.push([p, c]);
+      if (++n % 4 === 0) made.push([p.move(4, 3), c]);
+    }
+  for (const [p, c] of made) dot(p, c);
+}
+
+// 2. Cleaned: duplicates gone, one row per system.
+{
+  const v = el('v2'), cols = 6;
+  for (let r = 0; r < 4; r++)
+    for (let k = 0; k < cols; k++)
+      dot(pt(v.x + v.w * (k + 0.5) / cols, v.y + v.h * (r + 0.5) / 4), hue[r]);
+}
+
+// 3. Business-ready: one card per customer, holding that customer's four systems.
+{
+  const v = el('v3'), rows = 5, rw = 150, rh = 20;
+  for (let r = 0; r < rows; r++) {
+    const c = pt(v.center.x, v.y + v.h * (r + 0.5) / rows);
+    shape('rounded', c, { w: rw, h: rh, fill: 'var(--card)', stroke: 'var(--line)', width: 1.2 });
+    draw.moveTo(c.left(rw / 2 - 18)).lineTo(c.right(rw / 2 - 18)).style({ color: 'line', width: 1.5 });
+    for (let k = 0; k < 4; k++) dot(c.right((k - 1.5) * ((rw - 36) / 3)), hue[k]);
+  }
+}
+</script>
+</diagram>
