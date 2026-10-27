@@ -279,7 +279,10 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
   heading clear of the line). A box that holds other boxes in the HTML lets it in to reach
   them, and so does a container it connects to: the line ends on the container's border.
   These do not block: a box painted behind boxes it does not hold (a lane's background in
-  the same grid cells), and a full-width header strip without an id, up to 48px tall. The
+  the same grid cells), a full-width header strip without an id, up to 48px tall, and a
+  lane: a box as wide as its parent, with one as wide above or below it and no border all
+  round, which a line between lanes crosses straight. A framed box (a subnet) stays a box
+  that lines keep out of unless they connect into it. The
   script's straight lines count as taken, so `connect` keeps off them.
 - Lines that share a side split it evenly: one meets it at the middle, two at a third and
   two thirds, n at k/(n+1), ordered so they do not cross. A line alone on two facing sides

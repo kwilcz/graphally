@@ -704,6 +704,14 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H, previous) 
   const ends = new Set(calls.flatMap(c => [c.from, c.to]));
   const holds = (a, q) => q.x >= a.x - 0.5 && q.y >= a.y - 0.5 && q.x + q.w <= a.x + a.w + 0.5 && q.y + q.h <= a.y + a.h + 0.5;
   const behind = b => !hasChild.has(b) && !ends.has(b.e) && boxes.some((o, i) => i > boxes.indexOf(b) && holds(b.b, o.b));
+  // A row of a stack (a BPMN lane, a band of a phase chart) is a band to cross, not a box to
+  // keep out of: a line between two rows runs straight over the rows between them. A row spans
+  // its parent, a row of the same width lies above or below it, and it has no frame of its own
+  // (a framed box, a subnet in a network, is a container whatever its width).
+  const framed = b => { const cs = getComputedStyle(b.e); return ['Top', 'Right', 'Bottom', 'Left'].every(s => cs[`border${s}Style`] !== 'none' && parseFloat(cs[`border${s}Width`]) > 0); };
+  const near = (a, c) => Math.abs(a - c) <= 2;
+  const row = b => hasChild.has(b) && !ends.has(b.e) && b.parent && b.b.w >= b.parent.b.w * 0.9 && !framed(b)
+    && boxes.some(o => o !== b && o.parent === b.parent && hasChild.has(o) && near(o.b.x, b.b.x) && near(o.b.w, b.b.w));
   const ensure = b => {
     if (!b) return rootG;
     if (objOf.has(b)) return objOf.get(b);
@@ -714,7 +722,7 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H, previous) 
     objOf.set(b, obj);
     (isGroup ? model.groups : model.nodes).set(key, obj);
     parent.children?.push(obj);
-    (isGroup ? geo.groups : geo.nodes).set(key, isGroup ? { ...px(b.b), group: obj } : { ...px(b.b), node: obj, round: b.round });
+    (isGroup ? geo.groups : geo.nodes).set(key, isGroup ? { ...px(b.b), group: obj, ...(row(b) ? { lane: true } : {}) } : { ...px(b.b), node: obj, round: b.round });
     return obj;
   };
   boxes.forEach(ensure);

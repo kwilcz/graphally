@@ -21,8 +21,8 @@ const DX = [1, 0, -1, 0], DY = [0, 1, 0, -1];   // E S W N
 
 export function routeEdges(model, geo, m) {
   const P = geo.nodePad ?? S.edge.nodePad;
-  // Lanes and tree bands are rows to cross, not containers to avoid.
-  const groupsList = [...geo.groups.entries()].filter(([, r]) => !r.lane && r.group.style !== 'band' || !r.gutter).map(([id, r]) => ({ id, ...r, depth: r.group.depth }));
+  // Lanes are rows to cross, not containers to avoid.
+  const groupsList = [...geo.groups.entries()].filter(([, r]) => !r.lane).map(([id, r]) => ({ id, ...r, depth: r.group.depth }));
   const gIndex = new Map(groupsList.map((g, i) => [g.id, i]));
 
   // Hard obstacles: nodes, group titles, the title block, the legend.

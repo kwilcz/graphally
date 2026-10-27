@@ -296,6 +296,11 @@ later('page-routing', async () => {
   ok0(await render(write(d, page(`<style>.l { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 60px } .bg { grid-column: 1 / -1; grid-row: 1; background: var(--wash) } .t { grid-row: 1; margin: 30px 0 }</style>
 <div class=l><div class=bg></div><div class="card t" id=a style="grid-column: 1">A</div><div class="card t" id=b style="grid-column: 3">B</div></div>`, "connect('a', 'b')")), out));
   check(corners(edgePath(svgOf(out), 'a->b')) === 0, 'the line from a to b bends round the lane background');
+  // A line between two lanes runs straight over the lane between them, not round the pool.
+  const lanes = folder('page-lanes'), lanesOut = path.join(lanes, 'out');
+  ok0(await render(write(lanes, page(`<style>.pool { display: grid; grid-template-columns: 90px 1fr 1fr; border: 1px solid var(--line) } .lane { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; padding: 36px 0; border-bottom: 1px solid var(--line) } .lane > h4 { grid-column: 1 } .t { margin-right: 16px }</style>
+<div class=pool><div class=lane><h4>One</h4><div class="card t" id=a style="grid-column: 3">A</div></div><div class=lane><h4>Two</h4><div class="card t" id=m style="grid-column: 2">M</div></div><div class=lane><h4>Three</h4><div class="card t" id=b style="grid-column: 3">B</div></div></div>`, "connect('a', 'b')")), lanesOut));
+  check(corners(edgePath(svgOf(lanesOut), 'a->b')) === 0, 'the line from lane One to lane Three goes round lane Two');
   // Lines that share a side split it evenly: three lines into t's left side at a quarter, a
   // half and three quarters of its height, in order.
   ok0(await render(write(d, page(`<style>.g { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px 120px } .tall { grid-column: 3; grid-row: 1 / span 3 }</style>
