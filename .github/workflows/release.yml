@@ -91,8 +91,10 @@ jobs:
           node tools/version.mjs "$version"
           git config user.name "Kamil Wilczynski"
           git config user.email "25964560+kwilcz@users.noreply.github.com"
-          # [skip ci]: the version commit starts no workflow run of its own.
-          git commit -qam "Release $version [skip ci]"
+          # The workflow's token starts no workflow run with this push; one that did start would
+          # wait for this run (the concurrency group) and find main released. No skip keyword:
+          # a squash merge copies commit messages, and one in a merge would skip its release.
+          git commit -qam "Release $version"
           # If main moved meanwhile, the version commit goes on top of it.
           git push origin HEAD:main || { git pull -q --rebase origin main && git push origin HEAD:main; }
           (cd skills && zip -qr ../graphally-skill.zip graphally)
