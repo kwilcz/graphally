@@ -45,22 +45,30 @@
 <g data-id="c1" data-box="60,82,489,92">
 <polygon points="373,81.9 549,81.9 549,173.9 299.6,173.9" style="fill: var(--ink)"></polygon>
 <text x="400.5" y="125.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Executive sponsor</text>
+<g opacity="0.8">
 <text x="386.5" y="141.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">Chief Information Officer</text>
+</g>
 </g>
 <g data-id="c2" data-box="60,182,489,92">
 <polygon points="293.3,181.9 549,181.9 549,273.9 219.9,273.9" style="fill: var(--woad)"></polygon>
 <text x="390.5" y="225.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Programme director</text>
+<g opacity="0.8">
 <text x="440.3" y="241.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">Head of Claims</text>
+</g>
 </g>
 <g data-id="c3" data-box="60,282,489,92">
 <polygon points="213.1,281.9 549,281.9 549,373.9 139.7,373.9" style="fill: var(--icon-soft)"></polygon>
 <text x="418.9" y="325.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Product owners</text>
+<g opacity="0.8">
 <text x="375.9" y="341.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">Claims, Customer, Finance</text>
+</g>
 </g>
 <g data-id="c4" data-box="60,382,489,92">
 <polygon points="133.4,381.9 549,381.9 549,473.9 60,473.9" style="fill: var(--lane-a)"></polygon>
 <text x="373.5" y="425.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Business and IT teams</text>
+<g opacity="0.8">
 <text x="311.3" y="441.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">claims handlers, IT operations, testers</text>
+</g>
 </g>
 <g data-id="f1" data-box="576,102,196,51.5">
 <rect x="576.5" y="102.6" width="195" height="50.5" rx="25.3" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
@@ -89,22 +97,30 @@
 <g data-id="p1" data-box="799,82,489,92">
 <polygon points="799,81.9 975,81.9 1048.4,173.9 799,173.9" style="fill: var(--ink)"></polygon>
 <text x="821" y="125.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Account executive</text>
+<g opacity="0.8">
 <text x="821" y="141.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">Partner, insurance practice</text>
+</g>
 </g>
 <g data-id="p2" data-box="799,182,489,92">
 <polygon points="799,181.9 1054.7,181.9 1128.1,273.9 799,273.9" style="fill: var(--woad)"></polygon>
 <text x="821" y="225.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--card)">Engagement manager</text>
+<g opacity="0.8">
 <text x="821" y="241.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--card)">plan, budget, risks</text>
+</g>
 </g>
 <g data-id="p3" data-box="799,282,489,92">
 <polygon points="799,281.9 1134.9,281.9 1208.3,373.9 799,373.9" style="fill: var(--icon-soft)"></polygon>
 <text x="821" y="325.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Delivery lead and architects</text>
+<g opacity="0.8">
 <text x="821" y="341.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">solution, quality, backlog</text>
+</g>
 </g>
 <g data-id="p4" data-box="799,382,489,92">
 <polygon points="799,381.9 1214.7,381.9 1288,473.9 799,473.9" style="fill: var(--lane-a)"></polygon>
 <text x="821" y="425.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--ink)">Engineering squads</text>
+<g opacity="0.8">
 <text x="821" y="441.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--ink)">two squads of six, plus a platform engineer</text>
+</g>
 </g>
 
 <path d="M549,127.9 L576,127.9" style="fill: none; stroke: var(--line)" stroke-width="2" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path>

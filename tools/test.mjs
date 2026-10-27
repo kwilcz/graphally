@@ -258,6 +258,11 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div class=card id=m>A</div>', "shape('circle', el('m').center, { size: 30, fill: 'color-mix(in srgb, var(--woad) 30%, white)' })")), out));
   const tokens = svgOf(out);
   check(tokens.includes('fill: color-mix(in srgb, var(--woad) 30%, white)') && !tokens.includes('rgb(0, 0, 0)'), 'a script fill mixed from theme tokens was lost');
+  // disabled: the part, icon included, is drawn grey and faded; a line into it is grey and dashed.
+  ok0(await render(write(d, page('<div class="flex gap-24"><div class=figure id=a><icon name="functions"></icon>On</div><div class="figure disabled" id=b><icon name="functions"></icon>Off</div></div><script type="application/json">[["a", "b", "polled"]]</script>', '', 'width=500')), out));
+  const off = svgOf(out), offB = off.slice(off.indexOf('data-id="b"') - 80);
+  check(/<filter id="[^"]+-grey"/.test(off) && /<g opacity="0.5" filter="url\(#[^"]+-grey\)">\s*<g data-id="b"/.test(off) && !/filter="url[^>]*>\s*<g data-id="a"/.test(off), `the disabled figure is not drawn grey and faded: ${offB.slice(0, 160)}`);
+  check(/data-edge="a-&gt;b"[^>]*><path [^>]*stroke: var\(--muted\)"[^>]*stroke-dasharray="5 4"/.test(off), 'the line into the disabled figure is not grey and dashed');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
