@@ -46,7 +46,9 @@
 <g data-id="core" data-box="554,562,240,120">
 <path d="M554,681.9 A120,120 0 0 1 794,681.9 Z" style="fill: var(--ink); stroke: none" stroke-width="0"></path>
 <text x="616.2" y="641.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: var(--card)">Claims platform</text>
+<g opacity="0.8">
 <text x="649.6" y="657.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--card)">on Azure</text>
+</g>
 </g>
 <text x="24" y="105.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 26px; font-weight: 700; fill: var(--woad)">8 capabilities</text>
 <text x="24" y="123.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--muted)">in scope, fixed price, live in nine months</text>

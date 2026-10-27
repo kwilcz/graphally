@@ -124,8 +124,13 @@ them:
 - `band`: a full-width strip of shared services.
 - `key` with `swatch`, `swatch dashed` and `swatch box`: a legend.
 - `card`, `box`, `pill`, `tag`, `banner`.
+- `disabled` on any of them: a part that is there but does not run (switched off, kept
+  for rollback, not yet live). It turns grey, icon included, fades to half and dashes its
+  frame, and every line to or from it turns grey and dashed. `"disabled": true` does the
+  same to one line. In the legend: `<i class="swatch box disabled"></i>`. Any element with
+  CSS `opacity` or `filter: grayscale()` is drawn that way too.
 
-These names are taken, and so are the sequence helper's: `seq`, `msg`, `num`, `guard`,
+These names are taken (`disabled` too), and so are the sequence helper's: `seq`, `msg`, `num`, `guard`,
 `lifeline`, `activation` and `frag-…`. A class of your own with one of them gets their look
 too, so name yours differently (`lane`, not `band`; `amount`, not `num`).
 

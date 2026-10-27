@@ -164,7 +164,8 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   same in a framed card), `group` with an `<h4>` title (`plain`, `dashed`, `external`,
   `vnet`, `subnet`, `region`; `badges` of `badge` icons in the title), `tile` (an icon over
   its name in a small frame), `band` (a strip of shared services), `key` with `swatch` (a
-  legend), `card`, `box`, `pill`, `tag`, `banner`. These class names are taken, and so are
+  legend), `card`, `box`, `pill`, `tag`, `banner`; `disabled` on any of them greys a
+  part that is there but does not run, icon and lines included. These class names are taken, and so are
   the sequence helper's (`seq`, `msg`, `num`, `guard`, `lifeline`, `activation`, `frag-…`):
   name your own differently.
 - **Shapes**: `shape="cylinder"` on any element draws it as that shape: `diamond`,

@@ -75,6 +75,10 @@ const PAGE_CSS = `
 :where(.graphally-page :is(.node, .tile).accent) { border: 2px solid var(--woad); color: var(--woad); }
 :where(.graphally-page .figure.external) { color: var(--muted); }
 :where(.graphally-page .figure.accent) { color: var(--woad); font-weight: 650; }
+/* disabled: a part that is there but does not run. Grey, faded and dashed, icon included;
+   a line to or from it turns grey and dashed too. */
+:where(.graphally-page .disabled) { filter: grayscale(1); opacity: .5; }
+:where(.graphally-page :is(.node, .tile, .card, .box, .group, .swatch).disabled) { border-style: dashed; }
 :where(.graphally-page .tile) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 112px; padding: 10px 6px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
 :where(.graphally-page .tile > icon) { width: 40px; height: 40px; }
 :where(.graphally-page .figure) { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 104px; text-align: center; font-size: 12.5px; font-weight: 500; line-height: 15px; }
@@ -394,13 +398,21 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       return { x: b.x + len(xs, b.w), y: b.y + len(ys, b.h) };
     });
   };
+  let greyed = false;
   const visit = (e, parentBox) => {
     const cs = getComputedStyle(e);
     if (cs.display === 'none' || cs.visibility === 'hidden') return;
     const b = boxOf(e);
+    // opacity and filter: grayscale() (what disabled does): the element and all inside it are drawn
+    // in a group at that opacity, through a filter that takes the colour out of its icons too.
+    const op = parseFloat(cs.opacity), grey = /grayscale\((?!0\b|0%)/.test(cs.filter);
+    const fade = op < 1 || grey;
+    if (grey) greyed = true;
+    if (fade) out.push(`<g${op < 1 ? ` opacity="${fmt(op)}"` : ''}${grey ? ` filter="url(#${id}-grey)"` : ''}>`);
     if (e.tagName === 'ICON') {
       if (e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
       boxes.push({ e, b, painted: true, parent: parentBox });
+      if (fade) out.push('</g>');
       return;
     }
     // The layout the next render reads back (snapshot.mjs), with the author's nudge.
@@ -452,6 +464,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       else if (c.nodeType === 1 && c.tagName !== 'STYLE' && c.tagName !== 'SCRIPT') visit(c, me || parentBox);
     }
     if (open) out.push('</g>');
+    if (fade) out.push('</g>');
   };
   for (const c of root.childNodes) {
     if (c.nodeType === 3) textOf(c, root);
@@ -473,14 +486,14 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
   // ---------- assemble ----------
   const markers = new Set(), lineOut = [], labelOut = [], drawOut = [];
   for (const rt of routes) {
-    const e = rt.edge, tone = paintOf(toneOf(e.color)) || (e.accent ? 'var(--woad)' : 'var(--ink)');
+    const e = rt.edge, tone = e.off ? 'var(--muted)' : paintOf(toneOf(e.color)) || (e.accent ? 'var(--woad)' : 'var(--ink)');
     const ov = e.leg?.edge.override || e.override || {};
     const sides = (rt.out != null && rt.in != null ? ` data-sides="${SIDES[rt.out]},${SIDES[rt.in]}"` : '')
       + ['out', 'in'].filter(k => ov[k] != null).map(k => ` data-${k}="${SIDES[ov[k]]}"`).join('');
     lineOut.push(`<g data-edge="${esc(e.key)}"${sides}><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path></g>`);
     if (rt.label) {
       const halo = under(boxes, rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) || 'var(--bg)';
-      labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="fill: var(--ink); paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
+      labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="fill: ${e.off ? 'var(--muted)' : 'var(--ink)'}; paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
     }
   }
   for (const d of drawings) {
@@ -517,7 +530,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
   const defs = [...[...markers].map(k => {
     const [mid, kind, color] = k.split('|'), [ref, body] = MARKER[kind];
     return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
-  }), ...symbols.values()];
+  }), ...symbols.values(), ...(greyed ? [`<filter id="${id}-grey" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix></filter>`] : [])];
   const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
   const style = opts.standalone ? `<style>${opts.css}</style>\n` : '';
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
@@ -737,7 +750,10 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H, previous) 
     seen.set(base, k);
     for (const k of ['out', 'in']) if (c.o[k] != null && !SIDES.includes(c.o[k])) problems.push({ rule: 'bad-option', option: k, value: String(c.o[k]), hint: 'a side: top, right, bottom or left' });
     const override = Object.fromEntries(['out', 'in'].filter(s => SIDES.includes(c.o[s])).map(s => [s, SIDES.indexOf(c.o[s])]));
-    const edge = { id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends: endsOf(c.o, true, problems),
+    // A line to or from a disabled part is disabled too: grey and dashed, like the part.
+    const off = !!c.o.disabled || [c.from, c.to].some(e => e.closest('.disabled')), ends = endsOf(c.o, true, problems);
+    if (off && !ends.dash) ends.dash = '5 4';
+    const edge = { id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends, off,
       accent: !!c.o.accent, color: c.o.color, width: c.o.width, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) };
     if (!c.via.length) { model.edges.push(edge); return; }
     // via: each waypoint is a point the router passes through (it blocks nothing), and the line
