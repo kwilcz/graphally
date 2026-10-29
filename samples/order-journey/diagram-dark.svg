@@ -77,7 +77,7 @@
 <text x="318.1" y="279.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Front door</text>
 <text x="309.5" y="303.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">Checks every</text>
 <text x="306.7" y="320.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">request is safe</text>
-<text x="298.6" y="337.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">before letting it in</text>
+<text x="298.4" y="337.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">before letting it in</text>
 <text x="298.1" y="366.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Azure Front Door +</text>
 <text x="337.3" y="380.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">WAF</text>
 </g>
@@ -121,7 +121,7 @@
 <g data-id="sb" data-box="988,190,140,208.5">
 <rect x="988.5" y="190.4" width="139" height="207.5" rx="11.5" style="fill: var(--card); stroke: var(--muted)" stroke-width="1" stroke-dasharray="5 4"></rect>
 <rect x="976" y="177.9" width="28" height="28" rx="14" style="fill: var(--muted)"></rect>
-<text x="984.9" y="197.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; fill: var(--card)">5</text>
+<text x="985" y="197.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; fill: var(--card)">5</text>
 <use href="#pg-azure-service-bus" x="1035" y="214.9" width="46" height="46" style="color: var(--ink)"></use>
 <text x="1028.1" y="279.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">Ticket rail</text>
 <text x="1001.6" y="303.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">A “new order” note</text>
