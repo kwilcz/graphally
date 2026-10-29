@@ -7,7 +7,7 @@
       "name": "graphally",
       "source": "./",
       "description": "Professional diagrams as SVG from HTML and CSS: architecture with Azure and AWS icons, networks, hierarchies, BPMN, sequence diagrams, Gantt plans, roadmaps, figures for proposals and solution designs, and Terraform repositories.",
-      "version": "2.8.1"
+      "version": "2.9.0"
     }
   ]
 }
