@@ -197,15 +197,24 @@ Every pull request merged into `main` is a release, and its label chooses which:
 default, also with no label), `minor` or `major`. At the merge, the release workflow works out
 the next version from the last tag, commits it to `main`, tags it and publishes the release
 with the skill attached; on the pull request, its summary says which version the merge will
-make. The version lives in `SKILL.md` and both plugin manifests: `node tools/version.mjs`
-prints it, and `--check` checks that they agree. Diagrams load the viewer of their major
-version (`…/graphally@2/…`), which follows its latest release.
+make. The version lives in `SKILL.md`, both plugin manifests and the skill folder's
+`package.json`: `node tools/version.mjs` prints it, and `--check` checks that they agree.
+Diagrams load the viewer of their major version (`…/graphally@2/…`), which follows its
+latest release.
+
+The skill folder is also the npm package `graphally`, with nothing copied: the `graphally`
+command (`scripts/graphally.mjs`), the Node API (`import { render } from 'graphally'`, the
+same render the command runs), the browser engine (`graphally/engine`), source edits
+(`graphally/edits`) and the viewer (`graphally/viewer`). Agents keep using the skill's own
+copy, which works without a network. The release workflow publishes the package at the same
+version once npm trusts it: set up trusted publishing for this repository's `release.yml` on
+npmjs.com, then set the repository variable `NPM_PUBLISH` to `true`.
 
 ## Repository
 
 | Path | Contains |
 |---|---|
-| [`skills/graphally/`](skills/graphally) | the skill: `SKILL.md`, `references/`, `scripts/` (the engine), `assets/` (theme, icons) |
+| [`skills/graphally/`](skills/graphally) | the skill, which is also the npm package: `SKILL.md`, `references/`, `scripts/` (the engine, the CLI and its Node API), `viewer/`, `assets/` (theme, icons), `package.json` |
 | [`.claude-plugin/`](.claude-plugin) | the Claude Code plugin and marketplace manifests |
 | [`samples/`](samples) | briefs and the diagrams drawn from them; [the showcase](samples/README.md) |
 | [`docs/design.md`](docs/design.md) | how graphally works, illustrated with diagrams it drew ([sources](docs/diagrams)) |
