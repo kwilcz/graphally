@@ -131,15 +131,18 @@ async function renderJob(page, job) {
     const offline = r.problems.filter(p => p.rule === 'unknown-icon' && /not downloaded/.test(p.hint || ''));
     r.problems = r.problems.filter(p => !offline.includes(p));
     const s = r.stats;
-    log(`${svgPath}  ${r.width}×${r.height}  ${s.nodes} nodes, ${s.edges} edges, ${s.crossings} crossings  ${r.problems.length ? r.problems.length + ' problem(s):' : 'ok'}`);
+    // A warning (warn: true) is printed but passes: what it finds may be meant.
+    const warnings = r.problems.filter(p => p.warn), problems = r.problems.filter(p => !p.warn);
+    const counted = n => `${n} warning${n > 1 ? 's' : ''}`;
+    log(`${svgPath}  ${r.width}×${r.height}  ${s.nodes} nodes, ${s.edges} edges, ${s.crossings} crossings  ${problems.length ? problems.length + ' problem(s):' : warnings.length ? `ok, ${counted(warnings.length)}:` : 'ok'}`);
     const now = r.snapshot || readLayout(r.svg);
     if (prev && now) for (const line of droppedOverrides(prev, now)) log(line);
     if (offline.length) log(`  note: drawn without ${offline.length} icon(s) (${[...new Set(offline.map(p => p.icon))].slice(0, 6).join(', ')}): the icon packs are not downloaded; run node ${path.join(skillRoot, 'scripts/fetch-icons.mjs')} when online`);
-    for (const p of r.problems) {
-      const { rule, hint, ...rest } = p;
-      log(`  ${rule}: ${Object.entries(rest).map(([k, v]) => `${k}=${Array.isArray(v) ? v.join('|') : v}`).join(' ')}${hint ? `  (${hint})` : ''}`);
+    for (const p of [...problems, ...warnings]) {
+      const { rule, hint, warn, ...rest } = p;
+      log(`  ${warn ? 'warning: ' : ''}${rule}: ${Object.entries(rest).map(([k, v]) => `${k}=${Array.isArray(v) ? v.join('|') : v}`).join(' ')}${hint ? `  (${hint})` : ''}`);
     }
-    if (r.problems.length) job.exit = 1;
+    if (problems.length) job.exit = 1;
   }
 }
 

@@ -346,6 +346,10 @@ later('page-problems', async () => {
   const d = folder('page-problems'), out = path.join(d, 'out');
   const r1 = await render(write(d, page('<div class=card>A</div>', '', 'width=12px')), out);
   check(r1.code === 1 && /bad-attribute: attr=width value=12px/.test(r1.text), `expected bad-attribute for width: ${tail(r1.text)}`);
+  // A node wider than its group is a warning, and the render passes. A badge placed on the
+  // group's corner with position: absolute is meant, and so is the overflow of a plain wrapper.
+  const wide = await render(write(d, page('<div class=group style="position: relative; width: 200px"><h4>G</h4><div class=node id=big style="width: 260px">Too wide</div><b id=badge style="position: absolute; top: -8px; left: -8px; width: 16px; height: 16px; background: var(--woad)"></b></div><div style="width: 100px"><div class=card id=free style="width: 160px">Free</div></div>')), out);
+  check(wide.code === 0 && /ok, 1 warning:/.test(wide.text) && /warning: box-overflow: box=big in=div\.group by=right \d+px/.test(wide.text) && !/badge|free/.test(wide.text), `expected one box-overflow warning, for big: ${tail(wide.text)}`);
   const r2 = await render(write(d, page('<style>.r { display: flex; gap: 14px }</style><div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>',
     "connect('a', 'b', { label: 'a label far too long for this gap' })")), out);
   check(r2.code === 1 && /label-crowded: edge=a -> b/.test(r2.text), `expected label-crowded: ${tail(r2.text)}`);
