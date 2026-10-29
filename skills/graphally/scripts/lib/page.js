@@ -397,6 +397,15 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     });
   };
   let greyed = false;
+  // data-step="n": the element appears in its turn when the figure is shown (see motionCss).
+  const steps = new Set();
+  const stepOf = e => {
+    const v = e.getAttribute('data-step');
+    if (v == null) return 0;
+    if (!(Number(v) > 0)) { problems.push({ rule: 'bad-attribute', attr: 'data-step', value: v, ...(e.id ? { id: e.id } : {}), hint: 'a number from 1, the order the element appears in' }); return 0; }
+    steps.add(Number(v));
+    return Number(v);
+  };
   const visit = (e, parentBox) => {
     const cs = getComputedStyle(e);
     if (cs.display === 'none' || cs.visibility === 'hidden') return;
@@ -406,11 +415,14 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     const op = parseFloat(cs.opacity), grey = /grayscale\((?!0\b|0%)/.test(cs.filter);
     const fade = op < 1 || grey;
     if (grey) greyed = true;
+    const step = stepOf(e);
+    if (step) out.push(`<g data-step="${step}">`);
     if (fade) out.push(`<g${op < 1 ? ` opacity="${fmt(op)}"` : ''}${grey ? ` filter="url(#${id}-grey)"` : ''}>`);
     if (e.tagName === 'ICON') {
       if (e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
       boxes.push({ e, b, painted: true, parent: parentBox });
       if (fade) out.push('</g>');
+      if (step) out.push('</g>');
       return;
     }
     // The layout the next render reads back (snapshot.mjs), with the author's nudge.
@@ -463,6 +475,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     }
     if (open) out.push('</g>');
     if (fade) out.push('</g>');
+    if (step) out.push('</g>');
   };
   for (const c of root.childNodes) {
     if (c.nodeType === 3) textOf(c, root);
@@ -483,15 +496,19 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
 
   // ---------- assemble ----------
   const markers = new Set(), lineOut = [], labelOut = [], drawOut = [];
+  const stepOrder = [...steps].sort((a, b) => a - b), delayOf = n => 0.3 + stepOrder.indexOf(n) * 0.5;
+  let flows = 0;
   for (const rt of routes) {
     const e = rt.edge, tone = e.off ? 'var(--muted)' : paintOf(toneOf(e.color)) || (e.accent ? 'var(--woad)' : 'var(--ink)');
     const ov = e.leg?.edge.override || e.override || {};
     const sides = (rt.out != null && rt.in != null ? ` data-sides="${SIDES[rt.out]},${SIDES[rt.in]}"` : '')
       + ['out', 'in'].filter(k => ov[k] != null).map(k => ` data-${k}="${SIDES[ov[k]]}"`).join('');
-    lineOut.push(`<g data-edge="${esc(e.key)}"${sides}><path d="${rounded(rt.points, S.edge.radius)}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path></g>`);
+    const d = rounded(rt.points, S.edge.radius), stepAt = e.step ? ` data-step="${e.step}"` : '';
+    if (e.flow) flows++;
+    lineOut.push(`<g data-edge="${esc(e.key)}"${sides}${stepAt}><path d="${d}" style="fill: none; stroke: ${tone}" stroke-width="${e.width || (e.accent ? 2 : S.edge.width)}"${endAttrs(id, e.ends, tone, markers)}></path>${e.flow ? flowMarks(d, rt.points, tone, boxes, e.step ? delayOf(e.step) : 0) : ''}</g>`);
     if (rt.label) {
       const halo = under(boxes, rt.label.x + rt.label.w / 2, rt.label.y + rt.label.h / 2) || 'var(--bg)';
-      labelOut.push(`<text class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="fill: ${e.off ? 'var(--muted)' : 'var(--ink)'}; paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
+      labelOut.push(`<text${stepAt} class="${T.edge}" x="${fmt(rt.label.x)}" y="${fmt(m.baseline(rt.label.y, rt.label.h, T.edge))}" style="fill: ${e.off ? 'var(--muted)' : 'var(--ink)'}; paint-order: stroke; stroke: ${halo}; stroke-width: 4px; stroke-linejoin: round">${esc(rt.label.text)}</text>`);
     }
   }
   for (const d of drawings) {
@@ -531,7 +548,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
   }), ...symbols.values(), ...(greyed ? [`<filter id="${id}-grey" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix></filter>`] : [])];
   const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
-  const style = opts.standalone ? `<style>${opts.css}</style>\n` : '';
+  const style = (opts.standalone ? `<style>${opts.css}</style>\n` : '') + (stepOrder.length || flows ? `<style>${motionCss(stepOrder, delayOf)}</style>\n` : '');
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
   // The figure paints its own background, so it reads on a dark page as on a light one:
   // the theme's --bg, a colour of the author's (background="#fff"), or none (background=none).
@@ -621,6 +638,37 @@ function pathBuilder(start, drawings, point) {
   };
   sync();
   return api;
+}
+
+// Motion, for a reader whose browser shows it: a line with flow carries gaps that move along it
+// and a dot that travels it; data-step boxes, and their lines, appear in order, once. Both are
+// marks on top of the still figure, which is complete without them: the marks start hidden
+// (an attribute, which what ignores CSS keeps), the stylesheet shows them only when motion is
+// allowed, and a reveal ends where the still is. A PNG is the still: the renderer captures with
+// reduced motion. The keyframes are named g-*, after graphally's other classes.
+function flowMarks(d, pts, tone, boxes, delay) {
+  let len = 0, best = 0, mid = pts[0];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], l = Math.hypot(b.x - a.x, b.y - a.y);
+    len += l;
+    if (l > best) { best = l; mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
+  }
+  // The gaps take the colour under the line, as a label's halo does; the dot, the line's colour
+  // (blue on a plain line), ringed so it reads on the line itself. One speed for every dot.
+  const gap = under(boxes, mid.x, mid.y) || 'var(--bg)', dot = tone === 'var(--ink)' ? 'var(--woad)' : tone;
+  return `<path class="g-flow" d="${d}" visibility="hidden" style="fill: none; stroke: ${gap}" stroke-width="1.5"></path>`
+    + `<circle class="g-dot" r="4" visibility="hidden" style="fill: ${dot}; stroke: var(--card)" stroke-width="1.5">`
+    + `<animateMotion dur="${fmt(Math.max(1.2, len / 70))}s"${delay ? ` begin="${fmt(delay)}s"` : ''} repeatCount="indefinite" path="${d}"></animateMotion></circle>`;
+}
+function motionCss(order, delayOf) {
+  return `@media (prefers-reduced-motion: no-preference) {
+  svg.graphally .g-flow, svg.graphally .g-dot { visibility: visible; }
+  svg.graphally .g-flow { stroke-dasharray: 3 9; animation: g-flow 0.9s linear infinite; }
+  svg.graphally [data-step] { animation: g-in 0.5s backwards; }
+${order.map(n => `  svg.graphally [data-step="${n}"] { animation-delay: ${fmt(delayOf(n))}s; }`).join('\n')}
+}
+@keyframes g-flow { to { stroke-dashoffset: -12; } }
+@keyframes g-in { from { opacity: 0; transform: translateY(6px); } }`;
 }
 
 // The colours of the theme tokens, so a box painted var(--wash) stays var(--wash) in the SVG
@@ -752,7 +800,10 @@ function connectors(boxes, texts, calls, drawings, problems, m, W, H, previous) 
     // A line to or from a disabled part is disabled too: grey and dashed, like the part.
     const off = !!c.o.disabled || [c.from, c.to].some(e => e.closest('.disabled')), ends = endsOf(c.o, true, problems);
     if (off && !ends.dash) ends.dash = '5 4';
-    const edge = { id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends, off,
+    // A line appears with the later of its two ends (an end inside a stepped box takes its step).
+    const stepIn = e => Number(e.closest('[data-step]')?.getAttribute('data-step')) || 0;
+    const step = Math.max(stepIn(c.from), stepIn(c.to));
+    const edge = { id: `e${i}`, key: k > 1 ? `${base}#${k}` : base, from, to, label: c.o.label || '', ends, off, step, flow: !!c.o.flow,
       accent: !!c.o.accent, color: c.o.color, width: c.o.width, stmt: c.stmt, ...(Object.keys(override).length ? { override } : {}) };
     if (!c.via.length) { model.edges.push(edge); return; }
     // via: each waypoint is a point the router passes through (it blocks nothing), and the line

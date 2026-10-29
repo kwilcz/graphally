@@ -342,6 +342,23 @@ later('bundles', async () => {
   merged(svgOf(out), ['a->t', 'b->t', 'c->t']);
 });
 
+later('page-motion', async () => {
+  // Flow and steps: the marks on a line and the order boxes appear in, drawn on top of the
+  // still figure, which is what a PNG shows.
+  const d = folder('page-motion'), still = folder('page-motion-still');
+  const body = flow => `<div class="flex gap-24"><div class=card id=a${flow ? ' data-step=1' : ''}>A</div><div class=card id=b${flow ? ' data-step=2' : ''}>B</div></div><script type="application/json">[${flow ? '{ "from": "a", "to": "b", "label": "sends", "flow": true }' : '["a", "b", "sends"]'}]</script>`;
+  ok0(await render(write(d, page(body(true), '', 'width=500')), path.join(d, 'out'), ['--png', '--recompute']));
+  ok0(await render(write(still, page(body(false), '', 'width=500')), path.join(still, 'out'), ['--png', '--recompute']));
+  const svg = svgOf(path.join(d, 'out'));
+  check(/<g data-step="1">\s*<g data-id="a"/.test(svg) && /<g data-step="2">\s*<g data-id="b"/.test(svg), 'the stepped boxes are not wrapped in their steps');
+  check(/<g data-edge="a-&gt;b"[^>]* data-step="2">/.test(svg) && /<text data-step="2"[^>]*>sends</.test(svg), 'the line and its label do not appear with the later of their ends');
+  check(/<path class="g-flow" d="[^"]+" visibility="hidden"/.test(svg) && /<circle class="g-dot"[^>]* visibility="hidden"[^>]*><animateMotion dur="[\d.]+s" begin="0\.8s" repeatCount="indefinite" path="M/.test(svg), 'the flow marks are missing, visible by default, or start before their line');
+  check(/@media \(prefers-reduced-motion: no-preference\)/.test(svg) && /\[data-step="2"\] \{ animation-delay: 0\.8s; \}/.test(svg), 'the motion is not limited to readers who allow it, or a step has no delay');
+  check(fs.readFileSync(path.join(d, 'out', 'diagram.png')).equals(fs.readFileSync(path.join(still, 'out', 'diagram.png'))), 'the PNG of a figure with motion is not the still figure');
+  const bad = await render(write(d, page('<div class=card data-step=first>A</div>')), path.join(d, 'out'));
+  check(bad.code === 1 && /bad-attribute: attr=data-step value=first/.test(bad.text), `expected bad-attribute for data-step: ${tail(bad.text)}`);
+});
+
 later('page-problems', async () => {
   const d = folder('page-problems'), out = path.join(d, 'out');
   const r1 = await render(write(d, page('<div class=card>A</div>', '', 'width=12px')), out);

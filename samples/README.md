@@ -251,7 +251,8 @@ An engineer's topology of six systems, redrawn for business readers: four steps 
 the customer waits, a wall with an "Order saved" seal, then two steps in the background,
 numbered and in plain words, with the Azure names in small type.
 **Technique:** two zones in one grid row; the wall and the tick come from the drawing
-script; the connections are data.
+script; the connections are data. In a browser, the [SVG](order-journey/diagram.svg) moves:
+the steps appear in order (`data-step`) and the order flows along the lines (`"flow": true`).
 [Brief](order-journey/brief.md) · [source](order-journey/diagram.html) · [SVG](order-journey/diagram.svg)
 
 ### Technical, in depth

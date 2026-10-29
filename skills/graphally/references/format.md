@@ -40,6 +40,7 @@ is about choosing one.
 - [Moving one thing](#moving-one-thing), [Changing a diagram](#changing-a-diagram)
 - [The script](#the-script): every call and option
 - [Lines](#lines): how connections find their way
+- [Motion](#motion): lines that flow, boxes that appear in order
 - [Problems](#problems)
 
 ## The page
@@ -283,8 +284,8 @@ Options of lines (`connect`, `arrow`, `curve`): `color` (a CSS colour or a token
 `circle`, `dot`, `diamond`, `open-diamond`, `none`; `head` defaults to `arrow`, `tail` to
 none), `both` (a head at each end), `arrow: false` (no head), and `message: true` for a BPMN
 message flow (dashed, an open circle at the source, an open arrowhead). `connect` also
-takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and enters) and
-`via: [points]` (waypoints it passes through).
+takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and enters),
+`via: [points]` (waypoints it passes through) and `flow: true` (see Motion).
 
 ## Lines
 
@@ -313,6 +314,25 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 - The script's drawings paint above the page. A line that must pass behind boxes (a spine
   through a row of cards) belongs in the page: an absolutely positioned `div` placed before
   the cards, which are `position: relative`.
+
+## Motion
+
+A figure shown in a browser can move: in a README or a doc (the SVG as an image), on its
+own, and in a page that embeds it. Motion needs no script.
+
+- `"flow": true` on a connection: gaps move along the line in its direction, and a dot
+  travels it, at one speed for every line. It shows which way something flows, where an
+  arrowhead only states it.
+- `data-step="1"`, `"2"`… on any element: the elements appear in that order, once, half a
+  second apart; a line appears with the later of its two ends, and an element inside a
+  stepped box appears with the box. The steps tell a story: a request's path, waves of a
+  migration, before and after.
+
+The still figure is complete without the motion, and is what a PNG, a print, PowerPoint
+or Inkscape shows: the moving marks are drawn on top of it and start hidden, and the
+reveal ends where the still is. A reader who asks for reduced motion sees the still. Move
+one thing per figure, the one that carries its point: motion draws the eye before anything
+else does.
 
 ## Problems
 

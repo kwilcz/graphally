@@ -159,6 +159,9 @@ export async function openPage(browser, { width = 1400, height = 900, scale = 1 
     return s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
   };
   await viewport(width, height);
+  // A capture is the still figure: a diagram's motion (flow, steps) plays only where the reader
+  // allows motion, so the page asks for none.
+  await s('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   const evaluate = async expression => {
     const r = await s('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
     if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description || r.exceptionDetails.text);
