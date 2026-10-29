@@ -614,6 +614,26 @@ later('page-depend', async () => {
 
 // The skill's own examples: every complete <diagram> in SKILL.md and the references renders
 // with no problem, so what an agent copies works.
+later('package', async () => {
+  // The Node API is what the CLI runs: the same render, its result as data.
+  const { render: renderApi } = await import(pathToFileURL(path.join(root, 'skills/graphally/scripts/lib/api.mjs')).href);
+  const d = folder('api'), f = write(d, page('<div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div></div><script type="application/json">[["a", "b"]]</script>', '', 'width=400'));
+  const r = await renderApi([f], { out: path.join(d, 'out'), png: true, recompute: true });
+  const dia = r.files[0]?.diagrams[0];
+  check(r.exitCode === 0 && dia && fs.existsSync(dia.svg) && fs.existsSync(dia.png) && Array.isArray(dia.problems) && dia.stats.edges === 1 && r.lines.some(l => / ok$/.test(l)), `render() returned ${JSON.stringify(r).slice(0, 300)}`);
+  const missing = await renderApi([path.join(d, 'nope.html')]).then(() => null, e => e);
+  check(missing?.exitCode === 2 && /no such file/.test(missing.message), `a missing file did not throw with exitCode 2: ${missing}`);
+  // The npm package is the skill folder: what it would publish (npm pack works offline).
+  const pkgDir = path.join(root, 'skills/graphally'), pkg = JSON.parse(fs.readFileSync(path.join(pkgDir, 'package.json'), 'utf8'));
+  const packed = await new Promise(ok => { const c = spawn('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: pkgDir }); let t = ''; c.stdout.on('data', x => { t += x; }); c.on('close', () => ok(t)); c.on('error', () => ok('')); });
+  const names = new Set((JSON.parse(packed || '[{}]')[0].files || []).map(x => x.path));
+  const wanted = [pkg.bin.graphally, ...Object.values(pkg.exports), 'scripts/lib/harness.html', 'assets/icon-sources/azure.txt', 'SKILL.md'].map(x => x.replace(/^\.\//, ''));
+  const lost = wanted.filter(x => !names.has(x));
+  check(names.size && !lost.length, `the package would not publish ${lost.join(', ') || '(npm pack gave no list)'}`);
+  check(![...names].some(x => x.startsWith('assets/icons/')), 'the package would publish the downloaded icon packs');
+  check(pkg.version === /^  version: "([^"]+)"$/m.exec(fs.readFileSync(path.join(pkgDir, 'SKILL.md'), 'utf8'))[1], `package.json ${pkg.version} differs from SKILL.md`);
+});
+
 later('version', async () => {
   // The version is the same in SKILL.md and both manifests. The next one steps up from the
   // last release: the build number, the minor one or the major one.

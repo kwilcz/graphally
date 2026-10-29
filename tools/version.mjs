@@ -6,9 +6,10 @@
 // node tools/version.mjs --kind [label...]          prints the release the labels ask for: build, minor or major
 // node tools/version.mjs --next build|minor|major   prints the next version of that kind
 //
-// The version is kept in three places, which must agree: SKILL.md (metadata.version, which
-// ships with the skill folder on its own), and the plugin and marketplace manifests (read by
-// plugin updates). The release is tagged v<version>.
+// The version is kept in four places, which must agree: SKILL.md (metadata.version, which
+// ships with the skill folder on its own), the plugin and marketplace manifests (read by
+// plugin updates), and the skill folder's package.json (the npm package, which is the same
+// folder). The release is tagged v<version>.
 // A pull request's label chooses its release: "major", else "minor", else "build" (also with no
 // label). --next steps up from the newer of the last v-tag and the version on origin/main.
 import { execFileSync } from 'node:child_process';
@@ -21,6 +22,7 @@ const PLACES = [
   { file: 'skills/graphally/SKILL.md', re: /^(  version: ")(\d+\.\d+\.\d+)(")$/m },
   { file: '.claude-plugin/plugin.json', re: /^(  "version": ")(\d+\.\d+\.\d+)(")/m },
   { file: '.claude-plugin/marketplace.json', re: /^(      "version": ")(\d+\.\d+\.\d+)(")/m },
+  { file: 'skills/graphally/package.json', re: /^(  "version": ")(\d+\.\d+\.\d+)(")/m },
 ];
 const SEMVER = /^\d+\.\d+\.\d+$/;
 const read = p => { const m = p.re.exec(fs.readFileSync(path.join(root, p.file), 'utf8')); if (!m) throw new Error(`no version in ${p.file}`); return m[2]; };

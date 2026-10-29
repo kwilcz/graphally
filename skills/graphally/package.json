@@ -1,0 +1,23 @@
+{
+  "name": "graphally",
+  "version": "2.8.1",
+  "description": "Diagrams from HTML and CSS: the browser lays the figure out, graphally routes the connections and writes an SVG. Architecture with Azure and AWS icons, networks, BPMN, sequences, plans and any figure a web page can hold.",
+  "keywords": ["diagram", "svg", "architecture", "azure", "aws", "bpmn", "sequence-diagram", "gantt", "agent-skill"],
+  "homepage": "https://github.com/kwilcz/graphally",
+  "repository": { "type": "git", "url": "git+https://github.com/kwilcz/graphally.git", "directory": "skills/graphally" },
+  "bugs": "https://github.com/kwilcz/graphally/issues",
+  "license": "Apache-2.0",
+  "author": "Kamil Wilczyński (https://github.com/kwilcz)",
+  "type": "module",
+  "bin": { "graphally": "scripts/graphally.mjs" },
+  "exports": {
+    ".": "./scripts/lib/api.mjs",
+    "./engine": "./scripts/lib/index.js",
+    "./edits": "./scripts/lib/edits.mjs",
+    "./viewer": "./viewer/graphally.js",
+    "./theme.css": "./assets/theme.css",
+    "./package.json": "./package.json"
+  },
+  "files": ["scripts", "viewer", "assets/theme.css", "assets/icon-sources", "references", "SKILL.md", "LICENSE.txt", "NOTICE.txt"],
+  "engines": { "node": ">=18" }
+}
