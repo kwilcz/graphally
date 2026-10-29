@@ -67,6 +67,12 @@ is about choosing one.
 - A file may hold several `<diagram>` elements, among HTML of its own (a report, a wiki
   page). Each keeps its `<style>`, scripts, connections and ids to itself, and the page's
   CSS does not reach it, so two diagrams may both have `id=api` and a `.lane` of their own.
+- A title, caption or note that belongs beside boxes but must not move them hangs with
+  `position: absolute` from a `position: relative` parent: `bottom: 100%` above it,
+  `top: 100%` below it. It takes no room, so centring and rows count only the boxes, and the
+  lines into them run straight: a column's heading no longer pushes its cards below the box
+  they connect to. Leave it room, since nothing makes way for it: a margin above the column,
+  equal padding at the top and bottom of a drawn box that hangs a title and a caption.
 
 ## Shapes
 
