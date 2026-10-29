@@ -168,6 +168,9 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   part that is there but does not run, icon and lines included. These class names are taken, and so are
   the sequence helper's (`seq`, `msg`, `num`, `guard`, `lifeline`, `activation`, `frag-…`):
   name your own differently.
+- **Motion**: `"flow": true` on a connection moves gaps and a dot along it; `data-step="1"`,
+  `"2"`… make elements appear in order, once. The still figure stays complete: PNGs, print
+  and reduced motion show it. Move only what carries the point.
 - **Labels that must not move boxes** (a column's heading, a caption, a note): hang them
   with `position: absolute` from a `relative` parent, so centring counts only the boxes and
   lines run straight; leave them room.

@@ -24,6 +24,19 @@
 .g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 .g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 </style>
+<style>@media (prefers-reduced-motion: no-preference) {
+  svg.graphally .g-flow, svg.graphally .g-dot { visibility: visible; }
+  svg.graphally .g-flow { stroke-dasharray: 3 9; animation: g-flow 0.9s linear infinite; }
+  svg.graphally [data-step] { animation: g-in 0.5s backwards; }
+  svg.graphally [data-step="1"] { animation-delay: 0.3s; }
+  svg.graphally [data-step="2"] { animation-delay: 0.8s; }
+  svg.graphally [data-step="3"] { animation-delay: 1.3s; }
+  svg.graphally [data-step="4"] { animation-delay: 1.8s; }
+  svg.graphally [data-step="5"] { animation-delay: 2.3s; }
+  svg.graphally [data-step="6"] { animation-delay: 2.8s; }
+}
+@keyframes g-flow { to { stroke-dashoffset: -12; } }
+@keyframes g-in { from { opacity: 0; transform: translateY(6px); } }</style>
 <defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
 <symbol id="pg-g-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="pg-azure-front-doors" viewBox="0 0 18 15.862288"><defs id="pg-azure-front-doors-0"> <linearGradient id="pg-azure-front-doors-1" x1="9" y1="13.83" x2="9" y2="1.0700001" gradientUnits="userSpaceOnUse"> <stop offset="0" stop-color="#0078d4" id="pg-azure-front-doors-2" /> <stop offset="0.82" stop-color="#5ea0ef" id="pg-azure-front-doors-3" /> </linearGradient> </defs> <path d="m 18,8.7622883 a 4,4 0 0 0 -3.51,-3.83 5.1,5.1 0 0 0 -5.25,-4.93000003 5.23,5.23 0 0 0 -5,3.41000003 4.83,4.83 0 0 0 -4.24,4.64 4.9,4.9 0 0 0 5.07,4.7099997 h 0.44 8.21 a 0.78,0.78 0 0 0 0.22,0 A 4.09,4.09 0 0 0 18,8.7622883 Z" id="pg-azure-front-doors-4" style="fill:url(#pg-azure-front-doors-1)" /> <path id="pg-azure-front-doors-5" d="m 6.63,5.7522883 h 5.06 V 12.752288 H 6.63 Z" style="fill:#f2f2f2" /> <path id="pg-azure-front-doors-6" d="m 12.61,5.3022883 -3.49,-2 a 0.25,0.25 0 0 0 -0.31,0.15 c 0,0 0,0.06 0,0.08 V 15.612288 a 0.25,0.25 0 0 0 0.24,0.25 h 0.08 l 3.49,-2.06 a 0.25,0.25 0 0 0 0.17,-0.23 V 5.5722883 a 0.26,0.26 0 0 0 -0.18,-0.27 z" style="fill:#50e6ff" /></symbol>
@@ -43,6 +56,7 @@
 <text x="988" y="109.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.88px; fill: var(--muted)">AFTERWARDS, IN THE BACKGROUND</text>
 <text x="988" y="138.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 700; fill: var(--muted)">2 steps</text>
 <text x="988" y="159.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">The customer has their answer; nobody is waiting.</text>
+<g data-step="1">
 <g data-id="shopper" data-box="68,190,140,208.5">
 <rect x="68.5" y="190.4" width="139" height="207.5" rx="11.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="56" y="177.9" width="28" height="28" rx="14" style="fill: var(--woad)"></rect>
@@ -53,6 +67,8 @@
 <text x="103.5" y="320.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">our website</text>
 <text x="101.9" y="380.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Web browser</text>
 </g>
+</g>
+<g data-step="2">
 <g data-id="fd" data-box="280,190,140,208.5">
 <rect x="280.5" y="190.4" width="139" height="207.5" rx="11.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="268" y="177.9" width="28" height="28" rx="14" style="fill: var(--woad)"></rect>
@@ -65,6 +81,8 @@
 <text x="298.1" y="366.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Azure Front Door +</text>
 <text x="337.3" y="380.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">WAF</text>
 </g>
+</g>
+<g data-step="3">
 <g data-id="api" data-box="492,190,140,208.5">
 <rect x="492.5" y="190.4" width="139" height="207.5" rx="11.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <rect x="480" y="177.9" width="28" height="28" rx="14" style="fill: var(--woad)"></rect>
@@ -76,6 +94,8 @@
 <text x="518.4" y="366.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Orders API, App</text>
 <text x="541.4" y="380.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Service</text>
 </g>
+</g>
+<g data-step="4">
 <g data-id="db" data-box="704,190,140,208.5">
 <rect x="705" y="190.9" width="138" height="206.5" rx="11" style="fill: var(--card); stroke: var(--green)" stroke-width="2"></rect>
 <rect x="693" y="178.9" width="28" height="28" rx="14" style="fill: var(--woad)"></rect>
@@ -88,12 +108,16 @@
 <text x="727.1" y="365.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Orders database,</text>
 <text x="745.1" y="379.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Azure SQL</text>
 </g>
+</g>
+<g data-step="4">
 <g data-id="seal" data-box="860,252.5,112,83">
 <g data-id="ck" data-box="887,252.5,58,58">
 <rect x="887" y="252.6" width="58" height="58" rx="29" style="fill: var(--green)"></rect>
 </g>
 <text x="874.3" y="332.6" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--green)">Order saved</text>
 </g>
+</g>
+<g data-step="5">
 <g data-id="sb" data-box="988,190,140,208.5">
 <rect x="988.5" y="190.4" width="139" height="207.5" rx="11.5" style="fill: var(--card); stroke: var(--muted)" stroke-width="1" stroke-dasharray="5 4"></rect>
 <rect x="976" y="177.9" width="28" height="28" rx="14" style="fill: var(--muted)"></rect>
@@ -106,6 +130,8 @@
 <text x="1004.8" y="366.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Service Bus, orders</text>
 <text x="1044.5" y="380.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">topic</text>
 </g>
+</g>
+<g data-step="6">
 <g data-id="worker" data-box="1200,190,140,208.5">
 <rect x="1200.5" y="190.4" width="139" height="207.5" rx="11.5" style="fill: var(--card); stroke: var(--muted)" stroke-width="1" stroke-dasharray="5 4"></rect>
 <rect x="1188" y="177.9" width="28" height="28" rx="14" style="fill: var(--muted)"></rect>
@@ -116,6 +142,7 @@
 <text x="1231.5" y="320.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">and does the</text>
 <text x="1225.5" y="337.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--ink)">follow-up work</text>
 <text x="1226" y="380.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">Azure Functions</text>
+</g>
 </g>
 <rect x="68.5" y="504.9" width="1271" height="77" rx="11.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
 <text x="91" y="538.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: var(--green)">In one sentence:</text>
@@ -129,18 +156,18 @@
 <line x1="1065.8" y1="556.9" x2="1095.8" y2="556.9" style="stroke: var(--ink)" stroke-width="1" stroke-dasharray="5 4"></line>
 </g>
 <text x="1103.8" y="560.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">happens afterwards, in the background</text>
-<g data-edge="shopper-&gt;fd" data-sides="right,left"><path d="M208,298 L280,298" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="fd-&gt;api" data-sides="right,left"><path d="M420,298 L492,298" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="api-&gt;db" data-sides="right,left"><path d="M632,298.5 L704,298.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="sb-&gt;worker" data-sides="right,left"><path d="M1128,298 L1200,298" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="api-&gt;sb" data-sides="bottom,bottom" data-out="bottom" data-in="bottom"><path d="M562,398 L562,406 Q562,412 568,412 L1052,412 Q1058,412 1058,406 L1058,398" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="shopper-&gt;fd" data-sides="right,left" data-step="2"><path d="M208,298 L280,298" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path><path class="g-flow" d="M208,298 L280,298" visibility="hidden" style="fill: none; stroke: var(--lane-a)" stroke-width="1.5"></path><circle class="g-dot" r="4" visibility="hidden" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.5"><animateMotion dur="1.2s" begin="0.8s" repeatCount="indefinite" path="M208,298 L280,298"></animateMotion></circle></g>
+<g data-edge="fd-&gt;api" data-sides="right,left" data-step="3"><path d="M420,298 L492,298" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path><path class="g-flow" d="M420,298 L492,298" visibility="hidden" style="fill: none; stroke: var(--lane-a)" stroke-width="1.5"></path><circle class="g-dot" r="4" visibility="hidden" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.5"><animateMotion dur="1.2s" begin="1.3s" repeatCount="indefinite" path="M420,298 L492,298"></animateMotion></circle></g>
+<g data-edge="api-&gt;db" data-sides="right,left" data-step="4"><path d="M632,298.5 L704,298.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path><path class="g-flow" d="M632,298.5 L704,298.5" visibility="hidden" style="fill: none; stroke: var(--lane-a)" stroke-width="1.5"></path><circle class="g-dot" r="4" visibility="hidden" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.5"><animateMotion dur="1.2s" begin="1.8s" repeatCount="indefinite" path="M632,298.5 L704,298.5"></animateMotion></circle></g>
+<g data-edge="sb-&gt;worker" data-sides="right,left" data-step="6"><path d="M1128,298 L1200,298" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path><path class="g-flow" d="M1128,298 L1200,298" visibility="hidden" style="fill: none; stroke: var(--wash)" stroke-width="1.5"></path><circle class="g-dot" r="4" visibility="hidden" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.5"><animateMotion dur="1.2s" begin="2.8s" repeatCount="indefinite" path="M1128,298 L1200,298"></animateMotion></circle></g>
+<g data-edge="api-&gt;sb" data-sides="bottom,bottom" data-out="bottom" data-in="bottom" data-step="5"><path d="M562,398 L562,406 Q562,412 568,412 L1052,412 Q1058,412 1058,406 L1058,398" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path><path class="g-flow" d="M562,398 L562,406 Q562,412 568,412 L1052,412 Q1058,412 1058,406 L1058,398" visibility="hidden" style="fill: none; stroke: var(--lane-a)" stroke-width="1.5"></path><circle class="g-dot" r="4" visibility="hidden" style="fill: var(--woad); stroke: var(--card)" stroke-width="1.5"><animateMotion dur="7.5s" begin="2.3s" repeatCount="indefinite" path="M562,398 L562,406 Q562,412 568,412 L1052,412 Q1058,412 1058,406 L1058,398"></animateMotion></circle></g>
 <path d="M916,81.9 L916,246.6" style="fill: none; stroke: var(--green)" stroke-width="3"></path>
 <path d="M916,341.6 L916,476.4" style="fill: none; stroke: var(--green)" stroke-width="3"></path>
 <path d="M902,282.6 L912,292.6 L931,270.6" style="fill: none; stroke: var(--card)" stroke-width="5"></path>
 <path d="M1065.8,529.9 L1095.8,529.9" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <path d="M1065.8,556.9 L1095.8,556.9" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
-<text class="g-edge" x="647.3" y="292.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-a); stroke-width: 4px; stroke-linejoin: round">saves it</text>
-<text class="g-edge" x="1139" y="292" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">hands on</text>
-<text class="g-edge" x="744" y="427" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-a); stroke-width: 4px; stroke-linejoin: round">pins a note: &quot;new order&quot;</text>
+<text data-step="4" class="g-edge" x="647.3" y="292.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-a); stroke-width: 4px; stroke-linejoin: round">saves it</text>
+<text data-step="6" class="g-edge" x="1139" y="292" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">hands on</text>
+<text data-step="5" class="g-edge" x="744" y="427" style="fill: var(--ink); paint-order: stroke; stroke: var(--lane-a); stroke-width: 4px; stroke-linejoin: round">pins a note: &quot;new order&quot;</text>
 </g>
 </svg>

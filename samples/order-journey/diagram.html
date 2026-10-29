@@ -15,6 +15,8 @@ Encoding: position = time (left to right, numbered); tint and border = who is wa
   zone vs dashed grey zone); size/value = plain name big, tech name small and grey; line style =
   dashed for "happens afterwards"; green = saved, the only strong fill.
 Focal point: the green "Order saved" seal on the wall.
+Motion (in a browser): the steps appear in their order, the seal with the order book, and the
+  order flows along every line; the still figure, and the PNG, are the whole story without it.
 -->
 <style>
   .story { display: grid; grid-template-columns: repeat(4, 140px) 0 repeat(2, 140px); column-gap: 72px; justify-content: center; }
@@ -51,15 +53,15 @@ Focal point: the green "Order saved" seal on the wall.
   <div class="zh wait"><span class=kick>While the customer waits</span><b>4 steps</b><span>The customer is waiting on the screen for these.</span></div>
   <div class="zh later"><span class=kick>Afterwards, in the background</span><b>2 steps</b><span>The customer has their answer; nobody is waiting.</span></div>
 
-  <div class="st col-[1]" id=shopper><b class=stepno>1</b><icon name=user></icon>Customer<span class=d>Places an order on our website</span><small>Web browser</small></div>
-  <div class="st col-[2]" id=fd><b class=stepno>2</b><icon name="front door"></icon>Front door<span class=d>Checks every request is safe before letting it in</span><small>Azure Front Door + WAF</small></div>
-  <div class="st col-[3]" id=api><b class=stepno>3</b><icon name="app service"></icon>Order desk<span class=d>Takes the order and passes it on</span><small>Orders API, App Service</small></div>
-  <div class="st saved col-[4]" id=db><b class=stepno>4</b><icon name=sql></icon>Order book<span class=d>Keeps a safe record of every order</span><small>Orders database, Azure SQL</small></div>
+  <div class="st col-[1]" id=shopper data-step=1><b class=stepno>1</b><icon name=user></icon>Customer<span class=d>Places an order on our website</span><small>Web browser</small></div>
+  <div class="st col-[2]" id=fd data-step=2><b class=stepno>2</b><icon name="front door"></icon>Front door<span class=d>Checks every request is safe before letting it in</span><small>Azure Front Door + WAF</small></div>
+  <div class="st col-[3]" id=api data-step=3><b class=stepno>3</b><icon name="app service"></icon>Order desk<span class=d>Takes the order and passes it on</span><small>Orders API, App Service</small></div>
+  <div class="st saved col-[4]" id=db data-step=4><b class=stepno>4</b><icon name=sql></icon>Order book<span class=d>Keeps a safe record of every order</span><small>Orders database, Azure SQL</small></div>
 
-  <div class=seal id=seal><i id=ck></i>Order saved</div>
+  <div class=seal id=seal data-step=4><i id=ck></i>Order saved</div>
 
-  <div class="st bg col-[6]" id=sb><b class=stepno>5</b><icon name="service bus"></icon>Ticket rail<span class=d>A &ldquo;new order&rdquo; note waits here in line until it is picked up</span><small>Service Bus, orders topic</small></div>
-  <div class="st bg col-[7]" id=worker><b class=stepno>6</b><icon name=functions></icon>Back-office worker<span class=d>Picks up each note and does the follow-up work</span><small>Azure Functions</small></div>
+  <div class="st bg col-[6]" id=sb data-step=5><b class=stepno>5</b><icon name="service bus"></icon>Ticket rail<span class=d>A &ldquo;new order&rdquo; note waits here in line until it is picked up</span><small>Service Bus, orders topic</small></div>
+  <div class="st bg col-[7]" id=worker data-step=6><b class=stepno>6</b><icon name=functions></icon>Back-office worker<span class=d>Picks up each note and does the follow-up work</span><small>Azure Functions</small></div>
 
   <div class=room></div>
 
@@ -71,11 +73,11 @@ Focal point: the green "Order saved" seal on the wall.
 
 <script type="application/json">
 [
-  ["shopper", "fd"],
-  ["fd", "api"],
-  ["api", "db", "saves it"],
-  { "from": "api", "to": "sb", "label": "pins a note: \"new order\"", "dashed": true, "out": "bottom", "in": "bottom" },
-  { "from": "sb", "to": "worker", "label": "hands on", "dashed": true }
+  { "from": "shopper", "to": "fd", "flow": true },
+  { "from": "fd", "to": "api", "flow": true },
+  { "from": "api", "to": "db", "label": "saves it", "flow": true },
+  { "from": "api", "to": "sb", "label": "pins a note: \"new order\"", "dashed": true, "out": "bottom", "in": "bottom", "flow": true },
+  { "from": "sb", "to": "worker", "label": "hands on", "dashed": true, "flow": true }
 ]
 </script>
 
