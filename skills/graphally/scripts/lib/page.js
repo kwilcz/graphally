@@ -525,6 +525,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     }
   }
   check(texts, problems);
+  overflows(boxes, texts, root, problems);
   const defs = [...[...markers].map(k => {
     const [mid, kind, color] = k.split('|'), [ref, body] = MARKER[kind];
     return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
@@ -794,6 +795,38 @@ function check(texts, problems) {
     const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
     if (ox > 2 && oy > 2) problems.push({ rule: 'text-overlap', a: a.owner.id || a.owner.tagName.toLowerCase(), b: b.owner.id || b.owner.tagName.toLowerCase(), hint: 'give the text more room, or move one of them' });
   }
+}
+
+// A box, an icon or a line of text that sticks out of the painted box holding it: a node
+// wider than its group, a word wider than its card. A warning, not a problem: it may be meant,
+// so the render still passes. What is placed with position: absolute is placed on purpose (a
+// badge hung on a corner, a BPMN timer on a task's edge, a label beside its bar), and so is all
+// inside it: those are left alone. Only a drawn block has an edge to stick out of; a plain
+// wrapper has none, and an inline span's box is its line, not a frame.
+function overflows(boxes, texts, root, problems) {
+  const cs = e => getComputedStyle(e);
+  const drawn = new Map(boxes.filter(b => b.painted && !b.plain && b.e.tagName !== 'ICON' && cs(b.e).display !== 'inline').map(b => [b.e, b]));
+  const holder = e => { for (let p = e.parentElement; p && p !== root; p = p.parentElement) if (drawn.has(p)) return drawn.get(p); return null; };
+  // Placed on purpose: the element or an ancestor below its holder is absolutely positioned.
+  const placed = (e, h) => { for (let p = e; p && p !== h?.e && p !== root; p = p.parentElement) if (/^(absolute|fixed)$/.test(cs(p).position)) return true; return false; };
+  const name = e => e.id || `${e.tagName.toLowerCase()}${[...e.classList].filter(c => !c.startsWith('[')).map(c => `.${c}`).join('')}`;
+  const past = (q, a) => [['left', q.x - a.x], ['right', a.x + a.w - q.x - q.w], ['top', q.y - a.y], ['bottom', a.y + a.h - q.y - q.h]].filter(([, d]) => d > 1);
+  const warn = (what, h, sides) => problems.push({ rule: 'box-overflow', warn: true, box: what, in: name(h.e), by: sides.map(([k, d]) => `${k} ${Math.round(d)}px`).join(', '),
+    hint: 'widen the box that holds it, or narrow what is inside; leave it when it is meant' });
+  for (const b of boxes) {
+    if (!b.painted) continue;
+    const h = holder(b.e), sides = h && !placed(b.e, h) && past(h.b, b.b);
+    if (sides?.length) warn(name(b.e), h, sides);
+  }
+  // Text: once per element, by the line that sticks out furthest.
+  const worst = new Map();
+  for (const t of texts) {
+    const h = drawn.get(t.owner) || holder(t.owner), sides = h && !placed(t.owner, h) && past(h.b, t);
+    if (!sides?.length) continue;
+    const far = Math.max(...sides.map(([, d]) => d)), was = worst.get(t.owner);
+    if (!was || far > was.far) worst.set(t.owner, { far, h, sides, str: t.str });
+  }
+  for (const { h, sides, str } of worst.values()) warn(`text "${str.length > 24 ? `${str.slice(0, 24)}…` : str}"`, h, sides);
 }
 
 // An arrowhead or tail mark on an end segment shorter than 12px sits on the bend before it.

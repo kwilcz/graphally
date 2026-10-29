@@ -89,7 +89,8 @@ svg { display: block; }
         let r = compile(el, opts);
         // The first pass names the icons the diagram draws; the second draws them.
         if (used.size) { const want = [...used]; used.clear(); await fetchIcons(want); r = compile(el, opts); }
-        const problems = [...r.problems];
+        // Warnings are for the author at the render; a reader of the page is not shown them.
+        const problems = r.problems.filter(p => !p.warn);
         if (el.querySelector('include')) problems.unshift({ rule: 'include', hint: 'a file opened from disk cannot read its parts: render it with graphally, or put the parts in this file' });
         const t = document.createElement('template');
         t.innerHTML = r.svg;

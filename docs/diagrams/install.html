@@ -2,40 +2,95 @@
 <meta charset="utf-8">
 <!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
 <script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.js"></script>
-<diagram width=1500 title="Getting graphally into an agent" subtitle="Every installer copies the same skill folder; icons arrive on the first render">
-<style> .map { grid-template-areas: "src inst skill run" ". . icons ."; } </style>
-<div class="map grid justify-between items-start gap-x-24 gap-y-10">
-  <div class="group plain [grid-area:src] self-center"><h4>Source</h4>
-    <div class=node id=gh><icon name=repo></icon>kwilcz/graphally<small>GitHub</small></div>
+<!-- The point: a README reader choosing a route sees that every agent has a way in, all five
+     land the same skill folder, and the people who read the diagrams install nothing.
+     The metaphor: a road in three acts, left to right: five doors funnel into one folder (the
+     focal point), the agent's machine draws, and readers hold only a browser.
+     The build: grid areas, a chevron strip over the acts, one bundle for the funnel. -->
+<diagram width=1640 title="Five ways in, one skill, nothing for readers to install" subtitle="Every route copies the same skills/graphally folder; a diagram file opens in any browser">
+<style>
+  .road { display: grid; grid-template-columns: 250px 220px 280px 200px 270px; justify-content: space-between; row-gap: 22px;
+          grid-template-areas: "a1 a1 a2 a2 a3" "routes folder machine out readers" ". icons . . cdn"; }
+  .act { display: flex; align-items: center; justify-content: center; height: 40px; color: var(--ink); font-weight: 650; font-size: 13.5px; border: 0; background: var(--lane-a); }
+  .act b { color: var(--woad); margin-right: 8px; }
+  .routes { display: flex; flex-direction: column; gap: 14px; }
+  .routes .group > h4 { font-weight: 500; }
+  .node { min-width: 0; max-width: none; }
+  .routes .node { width: 250px; }
+  .folder { align-self: center; padding: 14px 16px; border: 2.5px solid var(--woad); border-radius: 10px; background: var(--card); }
+  .folder h3 { color: var(--woad); font-size: 15px; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .tree { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; font-size: 12px; }
+  .tree b { font-weight: 600; }
+  .tree span { color: var(--muted); }
+  .folder p { margin-top: 12px; font-size: 11.5px; color: var(--woad); font-weight: 600; }
+  .machine { align-self: center; gap: 30px; }
+  .packs, .cdn { align-self: start; }
+  .out { align-self: center; display: flex; flex-direction: column; gap: 40px; }
+  .out .node, .readers .node { width: auto; }
+  .readers { align-self: center; display: flex; flex-direction: column; gap: 26px; }
+</style>
+<div class=road>
+  <div class="act [grid-area:a1]" shape=chevron-start><b>1</b>Install once, for any agent</div>
+  <div class="act [grid-area:a2]" shape=chevron><b>2</b>Draw, on the agent's machine</div>
+  <div class="act [grid-area:a3]" shape=chevron><b>3</b>Read: nothing to install</div>
+
+  <div class="routes [grid-area:routes]">
+    <div class="group plain gap-8"><h4>From the plugin marketplace</h4>
+      <div class=node id=cc><icon name=code></icon>Claude Code<small>/plugin install</small></div>
+      <div class=node id=copilot><icon name=code></icon>GitHub Copilot CLI<small>copilot plugin install</small></div>
+    </div>
+    <div class="group plain gap-8"><h4>From the skill folder</h4>
+      <div class=node id=ghs><icon name=code></icon>GitHub CLI 2.90+<small>gh skill install, any agent</small></div>
+      <div class=node id=npx><icon name=code></icon>skills CLI<small>npx skills add</small></div>
+    </div>
+    <div class="group plain gap-8"><h4>From the release</h4>
+      <div class=node id=zip><icon name=browser></icon>Claude.ai and Desktop<small>upload graphally-skill.zip</small></div>
+    </div>
   </div>
-  <div class="group [grid-area:inst]" id=inst><h4>Installers</h4>
-    <div class=node id=plugin><icon name=code></icon>Claude Code<small>/plugin install</small></div>
-    <div class=node id=ghs><icon name=code></icon>GitHub CLI<small>gh skill install</small></div>
-    <div class=node id=npx><icon name=code></icon>skills CLI<small>npx skills add</small></div>
-    <div class=node id=zip><icon name=file></icon>Claude.ai<small>release zip</small></div>
+
+  <div class="folder [grid-area:folder]" id=folder>
+    <h3><icon name=file size=20></icon>skills/graphally</h3>
+    <div class=tree>
+      <b>SKILL.md</b><span>how to draw</span>
+      <b>references/</b><span>the format</span>
+      <b>scripts/</b><span>engine and CLIs</span>
+      <b>assets/</b><span>theme, icon packs</span>
+    </div>
+    <p>The same folder, every route</p>
   </div>
-  <div class="group [grid-area:skill]" id=skill><h4>skills/graphally</h4>
-    <div class=node id=md><icon name=file></icon>SKILL.md<small>instructions</small></div>
-    <div class=node id=refs><icon name=file></icon>references/<small>the format, one page per kind</small></div>
-    <div class=node id=scripts><icon name=code></icon>scripts/<small>engine and CLIs</small></div>
-    <div class=node id=assets><icon name=file></icon>assets/<small>theme, icon packs</small></div>
-  </div>
-  <div class="group plain [grid-area:run] self-center gap-16"><h4>At work</h4>
+
+  <div class="group machine [grid-area:machine]"><h4>The agent's machine</h4>
     <div class=node id=agent><icon name=user></icon>Agent<small>Claude, Copilot, Codex…</small></div>
-    <div class=node id=browser><icon name=browser></icon>Chrome, Chromium<small>or Edge</small></div>
+    <div class=node id=render><icon name=code></icon>graphally render<small>Node.js 18 or later</small></div>
+    <div class=node id=chrome><icon name=browser></icon>Chrome, Chromium or Edge<small>lays the page out</small></div>
   </div>
-  <div class="group dashed [grid-area:icons]" id=icons><h4>Icon sources</h4>
-    <div class="node external" id=drawio><icon name=globe></icon>draw.io repository<small>Azure icons</small></div>
-    <div class="node external" id=npm><icon name=globe></icon>npm registry<small>AWS icons</small></div>
+
+  <div class="out [grid-area:out]">
+    <div class=node id=svg><icon name=file></icon>diagram.svg<small>and a PNG, light and dark</small></div>
+    <div class=node id=html><icon name=file></icon>diagram.html<small>the source, a page</small></div>
   </div>
+
+  <div class="readers [grid-area:readers]">
+    <div class=node id=readme><icon name=file></icon>A README or a doc<small>shows the SVG as an image</small></div>
+    <div class=node id=colleague><icon name=users></icon>A colleague<small>opens the file: it draws itself</small></div>
+    <div class=node id=site><icon name=globe></icon>Your own page<small>any number of diagrams, each isolated</small></div>
+  </div>
+
+  <div class="node external packs [grid-area:icons]" id=packs><icon name=globe></icon>Icon packs<small>Azure from draw.io, AWS from npm</small></div>
+  <div class="node external cdn [grid-area:cdn]" id=cdn><icon name=globe></icon>jsDelivr<small>the viewer, its icons and font</small></div>
 </div>
 <script type="application/json">
 [
-  { "from": "gh", "to": ["plugin", "ghs", "npx", "zip"] },
-  { "from": ["plugin", "ghs", "npx", "zip"], "to": "skill", "label": "copy" },
-  ["agent", "md", "reads"], ["agent", "scripts", "runs"],
-  { "from": "scripts", "to": "browser", "label": "drives" },
-  { "from": ["drawio", "npm"], "to": "assets", "label": "first render", "dashed": true }
+  { "from": ["cc", "copilot", "ghs", "npx", "zip"], "to": "folder", "label": "copy", "in": "left" },
+  ["folder", "agent", "reads"],
+  ["agent", "render", "runs"],
+  ["render", "chrome"],
+  { "from": "render", "to": ["svg", "html"], "label": "writes" },
+  { "from": "packs", "to": "folder", "label": "first render", "dashed": true },
+  ["svg", "readme"],
+  ["html", "colleague"],
+  ["html", "site"],
+  { "from": "cdn", "to": ["colleague", "site"], "label": "loads", "dashed": true, "out": "right", "in": "right" }
 ]
 </script>
 </diagram>

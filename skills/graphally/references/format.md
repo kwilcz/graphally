@@ -321,6 +321,7 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
 | `lines-overlap` | two lines share a stretch and read as one: give one `via` points or other sides |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts of the page collide: give one more room |
+| `warning: box-overflow` | a box, an icon or a line of text sticks out of the drawn box that holds it (a node wider than its group, a word wider than its card): widen the holder or narrow what is inside. A warning: the render passes, and when the overflow is meant, leave it. What is placed with `position: absolute` (a badge on a corner, a timer on a task's edge) is not reported |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
 | `unknown-utility` | a class that reads like a utility and means nothing: use a theme colour (`bg-wash`) or a bracket value (`bg-[#eef]`) |
 | `plain-script` | a `<script>` without a type would run in the browser: write `<script type="graphally">` |

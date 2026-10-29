@@ -47,7 +47,7 @@ needs **Node.js 18 or later** and **Chrome, Chromium or Edge** on the machine wh
 agent runs. There is no `npm install` and nothing to clone. The first render downloads
 the Azure and AWS icon packs into the skill, which takes a few seconds once.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/install-dark.svg"><img alt="How the skill reaches an agent, and where its icons come from" src="docs/diagrams/install.svg"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/install-dark.svg"><img alt="Five install routes copy the same skills/graphally folder; the agent draws with it, and readers open the diagram in any browser with nothing installed" src="docs/diagrams/install.svg"></picture>
 
 **Claude Code**
 

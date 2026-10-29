@@ -194,7 +194,7 @@ work. `icons=aws` on `<diagram>` makes AWS win names both vendors share, and `aw
 `azure:` picks a pack for one icon. A small set of generic outline icons (people,
 devices, servers, documents) covers what has no vendor icon.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/install-dark.svg"><img alt="How the skill reaches an agent, and where its icons come from" src="diagrams/install.svg"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/install-dark.svg"><img alt="Five install routes copy the same skills/graphally folder; the agent draws with it, and readers open the diagram in any browser with nothing installed" src="diagrams/install.svg"></picture>
 
 ## Theming and output
 

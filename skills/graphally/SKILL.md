@@ -201,6 +201,7 @@ The whole format, with every class, shape, option and call: [references/format.m
 | `unroutable` | the line has no way through: widen a gap, or give it `via` points |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts collide: give one more room |
+| `warning: box-overflow` | a box or text sticks out of the drawn box holding it: widen the holder or narrow what is inside. A warning, so the render passes: leave it when it is meant |
 | `script-error` | the message and line say what failed in a script |
 
 ## References
