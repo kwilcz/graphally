@@ -9,8 +9,14 @@
 // inter-ui package, so the boxes measure the same text as in a render. A page can point
 // any of these at a mirror before it loads graphally.js:
 //   <script>graphallyOptions = { azure: 'https://…/azure2/', aws: 'https://…/icons/', font: 'https://…/web/' }</script>
+//
+// A page may hold any number of diagrams, and a diagram may sit in a page of its own (a
+// site, a wiki). Each is isolated: its <style> applies to it alone, the page's CSS does not
+// reach it, and it is shown in a shadow root, so its SVG ids do not meet another diagram's.
+// The page restyles a diagram only through the theme's tokens, set on .graphally-view.
 import { compile, registerPack } from './index.js';
 import { svgEntry } from './iconsvg.js';
+import { hostTheme } from './style.js';
 import THEME from '../../assets/theme.css';
 
 const WEIGHTS = { 400: 'Regular', 500: 'Medium', 600: 'SemiBold', 700: 'Bold' };
@@ -19,15 +25,28 @@ export function start(index) {
   const o = { azure: index.azure.base, aws: index.aws.base, font: index.font, ...(globalThis.graphallyOptions || {}) };
   const faces = Object.entries(WEIGHTS).map(([w, name]) => `@font-face { font-family: Inter; font-weight: ${w}; font-display: block; src: url("${o.font}Inter-${name}.woff2") format("woff2"), local("Inter ${name}"), local("Inter"); }`).join('\n');
   const style = document.createElement('style');
-  // A diagram follows the reader's light or dark setting unless it names a theme; the page
-  // around it follows too.
+  // A diagram follows the reader's light or dark setting unless it names a theme. A file that
+  // holds only diagrams follows too (data-graphally-page); a page they are embedded in keeps
+  // its own colours. Fonts are declared here: a shadow root uses the page's.
   const prefersDark = () => globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches;
-  style.textContent = `${faces}\n${THEME}\ndiagram { display: none; }
-@media (prefers-color-scheme: dark) { html:not([data-graphally-theme="light"]) body { background: #0f131e; color: #e3e8f3; } }
-.graphally-view { margin: 16px auto; width: max-content; max-width: 100%; overflow: auto; }
-.graphally-view svg { display: block; }
-.graphally-problems { font: 12px/1.5 Inter, "Segoe UI", system-ui, sans-serif; color: var(--rust, #b4472a); margin: 6px 0 0; padding: 0 0 0 18px; }`;
+  style.textContent = `${faces}\ndiagram { display: none; }
+@media (prefers-color-scheme: dark) { html[data-graphally-page]:not([data-graphally-theme="light"]) body { background: #0f131e; color: #e3e8f3; } }
+.graphally-view { display: block; margin: 16px auto; width: max-content; max-width: 100%; overflow: auto; }`;
   document.head.append(style);
+  // What a shadow root shows: the theme's tokens on its host, and a box that inherits no font
+  // or spacing from the page (a letter-spacing on body would widen every label).
+  const VIEW_CSS = `${hostTheme(THEME)}
+.view { all: initial; display: block; }
+svg { display: block; }
+.problems { font: 12px/1.5 Inter, "Segoe UI", system-ui, sans-serif; color: var(--rust); margin: 6px 0 0; padding: 0 0 0 18px; }`;
+
+  // A diagram's <style> is for that diagram, but a browser applies a <style> to the whole page
+  // wherever it sits. Each one is switched off as soon as it is parsed (and again whenever it
+  // is rewritten, which makes a new sheet); compile() lays the diagram out with a copy of it.
+  const mute = () => { for (const s of document.querySelectorAll('diagram style, diagram link[rel~="stylesheet"]')) if (s.sheet && !s.sheet.disabled) s.sheet.disabled = true; };
+  mute();
+  new MutationObserver(mute).observe(document.documentElement, { childList: true, subtree: true });
+  for (const s of document.querySelectorAll('diagram link[rel~="stylesheet"]')) s.addEventListener('load', mute);
 
   // An icon used by a diagram is fetched on first use; its pack entry is filled in place.
   const used = new Set();
@@ -53,25 +72,36 @@ export function start(index) {
   async function render() {
     await document.fonts.ready;
     await Promise.race([Promise.all(Object.keys(WEIGHTS).map(w => document.fonts.load(`${w} 13px Inter`))), new Promise(r => setTimeout(r, 4000))]).catch(() => {});
-    for (const el of document.querySelectorAll('diagram')) {
+    mute();
+    const diagrams = [...document.querySelectorAll('diagram')];
+    // A file of diagrams and nothing else (what graphally writes) is theirs to colour.
+    const alone = [...document.body.children].every(c => /^(DIAGRAM|SCRIPT|STYLE|LINK|META|TEMPLATE|NOSCRIPT)$/.test(c.tagName) || c.classList.contains('graphally-view'));
+    if (alone) document.documentElement.dataset.graphallyPage = '';
+    for (const el of diagrams) {
       let out = el.nextElementSibling?.classList.contains('graphally-view') ? el.nextElementSibling : null;
       if (!out) { out = document.createElement('div'); out.className = 'graphally-view'; el.after(out); }
+      const shadow = out.shadowRoot || out.attachShadow({ mode: 'open' });
+      const show = nodes => { const css = document.createElement('style'), view = document.createElement('div'); css.textContent = VIEW_CSS; view.className = 'view'; view.append(...nodes); shadow.replaceChildren(css, view); };
       try {
         const opts = { standalone: false, css: THEME, theme: el.getAttribute('theme') || (prefersDark() ? 'dark' : 'light'), source: location.pathname.split('/').pop() };
-        if (el.getAttribute('theme')) document.documentElement.dataset.graphallyTheme = el.getAttribute('theme');
+        out.dataset.theme = opts.theme;
+        if (alone && el.getAttribute('theme')) document.documentElement.dataset.graphallyTheme = el.getAttribute('theme');
         let r = compile(el, opts);
         // The first pass names the icons the diagram draws; the second draws them.
         if (used.size) { const want = [...used]; used.clear(); await fetchIcons(want); r = compile(el, opts); }
         const problems = [...r.problems];
         if (el.querySelector('include')) problems.unshift({ rule: 'include', hint: 'a file opened from disk cannot read its parts: render it with graphally, or put the parts in this file' });
-        out.innerHTML = r.svg;
+        const t = document.createElement('template');
+        t.innerHTML = r.svg;
+        const nodes = [...t.content.childNodes];
         if (problems.length) {
           const list = document.createElement('ul');
-          list.className = 'graphally-problems';
+          list.className = 'problems';
           for (const p of problems) { const li = document.createElement('li'); const { rule, hint, ...rest } = p; li.textContent = `${rule}: ${Object.entries(rest).map(([k, v]) => `${k}=${Array.isArray(v) ? v.join('|') : typeof v === 'object' ? JSON.stringify(v) : v}`).join(' ')}${hint ? ` (${hint})` : ''}`; list.append(li); }
-          out.append(list);
+          nodes.push(list);
         }
-      } catch (e) { out.textContent = `graphally could not draw this diagram: ${e.message}`; }
+        show(nodes);
+      } catch (e) { const p = document.createElement('p'); p.className = 'problems'; p.textContent = `graphally could not draw this diagram: ${e.message}`; show([p]); }
     }
     document.documentElement.dataset.graphally = 'ready';
   }

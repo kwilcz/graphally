@@ -75,6 +75,15 @@ from the draw.io repository and the aws-icons package, and the second pass draws
 loads Inter from the inter-ui package, so the text measures as it does in a render, and it
 follows the reader's light or dark setting.
 
+A page may hold many diagrams and other content of its own, so each diagram is isolated. A
+browser applies a `<style>` to the whole page wherever it sits; the viewer switches each
+diagram's `<style>` off as it is parsed, and the engine lays the diagram out in a shadow root
+with a copy of it, measures its labels in another, and the viewer shows the SVG in a third,
+on `.graphally-view`. So a diagram's CSS stays in it, the page's CSS stays out, and two
+diagrams' SVG ids (`pg-m0`, a line end) do not meet. The theme's tokens sit on each shadow's
+host: a page's own `--card` on `:root` does not reach a diagram, a rule on `.graphally-view`
+does. The CLI lays out in the same shadow roots, so a render and the viewer agree.
+
 ## One page, many diagrams
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/layouts-dark.svg"><img alt="HTML and CSS place most diagrams; two helpers place plans and sequences" src="diagrams/layouts.svg"></picture>
@@ -194,5 +203,6 @@ brand theme redefines the tokens and nothing else. Every figure paints its own b
 (the theme's `--bg`, or `background` on `<diagram>`), so it reads on a dark page as on a
 light one. `render --themes` writes the dark copy beside the light one, and a page can show
 the one that matches its reader with a `<picture>` element. A standalone SVG embeds its
-styles; an inlined one uses the page's tokens. Text stays text, and the SVG's `aria-label`
+styles; an inlined one uses the page's tokens, and the viewer's take theirs from
+`.graphally-view`. Text stays text, and the SVG's `aria-label`
 describes the diagram in words.

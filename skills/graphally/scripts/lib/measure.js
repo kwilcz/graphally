@@ -1,12 +1,16 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Text measurement with the same SVG text classes the output uses, so what we measure is
 // what renders.
+import { hostTheme, shadowBox } from './style.js';
+
 const NS = 'http://www.w3.org/2000/svg';
 
-export function createMeasurer() {
+// css: the theme, whose text classes the probe measures. In a shadow root of its own, so the
+// CSS of a page the diagram is embedded in (a letter-spacing on body) does not change it.
+export function createMeasurer(css) {
+  const box = shadowBox(hostTheme(css), 'left: -10000px; top: 0; visibility: hidden');
   const probe = document.createElementNS(NS, 'svg');
-  probe.setAttribute('style', 'position:absolute;left:-10000px;top:0;visibility:hidden');
-  document.body.appendChild(probe);
+  box.root.append(probe);
   const cache = new Map();
   const m = {
     text(str, cls) {
@@ -58,7 +62,7 @@ export function createMeasurer() {
     },
     // y of the baseline that centres one line of `cls` in a box of height h at top.
     baseline(top, h, cls) { const t = m.text('Hg', cls); return top + (h - t.h) / 2 + t.ascent; },
-    dispose() { probe.remove(); },
+    dispose() { box.host.remove(); },
   };
   return m;
 }
