@@ -5,7 +5,7 @@
 // curve, draw.moveTo(…).lineTo(…), gate, text, icon, shape. Nobody writes a coordinate.
 // This file turns the laid-out page into SVG: backgrounds, borders, clip-path shapes, text
 // line by line, icons; then the connectors (routed by route.js) and the script's drawings.
-import { S, T } from './style.js';
+import { S, T, hostTheme, shadowBox } from './style.js';
 import { schedule, timeline } from './time.js';
 import { sequence } from './seq.js';
 import { utilitiesFor } from './utilities.js';
@@ -112,12 +112,6 @@ const PAGE_CSS = `
 export function compilePage(el, opts, m) {
   const problems = [];
   const id = el.id || 'pg';
-  if (!document.getElementById('graphally-page-css')) {
-    const st = document.createElement('style');
-    st.id = 'graphally-page-css';
-    st.textContent = PAGE_CSS + SHAPE_CSS;
-    document.head.appendChild(st);
-  }
   const wAttr = el.getAttribute('width'), width = Number(wAttr) || 1200;
   if (wAttr != null && !(Number(wAttr) > 0)) problems.push({ rule: 'bad-attribute', attr: 'width', value: wAttr, hint: 'a number of pixels, as in width=1200' });
   const root = document.createElement('div');
@@ -144,7 +138,11 @@ export function compilePage(el, opts, m) {
     if (v.length !== 2 || v.some(n => !Number.isFinite(n))) { problems.push({ rule: 'bad-attribute', attr: 'nudge', value: e.getAttribute('nudge'), ...(e.id ? { id: e.id } : {}), hint: 'two numbers, as in nudge="20,-10"' }); continue; }
     e.style.translate = `${v[0]}px ${v[1]}px`;
   }
-  document.body.appendChild(root);
+  // Laid out in a shadow root, the page is the diagram's own: its <style> applies to it alone,
+  // and the CSS of a page it is embedded in (a site theme, a .card of its own) stays out.
+  const box = shadowBox(`${hostTheme(opts.css)}\n${PAGE_CSS}${SHAPE_CSS}`);
+  box.host.dataset.theme = opts.theme === 'dark' ? 'dark' : 'light';
+  box.root.append(root);
   // <script type="graphally" before>: runs on the page before it is laid out, to make or
   // place elements (rows from a list, bars on a timeline). Dates come from time.js.
   const pre = {
@@ -166,7 +164,7 @@ export function compilePage(el, opts, m) {
   try {
     return build(root, el, id, scripts, lines, opts, m, problems);
   } finally {
-    root.remove();
+    box.host.remove();
   }
 }
 

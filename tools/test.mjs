@@ -438,8 +438,8 @@ later('viewer', async () => {
       const page = await openPage(browser, { width: 2000, height: 1400 });
       await page.goto(pathToFileURL(f).href);
       await page.waitFor('document.documentElement.dataset.graphally === "ready"', 30000);
-      const svg = await page.evaluate(`document.querySelector('.graphally-view svg')?.outerHTML || ''`);
-      const shown = readLayout(svg), problems = await page.evaluate(`document.querySelector('.graphally-problems')?.textContent || ''`);
+      const svg = await page.evaluate(`document.querySelector('.graphally-view').shadowRoot?.querySelector('svg')?.outerHTML || ''`);
+      const shown = readLayout(svg), problems = await page.evaluate(`document.querySelector('.graphally-view').shadowRoot?.querySelector('.problems')?.textContent || ''`);
       check(shown, `${name}: the viewer drew no diagram (${problems})`);
       const moved = Object.keys(cli.nodes).filter(id => !shown.nodes[id] || cli.nodes[id].some((v, i) => Math.abs(v - shown.nodes[id][i]) > 0.5));
       check(!moved.length, `${name}: the viewer placed ${moved.join(', ')} elsewhere than the render`);
@@ -448,6 +448,32 @@ later('viewer', async () => {
       if (name !== 'phases') check(/<symbol id="[^"]+" viewBox="[^"]+"><(?:path|g|defs|rect|circle|ellipse|polygon)/.test(svg), `${name}: icons drawn empty`);
     }
     check(fetched > 10, `the viewer fetched only ${fetched} icons`);
+    // Two diagrams in a page with CSS of its own: each keeps its <style> to itself, the page's
+    // rules and its own --card stay out, a token set on .graphally-view on purpose gets in, and
+    // each diagram's line ends are its own though both number them alike.
+    const f = path.join(d, 'embedded.html');
+    fs.writeFileSync(f, `<!doctype html>\n<style>:root { --card: #ff00ff } .card { border: 4px solid green !important } body { letter-spacing: 3px } .graphally-view ~ .graphally-view { --rust: rgb(0, 128, 0) }</style>
+<script src="graphally.js"></script>\n<p class=lede>The page's own paragraph</p>
+<diagram width=500><style>.card { background: #fdd } .lede { color: red }</style><div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div></div><script type="application/json">[["a", "b"]]</script></diagram>
+<p>Between</p>
+<diagram width=500><div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div></div><script type="application/json">[{ "from": "a", "to": "b", "color": "rust", "message": true }]</script></diagram>\n`);
+    const page = await openPage(browser, { width: 900, height: 700 });
+    await page.goto(pathToFileURL(f).href);
+    await page.waitFor('document.documentElement.dataset.graphally === "ready"', 30000);
+    const got = JSON.parse(await page.evaluate(`JSON.stringify((() => {
+      const [one, two] = [...document.querySelectorAll('.graphally-view')].map(v => v.shadowRoot), card = (s, k) => s.querySelector('g[data-id="' + k + '"] rect');
+      return { lede: getComputedStyle(document.querySelector('p.lede')).color, oneFill: card(one, 'a').getAttribute('style'), oneStroke: card(one, 'a').getAttribute('stroke-width'),
+        twoFill: getComputedStyle(card(two, 'a')).fill, twoLine: getComputedStyle(two.querySelector('[data-edge] path')).stroke,
+        twoEnds: [...two.querySelectorAll('marker')].map(m => m.firstElementChild.tagName).join(' '), spacing: getComputedStyle(one.querySelector('text')).letterSpacing,
+        page: document.documentElement.hasAttribute('data-graphally-page') };
+    })())`));
+    check(got.lede === 'rgb(0, 0, 0)', `a diagram's <style> reached the page around it: ${got.lede}`);
+    check(/rgb\(255, 221, 221\)/.test(got.oneFill) && got.oneStroke === '1', `the page's CSS reached the diagram, or its own <style> did not: ${got.oneFill}, stroke ${got.oneStroke}`);
+    check(got.twoFill === 'rgb(255, 255, 255)', `one diagram's <style> or the page's --card reached another diagram: ${got.twoFill}`);
+    check(got.twoLine === 'rgb(0, 128, 0)', `a token set on .graphally-view did not reach the diagram: ${got.twoLine}`);
+    check(got.twoEnds === 'path circle', `the second diagram's line ends are not its own: ${got.twoEnds}`);
+    check(got.spacing === 'normal' && !got.page, `the page's letter-spacing reached the labels, or an embedding page was taken for a diagram file: ${JSON.stringify(got)}`);
+    check(!page.errors.length, `embedded: page errors: ${page.errors.join(' | ')}`);
   } finally { await browser.close(); srv.close(); }
   // The render adds the header once; a plain drawing script is reported.
   const h = write(folder('viewer-header'), page('<div class=card id=a>A</div>', ''));

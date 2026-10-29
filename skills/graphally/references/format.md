@@ -64,6 +64,9 @@ is about choosing one.
   `<diagram>` sets a colour, `background="none"` leaves it transparent. `theme=dark` draws
   the dark theme; `render --themes` writes both (`diagram.svg`, `diagram-dark.svg`). Use the
   tokens for colours, so the dark copy follows.
+- A file may hold several `<diagram>` elements, among HTML of its own (a report, a wiki
+  page). Each keeps its `<style>`, scripts, connections and ids to itself, and the page's
+  CSS does not reach it, so two diagrams may both have `id=api` and a `.lane` of their own.
 
 ## Shapes
 

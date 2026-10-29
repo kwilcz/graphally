@@ -104,6 +104,13 @@ next to the diagrams and point the header's `src` at it; `graphallyOptions` (see
 [`viewer.js`](skills/graphally/scripts/lib/viewer.js)) points the icons and the typeface at a
 mirror.
 
+To put diagrams in a page of your own (a site, a wiki, a report), load the viewer once and
+write any number of `<diagram>` elements where they should appear. Each one is isolated:
+its `<style>`, scripts, connections and ids belong to it alone, and your page's CSS does not
+reach it, so ten diagrams can each have a `.card` and an `id=api` of their own. Your page
+restyles them only through the theme's tokens, set on the box each is drawn in:
+`.graphally-view { --woad: #e30613; }`.
+
 The source looks like this:
 
 ```html
@@ -155,7 +162,7 @@ them out of pull-request diffs, mark them as generated in `.gitattributes`:
 ```
 
 Colours are CSS tokens in `skills/graphally/assets/theme.css`, with a light and a dark
-set, so a brand theme only redefines them.
+set, so a brand theme only redefines them (in a page, on `.graphally-view`).
 
 ## Samples
 

@@ -7,6 +7,6 @@ export { registerPack } from './icons.js';
 
 export function compile(el, opts = {}) {
   if (opts.debug) globalThis.__routeDebug = true;
-  const m = createMeasurer();
+  const m = createMeasurer(opts.css);
   try { return compilePage(el, opts, m); } finally { m.dispose(); }
 }

@@ -20,3 +20,23 @@ export const T = {
   title: 'g-title', subtitle: 'g-subtitle', label: 'g-label', sub: 'g-sub', group: 'g-group',
   gsub: 'g-gsub', edge: 'g-edge', key: 'g-key', tile: 'g-tile', msg: 'g-msg', num: 'g-num', frag: 'g-frag',
 };
+
+// A diagram is laid out, measured and shown in a shadow root of its own: the page's CSS does not
+// reach in, and the diagram's CSS does not leak out. The theme's tokens sit on the shadow's
+// host, light or dark by its data-theme, where the page can restyle them only on purpose (a
+// rule on the host) and not by chance (a --card of its own on :root).
+export const hostTheme = css => String(css || '')
+  .replace(/(?::root|svg\.graphally)\[data-theme="dark"\]/g, ':host([data-theme="dark"])')
+  .replace(/:root|svg\.graphally/g, ':host');
+
+// A shadow root in a host that takes nothing from the page (no inherited font, colour or
+// spacing), placed out of the way, with css in it. The caller removes the host.
+export function shadowBox(css, place = 'left: 0; top: 0') {
+  const host = document.createElement('div');
+  const root = host.attachShadow({ mode: 'open' });
+  const style = document.createElement('style');
+  style.textContent = `:host { all: initial !important; display: block !important; position: absolute !important; ${place.replace(/;?\s*$/, '').split(';').map(d => `${d.trim()} !important`).join('; ')}; }\n${css}`;
+  root.append(style);
+  document.body.appendChild(host);
+  return { host, root };
+}
