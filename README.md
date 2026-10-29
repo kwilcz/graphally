@@ -11,9 +11,6 @@ flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, 
 for proposals and solution designs, and any other figure a grid can hold, and drafts
 diagrams of Terraform repositories from the code.
 
-> **Licence.** graphally is open source under the [Apache License 2.0](LICENSE).
-> Copyright © 2026 Kamil Wilczyński ([kwilcz](https://github.com/kwilcz)).
-
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/azure-platform/diagram-dark.png"><img alt="An Azure order platform: hub and spoke, private endpoints, the SAP sync through the hub firewall" src="samples/azure-platform/diagram.png"></picture>
 
 Every figure above was drawn by an agent from a brief; the
