@@ -168,6 +168,9 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   part that is there but does not run, icon and lines included. These class names are taken, and so are
   the sequence helper's (`seq`, `msg`, `num`, `guard`, `lifeline`, `activation`, `frag-…`):
   name your own differently.
+- **Labels that must not move boxes** (a column's heading, a caption, a note): hang them
+  with `position: absolute` from a `relative` parent, so centring counts only the boxes and
+  lines run straight; leave them room.
 - **Shapes**: `shape="cylinder"` on any element draws it as that shape: `diamond`,
   `hexagon`, `chevron`, `semicircle`, `document`, `cloud`, BPMN `task`, `start`, `end`,
   `gateway exclusive`, `event timer` and more. `clip-path: polygon(…)` cuts any other
