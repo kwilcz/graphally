@@ -75,6 +75,13 @@ copilot plugin install graphally@graphally
 npx skills add kwilcz/graphally --skill graphally -g
 ```
 
+**npm**, for developers and CI without an agent: the same engine, as a command and a Node
+API (`import { render } from 'graphally'`).
+
+```sh
+npx graphally render diagram.html --png
+```
+
 **Claude.ai and Claude Desktop**: download `graphally-skill.zip` from the
 [latest release](https://github.com/kwilcz/graphally/releases/latest) and upload it under
 Settings → Capabilities → Skills.
@@ -206,9 +213,10 @@ The skill folder is also the npm package `graphally`, with nothing copied: the `
 command (`scripts/graphally.mjs`), the Node API (`import { render } from 'graphally'`, the
 same render the command runs), the browser engine (`graphally/engine`), source edits
 (`graphally/edits`) and the viewer (`graphally/viewer`). Agents keep using the skill's own
-copy, which works without a network. The release workflow publishes the package at the same
-version once npm trusts it: set up trusted publishing for this repository's `release.yml` on
-npmjs.com, then set the repository variable `NPM_PUBLISH` to `true`.
+copy, which works without a network. Each release stages the package on npm at the same
+version, through trusted publishing (no token is kept) while the repository variable
+`NPM_PUBLISH` is `true`; it goes live when a maintainer approves it with 2FA on npmjs.com
+(Staged Packages) or with `npm stage approve`.
 
 ## Repository
 

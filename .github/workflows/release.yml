@@ -105,20 +105,21 @@ jobs:
           (cd skills && zip -qr ../graphally-skill.zip graphally)
           gh release create "v$version" graphally-skill.zip --target "$(git rev-parse HEAD)" --title "v$version" --generate-notes
 
-      # The skill folder is also the npm package "graphally", published at the same version.
-      # npm trusts this workflow (trusted publishing, set up on npmjs.com), so no token is kept
-      # here and each release carries its provenance. Until that is set up, the repository
-      # variable NPM_PUBLISH stays unset and the step is skipped.
-      - name: Publish the package to npm
+      # The skill folder is also the npm package "graphally", staged at the same version. npm
+      # trusts this workflow (trusted publishing, set up on npmjs.com), so no token is kept here,
+      # and it may only stage: a staged version goes live when a maintainer approves it with 2FA
+      # (npmjs.com, Staged Packages, or npm stage approve). The repository variable NPM_PUBLISH
+      # turns the step on.
+      - name: Stage the package on npm
         if: ${{ github.event_name == 'push' && vars.NPM_PUBLISH == 'true' }}
         working-directory: skills/graphally
         run: |
           version=$(node ../../tools/version.mjs)
           if npm view "graphally@$version" version >/dev/null 2>&1; then echo "graphally@$version is on npm already."; exit 0; fi
-          # Trusted publishing needs npm 11.5.1 or later; Node 22 ships an older one.
-          npm install -g npm@^11.5.1
-          npm publish --access public
-          echo "Published graphally@$version to npm." | tee -a "$GITHUB_STEP_SUMMARY"
+          # Staged publishing needs npm 11.15.0 or later; Node 22 ships an older one.
+          npm install -g npm@^11.15.0
+          npm stage publish
+          echo "Staged graphally@$version on npm: approve it on npmjs.com (Staged Packages) to publish it." | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Attach the zip to a release published by hand
         if: ${{ github.event_name == 'release' }}
