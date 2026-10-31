@@ -1,6 +1,6 @@
 {
   "name": "graphally",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "description": "Diagrams from HTML and CSS: the browser lays the figure out, graphally routes the connections and writes an SVG. Architecture with Azure and AWS icons, networks, BPMN, sequences, plans and any figure a web page can hold.",
   "keywords": ["diagram", "svg", "architecture", "azure", "aws", "bpmn", "sequence-diagram", "gantt", "agent-skill"],
   "homepage": "https://github.com/kwilcz/graphally",
