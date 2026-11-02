@@ -1,0 +1,508 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="diagram.html" viewBox="0 0 868 515" width="868" height="515" role="img" aria-label="A dragged card tilts with the pointer's speed, on a spring. Drag right for 300 ms at 1.6 px a millisecond, stop, drag back: the card, and its angle against time, in step">
+<style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
+/* graphally tokens and text classes. The compiled SVG references these; standalone
+   files embed them. A brand theme redefines the tokens and nothing else. */
+:root, svg.graphally {
+  --ink: #1b2440; --muted: #5d6680; --line: #c8cfdd; --woad: #1f63b6; --rust: #c4391d;
+  --teal: #12807a; --green: #2f8f4e; --purple: #6b4fc4; --amber: #b7791f;
+  --wash: #eef2f8; --card: #ffffff; --bg: #f6f7fb; --icon-soft: #dbe6f6; --vnet: #e8f1fc; --note: #fff8e6;
+  --lane-a: #e7effb; --lane-b: #e5f4ec; --lane-c: #efe9fa; --lane-d: #fbeee2;
+}
+:root[data-theme="dark"], svg.graphally[data-theme="dark"] {
+  --ink: #e3e8f3; --muted: #9aa4bb; --line: #3a445c; --woad: #7cacf0; --rust: #ff7d61;
+  --teal: #4fc1b8; --green: #6fcf8f; --purple: #a991f2; --amber: #f0b44c;
+  --wash: #1b2234; --card: #141a29; --bg: #0f131e; --icon-soft: #2a3a58; --vnet: #17243a; --note: #2e2816;
+  --lane-a: #1b2a44; --lane-b: #19302a; --lane-c: #261f3d; --lane-d: #36271a;
+}
+.g-title { font: 600 15px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-subtitle { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-label { font: 500 13px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-tile { font: 500 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-sub, .g-gsub, .g-edge, .g-key { font: 400 11.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-group { font: 600 12px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-msg { font: 400 12.5px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-num { font: 700 10px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+.g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+</style>
+<style>@media (prefers-reduced-motion: no-preference) {
+  svg.graphally .g-flow, svg.graphally .g-dot { visibility: visible; }
+  svg.graphally .g-flow { stroke-dasharray: 3 9; animation: g-flow 0.9s linear infinite; }
+  svg.graphally [data-step] { animation: g-in 0.5s backwards; }
+
+  svg.graphally [data-anim="0"] { transform-box: view-box; transform-origin: 272px 113.719px; animation: pg-a0 2600ms linear 0ms infinite normal none; }
+  svg.graphally [data-anim="1"] { transform-box: view-box; transform-origin: 357px 149.375px; animation: pg-a1 2600ms linear 0ms infinite normal none; }
+  svg.graphally [data-anim="2"] { transform-box: view-box; transform-origin: 68px 348.875px; animation: pg-a2 2600ms linear 0ms infinite normal none; }
+  svg.graphally [data-anim="3"] { transform-box: view-box; transform-origin: 68px 348.875px; animation: pg-a3 2600ms linear 0ms infinite normal none; }
+}
+@keyframes g-flow { to { stroke-dashoffset: -12; } }
+@keyframes g-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes pg-a0 {
+  0% { translate: 0px 0px; rotate: 0deg; }
+  0.769% { translate: 0px 0px; rotate: 0deg; }
+  1.538% { translate: 0px 0px; rotate: 0deg; }
+  2.308% { translate: 0px 0px; rotate: 0deg; }
+  3.077% { translate: 0px 0px; rotate: 0deg; }
+  3.846% { translate: 0px 0px; rotate: 0deg; }
+  4.615% { translate: 0px 0px; rotate: 0deg; }
+  5.385% { translate: 0px 0px; rotate: 0deg; }
+  6.154% { translate: 0px 0px; rotate: 0deg; }
+  6.923% { translate: 0px 0px; rotate: 0deg; }
+  7.692% { translate: 0px 0px; rotate: 0deg; }
+  8.462% { translate: 0px 0px; rotate: 0deg; }
+  9.231% { translate: 0px 0px; rotate: 0deg; }
+  10% { translate: 0px 0px; rotate: 0deg; }
+  10.769% { translate: 0px 0px; rotate: 0deg; }
+  11.538% { translate: 0.4px 0px; rotate: 0deg; }
+  12.308% { translate: 8.4px 0px; rotate: 0.122deg; }
+  13.077% { translate: 16.4px 0px; rotate: 0.75deg; }
+  13.846% { translate: 24.4px 0px; rotate: 1.897deg; }
+  14.615% { translate: 32.4px 0px; rotate: 3.098deg; }
+  15.385% { translate: 40.4px 0px; rotate: 3.99deg; }
+  16.154% { translate: 48.4px 0px; rotate: 4.417deg; }
+  16.923% { translate: 56.4px 0px; rotate: 4.409deg; }
+  17.692% { translate: 64.4px 0px; rotate: 4.113deg; }
+  18.462% { translate: 72.4px 0px; rotate: 3.709deg; }
+  19.231% { translate: 80.4px 0px; rotate: 3.349deg; }
+  20% { translate: 88.4px 0px; rotate: 3.123deg; }
+  20.769% { translate: 96.4px 0px; rotate: 3.051deg; }
+  21.538% { translate: 104.4px 0px; rotate: 3.104deg; }
+  22.308% { translate: 112.4px 0px; rotate: 3.225deg; }
+  23.077% { translate: 120px 0px; rotate: 3.356deg; }
+  23.846% { translate: 120px 0px; rotate: 3.447deg; }
+  24.615% { translate: 120px 0px; rotate: 3.225deg; }
+  25.385% { translate: 120px 0px; rotate: 2.368deg; }
+  26.154% { translate: 120px 0px; rotate: 1.116deg; }
+  26.923% { translate: 120px 0px; rotate: -0.044deg; }
+  27.692% { translate: 120px 0px; rotate: -0.808deg; }
+  28.462% { translate: 120px 0px; rotate: -1.087deg; }
+  29.231% { translate: 120px 0px; rotate: -0.96deg; }
+  30% { translate: 120px 0px; rotate: -0.598deg; }
+  30.769% { translate: 120px 0px; rotate: -0.183deg; }
+  31.538% { translate: 120px 0px; rotate: 0.148deg; }
+  32.308% { translate: 120px 0px; rotate: 0.326deg; }
+  33.077% { translate: 120px 0px; rotate: 0.352deg; }
+  33.846% { translate: 120px 0px; rotate: 0.268deg; }
+  34.615% { translate: 120px 0px; rotate: 0.134deg; }
+  35.385% { translate: 120px 0px; rotate: 0.006deg; }
+  36.154% { translate: 120px 0px; rotate: -0.082deg; }
+  36.923% { translate: 120px 0px; rotate: -0.117deg; }
+  37.692% { translate: 120px 0px; rotate: -0.106deg; }
+  38.462% { translate: 120px 0px; rotate: -0.069deg; }
+  39.231% { translate: 120px 0px; rotate: -0.024deg; }
+  40% { translate: 120px 0px; rotate: 0.013deg; }
+  40.769% { translate: 120px 0px; rotate: 0.034deg; }
+  41.538% { translate: 120px 0px; rotate: 0.038deg; }
+  42.308% { translate: 120px 0px; rotate: 0.03deg; }
+  43.077% { translate: 120px 0px; rotate: 0.016deg; }
+  43.846% { translate: 120px 0px; rotate: 0.002deg; }
+  44.615% { translate: 120px 0px; rotate: -0.008deg; }
+  45.385% { translate: 120px 0px; rotate: -0.012deg; }
+  46.154% { translate: 120px 0px; rotate: -0.012deg; }
+  46.923% { translate: 120px 0px; rotate: -0.008deg; }
+  47.692% { translate: 120px 0px; rotate: -0.003deg; }
+  48.462% { translate: 120px 0px; rotate: 0.001deg; }
+  49.231% { translate: 120px 0px; rotate: 0.004deg; }
+  50% { translate: 120px 0px; rotate: 0.004deg; }
+  50.769% { translate: 120px 0px; rotate: 0.003deg; }
+  51.538% { translate: 120px 0px; rotate: 0.002deg; }
+  52.308% { translate: 120px 0px; rotate: 0deg; }
+  53.077% { translate: 120px 0px; rotate: -0.001deg; }
+  53.846% { translate: 119.6px 0px; rotate: -0.001deg; }
+  54.615% { translate: 111.6px 0px; rotate: -0.123deg; }
+  55.385% { translate: 103.6px 0px; rotate: -0.751deg; }
+  56.154% { translate: 95.6px 0px; rotate: -1.897deg; }
+  56.923% { translate: 87.6px 0px; rotate: -3.098deg; }
+  57.692% { translate: 79.6px 0px; rotate: -3.989deg; }
+  58.462% { translate: 71.6px 0px; rotate: -4.416deg; }
+  59.231% { translate: 63.6px 0px; rotate: -4.409deg; }
+  60% { translate: 55.6px 0px; rotate: -4.113deg; }
+  60.769% { translate: 47.6px 0px; rotate: -3.709deg; }
+  61.538% { translate: 39.6px 0px; rotate: -3.349deg; }
+  62.308% { translate: 31.6px 0px; rotate: -3.123deg; }
+  63.077% { translate: 23.6px 0px; rotate: -3.052deg; }
+  63.846% { translate: 15.6px 0px; rotate: -3.104deg; }
+  64.615% { translate: 7.6px 0px; rotate: -3.225deg; }
+  65.385% { translate: 0px 0px; rotate: -3.356deg; }
+  66.154% { translate: 0px 0px; rotate: -3.447deg; }
+  66.923% { translate: 0px 0px; rotate: -3.225deg; }
+  67.692% { translate: 0px 0px; rotate: -2.368deg; }
+  68.462% { translate: 0px 0px; rotate: -1.116deg; }
+  69.231% { translate: 0px 0px; rotate: 0.044deg; }
+  70% { translate: 0px 0px; rotate: 0.808deg; }
+  70.769% { translate: 0px 0px; rotate: 1.087deg; }
+  71.538% { translate: 0px 0px; rotate: 0.96deg; }
+  72.308% { translate: 0px 0px; rotate: 0.598deg; }
+  73.077% { translate: 0px 0px; rotate: 0.183deg; }
+  73.846% { translate: 0px 0px; rotate: -0.148deg; }
+  74.615% { translate: 0px 0px; rotate: -0.326deg; }
+  75.385% { translate: 0px 0px; rotate: -0.352deg; }
+  76.154% { translate: 0px 0px; rotate: -0.268deg; }
+  76.923% { translate: 0px 0px; rotate: -0.134deg; }
+  77.692% { translate: 0px 0px; rotate: -0.006deg; }
+  78.462% { translate: 0px 0px; rotate: 0.082deg; }
+  79.231% { translate: 0px 0px; rotate: 0.117deg; }
+  80% { translate: 0px 0px; rotate: 0.106deg; }
+  80.769% { translate: 0px 0px; rotate: 0.069deg; }
+  81.538% { translate: 0px 0px; rotate: 0.024deg; }
+  82.308% { translate: 0px 0px; rotate: -0.013deg; }
+  83.077% { translate: 0px 0px; rotate: -0.034deg; }
+  83.846% { translate: 0px 0px; rotate: -0.038deg; }
+  84.615% { translate: 0px 0px; rotate: -0.03deg; }
+  85.385% { translate: 0px 0px; rotate: -0.016deg; }
+  86.154% { translate: 0px 0px; rotate: -0.002deg; }
+  86.923% { translate: 0px 0px; rotate: 0.008deg; }
+  87.692% { translate: 0px 0px; rotate: 0.012deg; }
+  88.462% { translate: 0px 0px; rotate: 0.012deg; }
+  89.231% { translate: 0px 0px; rotate: 0.008deg; }
+  90% { translate: 0px 0px; rotate: 0.003deg; }
+  90.769% { translate: 0px 0px; rotate: -0.001deg; }
+  91.538% { translate: 0px 0px; rotate: -0.004deg; }
+  92.308% { translate: 0px 0px; rotate: -0.004deg; }
+  93.077% { translate: 0px 0px; rotate: -0.003deg; }
+  93.846% { translate: 0px 0px; rotate: -0.002deg; }
+  94.615% { translate: 0px 0px; rotate: 0deg; }
+  95.385% { translate: 0px 0px; rotate: 0.001deg; }
+  96.154% { translate: 0px 0px; rotate: 0.001deg; }
+  96.923% { translate: 0px 0px; rotate: 0.001deg; }
+  97.692% { translate: 0px 0px; rotate: 0.001deg; }
+  98.462% { translate: 0px 0px; rotate: 0deg; }
+  99.231% { translate: 0px 0px; rotate: 0deg; }
+  100% { translate: 0px 0px; rotate: 0deg; }
+}
+@keyframes pg-a1 {
+  0% { translate: 0px 0px; }
+  0.769% { translate: 0px 0px; }
+  1.538% { translate: 0px 0px; }
+  2.308% { translate: 0px 0px; }
+  3.077% { translate: 0px 0px; }
+  3.846% { translate: 0px 0px; }
+  4.615% { translate: 0px 0px; }
+  5.385% { translate: 0px 0px; }
+  6.154% { translate: 0px 0px; }
+  6.923% { translate: 0px 0px; }
+  7.692% { translate: 0px 0px; }
+  8.462% { translate: 0px 0px; }
+  9.231% { translate: 0px 0px; }
+  10% { translate: 0px 0px; }
+  10.769% { translate: 0px 0px; }
+  11.538% { translate: 0.4px 0px; }
+  12.308% { translate: 8.4px 0px; }
+  13.077% { translate: 16.4px 0px; }
+  13.846% { translate: 24.4px 0px; }
+  14.615% { translate: 32.4px 0px; }
+  15.385% { translate: 40.4px 0px; }
+  16.154% { translate: 48.4px 0px; }
+  16.923% { translate: 56.4px 0px; }
+  17.692% { translate: 64.4px 0px; }
+  18.462% { translate: 72.4px 0px; }
+  19.231% { translate: 80.4px 0px; }
+  20% { translate: 88.4px 0px; }
+  20.769% { translate: 96.4px 0px; }
+  21.538% { translate: 104.4px 0px; }
+  22.308% { translate: 112.4px 0px; }
+  23.077% { translate: 120px 0px; }
+  23.846% { translate: 120px 0px; }
+  24.615% { translate: 120px 0px; }
+  25.385% { translate: 120px 0px; }
+  26.154% { translate: 120px 0px; }
+  26.923% { translate: 120px 0px; }
+  27.692% { translate: 120px 0px; }
+  28.462% { translate: 120px 0px; }
+  29.231% { translate: 120px 0px; }
+  30% { translate: 120px 0px; }
+  30.769% { translate: 120px 0px; }
+  31.538% { translate: 120px 0px; }
+  32.308% { translate: 120px 0px; }
+  33.077% { translate: 120px 0px; }
+  33.846% { translate: 120px 0px; }
+  34.615% { translate: 120px 0px; }
+  35.385% { translate: 120px 0px; }
+  36.154% { translate: 120px 0px; }
+  36.923% { translate: 120px 0px; }
+  37.692% { translate: 120px 0px; }
+  38.462% { translate: 120px 0px; }
+  39.231% { translate: 120px 0px; }
+  40% { translate: 120px 0px; }
+  40.769% { translate: 120px 0px; }
+  41.538% { translate: 120px 0px; }
+  42.308% { translate: 120px 0px; }
+  43.077% { translate: 120px 0px; }
+  43.846% { translate: 120px 0px; }
+  44.615% { translate: 120px 0px; }
+  45.385% { translate: 120px 0px; }
+  46.154% { translate: 120px 0px; }
+  46.923% { translate: 120px 0px; }
+  47.692% { translate: 120px 0px; }
+  48.462% { translate: 120px 0px; }
+  49.231% { translate: 120px 0px; }
+  50% { translate: 120px 0px; }
+  50.769% { translate: 120px 0px; }
+  51.538% { translate: 120px 0px; }
+  52.308% { translate: 120px 0px; }
+  53.077% { translate: 120px 0px; }
+  53.846% { translate: 119.6px 0px; }
+  54.615% { translate: 111.6px 0px; }
+  55.385% { translate: 103.6px 0px; }
+  56.154% { translate: 95.6px 0px; }
+  56.923% { translate: 87.6px 0px; }
+  57.692% { translate: 79.6px 0px; }
+  58.462% { translate: 71.6px 0px; }
+  59.231% { translate: 63.6px 0px; }
+  60% { translate: 55.6px 0px; }
+  60.769% { translate: 47.6px 0px; }
+  61.538% { translate: 39.6px 0px; }
+  62.308% { translate: 31.6px 0px; }
+  63.077% { translate: 23.6px 0px; }
+  63.846% { translate: 15.6px 0px; }
+  64.615% { translate: 7.6px 0px; }
+  65.385% { translate: 0px 0px; }
+  66.154% { translate: 0px 0px; }
+  66.923% { translate: 0px 0px; }
+  67.692% { translate: 0px 0px; }
+  68.462% { translate: 0px 0px; }
+  69.231% { translate: 0px 0px; }
+  70% { translate: 0px 0px; }
+  70.769% { translate: 0px 0px; }
+  71.538% { translate: 0px 0px; }
+  72.308% { translate: 0px 0px; }
+  73.077% { translate: 0px 0px; }
+  73.846% { translate: 0px 0px; }
+  74.615% { translate: 0px 0px; }
+  75.385% { translate: 0px 0px; }
+  76.154% { translate: 0px 0px; }
+  76.923% { translate: 0px 0px; }
+  77.692% { translate: 0px 0px; }
+  78.462% { translate: 0px 0px; }
+  79.231% { translate: 0px 0px; }
+  80% { translate: 0px 0px; }
+  80.769% { translate: 0px 0px; }
+  81.538% { translate: 0px 0px; }
+  82.308% { translate: 0px 0px; }
+  83.077% { translate: 0px 0px; }
+  83.846% { translate: 0px 0px; }
+  84.615% { translate: 0px 0px; }
+  85.385% { translate: 0px 0px; }
+  86.154% { translate: 0px 0px; }
+  86.923% { translate: 0px 0px; }
+  87.692% { translate: 0px 0px; }
+  88.462% { translate: 0px 0px; }
+  89.231% { translate: 0px 0px; }
+  90% { translate: 0px 0px; }
+  90.769% { translate: 0px 0px; }
+  91.538% { translate: 0px 0px; }
+  92.308% { translate: 0px 0px; }
+  93.077% { translate: 0px 0px; }
+  93.846% { translate: 0px 0px; }
+  94.615% { translate: 0px 0px; }
+  95.385% { translate: 0px 0px; }
+  96.154% { translate: 0px 0px; }
+  96.923% { translate: 0px 0px; }
+  97.692% { translate: 0px 0px; }
+  98.462% { translate: 0px 0px; }
+  99.231% { translate: 0px 0px; }
+  100% { translate: 0px 0px; }
+}
+@keyframes pg-a2 {
+  0% { translate: 0px; }
+  100% { translate: 746px; }
+}
+@keyframes pg-a3 {
+  0% { translate: 0px 0px; }
+  0.769% { translate: 5.738px 0px; }
+  1.538% { translate: 11.477px 0px; }
+  2.308% { translate: 17.215px 0px; }
+  3.077% { translate: 22.954px 0px; }
+  3.846% { translate: 28.692px 0px; }
+  4.615% { translate: 34.431px 0px; }
+  5.385% { translate: 40.169px 0px; }
+  6.154% { translate: 45.908px 0px; }
+  6.923% { translate: 51.646px 0px; }
+  7.692% { translate: 57.385px 0px; }
+  8.462% { translate: 63.123px 0px; }
+  9.231% { translate: 68.862px 0px; }
+  10% { translate: 74.6px 0px; }
+  10.769% { translate: 80.338px 0px; }
+  11.538% { translate: 86.077px -0.001px; }
+  12.308% { translate: 91.815px -2.377px; }
+  13.077% { translate: 97.554px -14.673px; }
+  13.846% { translate: 103.292px -37.089px; }
+  14.615% { translate: 109.031px -60.581px; }
+  15.385% { translate: 114.769px -78.018px; }
+  16.154% { translate: 120.508px -86.368px; }
+  16.923% { translate: 126.246px -86.224px; }
+  17.692% { translate: 131.985px -80.434px; }
+  18.462% { translate: 137.723px -72.534px; }
+  19.231% { translate: 143.462px -65.499px; }
+  20% { translate: 149.2px -61.074px; }
+  20.769% { translate: 154.938px -59.673px; }
+  21.538% { translate: 160.677px -60.701px; }
+  22.308% { translate: 166.415px -63.06px; }
+  23.077% { translate: 172.154px -65.628px; }
+  23.846% { translate: 177.892px -67.403px; }
+  24.615% { translate: 183.631px -63.07px; }
+  25.385% { translate: 189.369px -46.302px; }
+  26.154% { translate: 195.108px -21.823px; }
+  26.923% { translate: 200.846px 0.865px; }
+  27.692% { translate: 206.585px 15.808px; }
+  28.462% { translate: 212.323px 21.255px; }
+  29.231% { translate: 218.062px 18.769px; }
+  30% { translate: 223.8px 11.69px; }
+  30.769% { translate: 229.538px 3.577px; }
+  31.538% { translate: 235.277px -2.888px; }
+  32.308% { translate: 241.015px -6.384px; }
+  33.077% { translate: 246.754px -6.883px; }
+  33.846% { translate: 252.492px -5.232px; }
+  34.615% { translate: 258.231px -2.616px; }
+  35.385% { translate: 263.969px -0.11px; }
+  36.154% { translate: 269.708px 1.6px; }
+  36.923% { translate: 275.446px 2.283px; }
+  37.692% { translate: 281.185px 2.082px; }
+  38.462% { translate: 286.923px 1.347px; }
+  39.231% { translate: 292.662px 0.466px; }
+  40% { translate: 298.4px -0.259px; }
+  40.769% { translate: 304.138px -0.669px; }
+  41.538% { translate: 309.877px -0.751px; }
+  42.308% { translate: 315.615px -0.589px; }
+  43.077% { translate: 321.354px -0.311px; }
+  43.846% { translate: 327.092px -0.035px; }
+  44.615% { translate: 332.831px 0.16px; }
+  45.385% { translate: 338.569px 0.244px; }
+  46.154% { translate: 344.308px 0.23px; }
+  46.923% { translate: 350.046px 0.154px; }
+  47.692% { translate: 355.785px 0.059px; }
+  48.462% { translate: 361.523px -0.022px; }
+  49.231% { translate: 367.262px -0.07px; }
+  50% { translate: 373px -0.082px; }
+  50.769% { translate: 378.738px -0.066px; }
+  51.538% { translate: 384.477px -0.037px; }
+  52.308% { translate: 390.215px -0.006px; }
+  53.077% { translate: 395.954px 0.016px; }
+  53.846% { translate: 401.692px 0.027px; }
+  54.615% { translate: 407.431px 2.403px; }
+  55.385% { translate: 413.169px 14.691px; }
+  56.154% { translate: 418.908px 37.096px; }
+  56.923% { translate: 424.646px 60.58px; }
+  57.692% { translate: 430.385px 78.01px; }
+  58.462% { translate: 436.123px 86.359px; }
+  59.231% { translate: 441.862px 86.217px; }
+  60% { translate: 447.6px 80.43px; }
+  60.769% { translate: 453.338px 72.533px; }
+  61.538% { translate: 459.077px 65.501px; }
+  62.308% { translate: 464.815px 61.077px; }
+  63.077% { translate: 470.554px 59.676px; }
+  63.846% { translate: 476.292px 60.703px; }
+  64.615% { translate: 482.031px 63.06px; }
+  65.385% { translate: 487.769px 65.628px; }
+  66.154% { translate: 493.508px 67.402px; }
+  66.923% { translate: 499.246px 63.069px; }
+  67.692% { translate: 504.985px 46.301px; }
+  68.462% { translate: 510.723px 21.823px; }
+  69.231% { translate: 516.462px -0.865px; }
+  70% { translate: 522.2px -15.808px; }
+  70.769% { translate: 527.938px -21.254px; }
+  71.538% { translate: 533.677px -18.769px; }
+  72.308% { translate: 539.415px -11.69px; }
+  73.077% { translate: 545.154px -3.577px; }
+  73.846% { translate: 550.892px 2.888px; }
+  74.615% { translate: 556.631px 6.384px; }
+  75.385% { translate: 562.369px 6.883px; }
+  76.154% { translate: 568.108px 5.232px; }
+  76.923% { translate: 573.846px 2.616px; }
+  77.692% { translate: 579.585px 0.11px; }
+  78.462% { translate: 585.323px -1.6px; }
+  79.231% { translate: 591.062px -2.283px; }
+  80% { translate: 596.8px -2.082px; }
+  80.769% { translate: 602.538px -1.347px; }
+  81.538% { translate: 608.277px -0.466px; }
+  82.308% { translate: 614.015px 0.259px; }
+  83.077% { translate: 619.754px 0.669px; }
+  83.846% { translate: 625.492px 0.751px; }
+  84.615% { translate: 631.231px 0.589px; }
+  85.385% { translate: 636.969px 0.311px; }
+  86.154% { translate: 642.708px 0.035px; }
+  86.923% { translate: 648.446px -0.16px; }
+  87.692% { translate: 654.185px -0.244px; }
+  88.462% { translate: 659.923px -0.23px; }
+  89.231% { translate: 665.662px -0.154px; }
+  90% { translate: 671.4px -0.059px; }
+  90.769% { translate: 677.138px 0.022px; }
+  91.538% { translate: 682.877px 0.07px; }
+  92.308% { translate: 688.615px 0.082px; }
+  93.077% { translate: 694.354px 0.066px; }
+  93.846% { translate: 700.092px 0.037px; }
+  94.615% { translate: 705.831px 0.006px; }
+  95.385% { translate: 711.569px -0.016px; }
+  96.154% { translate: 717.308px -0.026px; }
+  96.923% { translate: 723.046px -0.025px; }
+  97.692% { translate: 728.785px -0.018px; }
+  98.462% { translate: 734.523px -0.007px; }
+  99.231% { translate: 740.262px 0.002px; }
+  100% { translate: 746px 0.007px; }
+}</style>
+<defs></defs>
+<rect class="g-bg" width="868" height="515" style="fill: var(--bg)"></rect>
+<g>
+<text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">A dragged card tilts with the pointer's speed, on a spring</text>
+<text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Drag right for 300 ms at 1.6 px a millisecond, stop, drag back: the card, and its angle against time, in step</text>
+<g data-anim="0">
+<g data-id="card" data-box="154,100,236,69">
+<rect x="154.5" y="100.4" width="235" height="68.2" rx="8.5" style="fill: var(--card); stroke: var(--line)" stroke-width="1"></rect>
+<rect x="169" y="117" width="10" height="10" rx="5" style="fill: var(--amber)"></rect>
+<text x="187" y="126.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13.5px; font-weight: 700; fill: var(--ink)">Renew the TLS certificate</text>
+<text x="169" y="154.1" style="font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 400; fill: var(--muted)">OPS-207</text>
+</g>
+</g>
+<g data-anim="1">
+<g data-id="cursor" data-box="350,140,14,19">
+<polygon points="350,139.9 350,154.7 353.6,151.1 356.2,157.2 358.7,156 356.2,150.1 361.1,150.1" style="fill: var(--ink)"></polygon>
+</g>
+</g>
+<line x1="134" y1="190.4" x2="804" y2="190.4" style="stroke: var(--line)" stroke-width="1"></line>
+<text x="134" y="206.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">drawn at a quarter of the distance; the card turns about a point half way across and a fifth of the way down</text>
+<g data-id="plot" data-box="68,254,746,190">
+</g>
+
+<path d="M154.1,253.9 L240.2,253.9 L240.2,443.9 L154.1,443.9 Z" style="fill: var(--note); stroke: var(--note)" stroke-width="0.5"></path>
+<text x="197.1" y="248.9" text-anchor="middle" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">drags right</text>
+<path d="M469.7,253.9 L555.8,253.9 L555.8,443.9 L469.7,443.9 Z" style="fill: var(--note); stroke: var(--note)" stroke-width="0.5"></path>
+<text x="512.7" y="248.9" text-anchor="middle" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">drags back</text>
+<path d="M68,260.9 L814,260.9" style="fill: none; stroke: var(--line)" stroke-width="1"></path>
+<text x="59" y="264.7" text-anchor="end" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">+4.5°</text>
+<path d="M68,348.9 L814,348.9" style="fill: none; stroke: var(--line)" stroke-width="1"></path>
+<text x="59" y="352.7" text-anchor="end" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">0°</text>
+<path d="M68,436.9 L814,436.9" style="fill: none; stroke: var(--line)" stroke-width="1"></path>
+<text x="59" y="440.7" text-anchor="end" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">−4.5°</text>
+<path d="M64,282.4 L78,282.4" style="fill: none; stroke: var(--ink)" stroke-width="1.2" stroke-dasharray="5 4"></path>
+<text x="59" y="286.2" text-anchor="end" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">+3.4°</text>
+<path d="M64,415.4 L78,415.4" style="fill: none; stroke: var(--ink)" stroke-width="1.2" stroke-dasharray="5 4"></path>
+<text x="59" y="419.2" text-anchor="end" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">−3.4°</text>
+<text x="68" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">0</text>
+<text x="154.1" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">300</text>
+<text x="240.2" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">600</text>
+<text x="354.9" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">1000</text>
+<text x="469.7" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">1400</text>
+<text x="555.8" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">1700</text>
+<text x="641.8" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">2000</text>
+<text x="814" y="465.7" text-anchor="middle" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">2600</text>
+<text x="814" y="483.7" text-anchor="end" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">milliseconds</text>
+<path d="M68,348.9 L69.4,348.9 L70.9,348.9 L72.3,348.9 L73.7,348.9 L75.2,348.9 L76.6,348.9 L78,348.9 L79.5,348.9 L80.9,348.9 L82.3,348.9 L83.8,348.9 L85.2,348.9 L86.7,348.9 L88.1,348.9 L89.5,348.9 L91,348.9 L92.4,348.9 L93.8,348.9 L95.3,348.9 L96.7,348.9 L98.1,348.9 L99.6,348.9 L101,348.9 L102.4,348.9 L103.9,348.9 L105.3,348.9 L106.7,348.9 L108.2,348.9 L109.6,348.9 L111,348.9 L112.5,348.9 L113.9,348.9 L115.3,348.9 L116.8,348.9 L118.2,348.9 L119.6,348.9 L121.1,348.9 L122.5,348.9 L124,348.9 L125.4,348.9 L126.8,348.9 L128.3,348.9 L129.7,348.9 L131.1,348.9 L132.6,348.9 L134,348.9 L135.4,348.9 L136.9,348.9 L138.3,348.9 L139.7,348.9 L141.2,348.9 L142.6,348.9 L144,348.9 L145.5,348.9 L146.9,348.9 L148.3,348.9 L149.8,348.9 L151.2,348.9 L152.6,348.9 L154.1,347.1 L155.5,338.2 L156.9,329.4 L158.4,320.5 L159.8,311.6 L161.3,302.8 L162.7,293.9 L164.1,285 L165.6,282.4 L167,282.4 L168.4,282.4 L169.9,282.4 L171.3,282.4 L172.7,282.4 L174.2,282.4 L175.6,282.4 L177,282.4 L178.5,282.4 L179.9,282.4 L181.3,282.4 L182.8,282.4 L184.2,282.4 L185.6,282.4 L187.1,282.4 L188.5,282.4 L189.9,282.4 L191.4,282.4 L192.8,282.4 L194.2,282.4 L195.7,282.4 L197.1,282.4 L198.6,282.4 L200,282.4 L201.4,282.4 L202.9,282.4 L204.3,282.4 L205.7,282.4 L207.2,282.4 L208.6,282.4 L210,282.4 L211.5,282.4 L212.9,282.4 L214.3,282.4 L215.8,282.4 L217.2,282.4 L218.6,282.4 L220.1,282.4 L221.5,282.4 L222.9,282.4 L224.4,282.4 L225.8,282.4 L227.2,282.4 L228.7,282.4 L230.1,282.4 L231.5,282.4 L233,282.4 L234.4,282.4 L235.9,282.4 L237.3,282.4 L238.7,282.4 L240.2,282.4 L241.6,282.4 L243,282.4 L244.5,288.6 L245.9,297.5 L247.3,306.3 L248.8,315.2 L250.2,324.1 L251.6,332.9 L253.1,341.8 L254.5,348.9 L255.9,348.9 L257.4,348.9 L258.8,348.9 L260.2,348.9 L261.7,348.9 L263.1,348.9 L264.5,348.9 L266,348.9 L267.4,348.9 L268.8,348.9 L270.3,348.9 L271.7,348.9 L273.2,348.9 L274.6,348.9 L276,348.9 L277.5,348.9 L278.9,348.9 L280.3,348.9 L281.8,348.9 L283.2,348.9 L284.6,348.9 L286.1,348.9 L287.5,348.9 L288.9,348.9 L290.4,348.9 L291.8,348.9 L293.2,348.9 L294.7,348.9 L296.1,348.9 L297.5,348.9 L299,348.9 L300.4,348.9 L301.8,348.9 L303.3,348.9 L304.7,348.9 L306.1,348.9 L307.6,348.9 L309,348.9 L310.5,348.9 L311.9,348.9 L313.3,348.9 L314.8,348.9 L316.2,348.9 L317.6,348.9 L319.1,348.9 L320.5,348.9 L321.9,348.9 L323.4,348.9 L324.8,348.9 L326.2,348.9 L327.7,348.9 L329.1,348.9 L330.5,348.9 L332,348.9 L333.4,348.9 L334.8,348.9 L336.3,348.9 L337.7,348.9 L339.1,348.9 L340.6,348.9 L342,348.9 L343.4,348.9 L344.9,348.9 L346.3,348.9 L347.8,348.9 L349.2,348.9 L350.6,348.9 L352.1,348.9 L353.5,348.9 L354.9,348.9 L356.4,348.9 L357.8,348.9 L359.2,348.9 L360.7,348.9 L362.1,348.9 L363.5,348.9 L365,348.9 L366.4,348.9 L367.8,348.9 L369.3,348.9 L370.7,348.9 L372.1,348.9 L373.6,348.9 L375,348.9 L376.4,348.9 L377.9,348.9 L379.3,348.9 L380.7,348.9 L382.2,348.9 L383.6,348.9 L385.1,348.9 L386.5,348.9 L387.9,348.9 L389.4,348.9 L390.8,348.9 L392.2,348.9 L393.7,348.9 L395.1,348.9 L396.5,348.9 L398,348.9 L399.4,348.9 L400.8,348.9 L402.3,348.9 L403.7,348.9 L405.1,348.9 L406.6,348.9 L408,348.9 L409.4,348.9 L410.9,348.9 L412.3,348.9 L413.7,348.9 L415.2,348.9 L416.6,348.9 L418,348.9 L419.5,348.9 L420.9,348.9 L422.4,348.9 L423.8,348.9 L425.2,348.9 L426.7,348.9 L428.1,348.9 L429.5,348.9 L431,348.9 L432.4,348.9 L433.8,348.9 L435.3,348.9 L436.7,348.9 L438.1,348.9 L439.6,348.9 L441,348.9 L442.4,348.9 L443.9,348.9 L445.3,348.9 L446.7,348.9 L448.2,348.9 L449.6,348.9 L451,348.9 L452.5,348.9 L453.9,348.9 L455.3,348.9 L456.8,348.9 L458.2,348.9 L459.7,348.9 L461.1,348.9 L462.5,348.9 L464,348.9 L465.4,348.9 L466.8,348.9 L468.3,348.9 L469.7,350.6 L471.1,359.5 L472.6,368.4 L474,377.2 L475.4,386.1 L476.9,395 L478.3,403.8 L479.7,412.7 L481.2,415.4 L482.6,415.4 L484,415.4 L485.5,415.4 L486.9,415.4 L488.3,415.4 L489.8,415.4 L491.2,415.4 L492.6,415.4 L494.1,415.4 L495.5,415.4 L497,415.4 L498.4,415.4 L499.8,415.4 L501.3,415.4 L502.7,415.4 L504.1,415.4 L505.6,415.4 L507,415.4 L508.4,415.4 L509.9,415.4 L511.3,415.4 L512.7,415.4 L514.2,415.4 L515.6,415.4 L517,415.4 L518.5,415.4 L519.9,415.4 L521.3,415.4 L522.8,415.4 L524.2,415.4 L525.6,415.4 L527.1,415.4 L528.5,415.4 L529.9,415.4 L531.4,415.4 L532.8,415.4 L534.3,415.4 L535.7,415.4 L537.1,415.4 L538.6,415.4 L540,415.4 L541.4,415.4 L542.9,415.4 L544.3,415.4 L545.7,415.4 L547.2,415.4 L548.6,415.4 L550,415.4 L551.5,415.4 L552.9,415.4 L554.3,415.4 L555.8,415.4 L557.2,415.4 L558.6,415.4 L560.1,409.2 L561.5,400.3 L562.9,391.4 L564.4,382.6 L565.8,373.7 L567.2,364.8 L568.7,356 L570.1,348.9 L571.6,348.9 L573,348.9 L574.4,348.9 L575.9,348.9 L577.3,348.9 L578.7,348.9 L580.2,348.9 L581.6,348.9 L583,348.9 L584.5,348.9 L585.9,348.9 L587.3,348.9 L588.8,348.9 L590.2,348.9 L591.6,348.9 L593.1,348.9 L594.5,348.9 L595.9,348.9 L597.4,348.9 L598.8,348.9 L600.2,348.9 L601.7,348.9 L603.1,348.9 L604.5,348.9 L606,348.9 L607.4,348.9 L608.9,348.9 L610.3,348.9 L611.7,348.9 L613.2,348.9 L614.6,348.9 L616,348.9 L617.5,348.9 L618.9,348.9 L620.3,348.9 L621.8,348.9 L623.2,348.9 L624.6,348.9 L626.1,348.9 L627.5,348.9 L628.9,348.9 L630.4,348.9 L631.8,348.9 L633.2,348.9 L634.7,348.9 L636.1,348.9 L637.5,348.9 L639,348.9 L640.4,348.9 L641.8,348.9 L643.3,348.9 L644.7,348.9 L646.2,348.9 L647.6,348.9 L649,348.9 L650.5,348.9 L651.9,348.9 L653.3,348.9 L654.8,348.9 L656.2,348.9 L657.6,348.9 L659.1,348.9 L660.5,348.9 L661.9,348.9 L663.4,348.9 L664.8,348.9 L666.2,348.9 L667.7,348.9 L669.1,348.9 L670.5,348.9 L672,348.9 L673.4,348.9 L674.8,348.9 L676.3,348.9 L677.7,348.9 L679.1,348.9 L680.6,348.9 L682,348.9 L683.5,348.9 L684.9,348.9 L686.3,348.9 L687.8,348.9 L689.2,348.9 L690.6,348.9 L692.1,348.9 L693.5,348.9 L694.9,348.9 L696.4,348.9 L697.8,348.9 L699.2,348.9 L700.7,348.9 L702.1,348.9 L703.5,348.9 L705,348.9 L706.4,348.9 L707.8,348.9 L709.3,348.9 L710.7,348.9 L712.1,348.9 L713.6,348.9 L715,348.9 L716.4,348.9 L717.9,348.9 L719.3,348.9 L720.8,348.9 L722.2,348.9 L723.6,348.9 L725.1,348.9 L726.5,348.9 L727.9,348.9 L729.4,348.9 L730.8,348.9 L732.2,348.9 L733.7,348.9 L735.1,348.9 L736.5,348.9 L738,348.9 L739.4,348.9 L740.8,348.9 L742.3,348.9 L743.7,348.9 L745.1,348.9 L746.6,348.9 L748,348.9 L749.4,348.9 L750.9,348.9 L752.3,348.9 L753.7,348.9 L755.2,348.9 L756.6,348.9 L758.1,348.9 L759.5,348.9 L760.9,348.9 L762.4,348.9 L763.8,348.9 L765.2,348.9 L766.7,348.9 L768.1,348.9 L769.5,348.9 L771,348.9 L772.4,348.9 L773.8,348.9 L775.3,348.9 L776.7,348.9 L778.1,348.9 L779.6,348.9 L781,348.9 L782.4,348.9 L783.9,348.9 L785.3,348.9 L786.7,348.9 L788.2,348.9 L789.6,348.9 L791,348.9 L792.5,348.9 L793.9,348.9 L795.4,348.9 L796.8,348.9 L798.2,348.9 L799.7,348.9 L801.1,348.9 L802.5,348.9 L804,348.9 L805.4,348.9 L806.8,348.9 L808.3,348.9 L809.7,348.9 L811.1,348.9 L812.6,348.9 L814,348.9" style="fill: none; stroke: var(--ink)" stroke-width="1.4" stroke-dasharray="5 4"></path>
+<path d="M68,348.9 L69.4,348.9 L70.9,348.9 L72.3,348.9 L73.7,348.9 L75.2,348.9 L76.6,348.9 L78,348.9 L79.5,348.9 L80.9,348.9 L82.3,348.9 L83.8,348.9 L85.2,348.9 L86.7,348.9 L88.1,348.9 L89.5,348.9 L91,348.9 L92.4,348.9 L93.8,348.9 L95.3,348.9 L96.7,348.9 L98.1,348.9 L99.6,348.9 L101,348.9 L102.4,348.9 L103.9,348.9 L105.3,348.9 L106.7,348.9 L108.2,348.9 L109.6,348.9 L111,348.9 L112.5,348.9 L113.9,348.9 L115.3,348.9 L116.8,348.9 L118.2,348.9 L119.6,348.9 L121.1,348.9 L122.5,348.9 L124,348.9 L125.4,348.9 L126.8,348.9 L128.3,348.9 L129.7,348.9 L131.1,348.9 L132.6,348.9 L134,348.9 L135.4,348.9 L136.9,348.9 L138.3,348.9 L139.7,348.9 L141.2,348.9 L142.6,348.9 L144,348.9 L145.5,348.9 L146.9,348.9 L148.3,348.9 L149.8,348.9 L151.2,348.9 L152.6,348.9 L154.1,348.9 L155.5,348.8 L156.9,348.5 L158.4,347.8 L159.8,346.5 L161.3,344.6 L162.7,341.9 L164.1,338.5 L165.6,334.2 L167,329.2 L168.4,323.7 L169.9,317.9 L171.3,311.8 L172.7,305.7 L174.2,299.6 L175.6,293.8 L177,288.3 L178.5,283.2 L179.9,278.5 L181.3,274.4 L182.8,270.9 L184.2,267.9 L185.6,265.5 L187.1,263.7 L188.5,262.5 L189.9,261.8 L191.4,261.7 L192.8,262 L194.2,262.7 L195.7,263.7 L197.1,265.1 L198.6,266.7 L200,268.4 L201.4,270.4 L202.9,272.3 L204.3,274.3 L205.7,276.3 L207.2,278.3 L208.6,280.1 L210,281.8 L211.5,283.4 L212.9,284.8 L214.3,286 L215.8,287 L217.2,287.8 L218.6,288.4 L220.1,288.9 L221.5,289.1 L222.9,289.2 L224.4,289.1 L225.8,288.9 L227.2,288.6 L228.7,288.2 L230.1,287.7 L231.5,287.1 L233,286.5 L234.4,285.8 L235.9,285.2 L237.3,284.5 L238.7,283.9 L240.2,283.2 L241.6,282.7 L243,282.2 L244.5,281.7 L245.9,281.5 L247.3,281.6 L248.8,282.3 L250.2,283.7 L251.6,285.8 L253.1,288.8 L254.5,292.6 L255.9,297.2 L257.4,302.6 L258.8,308.4 L260.2,314.5 L261.7,320.8 L263.1,327.1 L264.5,333.2 L266,339.1 L267.4,344.6 L268.8,349.7 L270.3,354.3 L271.7,358.4 L273.2,361.8 L274.6,364.7 L276,366.9 L277.5,368.6 L278.9,369.6 L280.3,370.1 L281.8,370.1 L283.2,369.7 L284.6,368.8 L286.1,367.6 L287.5,366.2 L288.9,364.4 L290.4,362.6 L291.8,360.6 L293.2,358.5 L294.7,356.4 L296.1,354.4 L297.5,352.5 L299,350.6 L300.4,348.9 L301.8,347.4 L303.3,346 L304.7,344.8 L306.1,343.8 L307.6,343.1 L309,342.5 L310.5,342.1 L311.9,341.9 L313.3,341.9 L314.8,342 L316.2,342.2 L317.6,342.6 L319.1,343.1 L320.5,343.6 L321.9,344.3 L323.4,344.9 L324.8,345.6 L326.2,346.3 L327.7,346.9 L329.1,347.6 L330.5,348.2 L332,348.8 L333.4,349.3 L334.8,349.7 L336.3,350.1 L337.7,350.5 L339.1,350.7 L340.6,350.9 L342,351.1 L343.4,351.2 L344.9,351.2 L346.3,351.1 L347.8,351.1 L349.2,351 L350.6,350.8 L352.1,350.6 L353.5,350.4 L354.9,350.2 L356.4,350 L357.8,349.8 L359.2,349.6 L360.7,349.3 L362.1,349.1 L363.5,348.9 L365,348.8 L366.4,348.6 L367.8,348.5 L369.3,348.4 L370.7,348.3 L372.1,348.2 L373.6,348.2 L375,348.1 L376.4,348.1 L377.9,348.1 L379.3,348.1 L380.7,348.2 L382.2,348.2 L383.6,348.3 L385.1,348.3 L386.5,348.4 L387.9,348.5 L389.4,348.6 L390.8,348.6 L392.2,348.7 L393.7,348.8 L395.1,348.8 L396.5,348.9 L398,349 L399.4,349 L400.8,349 L402.3,349.1 L403.7,349.1 L405.1,349.1 L406.6,349.1 L408,349.1 L409.4,349.1 L410.9,349.1 L412.3,349.1 L413.7,349.1 L415.2,349.1 L416.6,349.1 L418,349 L419.5,349 L420.9,349 L422.4,349 L423.8,348.9 L425.2,348.9 L426.7,348.9 L428.1,348.9 L429.5,348.9 L431,348.8 L432.4,348.8 L433.8,348.8 L435.3,348.8 L436.7,348.8 L438.1,348.8 L439.6,348.8 L441,348.8 L442.4,348.8 L443.9,348.8 L445.3,348.8 L446.7,348.8 L448.2,348.8 L449.6,348.8 L451,348.8 L452.5,348.8 L453.9,348.8 L455.3,348.9 L456.8,348.9 L458.2,348.9 L459.7,348.9 L461.1,348.9 L462.5,348.9 L464,348.9 L465.4,348.9 L466.8,348.9 L468.3,348.9 L469.7,348.9 L471.1,349 L472.6,349.3 L474,350 L475.4,351.3 L476.9,353.2 L478.3,355.8 L479.7,359.3 L481.2,363.6 L482.6,368.5 L484,374 L485.5,379.9 L486.9,386 L488.3,392.1 L489.8,398.1 L491.2,403.9 L492.6,409.5 L494.1,414.6 L495.5,419.2 L497,423.3 L498.4,426.9 L499.8,429.9 L501.3,432.2 L502.7,434 L504.1,435.2 L505.6,435.9 L507,436.1 L508.4,435.8 L509.9,435.1 L511.3,434 L512.7,432.7 L514.2,431.1 L515.6,429.3 L517,427.4 L518.5,425.4 L519.9,423.4 L521.3,421.4 L522.8,419.5 L524.2,417.6 L525.6,415.9 L527.1,414.4 L528.5,413 L529.9,411.8 L531.4,410.8 L532.8,410 L534.3,409.3 L535.7,408.9 L537.1,408.6 L538.6,408.6 L540,408.6 L541.4,408.8 L542.9,409.2 L544.3,409.6 L545.7,410.1 L547.2,410.7 L548.6,411.3 L550,411.9 L551.5,412.6 L552.9,413.3 L554.3,413.9 L555.8,414.5 L557.2,415.1 L558.6,415.6 L560.1,416 L561.5,416.3 L562.9,416.1 L564.4,415.4 L565.8,414.1 L567.2,411.9 L568.7,409 L570.1,405.2 L571.6,400.5 L573,395.2 L574.4,389.4 L575.9,383.2 L577.3,377 L578.7,370.7 L580.2,364.6 L581.6,358.7 L583,353.1 L584.5,348 L585.9,343.4 L587.3,339.4 L588.8,335.9 L590.2,333.1 L591.6,330.8 L593.1,329.2 L594.5,328.1 L595.9,327.6 L597.4,327.6 L598.8,328.1 L600.2,328.9 L601.7,330.1 L603.1,331.6 L604.5,333.3 L606,335.2 L607.4,337.2 L608.9,339.2 L610.3,341.3 L611.7,343.3 L613.2,345.3 L614.6,347.1 L616,348.9 L617.5,350.4 L618.9,351.8 L620.3,352.9 L621.8,353.9 L623.2,354.7 L624.6,355.3 L626.1,355.6 L627.5,355.8 L628.9,355.9 L630.4,355.8 L631.8,355.5 L633.2,355.1 L634.7,354.7 L636.1,354.1 L637.5,353.5 L639,352.8 L640.4,352.2 L641.8,351.5 L643.3,350.8 L644.7,350.2 L646.2,349.6 L647.6,349 L649,348.5 L650.5,348 L651.9,347.6 L653.3,347.3 L654.8,347 L656.2,346.8 L657.6,346.7 L659.1,346.6 L660.5,346.6 L661.9,346.6 L663.4,346.7 L664.8,346.8 L666.2,346.9 L667.7,347.1 L669.1,347.3 L670.5,347.5 L672,347.7 L673.4,348 L674.8,348.2 L676.3,348.4 L677.7,348.6 L679.1,348.8 L680.6,349 L682,349.1 L683.5,349.3 L684.9,349.4 L686.3,349.5 L687.8,349.5 L689.2,349.6 L690.6,349.6 L692.1,349.6 L693.5,349.6 L694.9,349.6 L696.4,349.6 L697.8,349.5 L699.2,349.5 L700.7,349.4 L702.1,349.3 L703.5,349.3 L705,349.2 L706.4,349.1 L707.8,349 L709.3,349 L710.7,348.9 L712.1,348.9 L713.6,348.8 L715,348.8 L716.4,348.7 L717.9,348.7 L719.3,348.7 L720.8,348.6 L722.2,348.6 L723.6,348.6 L725.1,348.6 L726.5,348.6 L727.9,348.6 L729.4,348.7 L730.8,348.7 L732.2,348.7 L733.7,348.7 L735.1,348.7 L736.5,348.8 L738,348.8 L739.4,348.8 L740.8,348.8 L742.3,348.9 L743.7,348.9 L745.1,348.9 L746.6,348.9 L748,348.9 L749.4,348.9 L750.9,348.9 L752.3,349 L753.7,349 L755.2,349 L756.6,349 L758.1,349 L759.5,349 L760.9,348.9 L762.4,348.9 L763.8,348.9 L765.2,348.9 L766.7,348.9 L768.1,348.9 L769.5,348.9 L771,348.9 L772.4,348.9 L773.8,348.9 L775.3,348.9 L776.7,348.9 L778.1,348.9 L779.6,348.9 L781,348.9 L782.4,348.9 L783.9,348.9 L785.3,348.8 L786.7,348.8 L788.2,348.8 L789.6,348.8 L791,348.8 L792.5,348.9 L793.9,348.9 L795.4,348.9 L796.8,348.9 L798.2,348.9 L799.7,348.9 L801.1,348.9 L802.5,348.9 L804,348.9 L805.4,348.9 L806.8,348.9 L808.3,348.9 L809.7,348.9 L811.1,348.9 L812.6,348.9 L814,348.9" style="fill: none; stroke: var(--woad)" stroke-width="2.2"></path>
+<path d="M188.8,261.7 A2.3,2.3 0 1 1 193.3,261.7 A2.3,2.3 0 1 1 188.8,261.7 Z" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1.5"></path>
+<text x="200.1" y="259.7" text-anchor="start" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--woad); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">4.5°, past its aim: the most it turns</text>
+<path d="M278.9,370.2 A2.3,2.3 0 1 1 283.4,370.2 A2.3,2.3 0 1 1 278.9,370.2 Z" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1.5"></path>
+<text x="290.2" y="390.2" text-anchor="start" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--woad); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">stopped: back past level, to −1.1°</text>
+<path d="M504.5,436.1 A2.3,2.3 0 1 1 509,436.1 A2.3,2.3 0 1 1 504.5,436.1 Z" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1.5"></path>
+<text x="515.7" y="443.1" text-anchor="start" style="font: 400 11.5px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--woad); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">the other way, −4.5°</text>
+<path d="M68,479.9 L92,479.9" style="fill: none; stroke: var(--ink)" stroke-width="1.4" stroke-dasharray="5 4"></path>
+<text x="98" y="483.7" text-anchor="start" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">the angle it aims at</text>
+<path d="M228,479.9 L252,479.9" style="fill: none; stroke: var(--woad)" stroke-width="2.2"></path>
+<text x="258" y="483.7" text-anchor="start" style="font: 400 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--muted)">the card's angle</text>
+<g data-anim="2">
+<path d="M68,251.9 L68,445.9" style="fill: none; stroke: var(--rust)" stroke-width="1.2"></path>
+</g>
+<g data-anim="3">
+<path d="M64.5,348.9 A3.5,3.5 0 1 1 71.5,348.9 A3.5,3.5 0 1 1 64.5,348.9 Z" style="fill: var(--card); stroke: var(--woad)" stroke-width="2"></path>
+</g>
+
+</g>
+</svg>

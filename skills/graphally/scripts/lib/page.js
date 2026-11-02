@@ -221,6 +221,15 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     throw new Error(`${typeof ref === 'object' ? JSON.stringify(ref) : String(ref)} is not an element or a point`);
   };
   const point = ref => { const s = spot(ref); return s.el ? s.center : s; };
+  // animate(): what moves, keyed for the SVG; see motionCss. An element's output is wrapped in
+  // a group of its own (animOf), a drawn mark carries its index (mark.anim).
+  const anims = [], animOf = new Map();
+  const markBox = m => {
+    const ps = m.pts || m.ends;
+    if (ps) { const xs = ps.map(q => q.x), ys = ps.map(q => q.y), x = Math.min(...xs), y = Math.min(...ys); return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y }; }
+    const sz = m.kind === 'text' ? 0 : m.o.size || (m.kind === 'gate' ? 30 : m.kind === 'shape' ? 36 : 24), w = m.o.w || sz, h = m.o.h || (m.o.w ? w : sz);
+    return { x: m.p.x - w / 2, y: m.p.y - h / 2, w, h };
+  };
   const api = {
     el: ref => find(ref)[0],
     all: sel => find(sel),
@@ -231,11 +240,11 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       const stmt = edges.length + 1, via = [].concat(o2.via || []).map(point);
       for (const f of find(a)) for (const t of find(b)) edges.push({ from: f.el, to: t.el, o: o2, stmt, via });
     },
-    arrow(a, b, o2 = {}) { const [p, q] = ends(a, b); drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} L${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: api.mid(p, q) }); },
+    arrow(a, b, o2 = {}) { const [p, q] = ends(a, b); return mark({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} L${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: api.mid(p, q) }); },
     curve(a, b, o2 = {}) {
       const [p, q] = ends(a, b), bend = opt(o2.bend, 40), dx = q.x - p.x, dy = q.y - p.y, len = Math.hypot(dx, dy) || 1;
       const c = { x: (p.x + q.x) / 2 - dy / len * bend, y: (p.y + q.y) / 2 + dx / len * bend };
-      drawings.push({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: pt((p.x + 2 * c.x + q.x) / 4, (p.y + 2 * c.y + q.y) / 4) });
+      return mark({ kind: 'path', d: `M${fmt(p.x)},${fmt(p.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(q.x)},${fmt(q.y)}`, o: { arrow: true, ...o2 }, ends: [p, q], via: pt((p.x + 2 * c.x + q.x) / 4, (p.y + 2 * c.y + q.y) / 4) });
     },
     // depend(a, b): a finish-to-start dependency on a time chart, from a to the start of b.
     // It may leave a by its back or anywhere along its underside (its top when b is above),
@@ -295,16 +304,39 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       drawings.push({ kind: 'path', d: rounded(ps, 4), o: { arrow: true, ...o2 }, ends: [ps[0], ps.at(-1)], via: ps[Math.floor(ps.length / 2)] });
     },
     draw: { moveTo: p => pathBuilder(point(p), drawings, point), arc: (c, r, a0, a1) => pathBuilder(arcPoint(point(c), r, a0), drawings, point).arc(c, r, a0, a1) },
-    gate(p, label = '', o2 = {}) { drawings.push({ kind: 'gate', p: point(p), label, o: o2 }); },
-    text(p, str, o2 = {}) { drawings.push({ kind: 'text', p: point(p), str: String(str), o: o2 }); },
+    gate(p, label = '', o2 = {}) { return mark({ kind: 'gate', p: point(p), label, o: o2 }); },
+    text(p, str, o2 = {}) { return mark({ kind: 'text', p: point(p), str: String(str), o: o2 }); },
     icon(p, name, o2 = {}) {
       const r = resolveIcon(name, order);
       if (!r || r.error) { problems.push({ rule: 'unknown-icon', icon: name, suggest: r?.suggestions }); return; }
       const sym = symbolFor(r, id);
       symbols.set(sym.id, sym.markup);
-      drawings.push({ kind: 'icon', p: point(p), sym: sym.id, o: o2 });
+      return mark({ kind: 'icon', p: point(p), sym: sym.id, o: o2 });
     },
-    shape(kind, p, o2 = {}) { drawings.push({ kind: 'shape', shape: kind, p: point(p), o: o2 }); },
+    shape(kind, p, o2 = {}) { return mark({ kind: 'shape', shape: kind, p: point(p), o: o2 }); },
+    // animate(target, keyframes, options), as element.animate in a browser: an element (id,
+    // selector, box) or a mark the script drew moves when the figure is shown. The still figure
+    // is where it rests.
+    animate(ref, frames, o2 = {}) {
+      if (!Array.isArray(frames) || !frames.length) throw new Error('animate takes a list of keyframes, as element.animate does');
+      const marked = ref?.mark, targets = marked ? [marked] : find(ref);
+      for (const t of targets) {
+        const box = marked ? markBox(marked) : t, i = anims.length;
+        anims.push({ frames, o: o2, origin: originOf(o2.origin, box) });
+        if (marked) marked.anim = i; else animOf.set(t.el, i);
+      }
+    },
+  };
+  // A drawn mark, and the handle the script gets for it (to animate it).
+  function mark(item) { drawings.push(item); return { mark: item }; }
+  // The point an animation turns and scales about: keywords and percentages of the target's
+  // box ('center', '50% 20%', 'left top'), px from its top left, or a point or element.
+  const originOf = (v, box) => {
+    if (v != null && typeof v === 'object') return point(v);
+    const words = String(v ?? 'center').trim().split(/\s+/);
+    if (/^(top|bottom)$/.test(words[0])) words.reverse();
+    const at = (w = 'center', len) => (/%$/.test(w) ? len * parseFloat(w) / 100 : /px$/.test(w) ? parseFloat(w) : len * ({ left: 0, top: 0, right: 1, bottom: 1 }[w] ?? 0.5));
+    return pt(box.x + at(words[0], box.w), box.y + at(words[1], box.h));
   };
   // Two boxes: the facing sides. Points: as given.
   const ends = (ra, rb) => {
@@ -415,13 +447,15 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     const op = parseFloat(cs.opacity), grey = /grayscale\((?!0\b|0%)/.test(cs.filter);
     const fade = op < 1 || grey;
     if (grey) greyed = true;
-    const step = stepOf(e);
+    const step = stepOf(e), anim = animOf.get(e);
     if (step) out.push(`<g data-step="${step}">`);
+    if (anim != null) out.push(`<g data-anim="${anim}">`);
     if (fade) out.push(`<g${op < 1 ? ` opacity="${fmt(op)}"` : ''}${grey ? ` filter="url(#${id}-grey)"` : ''}>`);
     if (e.tagName === 'ICON') {
       if (e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
       boxes.push({ e, b, painted: true, parent: parentBox });
       if (fade) out.push('</g>');
+      if (anim != null) out.push('</g>');
       if (step) out.push('</g>');
       return;
     }
@@ -475,6 +509,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     }
     if (open) out.push('</g>');
     if (fade) out.push('</g>');
+    if (anim != null) out.push('</g>');
     if (step) out.push('</g>');
   };
   for (const c of root.childNodes) {
@@ -512,7 +547,8 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     }
   }
   for (const d of drawings) {
-    const o2 = d.o, color = paintOf(toneOf(o2.color || o2.tone)) || 'var(--ink)';
+    const o2 = d.o, color = paintOf(toneOf(o2.color || o2.tone)) || 'var(--ink)', at = drawOut.length;
+    if (d.anim != null) drawOut.push(`<g data-anim="${d.anim}">`);
     if (d.kind === 'path') {
       drawOut.push(`<path d="${d.d}" style="fill: ${paintOf(toneOf(o2.fill)) || 'none'}; stroke: ${color}" stroke-width="${o2.width || S.edge.width}"${endAttrs(id, endsOf(o2, false, problems), color, markers)}></path>`);
       // arrow and curve labels: beside the middle of a vertical line, above a horizontal one.
@@ -527,19 +563,22 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       if (d.label) drawOut.push(`<text x="${fmt(x)}" y="${fmt(y + 4)}" text-anchor="middle" style="font: 700 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--card)">${esc(d.label)}</text>`);
     } else if (d.kind === 'text') {
       const size = o2.size || 12, anchor = o2.anchor || 'middle';
-      drawOut.push(`<text x="${fmt(d.p.x)}" y="${fmt(d.p.y + size * 0.35)}" text-anchor="${anchor}" style="font: ${o2.italic ? 'italic ' : ''}${o2.weight || 400} ${size}px Inter, 'Segoe UI', system-ui, sans-serif; fill: ${color}">${esc(d.str)}</text>`);
+      // halo: a rim of the colour under it, as edge labels have, so a line through it does not cross the words.
+      const halo = o2.halo ? `; paint-order: stroke; stroke: ${under(boxes, d.p.x, d.p.y) || 'var(--bg)'}; stroke-width: 4px; stroke-linejoin: round` : '';
+      drawOut.push(`<text x="${fmt(d.p.x)}" y="${fmt(d.p.y + size * 0.35)}" text-anchor="${anchor}" style="font: ${o2.italic ? 'italic ' : ''}${o2.weight || 400} ${size}px Inter, 'Segoe UI', system-ui, sans-serif; fill: ${color}${halo}">${esc(d.str)}</text>`);
     } else if (d.kind === 'icon') {
       const s = o2.size || 24;
       drawOut.push(`<use href="#${d.sym}" x="${fmt(d.p.x - s / 2)}" y="${fmt(d.p.y - s / 2)}" width="${s}" height="${s}"></use>`);
     } else if (d.kind === 'shape') {
       // The same library as shape="…"; BPMN events and gateways default to their sizes.
       const spec = parseShape(d.shape);
-      if (spec.error) { problems.push({ rule: 'unknown-shape', shape: spec.error, ...(closest(spec.error, spec.options) ? { suggest: closest(spec.error, spec.options) } : {}) }); continue; }
+      if (spec.error) { problems.push({ rule: 'unknown-shape', shape: spec.error, ...(closest(spec.error, spec.options) ? { suggest: closest(spec.error, spec.options) } : {}) }); drawOut.length = at; continue; }
       const size = o2.size || (['start', 'event', 'end'].includes(spec.base) ? 36 : spec.base === 'gateway' ? 44 : spec.base === 'cycle' ? 28 : 24);
       const w = o2.w || size, h = o2.h || (o2.w ? w : size);
       drawOut.push(...drawShape(spec, { x: d.p.x - w / 2, y: d.p.y - h / 2, w, h },
         { fill: paintOf(toneOf(o2.fill || 'card')), stroke: paintOf(toneOf(o2.stroke || o2.color)) || 'var(--ink)', width: o2.width || (spec.base === 'end' ? 3 : 1.5), dash: o2.dashed ? '5 4' : '' }));
     }
+    if (d.anim != null) drawOut.push('</g>');
   }
   check(texts, problems);
   overflows(boxes, texts, root, problems);
@@ -548,7 +587,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
   }), ...symbols.values(), ...(greyed ? [`<filter id="${id}-grey" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix></filter>`] : [])];
   const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
-  const style = (opts.standalone ? `<style>${opts.css}</style>\n` : '') + (stepOrder.length || flows ? `<style>${motionCss(stepOrder, delayOf)}</style>\n` : '');
+  const style = (opts.standalone ? `<style>${opts.css}</style>\n` : '') + (stepOrder.length || flows || anims.length ? `<style>${motionCss(stepOrder, delayOf, animCss(anims, id, problems))}</style>\n` : '');
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
   // The figure paints its own background, so it reads on a dark page as on a light one:
   // the theme's --bg, a colour of the author's (background="#fff"), or none (background=none).
@@ -622,6 +661,7 @@ function pathBuilder(start, drawings, point) {
   drawings.push(item);
   const sync = () => { item.d = d.join(' '); return api; };
   const api = {
+    mark: item,
     lineTo: p => { p = point(p); item.pts.push(p); d.push(`L${fmt(p.x)},${fmt(p.y)}`); return sync(); },
     quadraticCurveTo: (c, p) => { [c, p] = [point(c), point(p)]; item.pts.push(c, p); d.push(`Q${fmt(c.x)},${fmt(c.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
     bezierCurveTo: (c1, c2, p) => { [c1, c2, p] = [point(c1), point(c2), point(p)]; item.pts.push(c1, c2, p); d.push(`C${fmt(c1.x)},${fmt(c1.y)} ${fmt(c2.x)},${fmt(c2.y)} ${fmt(p.x)},${fmt(p.y)}`); return sync(); },
@@ -660,15 +700,62 @@ function flowMarks(d, pts, tone, boxes, delay) {
     + `<circle class="g-dot" r="4" visibility="hidden" style="fill: ${dot}; stroke: var(--card)" stroke-width="1.5">`
     + `<animateMotion dur="${fmt(Math.max(1.2, len / 70))}s"${delay ? ` begin="${fmt(delay)}s"` : ''} repeatCount="indefinite" path="${d}"></animateMotion></circle>`;
 }
-function motionCss(order, delayOf) {
+function motionCss(order, delayOf, anim) {
   return `@media (prefers-reduced-motion: no-preference) {
   svg.graphally .g-flow, svg.graphally .g-dot { visibility: visible; }
   svg.graphally .g-flow { stroke-dasharray: 3 9; animation: g-flow 0.9s linear infinite; }
   svg.graphally [data-step] { animation: g-in 0.5s backwards; }
-${order.map(n => `  svg.graphally [data-step="${n}"] { animation-delay: ${fmt(delayOf(n))}s; }`).join('\n')}
+${order.map(n => `  svg.graphally [data-step="${n}"] { animation-delay: ${fmt(delayOf(n))}s; }`).join('\n')}${anim.rules}
 }
 @keyframes g-flow { to { stroke-dashoffset: -12; } }
-@keyframes g-in { from { opacity: 0; transform: translateY(6px); } }`;
+@keyframes g-in { from { opacity: 0; transform: translateY(6px); } }${anim.keyframes}`;
+}
+
+// animate(): one rule and one @keyframes per animation, as element.animate's keyframes and
+// options say. A keyframe takes opacity, rotate (a number is degrees), translate (a number or
+// [dx, dy] in px) and scale, with offset (0 to 1; spread evenly when left out) and easing. The
+// options: duration and delay (ms), iterations (Infinity: for ever), easing (linear unless
+// told), direction, fill (none unless told), and the origin it turns about, worked out when
+// animate() was called. Values go into CSS, so only plain ones pass; anything else is a problem.
+const KEYFRAME = {
+  opacity: v => num(v),
+  rotate: v => (typeof v === 'number' ? `${num(v)}deg` : v),
+  translate: v => [].concat(v).map(n => (typeof n === 'number' ? `${num(n)}px` : n)).join(' '),
+  scale: v => [].concat(v).map(n => (typeof n === 'number' ? num(n) : n)).join(' '),
+};
+const num = v => String(Math.round(Number(v) * 1000) / 1000);
+const plain = v => /^[-\w\s.,%()#]*$/.test(String(v));
+function animCss(anims, id, problems) {
+  let rules = '', keyframes = '';
+  anims.forEach((a, i) => {
+    const o = a.o, name = `${id}-a${i}`, bad = (option, value, hint) => problems.push({ rule: 'bad-option', option, value: String(value), hint });
+    const frames = a.frames.map(f => ({ ...f })), n = frames.length;
+    // Offsets as element.animate spreads them: the first at 0, the last at 1, the rest evenly between the given ones.
+    if (frames[0].offset == null) frames[0].offset = 0;
+    if (frames[n - 1].offset == null) frames[n - 1].offset = n > 1 ? 1 : 0;
+    for (let k = 1; k < n; k++) if (frames[k].offset == null) {
+      let j = k; while (frames[j].offset == null) j++;
+      const a0 = frames[k - 1].offset, a1 = frames[j].offset;
+      for (let m = k; m < j; m++) frames[m].offset = a0 + (a1 - a0) * (m - k + 1) / (j - k + 1);
+    }
+    const body = frames.map(f => {
+      const decl = [];
+      for (const [key, v] of Object.entries(f)) {
+        if (key === 'offset') continue;
+        if (key === 'easing') { if (plain(v)) decl.push(`animation-timing-function: ${v}`); else bad('animate easing', v, 'an easing as in CSS: linear, ease-in-out, cubic-bezier(…)'); continue; }
+        if (!KEYFRAME[key]) { bad('animate', key, 'a keyframe takes opacity, rotate, translate, scale, offset and easing'); continue; }
+        const css = KEYFRAME[key](v);
+        if (plain(css)) decl.push(`${key}: ${css}`); else bad(`animate ${key}`, v, 'a number, or a plain CSS value');
+      }
+      return `  ${num(f.offset * 100)}% { ${decl.join('; ')}; }`;
+    }).join('\n');
+    const easing = plain(o.easing ?? 'linear') ? o.easing ?? 'linear' : 'linear', fill = /^(none|forwards|backwards|both)$/.test(o.fill ?? 'none') ? o.fill ?? 'none' : 'none';
+    const dir = /^(normal|reverse|alternate|alternate-reverse)$/.test(o.direction ?? 'normal') ? o.direction ?? 'normal' : 'normal';
+    const iter = o.iterations === Infinity || o.iterations === 'infinite' ? 'infinite' : Number(o.iterations) > 0 ? num(o.iterations) : '1';
+    rules += `\n  svg.graphally [data-anim="${i}"] { transform-box: view-box; transform-origin: ${num(a.origin.x)}px ${num(a.origin.y)}px; animation: ${name} ${num(o.duration ?? 1000)}ms ${easing} ${num(o.delay ?? 0)}ms ${iter} ${dir} ${fill}; }`;
+    keyframes += `\n@keyframes ${name} {\n${body}\n}`;
+  });
+  return { rules, keyframes };
 }
 
 // The colours of the theme tokens, so a box painted var(--wash) stays var(--wash) in the SVG

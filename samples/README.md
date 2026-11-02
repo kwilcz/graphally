@@ -38,6 +38,7 @@ technical ones are drawn in depth, from the brief an engineer would write.
 | [How a change reaches production](#how-a-change-reaches-production) | waits to scale, users as dots | | |
 | [Who is responsible for what](#who-is-responsible-for-what) | two territories that overlap | | |
 | [The orders diagram, for business](#the-orders-diagram-for-business) | a wall where the order is saved | | |
+| [A card that tilts as it's dragged](#a-card-that-tilts-as-its-dragged) | the motion, played over its trace | | |
 
 ## Basic
 
@@ -254,6 +255,20 @@ numbered and in plain words, with the Azure names in small type.
 script; the connections are data. In a browser, the [SVG](order-journey/diagram.svg) moves:
 the steps appear in order (`data-step`) and the order flows along the lines (`"flow": true`).
 [Brief](order-journey/brief.md) · [source](order-journey/diagram.html) · [SVG](order-journey/diagram.svg)
+
+### A card that tilts as it's dragged
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="drag-tilt/diagram-dark.png"><img alt="A dragged card tilts with the pointer's speed, on a spring: the card, and its angle against time" src="drag-tilt/diagram.png"></picture>
+
+A drag interaction explained to designers: the card on a stage, and its angle against time
+below, from the spring model engineering built. In a browser, the
+[SVG](drag-tilt/diagram.svg) plays it: the card is dragged and turns on the spring while a
+playhead and a dot cross its trace, in step. The still, and the PNG, are the whole story:
+the card at rest, the full trace, and the three moments named.
+**Technique:** the stage in HTML, the cursor cut with `clip-path`; the drawing script runs
+the spring model, draws the trace and finds the moments; `animate()` moves the card, the
+cursor, the playhead and the dot on one loop, from the same simulation.
+[Brief](drag-tilt/brief.md) · [source](drag-tilt/diagram.html) · [SVG](drag-tilt/diagram.svg)
 
 ### Technical, in depth
 

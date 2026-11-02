@@ -274,8 +274,12 @@ also run as a page script when the file is opened in a browser (reported as `pla
 | `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path; `fill` takes a token or any CSS colour, `color-mix()` of tokens included |
 | `shape('gateway parallel', p, { size, w, h, fill, stroke, width, dashed })` | a shape centred on a point, from the list above |
 | `gate(p, 'G1', { fill, size })` | a red decision diamond with a label, for phase charts |
-| `text(p, 'str', { size, weight, italic, color, anchor })` | text centred on a point; `anchor`: `start`, `middle`, `end` |
+| `text(p, 'str', { size, weight, italic, color, anchor, halo })` | text centred on a point; `anchor`: `start`, `middle`, `end`; `halo: true` rims it in the colour under it, so a line through it does not cross the words |
 | `icon(p, 'name', { size })` | an icon centred on a point |
+| `animate(target, keyframes, { duration, iterations, origin, … })` | moves an element or a drawn mark when the figure is shown, as `element.animate` does in a browser (see Motion) |
+
+`draw` paths, `text`, `shape`, `icon`, `gate`, `arrow` and `curve` return the mark they drew,
+for `animate`.
 
 `a`, `b` and `p` take an element, an id, a selector, or a point.
 
@@ -328,9 +332,24 @@ own, and in a page that embeds it. Motion needs no script.
   stepped box appears with the box. The steps tell a story: a request's path, waves of a
   migration, before and after.
 
+- `animate(target, keyframes, options)` in the drawing script moves anything else, as
+  `element.animate` does in a browser. The target is an element (an id, a selector, a box)
+  or a mark the script drew. A keyframe takes `opacity`, `rotate` (a number is degrees),
+  `translate` (a number, or `[dx, dy]`, in px) and `scale`, with `offset` (0 to 1, spread
+  evenly when left out) and `easing`. The options: `duration` and `delay` in ms,
+  `iterations` (`Infinity` for ever), `easing` (`linear` unless told), `direction`, `fill`,
+  and `origin`, the point it turns and scales about (`'50% 20%'` of its box, `'left top'`,
+  or a point). Keyframes can come from a model the script runs: animations with one
+  duration stay in step, so a card can turn on a spring while a playhead crosses its trace.
+
+  ```js
+  animate('card', angles.map((a, i) => ({ offset: i / (angles.length - 1), rotate: a })), { duration: 2600, iterations: Infinity, origin: '50% 20%' });
+  ```
+
 The still figure is complete without the motion, and is what a PNG, a print, PowerPoint
 or Inkscape shows: the moving marks are drawn on top of it and start hidden, and the
-reveal ends where the still is. A reader who asks for reduced motion sees the still. Move
+reveal ends where the still is, and an animated element rests where the layout put it. A
+reader who asks for reduced motion sees the still. Move
 one thing per figure, the one that carries its point: motion draws the eye before anything
 else does.
 
