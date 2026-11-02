@@ -357,6 +357,23 @@ later('page-motion', async () => {
   check(fs.readFileSync(path.join(d, 'out', 'diagram.png')).equals(fs.readFileSync(path.join(still, 'out', 'diagram.png'))), 'the PNG of a figure with motion is not the still figure');
   const bad = await render(write(d, page('<div class=card data-step=first>A</div>')), path.join(d, 'out'));
   check(bad.code === 1 && /bad-attribute: attr=data-step value=first/.test(bad.text), `expected bad-attribute for data-step: ${tail(bad.text)}`);
+  // animate(): an element and a drawn mark move when the figure is shown, about the origin
+  // given (here the element's top left), and only where the reader allows motion; the still,
+  // and the PNG, are where they rest.
+  const an = folder('page-animate'), anStill = folder('page-animate-still');
+  const anBody = '<div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div></div>';
+  const mark = "const m = draw.moveTo(el('b').bottom.down(8)).lineTo(el('b').bottom.down(20));\ntext(el('a').bottom.down(16), 'label', { halo: true });";
+  ok0(await render(write(an, page(anBody, `animate('a', [{ rotate: 0 }, { rotate: 6 }, { rotate: 0 }], { duration: 1200, iterations: Infinity, origin: 'left top' });\n${mark}\nanimate(m, [{ translate: 0 }, { translate: [30, 0] }], { duration: 800 });`, 'width=400')), path.join(an, 'out'), ['--png', '--recompute']));
+  ok0(await render(write(anStill, page(anBody, mark, 'width=400')), path.join(anStill, 'out'), ['--png', '--recompute']));
+  const asvg = svgOf(path.join(an, 'out')), A = readLayout(asvg).nodes.a, media = /@media \(prefers-reduced-motion: no-preference\) \{([\s\S]*?)\n\}/.exec(asvg)?.[1] || '';
+  check(/<g data-anim="0">\s*<g data-id="a"/.test(asvg) && /<g data-anim="1">\s*<path /.test(asvg), 'the animated element or mark is not wrapped in its own group');
+  const origin = /\[data-anim="0"\] \{ transform-box: view-box; transform-origin: ([\d.]+)px ([\d.]+)px; animation: pg-a0 1200ms linear 0ms infinite normal none; \}/.exec(media);
+  check(origin && Math.abs(origin[1] - A[0]) < 1 && Math.abs(origin[2] - A[1]) < 1 && /\[data-anim="1"\][^}]*animation: pg-a1 800ms linear 0ms 1 normal none/.test(media), `the animation rules are missing, outside the reduced-motion guard, or turn about the wrong point: ${media.slice(0, 300)}`);
+  check(/@keyframes pg-a0 \{\s*0% \{ rotate: 0deg; \}\s*50% \{ rotate: 6deg; \}\s*100% \{ rotate: 0deg; \}/.test(asvg) && /@keyframes pg-a1 \{\s*0% \{ translate: 0px; \}\s*100% \{ translate: 30px 0px; \}/.test(asvg), 'the keyframes are not as given');
+  check(/fill: var\(--ink\); paint-order: stroke; stroke: [^;]+; stroke-width: 4px; stroke-linejoin: round">label</.test(asvg), 'the text halo is missing');
+  check(fs.readFileSync(path.join(an, 'out', 'diagram.png')).equals(fs.readFileSync(path.join(anStill, 'out', 'diagram.png'))), 'the PNG of an animated figure is not the still figure');
+  const badKey = await render(write(an, page(anBody, "animate('a', [{ width: 3 }, { rotate: 4 }])")), path.join(an, 'out'));
+  check(badKey.code === 1 && /bad-option: option=animate value=width/.test(badKey.text), `expected bad-option for a keyframe property: ${tail(badKey.text)}`);
 });
 
 later('page-problems', async () => {
