@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // node tools/build-viewer.mjs
-// Builds skills/graphally/viewer/graphally.js, the script a diagram file loads to render
+// Builds skills/graphally/viewer/graphally.min.js, the script a diagram file loads to render
 // itself in a browser: the engine (scripts/lib/viewer.js and what it imports), the theme,
 // and an index of the icon packs (icon name -> its file upstream, no artwork). Needs the
 // icon packs (node skills/graphally/scripts/fetch-icons.mjs) and npx, which fetches the
 // pinned esbuild. The output is committed; the render workflow rebuilds it on pull requests.
+// The readable code is scripts/lib; .gitattributes marks the bundle generated, so GitHub
+// folds it in diffs.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -35,7 +37,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'graphally-viewer-'));
 try {
   fs.writeFileSync(path.join(tmp, 'index.json'), JSON.stringify(index));
   fs.writeFileSync(path.join(tmp, 'entry.js'), `import { start } from ${JSON.stringify(path.join(skill, 'scripts/lib/viewer.js'))};\nimport index from './index.json';\nstart(index);\n`);
-  const out = path.join(skill, 'viewer/graphally.js');
+  const out = path.join(skill, 'viewer/graphally.min.js');
   fs.mkdirSync(path.dirname(out), { recursive: true });
   const banner = '/* graphally viewer · Copyright (c) 2026 Kamil Wilczyński (kwilcz) · Apache License 2.0 · https://github.com/kwilcz/graphally */';
   execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['--yes', ESBUILD, path.join(tmp, 'entry.js'), '--bundle', '--format=iife', '--minify', '--legal-comments=none',

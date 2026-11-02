@@ -1,0 +1,4 @@
+# The viewer bundle is build output (node tools/build-viewer.mjs); its readable source is
+# skills/graphally/scripts/lib. Marked generated, GitHub folds it in diffs and leaves it out
+# of the language statistics.
+skills/graphally/viewer/*.js linguist-generated=true

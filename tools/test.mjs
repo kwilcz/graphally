@@ -453,7 +453,7 @@ later('page-data', async () => {
 // server stands in for the icon CDNs, serving each icon back from the downloaded packs.
 later('viewer', async () => {
   const d = folder('viewer'), skill = path.join(root, 'skills/graphally');
-  fs.copyFileSync(path.join(skill, 'viewer/graphally.js'), path.join(d, 'graphally.js'));
+  fs.copyFileSync(path.join(skill, 'viewer/graphally.min.js'), path.join(d, 'graphally.min.js'));
   const packs = Object.fromEntries(['azure', 'aws'].map(v => [v, Object.values(JSON.parse(fs.readFileSync(findPack(skill, v), 'utf8')))]));
   let fetched = 0;
   const srv = http.createServer((req, res) => {
@@ -470,7 +470,7 @@ later('viewer', async () => {
     for (const name of ['architecture', 'aws', 'phases']) {
       const src = fs.readFileSync(path.join(root, 'samples', name, 'diagram.html'), 'utf8').replace(/<script src="[^"]*graphally\.js"><\/script>\n?/, '');
       const f = path.join(d, `${name}.html`), out = path.join(d, `out-${name}`);
-      fs.writeFileSync(f, `<!doctype html>\n<script>graphallyOptions = { azure: '${base}/azure/', aws: '${base}/aws/', font: '${base}/font/' }</script>\n<script src="graphally.js"></script>\n${src}`);
+      fs.writeFileSync(f, `<!doctype html>\n<script>graphallyOptions = { azure: '${base}/azure/', aws: '${base}/aws/', font: '${base}/font/' }</script>\n<script src="graphally.min.js"></script>\n${src}`);
       ok0(await render(f, out, ['--recompute']));
       const cli = readLayout(fs.readFileSync(path.join(out, `${name}.svg`), 'utf8'));
       const page = await openPage(browser, { width: 2000, height: 1400 });
@@ -491,7 +491,7 @@ later('viewer', async () => {
     // each diagram's line ends are its own though both number them alike.
     const f = path.join(d, 'embedded.html');
     fs.writeFileSync(f, `<!doctype html>\n<style>:root { --card: #ff00ff } .card { border: 4px solid green !important } body { letter-spacing: 3px } .graphally-view ~ .graphally-view { --rust: rgb(0, 128, 0) }</style>
-<script src="graphally.js"></script>\n<p class=lede>The page's own paragraph</p>
+<script src="graphally.min.js"></script>\n<p class=lede>The page's own paragraph</p>
 <diagram width=500><style>.card { background: #fdd } .lede { color: red }</style><div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div></div><script type="application/json">[["a", "b"]]</script></diagram>
 <p>Between</p>
 <diagram width=500><div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div></div><script type="application/json">[{ "from": "a", "to": "b", "color": "rust", "message": true }]</script></diagram>\n`);
@@ -517,18 +517,23 @@ later('viewer', async () => {
   const h = write(folder('viewer-header'), page('<div class=card id=a>A</div>', ''));
   ok0(await render(h, path.join(path.dirname(h), 'out'))); ok0(await render(h, path.join(path.dirname(h), 'out')));
   const text = fs.readFileSync(h, 'utf8');
-  check(text.startsWith('<!doctype html>') && text.split('graphally.js').length === 2, `header: ${text.slice(0, 200)}`);
+  check(text.startsWith('<!doctype html>') && text.split('graphally.min.js').length === 2, `header: ${text.slice(0, 200)}`);
   // It loads the skill's major version (@2 for 2.x); a header on an older major moves
   // forward, a pinned commit stays.
   check(VIEWER.includes(`/gh/kwilcz/graphally@${MAJOR}/`) && text.includes(VIEWER), `the header does not load @${MAJOR}: ${text.slice(0, 300)}`);
   fs.writeFileSync(h, text.replace(VIEWER, VIEWER.replace(`@${MAJOR}/`, `@${MAJOR - 1}/`)));
   const up = await render(h, path.join(path.dirname(h), 'out'));
   const moved = fs.readFileSync(h, 'utf8');
-  check(up.code === 0 && /the viewer header now loads/.test(up.text) && moved.includes(VIEWER) && moved.split('graphally.js').length === 2, `an older major's header was not moved forward: ${tail(up.text)}`);
+  check(up.code === 0 && /the viewer header now loads/.test(up.text) && moved.includes(VIEWER) && moved.split('graphally.min.js').length === 2, `an older major's header was not moved forward: ${tail(up.text)}`);
   const pinned = VIEWER.replace(`@${MAJOR}/`, '@0ae0df1/');
   fs.writeFileSync(h, moved.replace(VIEWER, pinned));
   ok0(await render(h, path.join(path.dirname(h), 'out')));
   check(fs.readFileSync(h, 'utf8').includes(pinned), 'a header pinned to a commit was changed');
+  // A header drawn before 2.11 loads graphally.js, which is gone: it moves to the .min.js.
+  fs.writeFileSync(h, moved.replace(VIEWER, VIEWER.replace('graphally.min.js', 'graphally.js')));
+  const renamed = await render(h, path.join(path.dirname(h), 'out'));
+  const forward = fs.readFileSync(h, 'utf8');
+  check(renamed.code === 0 && forward.includes(VIEWER) && forward.split('/viewer/graphally').length === 2, `a header that loads graphally.js did not move to ${VIEWER}: ${forward.slice(0, 300)}`);
   const r = await render(write(folder('viewer-plain'), page('<div class=card id=a>A</div>', '').replace('<script type="graphally">', '<script>')), path.join(work, 'viewer-plain', 'out'));
   check(r.code === 1 && /plain-script/.test(r.text), `expected plain-script: ${tail(r.text)}`);
 });

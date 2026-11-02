@@ -67,7 +67,7 @@ Most of a render's time is starting the browser and compiling the diagram:
 
 The same engine also runs without the script. `tools/build-viewer.mjs` bundles it with the
 theme and an index of the icon packs (names and upstream files, no artwork) into
-`skills/graphally/viewer/graphally.js`, about 190 KB. A diagram file that loads it, from
+`skills/graphally/viewer/graphally.min.js`, about 200 KB. A diagram file that loads it, from
 jsDelivr or a local copy, renders itself where it stands when a browser opens it, from disk
 too, since it is a classic script rather than a module. The viewer compiles each diagram
 twice when it draws icons: the first pass names them, the viewer fetches just those files

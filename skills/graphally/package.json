@@ -14,7 +14,7 @@
     ".": "./scripts/lib/api.mjs",
     "./engine": "./scripts/lib/index.js",
     "./edits": "./scripts/lib/edits.mjs",
-    "./viewer": "./viewer/graphally.js",
+    "./viewer": "./viewer/graphally.min.js",
     "./theme.css": "./assets/theme.css",
     "./package.json": "./package.json"
   },
