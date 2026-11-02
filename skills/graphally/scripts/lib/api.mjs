@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { launch, openPage, serve } from './browser.mjs';
 import { readLayout } from './snapshot.mjs';
 import { PACKS, fetchPacks, findPack } from './iconpack.mjs';
-import { VIEWER, withViewer } from './viewerheader.mjs';
+import { LOADS, VIEWER, withViewer } from './viewerheader.mjs';
 
 const skillRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const baseOf = f => path.basename(f).replace(/\.html?$/, '');
@@ -43,7 +43,7 @@ export async function render(files, o = {}) {
     const out = [];
     const header = o.viewer === false ? null : addViewer(file);
     if (header === 'added') out.push(`${file}: added the viewer header; the file now opens in a browser`);
-    else if (header === 'updated') out.push(`${file}: the viewer header now loads ${VIEWER.split('/')[5]}, the major version that drew it`);
+    else if (header === 'updated') out.push(`${file}: the viewer header now loads ${VIEWER}`);
     return { n, file, outDir, base, source, diagrams: [], previous: o.recompute ? [] : readPrevious(outDir, base, source), out, exit: 0, done: false };
   });
 
@@ -189,5 +189,5 @@ function addViewer(f) {
   const text = fs.readFileSync(f, 'utf8'), out = withViewer(text);
   if (out === text) return null;
   fs.writeFileSync(f, out);
-  return /graphally\.js["']/.test(text) ? 'updated' : 'added';
+  return LOADS.test(text) ? 'updated' : 'added';
 }

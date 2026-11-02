@@ -103,7 +103,7 @@ will do) and it draws itself. The render adds a three-line header that loads gra
 viewer from [jsDelivr](https://www.jsdelivr.com), so a colleague without the skill can
 read the diagram, edit its text and reload. GitHub shows `.html` files as source, so the
 rendered `.svg` stays the file to embed in a README. To work offline or behind a strict
-firewall, commit [`skills/graphally/viewer/graphally.js`](skills/graphally/viewer/graphally.js)
+firewall, commit [`skills/graphally/viewer/graphally.min.js`](skills/graphally/viewer/graphally.min.js)
 next to the diagrams and point the header's `src` at it; `graphallyOptions` (see the top of
 [`viewer.js`](skills/graphally/scripts/lib/viewer.js)) points the icons and the typeface at a
 mirror.

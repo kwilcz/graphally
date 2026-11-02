@@ -1,13 +1,13 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// The viewer: a diagram file that loads graphally.js renders itself when it is opened in a
+// The viewer: a diagram file that loads graphally.min.js renders itself when it is opened in a
 // browser, double-clicked from disk included. tools/build-viewer.mjs bundles this file, the
-// engine, the theme and an index of the icon packs into skills/graphally/viewer/graphally.js.
+// engine, the theme and an index of the icon packs into skills/graphally/viewer/graphally.min.js.
 //
 // The icon artwork is not in the bundle: the index names each icon's file, and the viewer
 // fetches only the icons a diagram uses, from where the skill gets them (the draw.io
 // repository for Azure, the aws-icons package for AWS). The Inter typeface comes from the
 // inter-ui package, so the boxes measure the same text as in a render. A page can point
-// any of these at a mirror before it loads graphally.js:
+// any of these at a mirror before it loads graphally.min.js:
 //   <script>graphallyOptions = { azure: 'https://…/azure2/', aws: 'https://…/icons/', font: 'https://…/web/' }</script>
 //
 // A page may hold any number of diagrams, and a diagram may sit in a page of its own (a
