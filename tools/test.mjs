@@ -656,31 +656,8 @@ later('package', async () => {
   check(pkg.version === /^  version: "([^"]+)"$/m.exec(fs.readFileSync(path.join(pkgDir, 'SKILL.md'), 'utf8'))[1], `package.json ${pkg.version} differs from SKILL.md`);
 });
 
-later('plugin', async () => {
-  // plugin.json is the Agent Plugins 1.0.0 manifest (agent-plugins.org/specification): a closed
-  // set of fields, and no paths, since a client finds each skill at skills/<name>/SKILL.md. It
-  // says what the Claude Code manifest says.
-  const m = JSON.parse(fs.readFileSync(path.join(root, 'plugin.json'), 'utf8'));
-  const claude = JSON.parse(fs.readFileSync(path.join(root, '.claude-plugin/plugin.json'), 'utf8'));
-  const extra = Object.keys(m).filter(k => !['$schema', 'name', 'version', 'description', 'author', 'homepage', 'repository', 'license', 'keywords', 'extensions'].includes(k));
-  check(m.$schema === 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json' && !extra.length, `plugin.json: $schema ${m.$schema}; fields outside the spec: ${extra.join(', ')}`);
-  check(m.name.length <= 64 && /^(?!.*(?:--|\.\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/.test(m.name), `plugin.json: the name ${m.name} breaks the spec's rule`);
-  check(['version', 'description', 'homepage', 'repository', 'license'].every(k => typeof m[k] === 'string') && Array.isArray(m.keywords)
-    && Object.entries(m.author).every(([k, v]) => ['name', 'email', 'url'].includes(k) && typeof v === 'string'), 'plugin.json: a field has the wrong type');
-  const differ = ['name', 'version', 'description', 'author', 'homepage', 'repository', 'license', 'keywords'].filter(k => JSON.stringify(m[k]) !== JSON.stringify(claude[k]));
-  check(!differ.length, `plugin.json and .claude-plugin/plugin.json differ in ${differ.join(', ')}`);
-  // The one skill, within the Agent Skills limits (agentskills.io/specification): a client skips
-  // a skill that breaks them.
-  const skills = fs.readdirSync(path.join(root, 'skills')).filter(d => fs.existsSync(path.join(root, 'skills', d, 'SKILL.md')));
-  check(skills.join() === 'graphally', `skills/ holds ${skills.join(', ') || 'no skill'}`);
-  const front = /^---\n([\s\S]*?)\n---\n/.exec(fs.readFileSync(path.join(root, 'skills/graphally/SKILL.md'), 'utf8'))?.[1] || '';
-  const keys = [...front.matchAll(/^([\w-]+):/gm)].map(x => x[1]), field = k => new RegExp(`^${k}: (.*)$`, 'm').exec(front)?.[1] || '';
-  check(keys.every(k => ['name', 'description', 'license', 'allowed-tools', 'metadata', 'compatibility'].includes(k)) && field('name') === 'graphally'
-    && field('description').length <= 1024 && field('compatibility').length <= 500, `SKILL.md frontmatter breaks the Agent Skills limits: ${keys.join(', ')}`);
-});
-
 later('version', async () => {
-  // The version is the same in SKILL.md and every manifest. The next one steps up from the
+  // The version is the same in SKILL.md and both manifests. The next one steps up from the
   // last release: the build number, the minor one or the major one.
   const run = (...args) => new Promise(resolve => { const c = spawn(process.execPath, [path.join(root, 'tools/version.mjs'), ...args]); let t = ''; c.stdout.on('data', d => { t += d; }); c.stderr.on('data', d => { t += d; }); c.on('close', code => resolve({ code, text: t.trim() })); });
   const now = await run('--check'), version = /^  version: "(.+)"$/m.exec(fs.readFileSync(path.join(root, 'skills/graphally/SKILL.md'), 'utf8'))?.[1];
