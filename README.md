@@ -204,7 +204,7 @@ Every pull request merged into `main` is a release, and its label chooses which:
 default, also with no label), `minor` or `major`. At the merge, the release workflow works out
 the next version from the last tag, commits it to `main`, tags it and publishes the release
 with the skill attached; on the pull request, its summary says which version the merge will
-make. The version lives in `SKILL.md`, both plugin manifests and the skill folder's
+make. The version lives in `SKILL.md`, the three plugin manifests and the skill folder's
 `package.json`: `node tools/version.mjs` prints it, and `--check` checks that they agree.
 Diagrams load the viewer of their major version (`…/graphally@2/…`), which follows its
 latest release.
@@ -223,6 +223,7 @@ version, through trusted publishing (no token is kept) while the repository vari
 | Path | Contains |
 |---|---|
 | [`skills/graphally/`](skills/graphally) | the skill, which is also the npm package: `SKILL.md`, `references/`, `scripts/` (the engine, the CLI and its Node API), `viewer/`, `assets/` (theme, icons), `package.json` |
+| [`plugin.json`](plugin.json) | the [Agent Plugins](https://agent-plugins.org/specification) 1.0.0 manifest, for clients that read the open format; they find the skill in `skills/` |
 | [`.claude-plugin/`](.claude-plugin) | the Claude Code plugin and marketplace manifests |
 | [`samples/`](samples) | briefs and the diagrams drawn from them; [the showcase](samples/README.md) |
 | [`docs/design.md`](docs/design.md) | how graphally works, illustrated with diagrams it drew ([sources](docs/diagrams)) |

@@ -2,7 +2,7 @@
 # "build" (the default, also with no label), "minor" or "major"; with several, the largest.
 # The version is decided at the merge, from the last tag, so a label changed late or a merge
 # made in a hurry cannot ship the wrong one. The release commits the version to main
-# (SKILL.md and both plugin manifests, through tools/version.mjs), tags it v<version> and
+# (SKILL.md, the plugin manifests and package.json, through tools/version.mjs), tags it v<version> and
 # publishes it, with notes from the merged pull requests and the skill attached as a zip for
 # clients that install skills by upload (Claude.ai, Claude Desktop). On a pull request, the
 # run's summary says which release its merge will make. A release published by hand gets its
