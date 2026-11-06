@@ -12,9 +12,9 @@ metadata:
 
 # graphally
 
-A diagram is a small web page: HTML says what exists and what contains what, CSS says
-where it goes, a JSON list says what connects to what, and a drawing script traces any
-mark no box gives. graphally lays the page out in a browser, routes the connections around
+A diagram is a small web page: HTML holds the components and their nesting, CSS sets the
+layout, a JSON list declares the connections, and a drawing script adds any mark a box
+can't hold. graphally lays the page out in a browser, routes the connections around
 the boxes, and writes an SVG. Never write coordinates, and never hand-write SVG.
 
 **A canvas, not a catalogue.** Whatever a web page can lay out, graphally draws: a pyramid
@@ -34,9 +34,10 @@ Design each figure for its reader before writing any HTML. Write the design in t
 3. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
    drawing script.
 
-A topology (icons joined by labelled lines) is the visual metaphor for one point: what runs
-where and what talks to what. When the user asks to explain, present, sell or simplify a
-system whose topology they already have, the point is a different one, and so is the form.
+A topology (icons joined by labelled lines) is the visual metaphor for one point: the
+system's parts, where they run, and how they communicate. When the user asks to explain,
+present, sell or simplify a system whose topology they already have, the point is a
+different one, and so is the form.
 A request to make a figure better, clearer or more advanced asks for a new visual metaphor,
 built for this content with whatever techniques it needs.
 
@@ -86,8 +87,9 @@ new design: start again at step 1, and render with `--recompute`.
 
 ## Examples
 
-A topology: what runs where and what talks to what. Items are icons over their names
-(`figure`), with no frame; groups carry the structure, labelled lines the flow.
+A topology: the system's parts, where they run, and how they communicate. Items are icons
+over their names (`figure`), with no frame; groups carry the structure, labelled lines the
+flow.
 
 ```html
 <diagram width=1200 title="Orders platform" subtitle="Production, West Europe">

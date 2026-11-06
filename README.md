@@ -1,10 +1,12 @@
 # graphally
 
-An agent skill for professional diagrams. The agent writes a diagram as a small web page:
-HTML for what exists and what contains what, CSS (mostly Tailwind-style utility classes)
-for where it goes, and a JSON list for what connects to what. graphally lays the page out
+**AI-generated technical diagrams, rendered to SVG.**
+
+An agent skill and the engine behind it. Your agent writes the diagram as a small web
+page: HTML for the components and their nesting, CSS (mostly Tailwind-style utility
+classes) for the layout, and a JSON list for the connections. graphally lays the page out
 in a browser, routes the connections around the boxes, places the labels, applies the
-theme, and writes an SVG. Nobody writes a coordinate.
+theme, and writes an SVG and a PNG. Nobody writes a coordinate.
 
 It draws architecture (with Azure and AWS icons), networks, hierarchies, BPMN processes,
 flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, figures
@@ -37,7 +39,7 @@ browser follows the system setting.
 |---|---|
 | <img alt="Why the cloud bill grew, light theme" src="samples/cost-rise/diagram.png"> | <img alt="Why the cloud bill grew, dark theme" src="samples/cost-rise/diagram-dark.png"> |
 
-## Install
+## Install for your agent
 
 The skill is self-contained: one folder with its instructions, scripts and assets. It
 needs **Node.js 18 or later** and **Chrome, Chromium or Edge** on the machine where the
@@ -73,13 +75,6 @@ copilot plugin install graphally@graphally
 
 ```sh
 npx skills add kwilcz/graphally --skill graphally -g
-```
-
-**npm**, for developers and CI without an agent: the same engine, as a command and a Node
-API (`import { render } from 'graphally'`).
-
-```sh
-npx graphally render diagram.html --png
 ```
 
 **Claude.ai and Claude Desktop**: download `graphally-skill.zip` from the
@@ -141,19 +136,6 @@ marks that have no box, such as a gate on a boundary. The whole format is in
 [`skills/graphally/references/format.md`](skills/graphally/references/format.md), with a page
 per kind of diagram beside it.
 
-The skill's scripts can also be run directly:
-
-```sh
-node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG and a preview PNG
-node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG to publish
-node skills/graphally/scripts/graphally.mjs render diagram.html --themes  # also diagram-dark.svg, the dark theme
-node skills/graphally/scripts/graphally.mjs render diagram.html --recompute  # lay out afresh, ignoring the previous SVG
-node skills/graphally/scripts/graphally.mjs render a.html b.html c.html  # several files in one browser, in parallel
-node skills/graphally/scripts/edit.mjs diagram.html --move db 0,20 --connect api cache "reads"  # patch moves and connections
-node skills/graphally/scripts/tf2graphally.mjs ./infra --out diagram.html  # a Terraform configuration, drafted
-node skills/graphally/scripts/fetch-icons.mjs                            # download or refresh the icon packs
-```
-
 **Source and output.** The `.html` source is the diagram; the SVG next to it is compiled
 output. Edit the source and render again: the render reads the previous SVG's layout, so
 what you did not change stays where it was. Corrections made by hand live in the
@@ -167,6 +149,28 @@ them out of pull-request diffs, mark them as generated in `.gitattributes`:
 
 Colours are CSS tokens in `skills/graphally/assets/theme.css`, with a light and a dark
 set, so a brand theme only redefines them (in a page, on `.graphally-view`).
+
+## Use the engine directly
+
+The engine is also the npm package `graphally`, for tools, pipelines and CI without an
+agent: a command, and a Node API (`import { render } from 'graphally'`).
+
+```sh
+npx graphally render diagram.html --png
+```
+
+From a clone, the skill's scripts do the same and more:
+
+```sh
+node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG and a preview PNG
+node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG to publish
+node skills/graphally/scripts/graphally.mjs render diagram.html --themes  # also diagram-dark.svg, the dark theme
+node skills/graphally/scripts/graphally.mjs render diagram.html --recompute  # lay out afresh, ignoring the previous SVG
+node skills/graphally/scripts/graphally.mjs render a.html b.html c.html  # several files in one browser, in parallel
+node skills/graphally/scripts/edit.mjs diagram.html --move db 0,20 --connect api cache "reads"  # patch moves and connections
+node skills/graphally/scripts/tf2graphally.mjs ./infra --out diagram.html  # a Terraform configuration, drafted
+node skills/graphally/scripts/fetch-icons.mjs                            # download or refresh the icon packs
+```
 
 ## Samples
 
