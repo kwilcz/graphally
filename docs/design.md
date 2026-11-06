@@ -1,8 +1,8 @@
 # How graphally works
 
 graphally turns a diagram written as a small web page into a finished SVG. The author,
-usually a coding agent, says what exists and what contains what in HTML, where it goes in
-CSS, and what connects to what in a JSON list. The browser decides every coordinate.
+usually a coding agent, writes the components and their nesting in HTML, the layout in
+CSS, and the connections in a JSON list. The browser decides every coordinate.
 
 ## The source
 

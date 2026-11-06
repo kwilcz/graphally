@@ -1,15 +1,16 @@
 # graphally
 
-Diagrams from HTML and CSS. A diagram is a small web page: HTML says what exists and what
-contains what, CSS says where it goes, and a JSON list says what connects to what. graphally
-lays the page out in a browser, routes the connections around the boxes and writes an SVG
+**AI-generated technical diagrams, rendered to SVG.** This package is the engine; the same
+folder is an agent skill. A diagram is a small web page: HTML holds the components and their
+nesting, CSS sets the layout, and a JSON list declares the connections. graphally lays the
+page out in a browser, routes the connections around the boxes and writes an SVG
 (and a PNG if you ask). Nobody writes a coordinate.
 
 ![An Azure platform drawn by graphally](https://raw.githubusercontent.com/kwilcz/graphally/main/samples/azure-platform/diagram.png)
 
 It draws architecture with Azure and AWS icons, networks, hierarchies, BPMN processes,
-sequence diagrams, Gantt plans and roadmaps, and any figure a web page can hold. It is built
-for AI agents to write, and this package is the same engine for developers and CI.
+sequence diagrams, Gantt plans and roadmaps, and any figure a web page can hold. Agents
+write the source; this package renders it, for tools, pipelines and CI.
 
 ## Requirements
 

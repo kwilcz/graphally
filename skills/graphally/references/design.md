@@ -31,7 +31,7 @@ starters, a few of many; the content's own shape is often the best form, so draw
 | growth or maturity | a staircase; a rising path with its steps named |
 | proportion | sizes that differ on purpose: the big part is drawn big |
 | a cycle | a ring of stages with an arrow closing it |
-| what runs where, what talks to what | a topology: icons over their names in groups, joined by labelled lines |
+| the parts, where they run, how they communicate | a topology: icons over their names in groups, joined by labelled lines |
 
 Forms combine: a topology with a numbered path over it, a track whose stations are lanes,
 rings with a map inside them.

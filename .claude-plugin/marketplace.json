@@ -1,12 +1,12 @@
 {
   "name": "graphally",
-  "description": "graphally: diagrams that agents describe and graphally draws.",
+  "description": "Technical diagrams your agent writes and graphally renders to SVG.",
   "owner": { "name": "Kamil Wilczyński", "url": "https://github.com/kwilcz" },
   "plugins": [
     {
       "name": "graphally",
       "source": "./",
-      "description": "Professional diagrams as SVG from HTML and CSS: architecture with Azure and AWS icons, networks, hierarchies, BPMN, sequence diagrams, Gantt plans, roadmaps, figures for proposals and solution designs, and Terraform repositories.",
+      "description": "AI-generated technical diagrams, rendered to SVG: an agent skill and the engine behind it. Architecture with Azure and AWS icons, networks, hierarchies, BPMN, sequence diagrams, Gantt plans, roadmaps, figures for proposals and solution designs, and Terraform repositories.",
       "version": "2.11.3"
     }
   ]
