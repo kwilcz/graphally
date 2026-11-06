@@ -7,7 +7,7 @@
       "name": "graphally",
       "source": "./",
       "description": "AI-generated technical diagrams, rendered to SVG: an agent skill and the engine behind it. Architecture with Azure and AWS icons, networks, hierarchies, BPMN, sequence diagrams, Gantt plans, roadmaps, figures for proposals and solution designs, and Terraform repositories.",
-      "version": "2.11.3"
+      "version": "2.11.4"
     }
   ]
 }
