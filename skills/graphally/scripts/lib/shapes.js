@@ -226,17 +226,20 @@ export function drawShape(spec, b, st) {
   return out;
 }
 
-// Shape defaults, at zero specificity: any rule of the author wins. Every shape is a
+// Shape defaults, at zero specificity: any rule of the author wins. An activity with a marker
+// at its bottom (subprocess, loop, multi-instance) keeps its label clear of it. Every shape is a
 // box with an outline and centred content; events and gateways have their BPMN sizes.
 const any = names => names.map(n => `[shape~="${n}"]`).join(', ');
+// The shape's name only, not a marker: `task loop` is a task, not the `loop` badge.
+const first = names => names.map(n => `[shape="${n}"], [shape^="${n} "]`).join(', ');
 export const SHAPE_CSS = `
 :where(.graphally-page [shape]) { border: 1.5px solid var(--ink); background: var(--card); display: grid; place-items: center; text-align: center; padding: 8px 12px; }
 :where(.graphally-page :is(${any(['start', 'start-event', 'event', 'intermediate', 'intermediate-event', 'end', 'end-event'])})) { width: 36px; height: 36px; padding: 0; }
 :where(.graphally-page :is(${any(['end', 'end-event'])})) { border-width: 3px; }
 :where(.graphally-page :is(${any(['gateway'])})) { width: 44px; height: 44px; padding: 0; }
-:where(.graphally-page :is(${any(['cycle', 'repeat', 'refresh', 'loop'])})) { width: 28px; height: 28px; padding: 0; }
+:where(.graphally-page :is(${first(['cycle', 'repeat', 'refresh', 'loop'])})) { width: 28px; height: 28px; padding: 0; }
 :where(.graphally-page :is(${any(['task', 'activity', 'subprocess', 'sub-process'])})) { padding: 10px 14px; min-height: 52px; }
-:where(.graphally-page :is(${any(['subprocess', 'sub-process'])})) { padding-bottom: 22px; }
+:where(.graphally-page :is(${any(['subprocess', 'sub-process'])}, :is(${any(['task', 'activity'])}):is(${any(['loop', 'multi', 'sequential'])}))) { padding-bottom: 22px; }
 :where(.graphally-page :is(${any(['diamond', 'decision', 'rhombus'])})) { padding: 22px 30px; min-height: 64px; }
 :where(.graphally-page :is(${any(['circle'])})) { aspect-ratio: 1; padding: 10px; }
 :where(.graphally-page :is(${any(['ellipse', 'oval'])})) { padding: 12px 26px; }

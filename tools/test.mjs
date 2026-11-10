@@ -286,6 +286,10 @@ later('page-shapes', async () => {
   const msvg = svgOf(out), mi = i => msvg.split(`data-id="m${i}"`)[1]?.split('</g>')[0] || '';
   const bars = i => [...mi(i).matchAll(/<path d="([^"]+)"/g)].pop()?.[1] || '';
   check((bars(0).match(/ V/g) || []).length === 3 && !/ H/.test(bars(0)) && (bars(1).match(/ H/g) || []).length === 3 && !/ V/.test(bars(1)), 'the multi-instance bars point the wrong way');
+  // A label clears the marker at the bottom of its activity, two lines long or not.
+  ok0(await render(write(d, page('<div class="flex gap-24 items-start"><div shape="task multi" id=w0 style="width: 90px">Notify the reviewers</div><div shape="task loop" id=w1 style="width: 90px">Retry the call again</div></div>', '', 'width=400')), path.join(d, 'out-wrap'), ['--recompute']));
+  const wsvg = svgOf(path.join(d, 'out-wrap')), clear = i => { const s = wsvg.split(`data-id="w${i}"`)[1]?.split('</g>')[0] || '', [, y, , h] = (/data-box="([^"]+)"/.exec(s)?.[1] || '0,0,0,0').split(',').map(Number); return y + h - Math.max(...[...s.matchAll(/<text x="[^"]+" y="([\d.]+)"/g)].map(m => Number(m[1]))); };
+  check(clear(0) > 20 && clear(1) > 20, `a label runs into its activity's marker: ${clear(0)}, ${clear(1)} px below the text`);
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
