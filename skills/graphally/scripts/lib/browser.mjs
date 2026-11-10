@@ -44,7 +44,7 @@ export function findBrowser() {
 // /src/0/, /src/1/ … when srcDir is a list), and single files at the paths given in `files`:
 // a path on disk (the icon packs, wherever they were downloaded to), or { body, type }.
 export function serve(skillRoot, srcDir, files = {}) {
-  const types = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml' };
+  const types = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' };
   const server = http.createServer((req, res) => {
     const url = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     const hit = files[url];
@@ -53,7 +53,8 @@ export function serve(skillRoot, srcDir, files = {}) {
     const [root, rel] = many ? [srcDir[many[1]] || '', url.slice(many[0].length)] : url.startsWith('/src/') && !Array.isArray(srcDir) ? [srcDir, url.slice(5)] : [skillRoot, url.slice(1)];
     const file = hit || path.resolve(root, rel);
     if ((!hit && (!root || !file.startsWith(path.resolve(root) + path.sep))) || !fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404); res.end(); return; }
-    res.writeHead(200, { 'content-type': (types[path.extname(file)] || 'application/octet-stream') + '; charset=utf-8' });
+    const type = types[path.extname(file).toLowerCase()] || 'application/octet-stream';
+    res.writeHead(200, { 'content-type': /^(text|application)\//.test(type) || type.endsWith('xml') ? `${type}; charset=utf-8` : type });
     fs.createReadStream(file).pipe(res);
   });
   return new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve({ origin: `http://127.0.0.1:${server.address().port}`, close: () => { server.closeAllConnections?.(); server.close(); } })));

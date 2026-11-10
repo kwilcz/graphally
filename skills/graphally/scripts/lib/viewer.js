@@ -74,6 +74,8 @@ svg { display: block; }
     await Promise.race([Promise.all(Object.keys(WEIGHTS).map(w => document.fonts.load(`${w} 13px Inter`))), new Promise(r => setTimeout(r, 4000))]).catch(() => {});
     mute();
     const diagrams = [...document.querySelectorAll('diagram')];
+    // An <img> is laid out at its own size, so it must have loaded first.
+    await Promise.all(diagrams.flatMap(d => [...d.querySelectorAll('img')].map(i => i.decode().catch(() => {}))));
     // A file of diagrams and nothing else (what graphally writes) is theirs to colour.
     const alone = [...document.body.children].every(c => /^(DIAGRAM|SCRIPT|STYLE|LINK|META|TEMPLATE|NOSCRIPT)$/.test(c.tagName) || c.classList.contains('graphally-view'));
     if (alone) document.documentElement.dataset.graphallyPage = '';

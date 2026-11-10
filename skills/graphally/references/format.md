@@ -52,9 +52,11 @@ is about choosing one.
 - What is drawn: background colours, borders (solid, dashed, dotted, per side),
   `border-radius`, `clip-path: polygon(…)`, shapes, text with its font, size, weight,
   style, colour, `text-transform`, `letter-spacing`, underline and line-through, list
-  bullets, and `<icon>`.
-- What is not drawn: shadows, gradients, transforms, rotated or vertical text, images,
-  `::before` and `::after`. Draw such marks in the script instead.
+  bullets, `<icon>`, and images: `<img src="logo.svg">` (a path relative to the diagram
+  file; the SVG holds the image, so it travels with it) and inline `<svg>`, sized with CSS
+  (`height: 28px`) like any element. A logo goes in a header this way.
+- What is not drawn: shadows, gradients, transforms, rotated or vertical text, CSS
+  background images, `::before` and `::after`. Draw such marks in the script instead.
 - Colours: any CSS colour, or the theme tokens, which follow the dark theme: `var(--ink)`
   (text), `--muted`, `--line`, `--card` (white), `--wash`, `--bg`; strong `--woad` (blue),
   `--rust` (red), `--teal`, `--green`, `--purple`, `--amber`; pale `--lane-a` (blue),
@@ -372,6 +374,7 @@ else does.
 |---|---|
 | `script-error` | the message and the script's line say what failed (an unknown id, a value that is not a point) |
 | `unknown-shape`, `unknown-icon` | use the suggested name |
+| `image-missing` | the `<img>` did not load: fix its path, relative to the diagram file |
 | `unroutable` | the line has no way through: widen a gap, or give it `via` points |
 | `override-ignored … by=x` | the side is blocked by `x`: choose another side |
 | `label-crowded` | widen the gap the line runs through, or shorten the label |
