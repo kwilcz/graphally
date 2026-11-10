@@ -98,8 +98,11 @@ a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a
 Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
 `gateway inclusive` (○), `gateway complex` (✱), `gateway event-based` (a pentagon in a
 double circle; `gateway event-based start` when it starts the process, `gateway event-based
-parallel` for the parallel variant); `start`, `event` or `end` with `timer`, `message`, `signal` or
-`error`, and `end terminate`; `task loop`, `task multi`, `subprocess loop`; a task's type in
+parallel` for the parallel variant); `start`, `event` or `end` with a trigger: `message`,
+`timer`, `signal`, `error`, `escalation`, `conditional`, `link`, `compensation`, `cancel`,
+`multiple`, `parallel-multiple`, and `end terminate`. An intermediate event catches (an open
+marker) unless it has `throw` (a filled one, as on every end event); `non-interrupting`
+dashes the rings of a start or intermediate event; `task loop`, `task multi`, `subprocess loop`; a task's type in
 its top-left corner: `task user`, `service`, `send`, `receive`, `manual`, `script`,
 `business-rule`. Events are 36px
 (`end` has a 3px outline), gateways 44px; set `width` and `height` to change them.

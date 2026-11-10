@@ -109,7 +109,8 @@ const ALIASES = {
   'start-event': 'start', 'end-event': 'end', 'intermediate': 'event', 'intermediate-event': 'event', activity: 'task',
   'sub-process': 'subprocess', arrow: 'arrow-right', step: 'chevron-start', repeat: 'cycle', refresh: 'cycle', loop: 'cycle',
 };
-const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
+const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule',
+  'escalation', 'conditional', 'link', 'compensation', 'cancel', 'multiple', 'parallel-multiple', 'throw', 'non-interrupting'];
 
 const TASK_TYPES = ['user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
 
@@ -130,13 +131,16 @@ export function parseShape(text) {
 // no fill or outline). The outline sits inside the box, as a CSS border does.
 export function drawShape(spec, b, st) {
   const def = BASES[spec.base], h = st.stroke === 'none' ? 0 : st.width / 2;
+  // A non-interrupting event (BPMN 2.0.2, Table 10.93) has dashed rings.
+  const broken = def.event && spec.marks.includes('non-interrupting');
+  if (broken) st = { ...st, dash: '4 2.6' };
   const box = { x: b.x + h, y: b.y + h, w: Math.max(0, b.w - 2 * h), h: Math.max(0, b.h - 2 * h) };
   const ink = st.stroke === 'none' ? 'var(--ink)' : st.stroke;
   const paint = (d, fill = st.fill) => `<path d="${d}" style="fill: ${fill}; stroke: ${st.stroke}" stroke-width="${f(st.width)}"${st.dash ? ` stroke-dasharray="${st.dash}"` : ''}></path>`;
   const line = (d, w = 1.5, fill = 'none') => `<path d="${d}" style="fill: ${fill}; stroke: ${ink}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"></path>`;
   const out = [...(def.under?.(box) || []).map(d => paint(d)), paint(def.path(box)), ...(def.lines?.(box) || []).map(d => line(d, Math.max(1, st.width || 1.5)))];
   const cx = b.x + b.w / 2, cy = b.y + b.h / 2, r = Math.min(b.w, b.h) / 2;
-  if (def.event === 'event') out.push(line(circle(cx, cy, r - h - 3.5), Math.min(st.width || 1.5, 1.5)));
+  if (def.event === 'event') out.push(line(circle(cx, cy, r - h - 3.5), Math.min(st.width || 1.5, 1.5)).replace('></path>', broken ? ` stroke-dasharray="3.4 2.2"></path>` : '></path>'));
   if (def.cycle) {
     // Two arcs, each ending in a solid head drawn to scale (a line marker would swamp them).
     const a = r * 0.52, w = Math.max(1.3, r * 0.13), head = r * 0.36, pt = deg => [cx + a * Math.cos(deg * Math.PI / 180), cy + a * Math.sin(deg * Math.PI / 180)];
@@ -176,7 +180,8 @@ export function drawShape(spec, b, st) {
         out.push(line(`M${f(cx - a)},${f(cy)} H${f(cx + a)} M${f(cx)},${f(cy - a)} V${f(cy + a)} M${f(cx - d)},${f(cy - d)} L${f(cx + d)},${f(cy + d)} M${f(cx + d)},${f(cy - d)} L${f(cx - d)},${f(cy + d)}`, 2.6));
       }
     } else if (def.event) {
-      const g = r * 0.5, filled = def.event === 'end';
+      // An end or throwing event's marker is filled; a catching one's is open.
+      const g = r * 0.5, filled = def.event === 'end' || spec.marks.includes('throw');
       if (k === 'timer') {
         out.push(line(circle(cx, cy, g), 1.3));
         out.push(line(`M${f(cx)},${f(cy - g * 0.7)} V${f(cy)} L${f(cx + g * 0.5)},${f(cy + g * 0.25)}`, 1.3));
@@ -189,6 +194,26 @@ export function drawShape(spec, b, st) {
       if (k === 'signal') out.push(line(poly([[cx, cy - g * 0.85], [cx + g * 0.85, cy + g * 0.6], [cx - g * 0.85, cy + g * 0.6]]), 1.3, filled ? ink : 'none'));
       if (k === 'error') out.push(line(poly([[cx - g * 0.7, cy + g * 0.7], [cx - g * 0.3, cy - g * 0.7], [cx + g * 0.1, cy + g * 0.05], [cx + g * 0.7, cy - g * 0.7], [cx + g * 0.3, cy + g * 0.7], [cx - g * 0.1, cy - g * 0.05]]), 1.3, filled ? ink : 'none'));
       if (k === 'terminate') out.push(line(circle(cx, cy, g * 0.9), 1, ink));
+      const fillOr = filled ? ink : 'none', P = pts => poly(pts.map(([u, v]) => [cx + u * g, cy + v * g]));
+      if (k === 'escalation') out.push(line(P([[0, -0.9], [0.6, 0.8], [0, 0.25], [-0.6, 0.8]]), 1.3, fillOr));
+      if (k === 'conditional') {
+        out.push(line(P([[-0.55, -0.8], [0.55, -0.8], [0.55, 0.8], [-0.55, 0.8]]), 1.2));
+        out.push(line([-0.45, -0.15, 0.15, 0.45].map(v => `M${f(cx - g * 0.35)},${f(cy + v * g)} H${f(cx + g * 0.35)}`).join(' '), 1));
+      }
+      if (k === 'link') out.push(line(P([[-0.75, -0.3], [0.05, -0.3], [0.05, -0.65], [0.8, 0], [0.05, 0.65], [0.05, 0.3], [-0.75, 0.3]]), 1.3, fillOr));
+      if (k === 'compensation') {
+        out.push(line(P([[-0.85, 0], [-0.05, -0.55], [-0.05, 0.55]]), 1.3, fillOr));
+        out.push(line(P([[-0.05, 0], [0.75, -0.55], [0.75, 0.55]]), 1.3, fillOr));
+      }
+      if (k === 'cancel') {
+        const a = 0.17, L = 0.72, arm = [[-a, -L], [a, -L], [a, -a], [L, -a], [L, a], [a, a], [a, L], [-a, L], [-a, a], [-L, a], [-L, -a], [-a, -a]];
+        out.push(line(P(arm.map(([u, v]) => [(u - v) * Math.SQRT1_2, (u + v) * Math.SQRT1_2])), 1.2, fillOr));
+      }
+      if (k === 'multiple') out.push(line(P([0, 1, 2, 3, 4].map(i => { const a = (-90 + i * 72) * Math.PI / 180; return [0.82 * Math.cos(a), 0.82 * Math.sin(a) + 0.06]; })), 1.3, fillOr));
+      if (k === 'parallel-multiple') {
+        const a = 0.25, L = 0.78;
+        out.push(line(P([[-a, -L], [a, -L], [a, -a], [L, -a], [L, a], [a, a], [a, L], [-a, L], [-a, a], [-L, a], [-L, -a], [-a, -a]]), 1.2, fillOr));
+      }
     }
   }
   // A task's type sits in its top-left corner (BPMN 2.0.2, 10.3.3), drawn on a 16-unit grid.
@@ -211,7 +236,11 @@ export function drawShape(spec, b, st) {
     }
     if (kind === 'send') env(true);
     if (kind === 'receive') env(false);
-    if (kind === 'manual') out.push(line(`M${P(3, 15)} V${f(oy + 7)} A1,1 0 0 1 ${P(5, 7)} V${f(oy + 4)} A1,1 0 0 1 ${P(7, 4)} V${f(oy + 2.5)} A1,1 0 0 1 ${P(9, 2.5)} V${f(oy + 4)} A1,1 0 0 1 ${P(11, 4)} V${f(oy + 9.5)} L${P(12.6, 7.9)} A1.1,1.1 0 0 1 ${P(14.3, 9.4)} L${P(10.5, 15)} Z`, 1.1));
+    if (kind === 'manual') {
+      // A hand pointing right from its cuff, fingers stacked (BPMN 2.0.2, Figure 10.18).
+      out.push(line(`M${P(1, 6.5)} H${f(ox + 4)} V${f(oy + 12.9)} H${f(ox + 1)} Z`, 1.1));
+      out.push(line(`M${P(4, 6.5)} H${f(ox + 7.5)} L${P(9.6, 4.1)} A0.8,0.8 0 0 1 ${P(10.9, 5)} L${P(9.8, 6.5)} H${f(ox + 14.2)} A0.8,0.8 0 0 1 ${P(14.2, 8.1)} H${f(ox + 13.4)} A0.8,0.8 0 0 1 ${P(13.4, 9.7)} H${f(ox + 12.8)} A0.8,0.8 0 0 1 ${P(12.8, 11.3)} H${f(ox + 12)} A0.8,0.8 0 0 1 ${P(12, 12.9)} H${f(ox + 4)} Z M${P(10.4, 8.1)} H${f(ox + 13.4)} M${P(10.4, 9.7)} H${f(ox + 12.8)} M${P(10.4, 11.3)} H${f(ox + 12)}`, 1.1));
+    }
     if (kind === 'script') {
       out.push(line(`M${P(4, 1)} H${f(ox + 14)} C${P(11, 4.5)} ${P(15, 11.5)} ${P(12, 15)} H${f(ox + 2)} C${P(5, 11.5)} ${P(1, 4.5)} ${P(4, 1)} Z`, 1.1));
       out.push(line(`M${P(5.2, 5)} H${f(ox + 11)} M${P(6.3, 8)} H${f(ox + 12)} M${P(6.3, 11)} H${f(ox + 11.5)}`, 1));

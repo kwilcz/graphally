@@ -59,6 +59,10 @@ gateways and tasks are shapes; the sequence flows are connections.
 - **A task's type** is a marker: `shape="task user"` (a person does it), `service` (a system
   does it), `send` and `receive` (a message), `manual`, `script`, `business-rule`. Mark the
   tasks whose type the reader needs; a plain `task` says nothing more.
+- **Events say what they wait for or send:** the trigger after the shape name
+  (`event timer`, `end message`), `throw` for an intermediate event that sends
+  (`event message throw`), and `non-interrupting` for a boundary event that lets its task
+  carry on (`event timer non-interrupting`, dashed).
 - **Choose the gateway by what decides.** Data decides at `gateway exclusive` (one branch),
   `gateway inclusive` (one or more) or `gateway complex` (a rule the caption states). An
   event decides at `gateway event-based`: the process waits, and the first event to happen
