@@ -102,6 +102,10 @@ const BASES = {
   end: { path: ({ x, y, w, h }) => circle(x + w / 2, y + h / 2, Math.min(w, h) / 2), round: true, event: 'end' },
   gateway: { path: ({ x, y, w, h }) => poly([[x + w / 2, y], [x + w, y + h / 2], [x + w / 2, y + h], [x, y + h / 2]]), round: true, gateway: true },
   // A repeat badge: a ring holding two arrows chasing each other round.
+  // BPMN artifacts (10.7): a text annotation is an open bracket beside its text; a group is a
+  // rounded box drawn dash-dot, a line style no other element uses.
+  annotation: { path: ({ x, y, w, h }) => `M${f(x + Math.min(12, w))},${f(y)} H${f(x)} V${f(y + h)} H${f(x + Math.min(12, w))}`, open: true },
+  group: { path: b => roundRect(b, 10), dash: '9 3 1.5 3' },
   cycle: { path: ({ x, y, w, h }) => circle(x + w / 2, y + h / 2, Math.min(w, h) / 2), round: true, cycle: true },
 };
 const ALIASES = {
@@ -176,11 +180,12 @@ export function drawShape(spec, b, st) {
   // A non-interrupting event (BPMN 2.0.2, Table 10.93) has dashed rings.
   const broken = def.event && spec.marks.includes('non-interrupting');
   if (broken) st = { ...st, dash: '4 2.6' };
+  if (def.dash) st = { ...st, dash: def.dash };
   const box = { x: b.x + h, y: b.y + h, w: Math.max(0, b.w - 2 * h), h: Math.max(0, b.h - 2 * h) };
   const ink = st.stroke === 'none' ? 'var(--ink)' : st.stroke;
   const paint = (d, fill = st.fill) => `<path d="${d}" style="fill: ${fill}; stroke: ${st.stroke}" stroke-width="${f(st.width)}"${st.dash ? ` stroke-dasharray="${st.dash}"` : ''}></path>`;
   const line = (d, w = 1.5, fill = 'none') => `<path d="${d}" style="fill: ${fill}; stroke: ${ink}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"></path>`;
-  const out = [...(def.under?.(box) || []).map(d => paint(d)), paint(def.path(box)), ...(def.lines?.(box) || []).map(d => line(d, Math.max(1, st.width || 1.5)))];
+  const out = [...(def.under?.(box) || []).map(d => paint(d)), paint(def.path(box), def.open ? 'none' : st.fill), ...(def.lines?.(box) || []).map(d => line(d, Math.max(1, st.width || 1.5)))];
   const cx = b.x + b.w / 2, cy = b.y + b.h / 2, r = Math.min(b.w, b.h) / 2;
   if (def.event === 'event') out.push(line(circle(cx, cy, r - h - 3.5), Math.min(st.width || 1.5, 1.5)).replace('></path>', broken ? ` stroke-dasharray="3.4 2.2"></path>` : '></path>'));
   if (def.cycle) {
@@ -247,6 +252,8 @@ export const SHAPE_CSS = `
 :where(.graphally-page :is(${any(['end', 'end-event'])})) { border-width: 3px; }
 :where(.graphally-page :is(${any(['gateway'])})) { width: 44px; height: 44px; padding: 0; }
 :where(.graphally-page :is(${first(['cycle', 'repeat', 'refresh', 'loop'])})) { width: 28px; height: 28px; padding: 0; }
+:where(.graphally-page :is(${first(['annotation'])})) { background: none; place-items: center start; text-align: left; padding: 6px 10px 6px 14px; }
+:where(.graphally-page :is(${first(['group'])})) { background: none; place-items: stretch; padding: 14px; }
 :where(.graphally-page :is(${any(['task', 'activity', 'subprocess', 'sub-process'])})) { padding: 10px 14px; min-height: 52px; }
 :where(.graphally-page :is(${any(['subprocess', 'sub-process'])}, :is(${any(['task', 'activity'])}):is(${any(['loop', 'multi', 'sequential', 'ad-hoc', 'compensation'])}))) { padding-bottom: 22px; }
 :where(.graphally-page :is(${any(['diamond', 'decision', 'rhombus'])})) { padding: 22px 30px; min-height: 64px; }

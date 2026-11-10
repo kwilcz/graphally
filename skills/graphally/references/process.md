@@ -67,6 +67,11 @@ gateways and tasks are shapes; the sequence flows are connections.
   `subprocess ad-hoc` (~, steps in any order), `task compensation` (⏪, undoes another task).
   A call activity is a task with a thick border (`style="border-width: 3px"`), an event
   subprocess a subprocess with a dotted one (`style="border-style: dotted"`).
+- **Notes and groupings** are artifacts. A text annotation is `<div shape=annotation id=n>…</div>`,
+  joined to what it explains by a dotted line without a head:
+  `{ "from": "n", "to": "review", "dotted": true, "arrow": false }` (with `out` and `in` when it
+  would run along a flow). A group,
+  `<div shape=group>`, wraps related items in a dash-dot box; it changes no flow.
 - **Data** a step reads or writes is `shape=data-object` (the folded page), joined by a dotted
   line with an open head: `{ "from": "form", "to": "review", "dotted": true, "head": "open" }`.
   Mark it `input` or `output` when the process takes it in or hands it out, `collection` when it
