@@ -8,7 +8,10 @@
 
 const f = n => String(Math.round(n * 10) / 10);
 const poly = pts => `M${pts.map(([x, y]) => `${f(x)},${f(y)}`).join(' L')} Z`;
-const circle = (cx, cy, r) => `M${f(cx - r)},${f(cy)} A${f(r)},${f(r)} 0 1 1 ${f(cx + r)},${f(cy)} A${f(r)},${f(r)} 0 1 1 ${f(cx - r)},${f(cy)} Z`;
+// Two half arcs. The radius is half the rounded chord, never rounded on its own: a radius a
+// hair longer than half the chord turns each large arc past a half and draws an oval.
+const half = (a, b) => String(Math.round((Number(b) - Number(a)) * 50) / 100);
+const circle = (cx, cy, r) => { const a = f(cx - r), b = f(cx + r), y = f(cy), q = half(a, b); return `M${a},${y} A${q},${q} 0 1 1 ${b},${y} A${q},${q} 0 1 1 ${a},${y} Z`; };
 
 // Block arrows: drawn along u (length) and v (width), then turned to their direction.
 const arrow = dir => ({ x, y, w, h }) => {
@@ -42,7 +45,7 @@ const BASES = {
   rect: { path: b => roundRect(b, 0) },
   rounded: { path: b => roundRect(b, 10) },
   stadium: { path: stadium },
-  ellipse: { path: ({ x, y, w, h }) => `M${f(x)},${f(y + h / 2)} A${f(w / 2)},${f(h / 2)} 0 1 1 ${f(x + w)},${f(y + h / 2)} A${f(w / 2)},${f(h / 2)} 0 1 1 ${f(x)},${f(y + h / 2)} Z`, round: true },
+  ellipse: { path: ({ x, y, w, h }) => { const a = f(x), b = f(x + w), q = half(a, b), m = f(y + h / 2); return `M${a},${m} A${q},${f(h / 2)} 0 1 1 ${b},${m} A${q},${f(h / 2)} 0 1 1 ${a},${m} Z`; }, round: true },
   circle: { path: ({ x, y, w, h }) => circle(x + w / 2, y + h / 2, Math.min(w, h) / 2), round: true },
   // The top half of an ellipse filling the box: a box twice as wide as it is high is a half disc.
   semicircle: { path: ({ x, y, w, h }) => `M${f(x)},${f(y + h)} A${f(w / 2)},${f(h)} 0 0 1 ${f(x + w)},${f(y + h)} Z` },
@@ -221,17 +224,24 @@ export function drawShape(spec, b, st) {
   if (kind) {
     const ox = b.x + h + 6, oy = b.y + h + 6, P = (x, y) => `${f(ox + x)},${f(oy + y)}`;
     const env = filled => {
-      out.push(line(`M${P(1, 3)} H${f(ox + 15)} V${f(oy + 13)} H${f(ox + 1)} Z`, 1.2, filled ? ink : 'none'));
-      out.push(`<path d="M${P(1, 3)} L${P(8, 8.5)} L${P(15, 3)}" style="fill: none; stroke: ${filled ? 'var(--card)' : ink}" stroke-width="1.2" stroke-linejoin="round"></path>`);
+      // A sealed envelope: its flap a clean V, inset from the edges when cut out of a filled one.
+      out.push(line(`M${P(2, 3.5)} H${f(ox + 14)} A1,1 0 0 1 ${P(15, 4.5)} V${f(oy + 11.5)} A1,1 0 0 1 ${P(14, 12.5)} H${f(ox + 2)} A1,1 0 0 1 ${P(1, 11.5)} V${f(oy + 4.5)} A1,1 0 0 1 ${P(2, 3.5)} Z`, 1.2, filled ? ink : 'none'));
+      out.push(filled ? `<path d="M${P(3, 5.3)} L${P(8, 9)} L${P(13, 5.3)}" style="fill: none; stroke: var(--card)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>`
+        : line(`M${P(1.4, 4.2)} L${P(8, 9)} L${P(14.6, 4.2)}`, 1.2));
     };
     if (kind === 'user') {
       out.push(line(circle(ox + 8, oy + 5, 3.2), 1.2));
       out.push(line(`M${P(2, 15)} C${P(2, 10.5)} ${P(4.5, 9.2)} ${P(8, 9.2)} C${P(11.5, 9.2)} ${P(14, 10.5)} ${P(14, 15)} Z`, 1.2));
     }
     if (kind === 'service') {
-      const pts = [];
-      for (let i = 0; i < 8; i++) for (const [da, rr] of [[-11, 7.2], [11, 7.2], [17, 5.3], [39, 5.3]]) { const a = (i * 45 + da) * Math.PI / 180; pts.push([ox + 8 + rr * Math.cos(a), oy + 8 + rr * Math.sin(a)]); }
-      out.push(line(poly(pts), 1.1));
+      // A gear: eight square-shouldered teeth on a round body, the gaps arcs of the body.
+      const R = 5.3, T = 7.3, at = (deg, rr) => P(8 + rr * Math.cos(deg * Math.PI / 180), 8 + rr * Math.sin(deg * Math.PI / 180));
+      let d = '';
+      for (let i = 0; i < 8; i++) {
+        const c = i * 45 - 90;
+        d += `${i ? ' A' + R + ',' + R + ' 0 0 1 ' : 'M'}${at(c - 13, R)} L${at(c - 9, T)} A${T},${T} 0 0 1 ${at(c + 9, T)} L${at(c + 13, R)}`;
+      }
+      out.push(line(`${d} A${R},${R} 0 0 1 ${at(-90 - 13, R)} Z`, 1.1));
       out.push(line(circle(ox + 8, oy + 8, 2.2), 1.1));
     }
     if (kind === 'send') env(true);
@@ -242,8 +252,9 @@ export function drawShape(spec, b, st) {
       out.push(line(`M${P(4, 6.5)} H${f(ox + 7.5)} L${P(9.6, 4.1)} A0.8,0.8 0 0 1 ${P(10.9, 5)} L${P(9.8, 6.5)} H${f(ox + 14.2)} A0.8,0.8 0 0 1 ${P(14.2, 8.1)} H${f(ox + 13.4)} A0.8,0.8 0 0 1 ${P(13.4, 9.7)} H${f(ox + 12.8)} A0.8,0.8 0 0 1 ${P(12.8, 11.3)} H${f(ox + 12)} A0.8,0.8 0 0 1 ${P(12, 12.9)} H${f(ox + 4)} Z M${P(10.4, 8.1)} H${f(ox + 13.4)} M${P(10.4, 9.7)} H${f(ox + 12.8)} M${P(10.4, 11.3)} H${f(ox + 12)}`, 1.1));
     }
     if (kind === 'script') {
-      out.push(line(`M${P(4, 1)} H${f(ox + 14)} C${P(11, 4.5)} ${P(15, 11.5)} ${P(12, 15)} H${f(ox + 2)} C${P(5, 11.5)} ${P(1, 4.5)} ${P(4, 1)} Z`, 1.1));
-      out.push(line(`M${P(5.2, 5)} H${f(ox + 11)} M${P(6.3, 8)} H${f(ox + 12)} M${P(6.3, 11)} H${f(ox + 11.5)}`, 1));
+      // A scroll: a page whose two sides curve alike, with three lines of script.
+      out.push(line(`M${P(4.5, 1.5)} H${f(ox + 13.5)} C${P(11.5, 4)} ${P(11.5, 5.5)} ${P(12.5, 8)} C${P(13.5, 10.5)} ${P(13.5, 12)} ${P(11.5, 14.5)} H${f(ox + 2.5)} C${P(4.5, 12)} ${P(4.5, 10.5)} ${P(3.5, 8)} C${P(2.5, 5.5)} ${P(2.5, 4)} ${P(4.5, 1.5)} Z`, 1.1));
+      out.push(line(`M${P(5.5, 5)} H${f(ox + 10.5)} M${P(6, 8)} H${f(ox + 11)} M${P(5.5, 11)} H${f(ox + 10.5)}`, 1));
     }
     if (kind === 'business-rule') {
       out.push(line(`M${P(1, 2.5)} H${f(ox + 15)} V${f(oy + 13.5)} H${f(ox + 1)} Z`, 1.1));
