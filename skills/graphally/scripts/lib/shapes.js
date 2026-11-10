@@ -115,6 +115,43 @@ const ALIASES = {
 const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule',
   'escalation', 'conditional', 'link', 'compensation', 'cancel', 'multiple', 'parallel-multiple', 'throw', 'non-interrupting'];
 
+// Glyphs: the markers inside events, gateways and tasks, each drawn once on a 16-unit grid
+// centred on 8,8 and placed at any size, so an end event's envelope is the send task's. A
+// part is [path, kind, stroke width in px]: 'line' is open, or filled on a filled marker;
+// 'stroke' is never filled; 'ink' always is; 'open' and 'shut' appear only on an open or a
+// filled marker, 'shut' drawn in the card colour to cut into the fill.
+const ENVELOPE = 'M2,3.5 H14 A1,1 0 0 1 15,4.5 V11.5 A1,1 0 0 1 14,12.5 H2 A1,1 0 0 1 1,11.5 V4.5 A1,1 0 0 1 2,3.5 Z';
+const GLYPH = {
+  message: [[ENVELOPE, 'line', 1.2], ['M1.4,4.2 L8,9 L14.6,4.2', 'open', 1.2], ['M3,5.3 L8,9 L13,5.3', 'shut', 1.3]],
+  timer: [['M0.38,8 A7.62,7.62 0 1 1 15.62,8 A7.62,7.62 0 1 1 0.38,8 Z', 'stroke', 1.3], ['M8,2.67 V8 L11.81,9.9', 'stroke', 1.3]],
+  signal: [['M8,1.52 L14.48,12.57 L1.52,12.57 Z', 'line', 1.3]],
+  error: [['M2.67,13.33 L5.71,2.67 L8.76,8.38 L13.33,2.67 L10.29,13.33 L7.24,7.62 Z', 'line', 1.3]],
+  escalation: [['M8,1.14 L12.57,14.1 L8,9.9 L3.43,14.1 Z', 'line', 1.3]],
+  conditional: [['M3.81,1.9 H12.19 V14.1 H3.81 Z', 'stroke', 1.2], ['M5.33,4.57 H10.67 M5.33,6.86 H10.67 M5.33,9.14 H10.67 M5.33,11.43 H10.67', 'stroke', 1]],
+  link: [['M2.29,5.71 L8.38,5.71 L8.38,3.05 L14.1,8 L8.38,12.95 L8.38,10.29 L2.29,10.29 Z', 'line', 1.3]],
+  compensation: [['M1.52,8 L7.62,3.81 L7.62,12.19 Z M7.62,8 L13.71,3.81 L13.71,12.19 Z', 'line', 1.3]],
+  cancel: [['M10.96,3.21 L12.79,5.04 L9.83,8 L12.79,10.96 L10.96,12.79 L8,9.83 L5.04,12.79 L3.21,10.96 L6.17,8 L3.21,5.04 L5.04,3.21 L8,6.17 Z', 'line', 1.2]],
+  multiple: [['M8,2.21 L13.94,6.53 L11.67,13.51 L4.33,13.51 L2.06,6.53 Z', 'line', 1.3]],
+  'parallel-multiple': [['M6.1,2.06 H9.9 V6.1 H13.94 V9.9 H9.9 V13.94 H6.1 V9.9 H2.06 V6.1 H6.1 Z', 'line', 1.2]],
+  terminate: [['M1.14,8 A6.86,6.86 0 1 1 14.86,8 A6.86,6.86 0 1 1 1.14,8 Z', 'ink', 1]],
+  'gateway exclusive': [['M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5', 'stroke', 2.6]],
+  'gateway parallel': [['M2.38,8 H13.62 M8,2.38 V13.62', 'stroke', 2.8]],
+  'gateway inclusive': [['M2.83,8 A5.17,5.17 0 1 1 13.17,8 A5.17,5.17 0 1 1 2.83,8 Z', 'stroke', 2.4]],
+  'gateway complex': [['M2.38,8 H13.62 M8,2.38 V13.62 M3.95,3.95 L12.05,12.05 M12.05,3.95 L3.95,12.05', 'stroke', 2.6]],
+  user: [['M4.8,5 A3.2,3.2 0 1 1 11.2,5 A3.2,3.2 0 1 1 4.8,5 Z', 'stroke', 1.2], ['M2,15 C2,10.5 4.5,9.2 8,9.2 C11.5,9.2 14,10.5 14,15 Z', 'stroke', 1.2]],
+  service: [['M6.81,2.84 L6.86,0.79 A7.3,7.3 0 0 1 9.14,0.79 L9.19,2.84 A5.3,5.3 0 0 1 10.81,3.51 L12.29,2.09 A7.3,7.3 0 0 1 13.91,3.71 L12.49,5.19 A5.3,5.3 0 0 1 13.16,6.81 L15.21,6.86 A7.3,7.3 0 0 1 15.21,9.14 L13.16,9.19 A5.3,5.3 0 0 1 12.49,10.81 L13.91,12.29 A7.3,7.3 0 0 1 12.29,13.91 L10.81,12.49 A5.3,5.3 0 0 1 9.19,13.16 L9.14,15.21 A7.3,7.3 0 0 1 6.86,15.21 L6.81,13.16 A5.3,5.3 0 0 1 5.19,12.49 L3.71,13.91 A7.3,7.3 0 0 1 2.09,12.29 L3.51,10.81 A5.3,5.3 0 0 1 2.84,9.19 L0.79,9.14 A7.3,7.3 0 0 1 0.79,6.86 L2.84,6.81 A5.3,5.3 0 0 1 3.51,5.19 L2.09,3.71 A7.3,7.3 0 0 1 3.71,2.09 L5.19,3.51 A5.3,5.3 0 0 1 6.81,2.84 Z', 'stroke', 1.1], ['M5.8,8 A2.2,2.2 0 1 1 10.2,8 A2.2,2.2 0 1 1 5.8,8 Z', 'stroke', 1.1]],
+  manual: [['M1,6.5 H4 V12.9 H1 Z', 'stroke', 1.1], ['M4,6.5 H7.5 L9.6,4.1 A0.8,0.8 0 0 1 10.9,5 L9.8,6.5 H14.2 A0.8,0.8 0 0 1 14.2,8.1 H13.4 A0.8,0.8 0 0 1 13.4,9.7 H12.8 A0.8,0.8 0 0 1 12.8,11.3 H12 A0.8,0.8 0 0 1 12,12.9 H4 Z M10.4,8.1 H13.4 M10.4,9.7 H12.8 M10.4,11.3 H12', 'stroke', 1.1]],
+  // A scroll: both sides curve alike, 9 apart, and each line is centred on the page at its height.
+  script: [['M4.5,1.5 H13.5 C11.5,4 11.5,5.5 12.5,8 C13.5,10.5 13.5,12 11.5,14.5 H2.5 C4.5,12 4.5,10.5 3.5,8 C2.5,5.5 2.5,4 4.5,1.5 Z', 'stroke', 1.1], ['M4.85,5 H9.85 M5.5,8 H10.5 M6.15,11 H11.15', 'stroke', 1]],
+  'business-rule': [['M1,2.5 H15 V13.5 H1 Z', 'stroke', 1.1], ['M1,2.5 H15 V5.5 H1 Z', 'ink', 1.1], ['M1,9.5 H15 M5.5,5.5 V13.5', 'stroke', 1]],
+};
+// A glyph centred on cx,cy, size px across; the stroke widths stay in px at any size.
+const glyph = (name, cx, cy, size, filled, ink) => {
+  const k = size / 16, at = `matrix(${+k.toFixed(4)} 0 0 ${+k.toFixed(4)} ${f(cx - 8 * k)} ${f(cy - 8 * k)})`;
+  return GLYPH[name].filter(([, kind]) => kind === 'open' ? !filled : kind === 'shut' ? filled : true).map(([d, kind, w]) =>
+    `<path d="${d}" transform="${at}" style="fill: ${kind === 'ink' || (kind === 'line' && filled) ? ink : 'none'}; stroke: ${kind === 'shut' ? 'var(--card)' : ink}" stroke-width="${+(w / k).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"></path>`);
+};
+
 const TASK_TYPES = ['user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
 
 export const SHAPE_NAMES = [...Object.keys(BASES), ...Object.keys(ALIASES)];
@@ -157,111 +194,24 @@ export function drawShape(spec, b, st) {
   }
   // An event-based gateway (BPMN 2.0.2, 10.6.6) waits for whichever event comes first: a
   // pentagon in a double circle. Starting a process, the circle is single; the parallel
-  // variant, which also starts one, holds an open cross in place of the pentagon.
-  if (def.gateway && spec.marks.includes('event-based')) {
-    const parallel = spec.marks.includes('parallel'), single = parallel || spec.marks.includes('start'), c = r * 0.5;
+  // variant, which also starts one, holds an open cross. Both are the events' own glyphs.
+  const marks = spec.marks, mark = k => marks.includes(k);
+  if (def.gateway && mark('event-based')) {
+    const parallel = mark('parallel'), single = parallel || mark('start'), c = r * 0.5;
     out.push(line(circle(cx, cy, c), 1.2));
     if (!single) out.push(line(circle(cx, cy, c - 2.5), 1.2));
-    const p = r * (single ? 0.32 : 0.27);
-    if (parallel) {
-      const a = p, k = p * 0.32;
-      out.push(line(poly([[cx - k, cy - a], [cx + k, cy - a], [cx + k, cy - k], [cx + a, cy - k], [cx + a, cy + k], [cx + k, cy + k], [cx + k, cy + a], [cx - k, cy + a], [cx - k, cy + k], [cx - a, cy + k], [cx - a, cy - k], [cx - k, cy - k]]), 1.2));
-    } else {
-      out.push(line(poly([0, 1, 2, 3, 4].map(i => { const t = (-90 + i * 72) * Math.PI / 180; return [cx + p * Math.cos(t), cy + p * Math.sin(t)]; })), 1.2));
-    }
+    out.push(...glyph(parallel ? 'parallel-multiple' : 'multiple', cx, cy, r * (single ? 0.82 : 0.69), false, ink));
+  } else if (def.gateway) {
+    for (const k of marks) if (GLYPH['gateway ' + k]) out.push(...glyph('gateway ' + k, cx, cy, r * 1.07, false, ink));
+  } else if (def.event) {
+    // An end or throwing event's marker is filled; a catching one's is open.
+    const filled = def.event === 'end' || mark('throw');
+    for (const k of marks) if (GLYPH[k]) out.push(...glyph(k, cx, cy, r * 1.05, filled, ink));
   }
-  for (const k of spec.marks) {
-    if (def.gateway) {
-      const s = r * 0.3;
-      if (spec.marks.includes('event-based')) continue;
-      if (k === 'exclusive') out.push(line(`M${f(cx - s)},${f(cy - s)} L${f(cx + s)},${f(cy + s)} M${f(cx + s)},${f(cy - s)} L${f(cx - s)},${f(cy + s)}`, 2.6));
-      if (k === 'parallel') out.push(line(`M${f(cx - s * 1.25)},${f(cy)} H${f(cx + s * 1.25)} M${f(cx)},${f(cy - s * 1.25)} V${f(cy + s * 1.25)}`, 2.8));
-      if (k === 'inclusive') out.push(line(circle(cx, cy, s * 1.15), 2.4));
-      // Complex: an asterisk, the cross of the parallel gateway with the exclusive one's ×.
-      if (k === 'complex') {
-        const a = s * 1.25, d = a * 0.72;
-        out.push(line(`M${f(cx - a)},${f(cy)} H${f(cx + a)} M${f(cx)},${f(cy - a)} V${f(cy + a)} M${f(cx - d)},${f(cy - d)} L${f(cx + d)},${f(cy + d)} M${f(cx + d)},${f(cy - d)} L${f(cx - d)},${f(cy + d)}`, 2.6));
-      }
-    } else if (def.event) {
-      // An end or throwing event's marker is filled; a catching one's is open.
-      const g = r * 0.5, filled = def.event === 'end' || spec.marks.includes('throw');
-      if (k === 'timer') {
-        out.push(line(circle(cx, cy, g), 1.3));
-        out.push(line(`M${f(cx)},${f(cy - g * 0.7)} V${f(cy)} L${f(cx + g * 0.5)},${f(cy + g * 0.25)}`, 1.3));
-      }
-      if (k === 'message') {
-        const w2 = g * 0.95, h2 = g * 0.65;
-        out.push(line(`M${f(cx - w2)},${f(cy - h2)} H${f(cx + w2)} V${f(cy + h2)} H${f(cx - w2)} Z`, 1.3, filled ? ink : 'none'));
-        out.push(`<path d="M${f(cx - w2)},${f(cy - h2)} L${f(cx)},${f(cy + h2 * 0.15)} L${f(cx + w2)},${f(cy - h2)}" style="fill: none; stroke: ${filled ? 'var(--card)' : ink}" stroke-width="1.3" stroke-linejoin="round"></path>`);
-      }
-      if (k === 'signal') out.push(line(poly([[cx, cy - g * 0.85], [cx + g * 0.85, cy + g * 0.6], [cx - g * 0.85, cy + g * 0.6]]), 1.3, filled ? ink : 'none'));
-      if (k === 'error') out.push(line(poly([[cx - g * 0.7, cy + g * 0.7], [cx - g * 0.3, cy - g * 0.7], [cx + g * 0.1, cy + g * 0.05], [cx + g * 0.7, cy - g * 0.7], [cx + g * 0.3, cy + g * 0.7], [cx - g * 0.1, cy - g * 0.05]]), 1.3, filled ? ink : 'none'));
-      if (k === 'terminate') out.push(line(circle(cx, cy, g * 0.9), 1, ink));
-      const fillOr = filled ? ink : 'none', P = pts => poly(pts.map(([u, v]) => [cx + u * g, cy + v * g]));
-      if (k === 'escalation') out.push(line(P([[0, -0.9], [0.6, 0.8], [0, 0.25], [-0.6, 0.8]]), 1.3, fillOr));
-      if (k === 'conditional') {
-        out.push(line(P([[-0.55, -0.8], [0.55, -0.8], [0.55, 0.8], [-0.55, 0.8]]), 1.2));
-        out.push(line([-0.45, -0.15, 0.15, 0.45].map(v => `M${f(cx - g * 0.35)},${f(cy + v * g)} H${f(cx + g * 0.35)}`).join(' '), 1));
-      }
-      if (k === 'link') out.push(line(P([[-0.75, -0.3], [0.05, -0.3], [0.05, -0.65], [0.8, 0], [0.05, 0.65], [0.05, 0.3], [-0.75, 0.3]]), 1.3, fillOr));
-      if (k === 'compensation') {
-        out.push(line(P([[-0.85, 0], [-0.05, -0.55], [-0.05, 0.55]]), 1.3, fillOr));
-        out.push(line(P([[-0.05, 0], [0.75, -0.55], [0.75, 0.55]]), 1.3, fillOr));
-      }
-      if (k === 'cancel') {
-        const a = 0.17, L = 0.72, arm = [[-a, -L], [a, -L], [a, -a], [L, -a], [L, a], [a, a], [a, L], [-a, L], [-a, a], [-L, a], [-L, -a], [-a, -a]];
-        out.push(line(P(arm.map(([u, v]) => [(u - v) * Math.SQRT1_2, (u + v) * Math.SQRT1_2])), 1.2, fillOr));
-      }
-      if (k === 'multiple') out.push(line(P([0, 1, 2, 3, 4].map(i => { const a = (-90 + i * 72) * Math.PI / 180; return [0.82 * Math.cos(a), 0.82 * Math.sin(a) + 0.06]; })), 1.3, fillOr));
-      if (k === 'parallel-multiple') {
-        const a = 0.25, L = 0.78;
-        out.push(line(P([[-a, -L], [a, -L], [a, -a], [L, -a], [L, a], [a, a], [a, L], [-a, L], [-a, a], [-L, a], [-L, -a], [-a, -a]]), 1.2, fillOr));
-      }
-    }
-  }
-  // A task's type sits in its top-left corner (BPMN 2.0.2, 10.3.3), drawn on a 16-unit grid.
-  const kind = !def.event && !def.gateway && spec.marks.find(k => TASK_TYPES.includes(k));
-  if (kind) {
-    const ox = b.x + h + 6, oy = b.y + h + 6, P = (x, y) => `${f(ox + x)},${f(oy + y)}`;
-    const env = filled => {
-      // A sealed envelope: its flap a clean V, inset from the edges when cut out of a filled one.
-      out.push(line(`M${P(2, 3.5)} H${f(ox + 14)} A1,1 0 0 1 ${P(15, 4.5)} V${f(oy + 11.5)} A1,1 0 0 1 ${P(14, 12.5)} H${f(ox + 2)} A1,1 0 0 1 ${P(1, 11.5)} V${f(oy + 4.5)} A1,1 0 0 1 ${P(2, 3.5)} Z`, 1.2, filled ? ink : 'none'));
-      out.push(filled ? `<path d="M${P(3, 5.3)} L${P(8, 9)} L${P(13, 5.3)}" style="fill: none; stroke: var(--card)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>`
-        : line(`M${P(1.4, 4.2)} L${P(8, 9)} L${P(14.6, 4.2)}`, 1.2));
-    };
-    if (kind === 'user') {
-      out.push(line(circle(ox + 8, oy + 5, 3.2), 1.2));
-      out.push(line(`M${P(2, 15)} C${P(2, 10.5)} ${P(4.5, 9.2)} ${P(8, 9.2)} C${P(11.5, 9.2)} ${P(14, 10.5)} ${P(14, 15)} Z`, 1.2));
-    }
-    if (kind === 'service') {
-      // A gear: eight square-shouldered teeth on a round body, the gaps arcs of the body.
-      const R = 5.3, T = 7.3, at = (deg, rr) => P(8 + rr * Math.cos(deg * Math.PI / 180), 8 + rr * Math.sin(deg * Math.PI / 180));
-      let d = '';
-      for (let i = 0; i < 8; i++) {
-        const c = i * 45 - 90;
-        d += `${i ? ' A' + R + ',' + R + ' 0 0 1 ' : 'M'}${at(c - 13, R)} L${at(c - 9, T)} A${T},${T} 0 0 1 ${at(c + 9, T)} L${at(c + 13, R)}`;
-      }
-      out.push(line(`${d} A${R},${R} 0 0 1 ${at(-90 - 13, R)} Z`, 1.1));
-      out.push(line(circle(ox + 8, oy + 8, 2.2), 1.1));
-    }
-    if (kind === 'send') env(true);
-    if (kind === 'receive') env(false);
-    if (kind === 'manual') {
-      // A hand pointing right from its cuff, fingers stacked (BPMN 2.0.2, Figure 10.18).
-      out.push(line(`M${P(1, 6.5)} H${f(ox + 4)} V${f(oy + 12.9)} H${f(ox + 1)} Z`, 1.1));
-      out.push(line(`M${P(4, 6.5)} H${f(ox + 7.5)} L${P(9.6, 4.1)} A0.8,0.8 0 0 1 ${P(10.9, 5)} L${P(9.8, 6.5)} H${f(ox + 14.2)} A0.8,0.8 0 0 1 ${P(14.2, 8.1)} H${f(ox + 13.4)} A0.8,0.8 0 0 1 ${P(13.4, 9.7)} H${f(ox + 12.8)} A0.8,0.8 0 0 1 ${P(12.8, 11.3)} H${f(ox + 12)} A0.8,0.8 0 0 1 ${P(12, 12.9)} H${f(ox + 4)} Z M${P(10.4, 8.1)} H${f(ox + 13.4)} M${P(10.4, 9.7)} H${f(ox + 12.8)} M${P(10.4, 11.3)} H${f(ox + 12)}`, 1.1));
-    }
-    if (kind === 'script') {
-      // A scroll: a page whose two sides curve alike, with three lines of script.
-      out.push(line(`M${P(4.5, 1.5)} H${f(ox + 13.5)} C${P(11.5, 4)} ${P(11.5, 5.5)} ${P(12.5, 8)} C${P(13.5, 10.5)} ${P(13.5, 12)} ${P(11.5, 14.5)} H${f(ox + 2.5)} C${P(4.5, 12)} ${P(4.5, 10.5)} ${P(3.5, 8)} C${P(2.5, 5.5)} ${P(2.5, 4)} ${P(4.5, 1.5)} Z`, 1.1));
-      out.push(line(`M${P(5.5, 5)} H${f(ox + 10.5)} M${P(6, 8)} H${f(ox + 11)} M${P(5.5, 11)} H${f(ox + 10.5)}`, 1));
-    }
-    if (kind === 'business-rule') {
-      out.push(line(`M${P(1, 2.5)} H${f(ox + 15)} V${f(oy + 13.5)} H${f(ox + 1)} Z`, 1.1));
-      out.push(line(`M${P(1, 2.5)} H${f(ox + 15)} V${f(oy + 5.5)} H${f(ox + 1)} Z`, 1.1, ink));
-      out.push(line(`M${P(1, 9.5)} H${f(ox + 15)} M${P(5.5, 5.5)} V${f(oy + 13.5)}`, 1));
-    }
-  }
+  // A task's type sits in its top-left corner (BPMN 2.0.2, 10.3.3); send and receive are the
+  // message glyph, filled and open, as on a throwing and a catching event.
+  const kind = !def.event && !def.gateway && marks.find(k => TASK_TYPES.includes(k));
+  if (kind) out.push(...glyph(kind === 'send' || kind === 'receive' ? 'message' : kind, b.x + h + 14, b.y + h + 14, 16, kind === 'send', ink));
   // Task markers sit side by side at the bottom middle.
   const bottom = spec.marks.filter(k => ['loop', 'multi', 'subprocess'].includes(k) && !def.event && !def.gateway);
   bottom.forEach((k, i) => {
