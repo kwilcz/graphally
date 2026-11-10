@@ -93,6 +93,7 @@ a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a
 | `document`, `documents`, `note` (`data-object`), `callout`, `cloud` | documents and notes |
 | `manual-input`, `predefined`, `delay`, `off-page` | flowchart |
 | `task`, `subprocess`, `start`, `event`, `end`, `gateway` | BPMN |
+| `annotation`, `group` | BPMN artifacts: a note in an open bracket, a dash-dot box around related items |
 | `cycle` (`repeat`, `loop`) | a repeat badge: a ring with two chasing arrows, 28px |
 
 Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),

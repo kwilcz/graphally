@@ -298,6 +298,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div shape="subprocess transaction" id=v0>T</div><div shape="subprocess ad-hoc" id=v1>A</div><div shape="task compensation" id=v2>C</div>')), out));
   const vsvg = svgOf(out), vd = i => [...(vsvg.split(`data-id="v${i}"`)[1]?.split('</g>')[0] || '').matchAll(/<path d="([^"]+)"/g)].map(m => m[1]);
   check(vd(0).filter(dd => (dd.match(/Q/g) || []).length === 4).length === 2 && vd(1).some(dd => /C1\.5,9\.5|^M1\.5,9\.5 C/.test(dd)) && vd(2).some(dd => /M1\.52,8 L7\.62,3\.81/.test(dd)), `activity variants: ${vd(0).length}, ${vd(1).length}, ${vd(2).length} paths`);
+  // Artifacts: an annotation is an open, unfilled bracket; a group is drawn dash-dot.
+  ok0(await render(write(d, page('<div shape=annotation id=r0>A note</div><div shape=group id=r1><div class=card id=r2>X</div></div>')), out));
+  const rsvg = svgOf(out), rd = i => (rsvg.split(`data-id="r${i}"`)[1] || '').split('</g>')[0];
+  check(/<path d="M[^"Z]+" style="fill: none;/.test(rd(0)) && /stroke-dasharray="9 3 1\.5 3"/.test(rd(1)), 'an annotation is not an open bracket, or a group is not dash-dot');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
