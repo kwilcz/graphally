@@ -115,56 +115,56 @@
 <path d="M65.4,834.1 A17.5,17.5 0 1 1 100.4,834.1 A17.5,17.5 0 1 1 65.4,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <text x="71.1" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">start</text>
 <path d="M197.1,834.1 A17.5,17.5 0 1 1 232.1,834.1 A17.5,17.5 0 1 1 197.1,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M206.1,828.2 H223.2 V839.9 H206.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M206.1,828.2 L214.6,834.9 L223.2,828.2" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linejoin="round"></path>
+<path d="M2,3.5 H14 A1,1 0 0 1 15,4.5 V11.5 A1,1 0 0 1 14,12.5 H2 A1,1 0 0 1 1,11.5 V4.5 A1,1 0 0 1 2,3.5 Z" transform="matrix(1.1813 0 0 1.1813 205.2 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.02" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M1.4,4.2 L8,9 L14.6,4.2" transform="matrix(1.1813 0 0 1.1813 205.2 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.02" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="177.8" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">start message</text>
 <path d="M328.9,834.1 A17.5,17.5 0 1 1 363.9,834.1 A17.5,17.5 0 1 1 328.9,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M337.4,834.1 A9,9 0 1 1 355.4,834.1 A9,9 0 1 1 337.4,834.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M346.4,827.8 V834.1 L350.9,836.3" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M0.38,8 A7.62,7.62 0 1 1 15.62,8 A7.62,7.62 0 1 1 0.38,8 Z" transform="matrix(1.1813 0 0 1.1813 336.9 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M8,2.67 V8 L11.81,9.9" transform="matrix(1.1813 0 0 1.1813 336.9 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="319.8" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">start timer</text>
 <path d="M460.6,834.1 A17.5,17.5 0 1 1 495.6,834.1 A17.5,17.5 0 1 1 460.6,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M464.1,834.1 A14,14 0 1 1 492.1,834.1 A14,14 0 1 1 464.1,834.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="463.8" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">event</text>
 <path d="M592.4,834.1 A17.5,17.5 0 1 1 627.4,834.1 A17.5,17.5 0 1 1 592.4,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M595.9,834.1 A14,14 0 1 1 623.9,834.1 A14,14 0 1 1 595.9,834.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M600.9,834.1 A9,9 0 1 1 618.9,834.1 A9,9 0 1 1 600.9,834.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M609.9,827.8 V834.1 L614.4,836.3" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M0.38,8 A7.62,7.62 0 1 1 15.62,8 A7.62,7.62 0 1 1 0.38,8 Z" transform="matrix(1.1813 0 0 1.1813 600.4 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M8,2.67 V8 L11.81,9.9" transform="matrix(1.1813 0 0 1.1813 600.4 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="580.8" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">event timer</text>
 <path d="M724.1,834.1 A17.5,17.5 0 1 1 759.1,834.1 A17.5,17.5 0 1 1 724.1,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M727.6,834.1 A14,14 0 1 1 755.6,834.1 A14,14 0 1 1 727.6,834.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M733.1,828.2 H750.2 V839.9 H733.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M733.1,828.2 L741.6,834.9 L750.2,828.2" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linejoin="round"></path>
+<path d="M2,3.5 H14 A1,1 0 0 1 15,4.5 V11.5 A1,1 0 0 1 14,12.5 H2 A1,1 0 0 1 1,11.5 V4.5 A1,1 0 0 1 2,3.5 Z" transform="matrix(1.1813 0 0 1.1813 732.2 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.02" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M1.4,4.2 L8,9 L14.6,4.2" transform="matrix(1.1813 0 0 1.1813 732.2 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.02" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="702.2" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">event message</text>
 <path d="M855.9,834.1 A17.5,17.5 0 1 1 890.9,834.1 A17.5,17.5 0 1 1 855.9,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M859.4,834.1 A14,14 0 1 1 887.4,834.1 A14,14 0 1 1 859.4,834.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M873.4,826.4 L881,839.5 L865.7,839.5 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M8,1.52 L14.48,12.57 L1.52,12.57 Z" transform="matrix(1.1813 0 0 1.1813 863.9 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="842.2" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">event signal</text>
 <path d="M987.6,834.1 A17.5,17.5 0 1 1 1022.6,834.1 A17.5,17.5 0 1 1 987.6,834.1 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M991.1,834.1 A14,14 0 1 1 1019.1,834.1 A14,14 0 1 1 991.1,834.1 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M998.8,840.4 L1002.4,827.8 L1006,834.5 L1011.4,827.8 L1007.8,840.4 L1004.2,833.6 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.67,13.33 L5.71,2.67 L8.76,8.38 L13.33,2.67 L10.29,13.33 L7.24,7.62 Z" transform="matrix(1.1813 0 0 1.1813 995.7 824.6)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="976.5" y="869.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">event error</text>
 <path d="M66.4,916.9 A16.5,16.5 0 1 1 99.4,916.9 A16.5,16.5 0 1 1 66.4,916.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="3"></path>
 <text x="73" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">end</text>
 <path d="M198.1,916.9 A16.5,16.5 0 1 1 231.1,916.9 A16.5,16.5 0 1 1 198.1,916.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="3"></path>
-<path d="M206.1,911.1 H223.2 V922.8 H206.1 Z" style="fill: var(--ink); stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M206.1,911.1 L214.6,917.8 L223.2,911.1" style="fill: none; stroke: var(--card)" stroke-width="1.3" stroke-linejoin="round"></path>
+<path d="M2,3.5 H14 A1,1 0 0 1 15,4.5 V11.5 A1,1 0 0 1 14,12.5 H2 A1,1 0 0 1 1,11.5 V4.5 A1,1 0 0 1 2,3.5 Z" transform="matrix(1.1813 0 0 1.1813 205.2 907.5)" style="fill: var(--ink); stroke: var(--ink)" stroke-width="1.02" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3,5.3 L8,9 L13,5.3" transform="matrix(1.1813 0 0 1.1813 205.2 907.5)" style="fill: none; stroke: var(--card)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="179.8" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">end message</text>
 <path d="M329.9,916.9 A16.5,16.5 0 1 1 362.9,916.9 A16.5,16.5 0 1 1 329.9,916.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="3"></path>
-<path d="M340.1,923.2 L343.7,910.6 L347.3,917.4 L352.7,910.6 L349.1,923.2 L345.5,916.5 Z" style="fill: var(--ink); stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.67,13.33 L5.71,2.67 L8.76,8.38 L13.33,2.67 L10.29,13.33 L7.24,7.62 Z" transform="matrix(1.1813 0 0 1.1813 336.9 907.5)" style="fill: var(--ink); stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="322.3" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">end error</text>
 <path d="M461.6,916.9 A16.5,16.5 0 1 1 494.6,916.9 A16.5,16.5 0 1 1 461.6,916.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="3"></path>
-<path d="M470,916.9 A8.1,8.1 0 1 1 486.2,916.9 A8.1,8.1 0 1 1 470,916.9 Z" style="fill: var(--ink); stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M1.14,8 A6.86,6.86 0 1 1 14.86,8 A6.86,6.86 0 1 1 1.14,8 Z" transform="matrix(1.1813 0 0 1.1813 468.7 907.5)" style="fill: var(--ink); stroke: var(--ink)" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="442.2" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">end terminate</text>
 <path d="M609.9,891.4 L631.4,912.9 L609.9,934.4 L588.4,912.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <text x="588" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">gateway</text>
 <path d="M741.6,891.4 L763.1,912.9 L741.6,934.4 L720.1,912.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M735,906.3 L748.2,919.5 M748.2,906.3 L735,919.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 729.9 901.1)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="694" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">gateway exclusive</text>
 <path d="M873.4,891.4 L894.9,912.9 L873.4,934.4 L851.9,912.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M865.1,912.9 H881.6 M873.4,904.7 V921.2" style="fill: none; stroke: var(--ink)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.38,8 H13.62 M8,2.38 V13.62" transform="matrix(1.4713 0 0 1.4713 861.6 901.1)" style="fill: none; stroke: var(--ink)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="831" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">gateway parallel</text>
 <path d="M1005.1,891.4 L1026.6,912.9 L1005.1,934.4 L983.6,912.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M997.5,912.9 A7.6,7.6 0 1 1 1012.7,912.9 A7.6,7.6 0 1 1 997.5,912.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.83,8 A5.17,5.17 0 1 1 13.17,8 A5.17,5.17 0 1 1 2.83,8 Z" transform="matrix(1.4713 0 0 1.4713 993.4 901.1)" style="fill: none; stroke: var(--ink)" stroke-width="1.63" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="958.9" y="951.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">gateway inclusive</text>
 <path d="M69.4,987.8 A13.5,13.5 0 1 1 96.4,987.8 A13.5,13.5 0 1 1 69.4,987.8 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M76,985.3 A7.3,7.3 0 0 1 88.1,982.7" style="fill: none; stroke: var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>

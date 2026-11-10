@@ -269,6 +269,18 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page(gws.map((n, i) => `<i shape="${n}" id=g${i}></i>`).join('\n'))), out));
   const gsvg = svgOf(out), marks = gws.map((_, i) => (gsvg.split(`data-id="g${i}"`)[1]?.split('</g>')[0].match(/<path /g) || []).length);
   check(marks.join() === '4,3,3,2', `the gateway markers drew ${marks.join(', ')} paths, not 4, 3, 3, 2`);
+  // A task's type: a glyph in its top-left corner, drawn with a set number of paths.
+  const kinds = ['user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
+  ok0(await render(write(d, page(kinds.map((k, i) => `<div shape="task ${k}" id=t${i}>Task</div>`).join('\n'))), out));
+  const tsvg = svgOf(out), drawn = kinds.map((_, i) => (tsvg.split(`data-id="t${i}"`)[1]?.split('</g>')[0].match(/<path /g) || []).length);
+  check(drawn.join() === '3,3,3,3,3,3,4', `the task types drew ${drawn.join(', ')} paths, not 3, 3, 3, 3, 3, 3, 4`);
+  // Events (BPMN 2.0.2, Table 10.93): a throwing marker is filled, a catching one open, and a
+  // non-interrupting event's rings are dashed.
+  ok0(await render(write(d, page('<i shape="event escalation" id=e0></i><i shape="event escalation throw" id=e1></i><i shape="event timer non-interrupting" id=e2></i><i shape="start parallel-multiple" id=e3></i>')), out));
+  const esvg = svgOf(out), ev = i => esvg.split(`data-id="e${i}"`)[1]?.split('</g>')[0] || '';
+  check(/style="fill: none; stroke: [^"]+"[^>]*><\/path>\s*$/.test(ev(0).trim()) && !/fill: none; stroke/.test(ev(1).split('<path').pop()), 'a throwing marker is not filled, or a catching one is');
+  check((ev(2).match(/stroke-dasharray/g) || []).length === 2, `a non-interrupting event's rings are not both dashed: ${ev(2).slice(0, 200)}`);
+  check((ev(3).match(/<path /g) || []).length === 2, 'the parallel-multiple trigger is missing');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
