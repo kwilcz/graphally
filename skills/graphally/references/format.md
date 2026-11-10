@@ -103,7 +103,8 @@ parallel` for the parallel variant); `start`, `event` or `end` with a trigger: `
 `multiple`, `parallel-multiple`, and `end terminate`. An intermediate event catches (an open
 marker) unless it has `throw` (a filled one, as on every end event); `non-interrupting`
 dashes the rings of a start or intermediate event; `task loop`, `task multi` (instances in parallel, three upright bars), `task sequential` (one
-after another, three flat bars), `subprocess loop`; a task's type in
+after another, three flat bars), `subprocess loop`; `ad-hoc` (~) and `compensation` (⏪) at the bottom of a task or subprocess;
+`subprocess transaction` (a double border); a task's type in
 its top-left corner: `task user`, `service`, `send`, `receive`, `manual`, `script`,
 `business-rule`. Events are 36px
 (`end` has a 3px outline), gateways 44px; set `width` and `height` to change them.
