@@ -112,7 +112,7 @@ const ALIASES = {
   'start-event': 'start', 'end-event': 'end', 'intermediate': 'event', 'intermediate-event': 'event', activity: 'task',
   'sub-process': 'subprocess', arrow: 'arrow-right', step: 'chevron-start', repeat: 'cycle', refresh: 'cycle', loop: 'cycle',
 };
-const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule',
+const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'sequential', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule',
   'escalation', 'conditional', 'link', 'compensation', 'cancel', 'multiple', 'parallel-multiple', 'throw', 'non-interrupting'];
 
 // Glyphs: the markers inside events, gateways and tasks, each drawn once on a 16-unit grid
@@ -213,11 +213,14 @@ export function drawShape(spec, b, st) {
   const kind = !def.event && !def.gateway && marks.find(k => TASK_TYPES.includes(k));
   if (kind) out.push(...glyph(kind === 'send' || kind === 'receive' ? 'message' : kind, b.x + h + 14, b.y + h + 14, 16, kind === 'send', ink));
   // Task markers sit side by side at the bottom middle.
-  const bottom = spec.marks.filter(k => ['loop', 'multi', 'subprocess'].includes(k) && !def.event && !def.gateway);
+  // Multi-instance (BPMN 2.0.2, 10.3.5): three upright bars run the instances in parallel, three
+  // flat ones one after another.
+  const bottom = spec.marks.filter(k => ['loop', 'multi', 'sequential', 'subprocess'].includes(k) && !(k === 'multi' && mark('sequential')) && !def.event && !def.gateway);
   bottom.forEach((k, i) => {
     const s = 12, mx = cx + (i - (bottom.length - 1) / 2) * (s + 6), my = b.y + b.h - h - s / 2 - 5;
     if (k === 'subprocess') out.push(line(`M${f(mx - s / 2)},${f(my - s / 2)} H${f(mx + s / 2)} V${f(my + s / 2)} H${f(mx - s / 2)} Z M${f(mx - 3.5)},${f(my)} H${f(mx + 3.5)} M${f(mx)},${f(my - 3.5)} V${f(my + 3.5)}`, 1.2));
     if (k === 'loop') out.push(line(`M${f(mx + 4.5)},${f(my + 3.5)} A5.5,5.5 0 1 0 ${f(mx - 4.5)},${f(my + 3.5)} M${f(mx - 4.5)},${f(my + 3.5)} l-0.5,-3.5 M${f(mx - 4.5)},${f(my + 3.5)} l3.3,-1`, 1.3));
+    if (k === 'sequential') out.push(line(`M${f(mx - 5)},${f(my - 4)} H${f(mx + 5)} M${f(mx - 5)},${f(my)} H${f(mx + 5)} M${f(mx - 5)},${f(my + 4)} H${f(mx + 5)}`, 1.5));
     if (k === 'multi') out.push(line(`M${f(mx - 4)},${f(my - 5)} V${f(my + 5)} M${f(mx)},${f(my - 5)} V${f(my + 5)} M${f(mx + 4)},${f(my - 5)} V${f(my + 5)}`, 1.5));
   });
   return out;
