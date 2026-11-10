@@ -5,7 +5,7 @@
 //   import { render } from 'graphally';
 //   const { exitCode, files } = await render(['diagram.html'], { png: true });
 //
-// Options, each the CLI flag of the same name: out (a folder), png, png2x, dark, themes,
+// Options, each the CLI flag of the same name: out (a folder), png, png1x, png2x, dark, themes,
 // inline, json, recompute, viewer (false: leave the file without the viewer header), jobs,
 // debug. log(line) receives each line the CLI prints, in order; without it the lines are only
 // returned. The result: exitCode (0 ok, 1 a problem or an error) and, per file, its lines, its
@@ -30,8 +30,10 @@ export async function render(files, o = {}) {
   for (const f of files) if (!fs.existsSync(f)) throw refuse(`no such file: ${f}`);
   const outOpt = o.out;
   if (outOpt && new Set(files.map(baseOf)).size < files.length) throw refuse('two sources share a name, so their files would overwrite each other in --out: render them separately, or without --out');
-  // The PNG is a preview for checking the layout; png2x renders it sharp enough to publish.
-  const scale = o.png2x ? 2 : 1;
+  // --png is the agent's preview at half size: an image costs tokens by its pixels, and in a
+  // blind test labels read as well at 0.5x as at 1x (geometry is the checks' job, not the
+  // picture's). --png1x is the full-size look; --png2x is sharp enough to publish.
+  const scale = o.png2x ? 2 : o.png1x ? 1 : 0.5;
   const dark = o.themes && !o.dark;
   let exitCode = 0;
 
@@ -115,9 +117,9 @@ async function renderJob(page, job, { o, server, scale, dark }) {
     // --themes: the dark copy beside it (<name>-dark.svg). Same layout, the dark tokens.
     if (dark) fs.writeFileSync(path.join(job.outDir, `${name}-dark.svg`), r.svg.replace(/^<svg ([^>]*?)class="graphally"(?! data-theme)/, '<svg $1class="graphally" data-theme="dark"') + '\n');
     let png;
-    if (o.png || o.png2x) {
-      // --png is a preview, encoded for speed; --png2x is for publishing, encoded small.
-      const fast = scale === 1;
+    if (o.png || o.png1x || o.png2x) {
+      // Previews are encoded for speed; --png2x is for publishing, encoded small.
+      const fast = scale <= 1;
       await page.viewport(Math.max(800, r.width), Math.max(600, r.height), scale);
       const sel = `document.querySelectorAll('.out svg')[${i}]`;
       const box = await page.evaluate(`(() => { const b = ${sel}.getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);

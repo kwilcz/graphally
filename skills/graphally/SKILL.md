@@ -55,7 +55,7 @@ Copy this checklist and work through it; render as often as the figure needs.
 - [ ] 4. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
 - [ ] 5. Fix every reported problem; render again until it prints ok
 - [ ] 6. Look at diagram.png: the form shows the point before the labels are read; rework until it does
-- [ ] 7. Hand over diagram.svg, diagram.png and diagram.html
+- [ ] 7. Hand over diagram.svg and diagram.html; a PNG to share is rendered with --png2x
 ```
 
 1. **Design.** Three short lines, in your reply or a comment in the file. The design
@@ -66,9 +66,11 @@ Copy this checklist and work through it; render as often as the figure needs.
    design asks. Ids name what the connections and the script refer to; text is what the
    reader sees.
 4. **Render.** The command writes `diagram.svg` (the deliverable) and `diagram.png` (a
-   preview), then prints `ok` or one line per problem. `${CLAUDE_SKILL_DIR}` is this
-   skill's directory: Claude Code fills it in; elsewhere, use the path of the folder that
-   holds this file.
+   half-size preview: enough to read every label and judge the form, at a quarter of the
+   tokens), then prints `ok` or one line per problem. Overlaps and overflows are the
+   problems' job, not the picture's; `--png1x` gives a full-size look when one is needed.
+   `${CLAUDE_SKILL_DIR}` is this skill's directory: Claude Code fills it in; elsewhere,
+   use the path of the folder that holds this file.
 5. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
    again.
 6. **Look.** `ok` means nothing collides, not that the figure works. Read it as its reader
@@ -233,9 +235,10 @@ many as it needs.
 
 ## Scripts
 
-- `scripts/graphally.mjs render <file.html>... [--png | --png2x] [--themes | --dark] [--out dir] [--recompute]`:
-  compiles every `<diagram>` in the file to SVG; `--png` adds a preview, `--png2x` a sharp
-  PNG to publish, `--themes` a dark copy, `--recompute` ignores the previous layout. Several
+- `scripts/graphally.mjs render <file.html>... [--png | --png1x | --png2x] [--themes |
+  --dark] [--out dir] [--recompute]`: compiles every `<diagram>` in the file to SVG;
+  `--png` adds a half-size preview, `--png1x` a full-size one, `--png2x` a sharp PNG to
+  publish, `--themes` a dark copy, `--recompute` ignores the previous layout. Several
   files render in one call, in parallel; render them together rather than one by one.
 - `scripts/edit.mjs <file.html> --move id dx,dy | --connect from to [label] | --line 'a->b' json | --unline 'a->b' | --lines`:
   patches moves and connections and keeps the rest of the file as written.
