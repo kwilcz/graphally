@@ -69,6 +69,10 @@ gateways and tasks are shapes; the sequence flows are connections.
   takes its branch, so each branch starts with a catching event (`event message`, `event
   timer`, `event signal`) or a receive task. `gateway parallel` splits or joins without a
   decision.
+- **The default branch** of an exclusive or inclusive gateway, taken when no condition holds:
+  `{ "from": "ok", "to": "retry", "label": "otherwise", "default": true }` (a slash at the
+  source). A flow with a condition straight out of a task: `"conditional": true` (an open
+  diamond at the source).
 - **Message flows** between pools: `{ "from": "a", "to": "b", "message": true }` (dashed, an
   open circle at the source). Within one pool, a dashed connection reads as a notice.
 

@@ -290,6 +290,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div class="flex gap-24 items-start"><div shape="task multi" id=w0 style="width: 90px">Notify the reviewers</div><div shape="task loop" id=w1 style="width: 90px">Retry the call again</div></div>', '', 'width=400')), path.join(d, 'out-wrap'), ['--recompute']));
   const wsvg = svgOf(path.join(d, 'out-wrap')), clear = i => { const s = wsvg.split(`data-id="w${i}"`)[1]?.split('</g>')[0] || '', [, y, , h] = (/data-box="([^"]+)"/.exec(s)?.[1] || '0,0,0,0').split(',').map(Number); return y + h - Math.max(...[...s.matchAll(/<text x="[^"]+" y="([\d.]+)"/g)].map(m => Number(m[1]))); };
   check(clear(0) > 20 && clear(1) > 20, `a label runs into its activity's marker: ${clear(0)}, ${clear(1)} px below the text`);
+  // A BPMN default flow starts with a slash, a conditional one with an open diamond.
+  ok0(await render(write(d, page('<div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div><div class=card id=c>C</div></div><script type="application/json">[{ "from": "a", "to": "b", "default": true }, { "from": "b", "to": "c", "conditional": true }]</script>', '', 'width=500')), out));
+  const fsvg = svgOf(out);
+  check(/<marker [^>]*><path d="M0\.8,8\.8 L6\.8,1\.2"/.test(fsvg) && /<marker [^>]*><path d="M0\.6,5 L5,1\.9/.test(fsvg) && (fsvg.match(/marker-start=/g) || []).length === 2, 'a default flow lacks its slash, or a conditional one its diamond');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
