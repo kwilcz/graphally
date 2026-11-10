@@ -152,10 +152,11 @@ export async function openPage(browser, { width = 1400, height = 900, scale = 1 
   // browser's own frame takes a strip (166 to 192px of the height, varying), and a capture
   // reaching beyond what the window draws now and then repeated what was inside it: a PNG
   // with the figure drawn a second time from x = 780, or from partway down. So the window is
-  // the page with room to spare for any frame.
+  // the page with room to spare for any frame, in device pixels: at scale 2 the window needs
+  // twice the page, or a 2x capture repeats its first half in the second.
   const { windowId } = await browser.send('Browser.getWindowForTarget', { targetId });
   const viewport = async (w, h, sc = scale) => {
-    await browser.send('Browser.setWindowBounds', { windowId, bounds: { width: Math.ceil(w) + 64, height: Math.ceil(h) + 320 } });
+    await browser.send('Browser.setWindowBounds', { windowId, bounds: { width: Math.ceil(w * sc) + 64, height: Math.ceil(h * sc) + 320 } });
     return s('Emulation.setDeviceMetricsOverride', { width: Math.ceil(w), height: Math.ceil(h), deviceScaleFactor: sc, mobile: false });
   };
   await viewport(width, height);
