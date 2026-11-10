@@ -32,7 +32,7 @@ const SIDES = ['right', 'bottom', 'left', 'top'];
 const TOKENS = ['ink', 'muted', 'line', 'woad', 'rust', 'teal', 'green', 'purple', 'amber', 'wash', 'card', 'bg', 'icon-soft', 'vnet', 'note', 'lane-a', 'lane-b', 'lane-c', 'lane-d'];
 const TONE_ALIASES = { blue: 'woad', red: 'rust' };
 // Line ends: head at the end of a line, tail at its start.
-const ENDS = ['arrow', 'open', 'circle', 'dot', 'diamond', 'open-diamond', 'none'];
+const ENDS = ['arrow', 'open', 'circle', 'dot', 'diamond', 'open-diamond', 'slash', 'none'];
 
 // Defaults for the page and its building blocks; layout and spacing are utility classes
 // (utilities.js) or plain CSS. :where() keeps their specificity at zero, so any rule of the
@@ -614,7 +614,8 @@ const toneOf = v => (v && TOKENS.includes(TONE_ALIASES[v] || v) ? `var(--${TONE_
 // circle at the source, an open arrowhead). arrowDefault: whether the line has a head unless told.
 function endsOf(o, arrowDefault, problems) {
   const head = o.head ?? (o.message ? 'open' : o.arrow === false ? 'none' : o.arrow || arrowDefault ? 'arrow' : 'none');
-  const tail = o.tail ?? (o.message ? 'circle' : o.both ? head : 'none');
+  // BPMN (2.0.2, 10.5.1): a default flow starts with a slash, a conditional one with an open diamond.
+  const tail = o.tail ?? (o.message ? 'circle' : o.default ? 'slash' : o.conditional ? 'open-diamond' : o.both ? head : 'none');
   for (const v of [head, tail]) if (!ENDS.includes(v)) problems.push({ rule: 'bad-option', option: 'head/tail', value: v, hint: ENDS.join(', ') });
   return { head: ENDS.includes(head) ? head : 'arrow', tail: ENDS.includes(tail) ? tail : 'none',
     dash: o.message || o.dashed || o.async ? '5 4' : o.dotted ? '1.5 3' : '' };
@@ -626,6 +627,7 @@ const MARKER = {
   dot: [8.5, c => `<circle cx="5" cy="5" r="3.3" style="fill: ${c}"></circle>`],
   diamond: [10, c => `<path d="M0,5 L5,1.5 L10,5 L5,8.5 z" style="fill: ${c}"></path>`],
   'open-diamond': [10, c => `<path d="M0.6,5 L5,1.9 L9.4,5 L5,8.1 z" style="fill: var(--card); stroke: ${c}" stroke-width="1.2"></path>`],
+  slash: [10, c => `<path d="M0.8,8.8 L6.8,1.2" style="fill: none; stroke: ${c}" stroke-width="1.4" stroke-linecap="round"></path>`],
 };
 
 const arcPoint = (c, r, deg) => ({ x: c.x + r * Math.cos(deg * Math.PI / 180), y: c.y + r * Math.sin(deg * Math.PI / 180) });
