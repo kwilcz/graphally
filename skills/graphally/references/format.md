@@ -96,7 +96,9 @@ a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a
 | `cycle` (`repeat`, `loop`) | a repeat badge: a ring with two chasing arrows, 28px |
 
 Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
-`gateway inclusive` (○); `start`, `event` or `end` with `timer`, `message`, `signal` or
+`gateway inclusive` (○), `gateway complex` (✱), `gateway event-based` (a pentagon in a
+double circle; `gateway event-based start` when it starts the process, `gateway event-based
+parallel` for the parallel variant); `start`, `event` or `end` with `timer`, `message`, `signal` or
 `error`, and `end terminate`; `task loop`, `task multi`, `subprocess loop`. Events are 36px
 (`end` has a 3px outline), gateways 44px; set `width` and `height` to change them.
 
