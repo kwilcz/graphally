@@ -1,6 +1,6 @@
 {
   "name": "graphally",
-  "version": "2.16.1",
+  "version": "2.17.0",
   "description": "The engine that renders AI-generated technical diagrams to SVG, from HTML and CSS. Also an agent skill. Architecture with Azure and AWS icons, networks, BPMN, sequences, plans and any figure a web page can hold.",
   "keywords": ["diagram", "svg", "architecture", "azure", "aws", "bpmn", "sequence-diagram", "gantt", "agent-skill", "ai", "llm"],
   "homepage": "https://github.com/kwilcz/graphally",
