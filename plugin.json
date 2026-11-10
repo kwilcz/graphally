@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "graphally",
-  "version": "2.15.0",
+  "version": "2.15.1",
   "description": "AI-generated technical diagrams, rendered to SVG: an agent skill and the engine behind it. Architecture with Azure and AWS icons, networks, hierarchies, BPMN, sequence diagrams, Gantt plans, roadmaps, figures for proposals and solution designs, and Terraform repositories.",
   "author": { "name": "Kamil Wilczyński", "url": "https://github.com/kwilcz" },
   "homepage": "https://github.com/kwilcz/graphally",
