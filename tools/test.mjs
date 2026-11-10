@@ -263,6 +263,12 @@ later('page-shapes', async () => {
   const off = svgOf(out), offB = off.slice(off.indexOf('data-id="b"') - 80);
   check(/<filter id="[^"]+-grey"/.test(off) && /<g opacity="0.5" filter="url\(#[^"]+-grey\)">\s*<g data-id="b"/.test(off) && !/filter="url[^>]*>\s*<g data-id="a"/.test(off), `the disabled figure is not drawn grey and faded: ${offB.slice(0, 160)}`);
   check(/data-edge="a-&gt;b"[^>]*><path [^>]*stroke: var\(--muted\)"[^>]*stroke-dasharray="5 4"/.test(off), 'the line into the disabled figure is not grey and dashed');
+  // The gateways BPMN 2.0 adds to these: event-based (a pentagon in a double circle; a single
+  // circle when it starts the process; an open cross for the parallel one) and complex (✱).
+  const gws = ['gateway event-based', 'gateway event-based start', 'gateway event-based parallel', 'gateway complex'];
+  ok0(await render(write(d, page(gws.map((n, i) => `<i shape="${n}" id=g${i}></i>`).join('\n'))), out));
+  const gsvg = svgOf(out), marks = gws.map((_, i) => (gsvg.split(`data-id="g${i}"`)[1]?.split('</g>')[0].match(/<path /g) || []).length);
+  check(marks.join() === '4,3,3,2', `the gateway markers drew ${marks.join(', ')} paths, not 4, 3, 3, 2`);
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);

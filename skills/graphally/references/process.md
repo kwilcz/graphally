@@ -56,8 +56,54 @@ gateways and tasks are shapes; the sequence flows are connections.
   task with `position: relative`. Lines may leave from it.
 - **Branches** are connections with labels (`yes`, `no`); give the branch that leaves
   sideways `"out": "top"` or `"out": "bottom"`.
+- **Choose the gateway by what decides.** Data decides at `gateway exclusive` (one branch),
+  `gateway inclusive` (one or more) or `gateway complex` (a rule the caption states). An
+  event decides at `gateway event-based`: the process waits, and the first event to happen
+  takes its branch, so each branch starts with a catching event (`event message`, `event
+  timer`, `event signal`) or a receive task. `gateway parallel` splits or joins without a
+  decision.
 - **Message flows** between pools: `{ "from": "a", "to": "b", "message": true }` (dashed, an
   open circle at the source). Within one pool, a dashed connection reads as a notice.
+
+## Waiting for a response
+
+A call to another system waits for one of two events, then decides on the data: an
+event-based gateway between the response and a timeout, then an exclusive gateway on the
+status. Captions sit outside the layout (`position: absolute`), so every shape centres on
+its row and the branches leave from any side.
+
+```html
+<diagram width=1000 title="Call the payment API" subtitle="Wait for the first event, then decide on the data">
+<style>
+  [shape=task] { width: 130px; min-height: 52px; font-weight: 500; }
+  .ev, .gw { position: relative; display: grid; justify-items: center; width: 96px; text-align: center; font-size: 11.5px; }
+  .ev span { position: absolute; top: calc(100% + 4px); }
+  .gw span { position: absolute; bottom: calc(100% + 4px); }
+</style>
+<div class="grid grid-cols-[repeat(6,auto)] grid-rows-[auto_auto] items-center justify-between gap-y-10">
+  <div shape=task class="col-[1] row-[1]" id=call>Call payment API</div>
+  <div class="gw col-[2] row-[1]"><i shape="gateway event-based" id=wait></i><span>first to happen</span></div>
+  <div class="ev col-[3] row-[1]"><i shape="event message" id=resp></i><span>response received</span></div>
+  <div class="gw col-[4] row-[1]"><i shape="gateway exclusive" id=status></i><span>status?</span></div>
+  <div shape=task class="col-[5] row-[1]" id=ok>Confirm order</div>
+  <div shape=task class="col-[5] row-[2]" id=bad>Reject payment</div>
+  <div class="ev col-[3] row-[2]"><i shape="event timer" id=timeout></i><span>30 s, no response</span></div>
+  <div shape=task class="col-[4] row-[2]" id=retry>Retry later</div>
+</div>
+<script type="application/json">
+[
+  ["call", "wait"], ["wait", "resp"], ["resp", "status"],
+  ["status", "ok", "200"],
+  { "from": "status", "to": "bad", "label": "400", "out": "bottom" },
+  { "from": "wait", "to": "timeout", "out": "bottom" },
+  ["timeout", "retry"]
+]
+</script>
+</diagram>
+```
+
+A 200 and a 400 are both a response: the same event, told apart by its data, so they
+branch at the exclusive gateway, not the event-based one.
 
 ## Flowcharts
 

@@ -109,7 +109,7 @@ const ALIASES = {
   'start-event': 'start', 'end-event': 'end', 'intermediate': 'event', 'intermediate-event': 'event', activity: 'task',
   'sub-process': 'subprocess', arrow: 'arrow-right', step: 'chevron-start', repeat: 'cycle', refresh: 'cycle', loop: 'cycle',
 };
-const MARKS = ['exclusive', 'parallel', 'inclusive', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess'];
+const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess'];
 
 export const SHAPE_NAMES = [...Object.keys(BASES), ...Object.keys(ALIASES)];
 export const MARK_NAMES = MARKS;
@@ -146,12 +146,33 @@ export function drawShape(spec, b, st) {
       out.push(`<path d="${poly([[ex + tx * head * 0.55, ey + ty * head * 0.55], [ex - tx * head * 0.45 + nx * head * 0.5, ey - ty * head * 0.45 + ny * head * 0.5], [ex - tx * head * 0.45 - nx * head * 0.5, ey - ty * head * 0.45 - ny * head * 0.5]])}" style="fill: ${ink}; stroke: none"></path>`);
     }
   }
+  // An event-based gateway (BPMN 2.0.2, 10.6.6) waits for whichever event comes first: a
+  // pentagon in a double circle. Starting a process, the circle is single; the parallel
+  // variant, which also starts one, holds an open cross in place of the pentagon.
+  if (def.gateway && spec.marks.includes('event-based')) {
+    const parallel = spec.marks.includes('parallel'), single = parallel || spec.marks.includes('start'), c = r * 0.5;
+    out.push(line(circle(cx, cy, c), 1.2));
+    if (!single) out.push(line(circle(cx, cy, c - 2.5), 1.2));
+    const p = r * (single ? 0.32 : 0.27);
+    if (parallel) {
+      const a = p, k = p * 0.32;
+      out.push(line(poly([[cx - k, cy - a], [cx + k, cy - a], [cx + k, cy - k], [cx + a, cy - k], [cx + a, cy + k], [cx + k, cy + k], [cx + k, cy + a], [cx - k, cy + a], [cx - k, cy + k], [cx - a, cy + k], [cx - a, cy - k], [cx - k, cy - k]]), 1.2));
+    } else {
+      out.push(line(poly([0, 1, 2, 3, 4].map(i => { const t = (-90 + i * 72) * Math.PI / 180; return [cx + p * Math.cos(t), cy + p * Math.sin(t)]; })), 1.2));
+    }
+  }
   for (const k of spec.marks) {
     if (def.gateway) {
       const s = r * 0.3;
+      if (spec.marks.includes('event-based')) continue;
       if (k === 'exclusive') out.push(line(`M${f(cx - s)},${f(cy - s)} L${f(cx + s)},${f(cy + s)} M${f(cx + s)},${f(cy - s)} L${f(cx - s)},${f(cy + s)}`, 2.6));
       if (k === 'parallel') out.push(line(`M${f(cx - s * 1.25)},${f(cy)} H${f(cx + s * 1.25)} M${f(cx)},${f(cy - s * 1.25)} V${f(cy + s * 1.25)}`, 2.8));
       if (k === 'inclusive') out.push(line(circle(cx, cy, s * 1.15), 2.4));
+      // Complex: an asterisk, the cross of the parallel gateway with the exclusive one's ×.
+      if (k === 'complex') {
+        const a = s * 1.25, d = a * 0.72;
+        out.push(line(`M${f(cx - a)},${f(cy)} H${f(cx + a)} M${f(cx)},${f(cy - a)} V${f(cy + a)} M${f(cx - d)},${f(cy - d)} L${f(cx + d)},${f(cy + d)} M${f(cx + d)},${f(cy - d)} L${f(cx - d)},${f(cy + d)}`, 2.6));
+      }
     } else if (def.event) {
       const g = r * 0.5, filled = def.event === 'end';
       if (k === 'timer') {
