@@ -302,6 +302,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div shape=annotation id=r0>A note</div><div shape=group id=r1><div class=card id=r2>X</div></div>')), out));
   const rsvg = svgOf(out), rd = i => (rsvg.split(`data-id="r${i}"`)[1] || '').split('</g>')[0];
   check(/<path d="M[^"Z]+" style="fill: none;/.test(rd(0)) && /stroke-dasharray="9 3 1\.5 3"/.test(rd(1)), 'an annotation is not an open bracket, or a group is not dash-dot');
+  // Data objects: an input's arrow is open, an output's filled; a collection has three bars.
+  ok0(await render(write(d, page('<div shape="data-object input" id=o0></div><div shape="data-object output" id=o1></div><div shape="data-object collection" id=o2></div>')), out));
+  const osvg = svgOf(out), od = i => (osvg.split(`data-id="o${i}"`)[1] || '').split('</g>')[0];
+  check(/d="M2,5\.5 H8\.5[^"]*"[^>]*style="fill: none/.test(od(0)) && /d="M2,5\.5 H8\.5[^"]*"[^>]*style="fill: (?!none)/.test(od(1)) && (od(2).match(/ V/g) || []).length >= 3, 'a data object lacks its arrow or its collection bars');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);

@@ -116,7 +116,7 @@ const ALIASES = {
   'start-event': 'start', 'end-event': 'end', 'intermediate': 'event', 'intermediate-event': 'event', activity: 'task',
   'sub-process': 'subprocess', arrow: 'arrow-right', step: 'chevron-start', repeat: 'cycle', refresh: 'cycle', loop: 'cycle',
 };
-const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'sequential', 'ad-hoc', 'transaction', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule',
+const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'sequential', 'ad-hoc', 'transaction', 'collection', 'input', 'output', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule',
   'escalation', 'conditional', 'link', 'compensation', 'cancel', 'multiple', 'parallel-multiple', 'throw', 'non-interrupting'];
 
 // Glyphs: the markers inside events, gateways and tasks, each drawn once on a 16-unit grid
@@ -142,6 +142,7 @@ const GLYPH = {
   'gateway parallel': [['M2.38,8 H13.62 M8,2.38 V13.62', 'stroke', 2.8]],
   'gateway inclusive': [['M2.83,8 A5.17,5.17 0 1 1 13.17,8 A5.17,5.17 0 1 1 2.83,8 Z', 'stroke', 2.4]],
   'ad-hoc': [['M1.5,9.5 C3.5,5.2 6,5.2 8,8 C10,10.8 12.5,10.8 14.5,6.5', 'stroke', 1.5]],
+  arrow: [['M2,5.5 H8.5 V2.5 L14.5,8 L8.5,13.5 V10.5 H2 Z', 'line', 1.2]],
   'gateway complex': [['M2.38,8 H13.62 M8,2.38 V13.62 M3.95,3.95 L12.05,12.05 M12.05,3.95 L3.95,12.05', 'stroke', 2.6]],
   user: [['M4.8,5 A3.2,3.2 0 1 1 11.2,5 A3.2,3.2 0 1 1 4.8,5 Z', 'stroke', 1.2], ['M2,15 C2,10.5 4.5,9.2 8,9.2 C11.5,9.2 14,10.5 14,15 Z', 'stroke', 1.2]],
   service: [['M6.81,2.84 L6.86,0.79 A7.3,7.3 0 0 1 9.14,0.79 L9.19,2.84 A5.3,5.3 0 0 1 10.81,3.51 L12.29,2.09 A7.3,7.3 0 0 1 13.91,3.71 L12.49,5.19 A5.3,5.3 0 0 1 13.16,6.81 L15.21,6.86 A7.3,7.3 0 0 1 15.21,9.14 L13.16,9.19 A5.3,5.3 0 0 1 12.49,10.81 L13.91,12.29 A7.3,7.3 0 0 1 12.29,13.91 L10.81,12.49 A5.3,5.3 0 0 1 9.19,13.16 L9.14,15.21 A7.3,7.3 0 0 1 6.86,15.21 L6.81,13.16 A5.3,5.3 0 0 1 5.19,12.49 L3.71,13.91 A7.3,7.3 0 0 1 2.09,12.29 L3.51,10.81 A5.3,5.3 0 0 1 2.84,9.19 L0.79,9.14 A7.3,7.3 0 0 1 0.79,6.86 L2.84,6.81 A5.3,5.3 0 0 1 3.51,5.19 L2.09,3.71 A7.3,7.3 0 0 1 3.71,2.09 L5.19,3.51 A5.3,5.3 0 0 1 6.81,2.84 Z', 'stroke', 1.1], ['M5.8,8 A2.2,2.2 0 1 1 10.2,8 A2.2,2.2 0 1 1 5.8,8 Z', 'stroke', 1.1]],
@@ -224,14 +225,17 @@ export function drawShape(spec, b, st) {
   // A transaction (10.3.7) is drawn with a double border.
   if (!def.event && !def.gateway && mark('transaction')) out.push(line(roundRect({ x: b.x + h + 3, y: b.y + h + 3, w: b.w - 2 * h - 6, h: b.h - 2 * h - 6 }, 7), Math.max(1, st.width || 1.5)));
   // Ad-hoc (~) and compensation (the event's rewind glyph) sit among the bottom markers.
-  const bottom = spec.marks.filter(k => ['loop', 'multi', 'sequential', 'ad-hoc', 'compensation', 'subprocess'].includes(k) && !(k === 'multi' && mark('sequential')) && !def.event && !def.gateway);
+  // A data object (10.4.1) is an input with an open arrow in its corner, an output with a filled
+  // one, and a collection with three bars below, as a multi-instance task.
+  if (spec.base === 'note' && (mark('input') || mark('output'))) out.push(...glyph('arrow', b.x + h + 10, b.y + h + 10, 13, mark('output'), ink));
+  const bottom = spec.marks.filter(k => ['loop', 'multi', 'collection', 'sequential', 'ad-hoc', 'compensation', 'subprocess'].includes(k) && !(k === 'multi' && mark('sequential')) && !def.event && !def.gateway);
   bottom.forEach((k, i) => {
     const s = 12, mx = cx + (i - (bottom.length - 1) / 2) * (s + 6), my = b.y + b.h - h - s / 2 - 5;
     if (k === 'ad-hoc' || k === 'compensation') out.push(...glyph(k, mx, my, 13, false, ink));
     if (k === 'subprocess') out.push(line(`M${f(mx - s / 2)},${f(my - s / 2)} H${f(mx + s / 2)} V${f(my + s / 2)} H${f(mx - s / 2)} Z M${f(mx - 3.5)},${f(my)} H${f(mx + 3.5)} M${f(mx)},${f(my - 3.5)} V${f(my + 3.5)}`, 1.2));
     if (k === 'loop') out.push(line(`M${f(mx + 4.5)},${f(my + 3.5)} A5.5,5.5 0 1 0 ${f(mx - 4.5)},${f(my + 3.5)} M${f(mx - 4.5)},${f(my + 3.5)} l-0.5,-3.5 M${f(mx - 4.5)},${f(my + 3.5)} l3.3,-1`, 1.3));
     if (k === 'sequential') out.push(line(`M${f(mx - 5)},${f(my - 4)} H${f(mx + 5)} M${f(mx - 5)},${f(my)} H${f(mx + 5)} M${f(mx - 5)},${f(my + 4)} H${f(mx + 5)}`, 1.5));
-    if (k === 'multi') out.push(line(`M${f(mx - 4)},${f(my - 5)} V${f(my + 5)} M${f(mx)},${f(my - 5)} V${f(my + 5)} M${f(mx + 4)},${f(my - 5)} V${f(my + 5)}`, 1.5));
+    if (k === 'multi' || k === 'collection') out.push(line(`M${f(mx - 4)},${f(my - 5)} V${f(my + 5)} M${f(mx)},${f(my - 5)} V${f(my + 5)} M${f(mx + 4)},${f(my - 5)} V${f(my + 5)}`, 1.5));
   });
   return out;
 }
@@ -260,6 +264,8 @@ export const SHAPE_CSS = `
 :where(.graphally-page :is(${any(['document', 'documents', 'multi-document'])})) { padding: 8px 12px 18px; }
 :where(.graphally-page :is(${any(['documents', 'multi-document'])})) { padding: 16px 20px 22px 12px; }
 :where(.graphally-page :is(${any(['note', 'data-object', 'folded'])})) { padding: 8px 22px 8px 12px; }
+:where(.graphally-page :is(${any(['note', 'data-object', 'folded'])}):is(${any(['input', 'output'])})) { padding-top: 22px; }
+:where(.graphally-page :is(${any(['note', 'data-object', 'folded'])}):is(${any(['collection'])})) { padding-bottom: 22px; }
 :where(.graphally-page :is(${any(['callout'])})) { padding: 8px 12px 22px; }
 :where(.graphally-page :is(${any(['cloud'])})) { padding: 22px 30px 18px; }
 :where(.graphally-page :is(${any(['chevron', 'chevron-start', 'step'])})) { padding: 8px 30px; }

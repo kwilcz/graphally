@@ -72,6 +72,10 @@ gateways and tasks are shapes; the sequence flows are connections.
   `{ "from": "n", "to": "review", "dotted": true, "arrow": false }` (with `out` and `in` when it
   would run along a flow). A group,
   `<div shape=group>`, wraps related items in a dash-dot box; it changes no flow.
+- **Data** a step reads or writes is `shape=data-object` (the folded page), joined by a dotted
+  line with an open head: `{ "from": "form", "to": "review", "dotted": true, "head": "open" }`.
+  Mark it `input` or `output` when the process takes it in or hands it out, `collection` when it
+  is a list. A store that outlives the process is `shape=cylinder`.
 - **Choose the gateway by what decides.** Data decides at `gateway exclusive` (one branch),
   `gateway inclusive` (one or more) or `gateway complex` (a rule the caption states). An
   event decides at `gateway event-based`: the process waits, and the first event to happen
