@@ -281,6 +281,11 @@ later('page-shapes', async () => {
   check(/style="fill: none; stroke: [^"]+"[^>]*><\/path>\s*$/.test(ev(0).trim()) && !/fill: none; stroke/.test(ev(1).split('<path').pop()), 'a throwing marker is not filled, or a catching one is');
   check((ev(2).match(/stroke-dasharray/g) || []).length === 2, `a non-interrupting event's rings are not both dashed: ${ev(2).slice(0, 200)}`);
   check((ev(3).match(/<path /g) || []).length === 2, 'the parallel-multiple trigger is missing');
+  // Multi-instance: upright bars in parallel, flat ones in sequence.
+  ok0(await render(write(d, page('<div shape="task multi" id=m0>A</div><div shape="task sequential" id=m1>B</div>')), out));
+  const msvg = svgOf(out), mi = i => msvg.split(`data-id="m${i}"`)[1]?.split('</g>')[0] || '';
+  const bars = i => [...mi(i).matchAll(/<path d="([^"]+)"/g)].pop()?.[1] || '';
+  check((bars(0).match(/ V/g) || []).length === 3 && !/ H/.test(bars(0)) && (bars(1).match(/ H/g) || []).length === 3 && !/ V/.test(bars(1)), 'the multi-instance bars point the wrong way');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
