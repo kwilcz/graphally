@@ -428,6 +428,28 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       return { x: b.x + len(xs, b.w), y: b.y + len(ys, b.h) };
     });
   };
+  // <img> and inline <svg> (a logo in a header): drawn in the element's content box. An image is
+  // embedded as a data: URL by the CLI (run.js), so the SVG keeps it wherever it is opened.
+  const picture = (e, cs, b) => {
+    const px = s => parseFloat(cs[s]) || 0;
+    const x = b.x + px('borderLeftWidth') + px('paddingLeft'), y = b.y + px('borderTopWidth') + px('paddingTop');
+    const w = b.w - x + b.x - px('borderRightWidth') - px('paddingRight'), h = b.h - y + b.y - px('borderBottomWidth') - px('paddingBottom');
+    const at = `x="${fmt(x)}" y="${fmt(y)}" width="${fmt(w)}" height="${fmt(h)}"`;
+    if (e.tagName === 'svg') {
+      const c = e.cloneNode(true);
+      for (const a of ['x', 'y', 'width', 'height', 'style', 'class', 'id']) c.removeAttribute(a);
+      // Without a viewBox the drawing keeps the size its own width and height gave it.
+      if (!c.hasAttribute('viewBox') && Number(e.getAttribute('width')) > 0 && Number(e.getAttribute('height')) > 0) c.setAttribute('viewBox', `0 0 ${e.getAttribute('width')} ${e.getAttribute('height')}`);
+      c.setAttribute('style', `color: ${paintOf(cs.color) || 'var(--ink)'}`);
+      out.push(new XMLSerializer().serializeToString(c).replace(/^<svg /, `<svg ${at} `));
+      return;
+    }
+    const src = e.currentSrc || e.src, name = e.dataset.src || e.getAttribute('src') || '';
+    if (!e.complete || !e.naturalWidth) { problems.push({ rule: 'image-missing', src: name, hint: 'the image did not load: check the path, relative to the diagram file' }); return; }
+    if (!src.startsWith('data:')) problems.push({ rule: 'image-link', warn: true, src: name, hint: 'the SVG links the image instead of holding it: use a file next to the diagram' });
+    const fit = cs.objectFit, par = fit === 'contain' || fit === 'scale-down' ? 'xMidYMid meet' : fit === 'cover' ? 'xMidYMid slice' : 'none';
+    out.push(`<image href="${esc(src)}" ${at} preserveAspectRatio="${par}"></image>`);
+  };
   let greyed = false;
   // data-step="n": the element appears in its turn when the figure is shown (see motionCss).
   const steps = new Set();
@@ -451,8 +473,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     if (step) out.push(`<g data-step="${step}">`);
     if (anim != null) out.push(`<g data-anim="${anim}">`);
     if (fade) out.push(`<g${op < 1 ? ` opacity="${fmt(op)}"` : ''}${grey ? ` filter="url(#${id}-grey)"` : ''}>`);
-    if (e.tagName === 'ICON') {
-      if (e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
+    if (e.tagName === 'ICON' || e.tagName === 'IMG' || e.tagName === 'svg') {
+      if (e.tagName === 'ICON' && e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
+      else if (e.tagName !== 'ICON') picture(e, cs, b);
       boxes.push({ e, b, painted: true, parent: parentBox });
       if (fade) out.push('</g>');
       if (anim != null) out.push('</g>');

@@ -494,6 +494,18 @@ later('page-data', async () => {
 
 // The viewer: a diagram file opened from disk renders itself as the CLI renders it. A local
 // server stands in for the icon CDNs, serving each icon back from the downloaded packs.
+// A logo in a header: an <img> goes into the SVG as a data: URL, an inline <svg> as it is.
+later('page-images', async () => {
+  const d = folder('page-images'), out = path.join(d, 'out');
+  fs.writeFileSync(path.join(d, 'logo.svg'), '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 10"><rect width="30" height="10" fill="#123"/></svg>');
+  ok0(await render(write(d, page('<div class="flex items-center gap-8"><img src="logo.svg" style="height: 20px"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="currentColor"/></svg><b>Title</b></div>', '', 'width=300')), out));
+  const svg = svgOf(out);
+  check(/<image href="data:image\/svg\+xml;base64,[^"]+" x="[\d.]+" y="[\d.]+" width="60" height="20"/.test(svg), `the logo is not embedded at its size: ${(svg.match(/<image[^>]{0,80}/) || ['none'])[0]}`);
+  check(/<svg x="[\d.]+" y="[\d.]+" width="16" height="16"[^>]*viewBox="0 0 16 16"[^>]*><circle/.test(svg), 'the inline svg is not drawn');
+  const r = await render(write(d, page('<img src="nothing.png" style="width: 20px">', '', 'width=300')), out);
+  check(/image-missing: src=nothing\.png/.test(r.text), `a missing image is not reported: ${tail(r.text)}`);
+});
+
 later('viewer', async () => {
   const d = folder('viewer'), skill = path.join(root, 'skills/graphally');
   fs.copyFileSync(path.join(skill, 'viewer/graphally.min.js'), path.join(d, 'graphally.min.js'));
