@@ -81,7 +81,7 @@
 </g>
 <g data-id="ok" data-box="1780,94.5,44,44">
 <path d="M1801.8,94.8 L1823.3,116.3 L1801.8,137.8 L1780.3,116.3 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M1795.2,109.7 L1808.4,122.9 M1808.4,109.7 L1795.2,122.9" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 1790 104.5)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="1773.3" y="85.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Problems?</text>
 <g data-id="done" data-box="1956,88.5,36,36">

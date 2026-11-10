@@ -35,8 +35,8 @@
 <text x="37" y="142.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--ink)">Customer</text>
 <g data-id="s" data-box="183.5,121,36,36">
 <path d="M184.2,138.9 A17.5,17.5 0 1 1 219.2,138.9 A17.5,17.5 0 1 1 184.2,138.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M193.2,133 H210.3 V144.7 H193.2 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M193.2,133 L201.7,139.8 L210.3,133" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linejoin="round"></path>
+<path d="M2,3.5 H14 A1,1 0 0 1 15,4.5 V11.5 A1,1 0 0 1 14,12.5 H2 A1,1 0 0 1 1,11.5 V4.5 A1,1 0 0 1 2,3.5 Z" transform="matrix(1.1813 0 0 1.1813 192.3 129.4)" style="fill: none; stroke: var(--ink)" stroke-width="1.02" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M1.4,4.2 L8,9 L14.6,4.2" transform="matrix(1.1813 0 0 1.1813 192.3 129.4)" style="fill: none; stroke: var(--ink)" stroke-width="1.02" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="154.5" y="171.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Customer submits</text>
 <text x="170.8" y="185.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">claim online</text>
@@ -47,8 +47,8 @@
 <g data-id="tim" data-box="821.5,150,32,32">
 <path d="M822.1,165.9 A15.5,15.5 0 1 1 853.1,165.9 A15.5,15.5 0 1 1 822.1,165.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M825.6,165.9 A12,12 0 1 1 849.6,165.9 A12,12 0 1 1 825.6,165.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M829.6,165.9 A8,8 0 1 1 845.6,165.9 A8,8 0 1 1 829.6,165.9 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M837.6,160.3 V165.9 L841.6,167.9" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M0.38,8 A7.62,7.62 0 1 1 15.62,8 A7.62,7.62 0 1 1 0.38,8 Z" transform="matrix(1.05 0 0 1.05 829.2 157.5)" style="fill: none; stroke: var(--ink)" stroke-width="1.24" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M8,2.67 V8 L11.81,9.9" transform="matrix(1.05 0 0 1.05 829.2 157.5)" style="fill: none; stroke: var(--ink)" stroke-width="1.24" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 </g>
 <line x1="25" y1="316.4" x2="1730.9" y2="316.4" style="stroke: var(--line)" stroke-width="1"></line>
@@ -62,7 +62,7 @@
 </g>
 <g data-id="g1" data-box="461,234,44,44">
 <path d="M483.2,234.4 L504.7,255.9 L483.2,277.4 L461.7,255.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M476.6,249.3 L489.8,262.5 M489.8,249.3 L476.6,262.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 471.4 244.1)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="453.6" y="212.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Documents</text>
 <text x="456.2" y="226.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">complete?</text>
@@ -91,7 +91,7 @@
 </g>
 <g data-id="g2" data-box="742.5,355,44,44">
 <path d="M764.6,355.4 L786.1,376.9 L764.6,398.4 L743.1,376.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M758,370.3 L771.2,383.5 M771.2,370.3 L758,383.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 752.8 365.1)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="723.4" y="347.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">High fraud risk?</text>
 <g data-id="ntRej" data-box="1169,343.5,128,67">
@@ -141,12 +141,12 @@
 </g>
 <g data-id="g3" data-box="1070,589,44,44">
 <path d="M1092,589.4 L1113.5,610.9 L1092,632.4 L1070.5,610.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M1085.4,604.3 L1098.6,617.5 M1098.6,604.3 L1085.4,617.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 1080.3 599.1)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="1045.3" y="581.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Over 10,000 EUR?</text>
 <g data-id="g4" data-box="1211,589,44,44">
 <path d="M1232.8,589.4 L1254.3,610.9 L1232.8,632.4 L1211.3,610.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M1226.2,604.3 L1239.4,617.5 M1239.4,604.3 L1226.2,617.5" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 1221 599.1)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="1246.8" y="635.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--ink)">Approved?</text>
 <line x1="25" y1="781.4" x2="1730.9" y2="781.4" style="stroke: var(--line)" stroke-width="1"></line>

@@ -43,7 +43,7 @@
 </g>
 <g data-id="unit" data-box="428,216.5,44,44">
 <path d="M450,217 L471.5,238.5 L450,260 L428.5,238.5 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M443.4,231.9 L456.6,245.1 M456.6,231.9 L443.4,245.1" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 438.2 226.7)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="406.9" y="275.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Unit tests pass?</text>
 <g data-id="push" data-box="558,209,150,58">
@@ -66,7 +66,7 @@
 </g>
 <g data-id="smokeok" data-box="1190,216.5,44,44">
 <path d="M1212,217 L1233.5,238.5 L1212,260 L1190.5,238.5 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M1205.4,231.9 L1218.6,245.1 M1218.6,231.9 L1205.4,245.1" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 1200.2 226.7)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="1161.3" y="275.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Smoke tests pass?</text>
 <g data-id="approve" data-box="1320,209,150,58">
@@ -77,8 +77,8 @@
 <g data-id="expire" data-box="1419,248,36,36">
 <path d="M1419.5,266.2 A17.5,17.5 0 1 1 1454.5,266.2 A17.5,17.5 0 1 1 1419.5,266.2 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
 <path d="M1423,266.2 A14,14 0 1 1 1451,266.2 A14,14 0 1 1 1423,266.2 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M1428,266.2 A9,9 0 1 1 1446,266.2 A9,9 0 1 1 1428,266.2 Z" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M1437,259.9 V266.2 L1441.5,268.5" style="fill: none; stroke: var(--ink)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M0.38,8 A7.62,7.62 0 1 1 15.62,8 A7.62,7.62 0 1 1 0.38,8 Z" transform="matrix(1.1813 0 0 1.1813 1427.6 256.8)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M8,2.67 V8 L11.81,9.9" transform="matrix(1.1813 0 0 1.1813 1427.6 256.8)" style="fill: none; stroke: var(--ink)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 </g>
 <g data-id="swap" data-box="1566,201,150,74.5">
@@ -95,7 +95,7 @@
 </g>
 <g data-id="err" data-box="2000,216.5,44,44">
 <path d="M2022,217 L2043.5,238.5 L2022,260 L2000.5,238.5 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M2015.4,231.9 L2028.6,245.1 M2028.6,231.9 L2015.4,245.1" style="fill: none; stroke: var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M3.5,3.5 L12.5,12.5 M12.5,3.5 L3.5,12.5" transform="matrix(1.4713 0 0 1.4713 2010.2 226.7)" style="fill: none; stroke: var(--ink)" stroke-width="1.77" stroke-linecap="round" stroke-linejoin="round"></path>
 </g>
 <text x="1964.5" y="275.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--ink)">Error rate above 2%?</text>
 <g data-id="done" data-box="2172,210.5,36,36">
