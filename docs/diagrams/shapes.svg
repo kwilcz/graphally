@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="shapes.html" viewBox="0 0 1088 1996" width="1088" height="1996" role="img" aria-label="Shapes. shape=&quot;…&quot; on any element; markers follow the name">
+<svg xmlns="http://www.w3.org/2000/svg" class="graphally" data-source="shapes.html" viewBox="0 0 1088 2119" width="1088" height="2119" role="img" aria-label="Shapes. shape=&quot;…&quot; on any element; markers follow the name">
 <style>/* Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE. */
 /* graphally tokens and text classes. The compiled SVG references these; standalone
    files embed them. A brand theme redefines the tokens and nothing else. */
@@ -25,7 +25,7 @@
 .g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 </style>
 <defs></defs>
-<rect class="g-bg" width="1088" height="1996" style="fill: var(--bg)"></rect>
+<rect class="g-bg" width="1088" height="2119" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Shapes</text>
 <text x="24" y="59" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">shape=&quot;…&quot; on any element; markers follow the name</text>
@@ -352,13 +352,19 @@
 <path d="M6.1,2.06 H9.9 V6.1 H13.94 V9.9 H9.9 V13.94 H6.1 V9.9 H2.06 V6.1 H6.1 Z" transform="matrix(1.1275 0 0 1.1275 996.1 1808.9)" style="fill: none; stroke: var(--ink)" stroke-width="1.06" stroke-linecap="round" stroke-linejoin="round"></path>
 <text x="948.9" y="1857" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">gateway event-based</text>
 <text x="986.3" y="1871.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">parallel</text>
-<text x="24" y="1909.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.72px; fill: var(--muted)">BADGES</text>
-<path d="M69.4,1937.8 A13.5,13.5 0 1 1 96.4,1937.8 A13.5,13.5 0 1 1 69.4,1937.8 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
-<path d="M76,1935.4 A7.3,7.3 0 0 1 88.1,1932.8" style="fill: none; stroke: var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M90.6,1936.6 L90.2,1931 L85.9,1933.5 Z" style="fill: var(--ink); stroke: none"></path>
-<path d="M89.7,1940.3 A7.3,7.3 0 0 1 77.6,1942.9" style="fill: none; stroke: var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M75.2,1939.1 L75.5,1944.7 L79.9,1942.2 Z" style="fill: var(--ink); stroke: none"></path>
-<text x="69.2" y="1968.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">cycle</text>
+<text x="24" y="1909.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.72px; fill: var(--muted)">BPMN ARTIFACTS</text>
+<path d="M47.4,1924.3 H35.4 V1977.3 H47.4" style="fill: none; stroke: var(--ink)" stroke-width="1"></path>
+<text x="35.9" y="1955.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; fill: var(--ink)">A note</text>
+<text x="55.4" y="1994.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">annotation</text>
+<path d="M177.1,1924.3 H252.1 Q262.1,1924.3 262.1,1934.3 V1967.3 Q262.1,1977.3 252.1,1977.3 H177.1 Q167.1,1977.3 167.1,1967.3 V1934.3 Q167.1,1924.3 177.1,1924.3 Z" style="fill: none; stroke: var(--ink)" stroke-width="1" stroke-dasharray="9 3 1.5 3"></path>
+<text x="199.3" y="1994.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">group</text>
+<text x="24" y="2032.7" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.72px; fill: var(--muted)">BADGES</text>
+<path d="M69.4,2060.9 A13.5,13.5 0 1 1 96.4,2060.9 A13.5,13.5 0 1 1 69.4,2060.9 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1"></path>
+<path d="M76,2058.4 A7.3,7.3 0 0 1 88.1,2055.8" style="fill: none; stroke: var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M90.6,2059.6 L90.2,2054 L85.9,2056.5 Z" style="fill: var(--ink); stroke: none"></path>
+<path d="M89.7,2063.4 A7.3,7.3 0 0 1 77.6,2065.9" style="fill: none; stroke: var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M75.2,2062.1 L75.5,2067.7 L79.9,2065.2 Z" style="fill: var(--ink); stroke: none"></path>
+<text x="69.2" y="2091.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 400; fill: var(--muted)">cycle</text>
 
 
 
