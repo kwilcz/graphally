@@ -140,7 +140,7 @@
 <text x="1005.5" y="119.2" text-anchor="middle" style="font: 700 11px Inter, 'Segoe UI', system-ui, sans-serif; fill: var(--card)">M3</text>
 <path d="M596.8,233.9 L596.8,265.9" style="fill: none; stroke: var(--woad)" stroke-width="2" marker-end="url(#pg-m1)"></path>
 <path d="M869.3,342.5 L869.3,374.5" style="fill: none; stroke: var(--rust)" stroke-width="2" marker-end="url(#pg-m2)" marker-start="url(#pg-m2)"></path>
-<path d="M960.3,285.9 A11.3,11.3 0 1 1 982.8,285.9 A11.3,11.3 0 1 1 960.3,285.9 Z" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.5"></path>
+<path d="M960.3,285.9 A11.25,11.25 0 1 1 982.8,285.9 A11.25,11.25 0 1 1 960.3,285.9 Z" style="fill: var(--card); stroke: var(--woad)" stroke-width="1.5"></path>
 <path d="M965.6,283.7 A6.2,6.2 0 0 1 976,281.5" style="fill: none; stroke: var(--woad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
 <path d="M978.1,284.8 L977.8,280 L974.1,282.2 Z" style="fill: var(--woad); stroke: none"></path>
 <path d="M977.4,288 A6.2,6.2 0 0 1 967,290.2" style="fill: none; stroke: var(--woad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>

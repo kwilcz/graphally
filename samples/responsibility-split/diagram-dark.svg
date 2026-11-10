@@ -69,7 +69,7 @@
 
 <path d="M574,490.5 L574,490.5 A87,87 0 0 1 574,316.5" style="fill: none; stroke: var(--woad)" stroke-width="8"></path>
 <path d="M574,316.5 L574,316.5 A87,87 0 0 1 574,490.5" style="fill: none; stroke: #96600e" stroke-width="8"></path>
-<path d="M557.8,316.5 A16.3,16.3 0 1 1 590.3,316.5 A16.3,16.3 0 1 1 557.8,316.5 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
+<path d="M557.8,316.5 A16.25,16.25 0 1 1 590.3,316.5 A16.25,16.25 0 1 1 557.8,316.5 Z" style="fill: var(--card); stroke: var(--ink)" stroke-width="1.5"></path>
 <path d="M565.7,313.4 A8.8,8.8 0 0 1 580.4,310.3" style="fill: none; stroke: var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
 <path d="M583.3,315 L582.9,308.1 L577.6,311.2 Z" style="fill: var(--ink); stroke: none"></path>
 <path d="M582.3,319.5 A8.8,8.8 0 0 1 567.6,322.6" style="fill: none; stroke: var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
