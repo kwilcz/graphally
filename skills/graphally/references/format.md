@@ -99,7 +99,9 @@ Markers follow the shape name: `gateway exclusive` (×), `gateway parallel` (+),
 `gateway inclusive` (○), `gateway complex` (✱), `gateway event-based` (a pentagon in a
 double circle; `gateway event-based start` when it starts the process, `gateway event-based
 parallel` for the parallel variant); `start`, `event` or `end` with `timer`, `message`, `signal` or
-`error`, and `end terminate`; `task loop`, `task multi`, `subprocess loop`. Events are 36px
+`error`, and `end terminate`; `task loop`, `task multi`, `subprocess loop`; a task's type in
+its top-left corner: `task user`, `service`, `send`, `receive`, `manual`, `script`,
+`business-rule`. Events are 36px
 (`end` has a 3px outline), gateways 44px; set `width` and `height` to change them.
 
 ## Classes and icons

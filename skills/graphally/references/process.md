@@ -56,6 +56,9 @@ gateways and tasks are shapes; the sequence flows are connections.
   task with `position: relative`. Lines may leave from it.
 - **Branches** are connections with labels (`yes`, `no`); give the branch that leaves
   sideways `"out": "top"` or `"out": "bottom"`.
+- **A task's type** is a marker: `shape="task user"` (a person does it), `service` (a system
+  does it), `send` and `receive` (a message), `manual`, `script`, `business-rule`. Mark the
+  tasks whose type the reader needs; a plain `task` says nothing more.
 - **Choose the gateway by what decides.** Data decides at `gateway exclusive` (one branch),
   `gateway inclusive` (one or more) or `gateway complex` (a rule the caption states). An
   event decides at `gateway event-based`: the process waits, and the first event to happen

@@ -109,7 +109,9 @@ const ALIASES = {
   'start-event': 'start', 'end-event': 'end', 'intermediate': 'event', 'intermediate-event': 'event', activity: 'task',
   'sub-process': 'subprocess', arrow: 'arrow-right', step: 'chevron-start', repeat: 'cycle', refresh: 'cycle', loop: 'cycle',
 };
-const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess'];
+const MARKS = ['exclusive', 'parallel', 'inclusive', 'complex', 'event-based', 'start', 'timer', 'message', 'signal', 'error', 'terminate', 'loop', 'multi', 'subprocess', 'user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
+
+const TASK_TYPES = ['user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
 
 export const SHAPE_NAMES = [...Object.keys(BASES), ...Object.keys(ALIASES)];
 export const MARK_NAMES = MARKS;
@@ -187,6 +189,37 @@ export function drawShape(spec, b, st) {
       if (k === 'signal') out.push(line(poly([[cx, cy - g * 0.85], [cx + g * 0.85, cy + g * 0.6], [cx - g * 0.85, cy + g * 0.6]]), 1.3, filled ? ink : 'none'));
       if (k === 'error') out.push(line(poly([[cx - g * 0.7, cy + g * 0.7], [cx - g * 0.3, cy - g * 0.7], [cx + g * 0.1, cy + g * 0.05], [cx + g * 0.7, cy - g * 0.7], [cx + g * 0.3, cy + g * 0.7], [cx - g * 0.1, cy - g * 0.05]]), 1.3, filled ? ink : 'none'));
       if (k === 'terminate') out.push(line(circle(cx, cy, g * 0.9), 1, ink));
+    }
+  }
+  // A task's type sits in its top-left corner (BPMN 2.0.2, 10.3.3), drawn on a 16-unit grid.
+  const kind = !def.event && !def.gateway && spec.marks.find(k => TASK_TYPES.includes(k));
+  if (kind) {
+    const ox = b.x + h + 6, oy = b.y + h + 6, P = (x, y) => `${f(ox + x)},${f(oy + y)}`;
+    const env = filled => {
+      out.push(line(`M${P(1, 3)} H${f(ox + 15)} V${f(oy + 13)} H${f(ox + 1)} Z`, 1.2, filled ? ink : 'none'));
+      out.push(`<path d="M${P(1, 3)} L${P(8, 8.5)} L${P(15, 3)}" style="fill: none; stroke: ${filled ? 'var(--card)' : ink}" stroke-width="1.2" stroke-linejoin="round"></path>`);
+    };
+    if (kind === 'user') {
+      out.push(line(circle(ox + 8, oy + 5, 3.2), 1.2));
+      out.push(line(`M${P(2, 15)} C${P(2, 10.5)} ${P(4.5, 9.2)} ${P(8, 9.2)} C${P(11.5, 9.2)} ${P(14, 10.5)} ${P(14, 15)} Z`, 1.2));
+    }
+    if (kind === 'service') {
+      const pts = [];
+      for (let i = 0; i < 8; i++) for (const [da, rr] of [[-11, 7.2], [11, 7.2], [17, 5.3], [39, 5.3]]) { const a = (i * 45 + da) * Math.PI / 180; pts.push([ox + 8 + rr * Math.cos(a), oy + 8 + rr * Math.sin(a)]); }
+      out.push(line(poly(pts), 1.1));
+      out.push(line(circle(ox + 8, oy + 8, 2.2), 1.1));
+    }
+    if (kind === 'send') env(true);
+    if (kind === 'receive') env(false);
+    if (kind === 'manual') out.push(line(`M${P(3, 15)} V${f(oy + 7)} A1,1 0 0 1 ${P(5, 7)} V${f(oy + 4)} A1,1 0 0 1 ${P(7, 4)} V${f(oy + 2.5)} A1,1 0 0 1 ${P(9, 2.5)} V${f(oy + 4)} A1,1 0 0 1 ${P(11, 4)} V${f(oy + 9.5)} L${P(12.6, 7.9)} A1.1,1.1 0 0 1 ${P(14.3, 9.4)} L${P(10.5, 15)} Z`, 1.1));
+    if (kind === 'script') {
+      out.push(line(`M${P(4, 1)} H${f(ox + 14)} C${P(11, 4.5)} ${P(15, 11.5)} ${P(12, 15)} H${f(ox + 2)} C${P(5, 11.5)} ${P(1, 4.5)} ${P(4, 1)} Z`, 1.1));
+      out.push(line(`M${P(5.2, 5)} H${f(ox + 11)} M${P(6.3, 8)} H${f(ox + 12)} M${P(6.3, 11)} H${f(ox + 11.5)}`, 1));
+    }
+    if (kind === 'business-rule') {
+      out.push(line(`M${P(1, 2.5)} H${f(ox + 15)} V${f(oy + 13.5)} H${f(ox + 1)} Z`, 1.1));
+      out.push(line(`M${P(1, 2.5)} H${f(ox + 15)} V${f(oy + 5.5)} H${f(ox + 1)} Z`, 1.1, ink));
+      out.push(line(`M${P(1, 9.5)} H${f(ox + 15)} M${P(5.5, 5.5)} V${f(oy + 13.5)}`, 1));
     }
   }
   // Task markers sit side by side at the bottom middle.

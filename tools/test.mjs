@@ -269,6 +269,11 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page(gws.map((n, i) => `<i shape="${n}" id=g${i}></i>`).join('\n'))), out));
   const gsvg = svgOf(out), marks = gws.map((_, i) => (gsvg.split(`data-id="g${i}"`)[1]?.split('</g>')[0].match(/<path /g) || []).length);
   check(marks.join() === '4,3,3,2', `the gateway markers drew ${marks.join(', ')} paths, not 4, 3, 3, 2`);
+  // A task's type: a glyph in its top-left corner, drawn with a set number of paths.
+  const kinds = ['user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
+  ok0(await render(write(d, page(kinds.map((k, i) => `<div shape="task ${k}" id=t${i}>Task</div>`).join('\n'))), out));
+  const tsvg = svgOf(out), drawn = kinds.map((_, i) => (tsvg.split(`data-id="t${i}"`)[1]?.split('</g>')[0].match(/<path /g) || []).length);
+  check(drawn.join() === '3,3,3,3,2,3,4', `the task types drew ${drawn.join(', ')} paths, not 3, 3, 3, 3, 2, 3, 4`);
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
