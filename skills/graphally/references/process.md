@@ -67,6 +67,10 @@ gateways and tasks are shapes; the sequence flows are connections.
   `subprocess ad-hoc` (~, steps in any order), `task compensation` (⏪, undoes another task).
   A call activity is a task with a thick border (`style="border-width: 3px"`), an event
   subprocess a subprocess with a dotted one (`style="border-style: dotted"`).
+- **Data** a step reads or writes is `shape=data-object` (the folded page), joined by a dotted
+  line with an open head: `{ "from": "form", "to": "review", "dotted": true, "head": "open" }`.
+  Mark it `input` or `output` when the process takes it in or hands it out, `collection` when it
+  is a list. A store that outlives the process is `shape=cylinder`.
 - **Choose the gateway by what decides.** Data decides at `gateway exclusive` (one branch),
   `gateway inclusive` (one or more) or `gateway complex` (a rule the caption states). An
   event decides at `gateway event-based`: the process waits, and the first event to happen

@@ -298,6 +298,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div shape="subprocess transaction" id=v0>T</div><div shape="subprocess ad-hoc" id=v1>A</div><div shape="task compensation" id=v2>C</div>')), out));
   const vsvg = svgOf(out), vd = i => [...(vsvg.split(`data-id="v${i}"`)[1]?.split('</g>')[0] || '').matchAll(/<path d="([^"]+)"/g)].map(m => m[1]);
   check(vd(0).filter(dd => (dd.match(/Q/g) || []).length === 4).length === 2 && vd(1).some(dd => /C1\.5,9\.5|^M1\.5,9\.5 C/.test(dd)) && vd(2).some(dd => /M1\.52,8 L7\.62,3\.81/.test(dd)), `activity variants: ${vd(0).length}, ${vd(1).length}, ${vd(2).length} paths`);
+  // Data objects: an input's arrow is open, an output's filled; a collection has three bars.
+  ok0(await render(write(d, page('<div shape="data-object input" id=o0></div><div shape="data-object output" id=o1></div><div shape="data-object collection" id=o2></div>')), out));
+  const osvg = svgOf(out), od = i => (osvg.split(`data-id="o${i}"`)[1] || '').split('</g>')[0];
+  check(/d="M2,5\.5 H8\.5[^"]*"[^>]*style="fill: none/.test(od(0)) && /d="M2,5\.5 H8\.5[^"]*"[^>]*style="fill: (?!none)/.test(od(1)) && (od(2).match(/ V/g) || []).length >= 3, 'a data object lacks its arrow or its collection bars');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
