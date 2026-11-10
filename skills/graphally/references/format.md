@@ -293,9 +293,11 @@ for `animate`.
 
 Options of lines (`connect`, `arrow`, `curve`): `color` (a CSS colour or a token name:
 `'teal'`, `'rust'`), `width`, `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
-`circle`, `dot`, `diamond`, `open-diamond`, `none`; `head` defaults to `arrow`, `tail` to
-none), `both` (a head at each end), `arrow: false` (no head), and `message: true` for a BPMN
-message flow (dashed, an open circle at the source, an open arrowhead). `connect` also
+`circle`, `dot`, `diamond`, `open-diamond`, `slash`, `none`; `head` defaults to `arrow`, `tail`
+to none), `both` (a head at each end), `arrow: false` (no head), and `message: true` for a BPMN
+message flow (dashed, an open circle at the source, an open arrowhead), `default: true` for a
+BPMN default flow (a slash at the source) and `conditional: true` for a conditional one (an
+open diamond at the source). `connect` also
 takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and enters),
 `via: [points]` (waypoints it passes through) and `flow: true` (see Motion).
 

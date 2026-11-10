@@ -286,6 +286,10 @@ later('page-shapes', async () => {
   const msvg = svgOf(out), mi = i => msvg.split(`data-id="m${i}"`)[1]?.split('</g>')[0] || '';
   const bars = i => [...mi(i).matchAll(/<path d="([^"]+)"/g)].pop()?.[1] || '';
   check((bars(0).match(/ V/g) || []).length === 3 && !/ H/.test(bars(0)) && (bars(1).match(/ H/g) || []).length === 3 && !/ V/.test(bars(1)), 'the multi-instance bars point the wrong way');
+  // A BPMN default flow starts with a slash, a conditional one with an open diamond.
+  ok0(await render(write(d, page('<div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div><div class=card id=c>C</div></div><script type="application/json">[{ "from": "a", "to": "b", "default": true }, { "from": "b", "to": "c", "conditional": true }]</script>', '', 'width=500')), out));
+  const fsvg = svgOf(out);
+  check(/<marker [^>]*><path d="M0\.8,8\.8 L6\.8,1\.2"/.test(fsvg) && /<marker [^>]*><path d="M0\.6,5 L5,1\.9/.test(fsvg) && (fsvg.match(/marker-start=/g) || []).length === 2, 'a default flow lacks its slash, or a conditional one its diamond');
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
