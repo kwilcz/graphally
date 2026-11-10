@@ -63,6 +63,10 @@ gateways and tasks are shapes; the sequence flows are connections.
   (`event timer`, `end message`), `throw` for an intermediate event that sends
   (`event message throw`), and `non-interrupting` for a boundary event that lets its task
   carry on (`event timer non-interrupting`, dashed).
+- **Activity variants** are markers and borders: `subprocess transaction` (double border),
+  `subprocess ad-hoc` (~, steps in any order), `task compensation` (⏪, undoes another task).
+  A call activity is a task with a thick border (`style="border-width: 3px"`), an event
+  subprocess a subprocess with a dotted one (`style="border-style: dotted"`).
 - **Choose the gateway by what decides.** Data decides at `gateway exclusive` (one branch),
   `gateway inclusive` (one or more) or `gateway complex` (a rule the caption states). An
   event decides at `gateway event-based`: the process waits, and the first event to happen

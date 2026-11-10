@@ -294,6 +294,10 @@ later('page-shapes', async () => {
   ok0(await render(write(d, page('<div class="flex gap-24"><div class=card id=a>A</div><div class=card id=b>B</div><div class=card id=c>C</div></div><script type="application/json">[{ "from": "a", "to": "b", "default": true }, { "from": "b", "to": "c", "conditional": true }]</script>', '', 'width=500')), out));
   const fsvg = svgOf(out);
   check(/<marker [^>]*><path d="M0\.8,8\.8 L6\.8,1\.2"/.test(fsvg) && /<marker [^>]*><path d="M0\.6,5 L5,1\.9/.test(fsvg) && (fsvg.match(/marker-start=/g) || []).length === 2, 'a default flow lacks its slash, or a conditional one its diamond');
+  // A transaction has a double border; ad-hoc and compensation mark the bottom of an activity.
+  ok0(await render(write(d, page('<div shape="subprocess transaction" id=v0>T</div><div shape="subprocess ad-hoc" id=v1>A</div><div shape="task compensation" id=v2>C</div>')), out));
+  const vsvg = svgOf(out), vd = i => [...(vsvg.split(`data-id="v${i}"`)[1]?.split('</g>')[0] || '').matchAll(/<path d="([^"]+)"/g)].map(m => m[1]);
+  check(vd(0).filter(dd => (dd.match(/Q/g) || []).length === 4).length === 2 && vd(1).some(dd => /C1\.5,9\.5|^M1\.5,9\.5 C/.test(dd)) && vd(2).some(dd => /M1\.52,8 L7\.62,3\.81/.test(dd)), `activity variants: ${vd(0).length}, ${vd(1).length}, ${vd(2).length} paths`);
   // A semicircle is one arc over a flat base.
   const half = svg.match(/data-id="s11"[^>]*>\s*<path d="([^"]+)"/);
   check(half && (half[1].match(/A/g) || []).length === 1 && /Z$/.test(half[1].trim()), `semicircle drawn as ${half?.[1]}`);
