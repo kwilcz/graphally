@@ -36,8 +36,9 @@ that names a cloud icon downloads the Azure and AWS icon packs, once.
 npx graphally render diagram.html --png
 ```
 
-This writes `diagram.svg` and `diagram.png` next to the source. `--themes` adds the dark
-variants, `--out <dir>` writes elsewhere, and `--json` prints the result as data. The render
+This writes `diagram.svg` and a half-size preview, `diagram.png`, next to the source.
+`--png1x` writes the PNG at full size and `--png2x` at twice the size, sharp enough to
+publish. `--themes` adds the dark variants, `--out <dir>` writes elsewhere, and `--json` prints the result as data. The render
 also adds a three-line header to the source, so the `.html` file draws itself when opened in
 a browser.
 

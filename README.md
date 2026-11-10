@@ -162,7 +162,7 @@ npx graphally render diagram.html --png
 From a clone, the skill's scripts do the same and more:
 
 ```sh
-node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG and a preview PNG
+node skills/graphally/scripts/graphally.mjs render diagram.html --png    # SVG and a half-size preview PNG
 node skills/graphally/scripts/graphally.mjs render diagram.html --png2x  # a sharp PNG to publish
 node skills/graphally/scripts/graphally.mjs render diagram.html --themes  # also diagram-dark.svg, the dark theme
 node skills/graphally/scripts/graphally.mjs render diagram.html --recompute  # lay out afresh, ignoring the previous SVG
