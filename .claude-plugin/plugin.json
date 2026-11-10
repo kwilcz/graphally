@@ -1,7 +1,7 @@
 {
   "name": "graphally",
   "displayName": "graphally",
-  "version": "2.11.4",
+  "version": "2.12.0",
   "description": "AI-generated technical diagrams, rendered to SVG: an agent skill and the engine behind it. Architecture with Azure and AWS icons, networks, hierarchies, BPMN, sequence diagrams, Gantt plans, roadmaps, figures for proposals and solution designs, and Terraform repositories.",
   "author": { "name": "Kamil Wilczyński", "url": "https://github.com/kwilcz" },
   "homepage": "https://github.com/kwilcz/graphally",
