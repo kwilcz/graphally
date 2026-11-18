@@ -35,23 +35,24 @@ script draws only what has no box.
 <picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/pipeline-dark.svg"><img alt="The render pipeline as a flowchart, with the agent's fix loop" src="diagrams/pipeline.svg"></picture>
 
 All of it runs in a headless Chrome, Chromium or Edge, driven by the skill's scripts over
-the DevTools protocol, so text is measured with the same font that draws it.
+the DevTools protocol, so text is measured with the same font that draws it. The folders
+named below are in `skills/graphally/scripts/lib/engine/`.
 
 1. **Before script** (`<script type="graphally" before>`): makes or places elements before
-   layout, with the helpers `schedule()`, `timeline()` (`time.js`) and `sequence()`
-   (`seq.js`).
-2. **Utility classes** (`utilities.js`): the classes the page uses become CSS; a class that
+   layout, with the helpers `schedule()`, `timeline()` (`time/`) and `sequence()`
+   (`sequence/`).
+2. **Utility classes** (`css/utilities.js`): the classes the page uses become CSS; a class that
    reads like a utility and means nothing is reported.
 3. **Lay out**: the browser lays the page out, with graphally's building blocks and shapes
    as zero-specificity defaults, so any rule of the author wins.
-4. **Read geometry** (`page.js`): every element's box, every line of text with its own
+4. **Read geometry** (`walk/`): every element's box, every line of text with its own
    measured position and baseline.
-5. **Route** (`route.js`): the JSON connections, orthogonally, around the boxes.
-6. **Drawing script** (`<script type="graphally">`): runs with the geometry of every element
+5. **Route** (`connect/`, `route/`): the JSON connections, orthogonally, around the boxes.
+6. **Drawing script** (`<script type="graphally">`, `script/`): runs with the geometry of every element
    and draws by name: arrows, gates, dependency lines (`depend()`), text, shapes.
-7. **Render** (`page.js`, `shapes.js`): SVG with colours as CSS tokens, icons as reusable
+7. **Render** (`page/`, `shapes/`): SVG with colours as CSS tokens, icons as reusable
    symbols, shapes drawn from path templates over the boxes the browser gave them.
-8. **Check**: unknown ids, icons, shapes and classes, crowded labels, short arrow ends,
+8. **Check** (`checks/`): unknown ids, icons, shapes and classes, crowded labels, short arrow ends,
    overlapping lines and text, content wider than the page. Each problem is one line that
    names its fix.
 
@@ -104,7 +105,7 @@ Every kind of diagram is a page, so no kind needs a layout algorithm of its own:
 - **Anything else**: phase and role charts, matrices, step cards; bands of cards line up
   with a chart's columns through `subgrid`.
 
-`shape="…"` on an element draws it from a library of path templates (`shapes.js`:
+`shape="…"` on an element draws it from a library of path templates (`shapes/`:
 flowchart, BPMN, stores, block arrows) over the box the browser gave it, with its background
 and border as fill and outline.
 

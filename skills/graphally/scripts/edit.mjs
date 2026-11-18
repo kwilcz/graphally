@@ -16,10 +16,12 @@
 import fs from 'node:fs';
 import { applyEdits, readLines } from './lib/edits.mjs';
 
+const USAGE = 'usage: node edit.mjs <file.html> [--diagram id] --move id dx,dy | --nudge id x,y'
+  + ' | --connect from to [label] | --line key json | --unline key | --edits json | --lines';
 const argv = process.argv.slice(2);
 if (argv[0] === 'edit') argv.shift();
 const file = argv[0];
-if (!file || file.startsWith('--')) { console.error('usage: node edit.mjs <file.html> [--diagram id] --move id dx,dy | --nudge id x,y | --connect from to [label] | --line key json | --unline key | --edits json | --lines'); process.exit(2); }
+if (!file || file.startsWith('--')) { console.error(USAGE); process.exit(2); }
 if (!fs.existsSync(file)) { console.log(`error: no such file: ${file}`); process.exit(2); }
 const src = fs.readFileSync(file, 'utf8');
 const di = argv.indexOf('--diagram'), diagram = di > 0 ? argv[di + 1] : undefined;
@@ -34,7 +36,8 @@ for (let i = 1; i < argv.length; i++) {
   else if (a === '--nudge') { const id = next(), [x, y] = pair(next()); edits.push({ op: 'nudge', id, x, y }); }
   else if (a === '--connect') {
     const from = next(), to = next(), more = () => argv[i + 1] && !argv[i + 1].startsWith('--');
-    const label = more() && !argv[i + 1].startsWith('{') ? next() : '', options = more() && argv[i + 1].startsWith('{') ? JSON.parse(next()) : {};
+    const label = more() && !argv[i + 1].startsWith('{') ? next() : '';
+    const options = more() && argv[i + 1].startsWith('{') ? JSON.parse(next()) : {};
     edits.push({ op: 'connect', from, to, ...(label ? { label } : {}), ...options });
   } else if (a === '--line') { const key = next(); edits.push({ op: 'line', key, set: JSON.parse(next()) }); }
   else if (a === '--unline') edits.push({ op: 'unline', key: next() });
