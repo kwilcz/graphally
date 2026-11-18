@@ -25,7 +25,10 @@
 .g-frag { font: 700 11px Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
 </style>
 <defs><marker id="pg-m0" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--ink)"></path></marker>
-<marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--rust)"></path></marker></defs>
+<marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--rust)"></path></marker>
+<clipPath id="pg-clip0"><rect x="521.4" y="172.4" width="219.5" height="18" rx="3"></rect></clipPath>
+<clipPath id="pg-clip1"><rect x="743" y="212.4" width="122.1" height="18" rx="3"></rect></clipPath>
+<clipPath id="pg-clip2"><rect x="831.6" y="362.4" width="246.1" height="18" rx="3"></rect></clipPath></defs>
 <rect class="g-bg" width="1848" height="879" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Logistics move to AKS</text>
@@ -49,7 +52,9 @@
 <text x="393" y="185" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Done</text>
 <g data-id="hub" data-box="520.5,171.5,221.5,20">
 <rect x="520.9" y="171.9" width="220.5" height="19" rx="3.5" style="fill: var(--line); stroke: var(--muted)" stroke-width="1"></rect>
+<g clip-path="url(#pg-clip0)">
 <rect x="521.4" y="172.4" width="219.5" height="18" rx="0" style="fill: var(--line)"></rect>
+</g>
 </g>
 <line x1="25" y1="241.4" x2="1823" y2="241.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="224.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Spoke VNets and peering</text>
@@ -58,7 +63,9 @@
 <text x="393" y="225" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Done</text>
 <g data-id="spoke" data-box="742,211.5,124,20">
 <rect x="742.5" y="211.9" width="123.1" height="19" rx="3.5" style="fill: var(--line); stroke: var(--muted)" stroke-width="1"></rect>
+<g clip-path="url(#pg-clip1)">
 <rect x="743" y="212.4" width="122.1" height="18" rx="0" style="fill: var(--line)"></rect>
+</g>
 </g>
 <line x1="25" y1="281.4" x2="1823" y2="281.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="264.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Firewall change approval</text>
@@ -85,7 +92,9 @@
 <text x="393" y="375" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--amber)">At risk</text>
 <g data-id="pg" data-box="830.5,361.5,248,20">
 <rect x="831.1" y="361.9" width="247.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
+<g clip-path="url(#pg-clip2)">
 <rect x="831.6" y="362.4" width="135.4" height="18" rx="0" style="fill: var(--icon-soft)"></rect>
+</g>
 </g>
 <line x1="25" y1="431.4" x2="1823" y2="431.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="414.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Monitoring and alerts</text>
