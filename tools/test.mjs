@@ -17,7 +17,9 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readLayout } from '../skills/graphally/scripts/lib/snapshot.mjs';
 import { applyEdits, readLines } from '../skills/graphally/scripts/lib/edits.mjs';
-import { launch, openPage, serve } from '../skills/graphally/scripts/lib/browser.mjs';
+import { launch } from '../skills/graphally/scripts/lib/browser/launch.mjs';
+import { openPage } from '../skills/graphally/scripts/lib/browser/page.mjs';
+import { serve } from '../skills/graphally/scripts/lib/browser/serve.mjs';
 import { findPack } from '../skills/graphally/scripts/lib/iconpack.mjs';
 import { MAJOR, VIEWER } from '../skills/graphally/scripts/lib/viewerheader.mjs';
 
