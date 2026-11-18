@@ -19,7 +19,7 @@ import { launch, openPage, serve } from './browser.mjs';
 import { readLayout } from './snapshot.mjs';
 import { PACKS, fetchPacks, findPack } from './iconpack.mjs';
 import { LOADS, VIEWER, withViewer } from './viewerheader.mjs';
-import { harnessPage } from './harness.mjs';
+import { bundle } from './bundle.mjs';
 
 const skillRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const baseOf = f => path.basename(f).replace(/\.html?$/, '');
@@ -63,7 +63,7 @@ export async function render(files, o = {}) {
   try {
     const served = Object.fromEntries(PACKS.map(n => [`/icons/${n}.json`, findPack(skillRoot, n)]).filter(([, f]) => f));
     for (const j of jobs) if (!o.recompute) served[`/previous/${j.n}.json`] = { body: JSON.stringify(j.previous) };
-    served['/scripts/lib/harness.html'] = { body: harnessPage(path.join(skillRoot, 'scripts/lib')), type: 'text/html' };
+    served['/scripts/lib/run.js'] = { body: bundle(path.join(skillRoot, 'scripts/lib'), 'run.js'), type: 'text/javascript' };
     server = await serve(skillRoot, jobs.map(j => path.dirname(path.resolve(j.file))), served);
     browser = await launch();
     const ctx = { o, server, scale, dark };
