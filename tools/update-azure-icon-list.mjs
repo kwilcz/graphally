@@ -7,15 +7,22 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 
+const PREFIX = 'src/main/webapp/img/lib/azure2/';
+const OUT = new URL('../skills/graphally/assets/icon-sources/azure.txt', import.meta.url);
+
 const dir = process.argv[2];
-if (!dir) { console.error('usage: node tools/update-azure-icon-list.mjs <draw.io checkout>'); process.exit(2); }
-const git = (...a) => execFileSync('git', ['-C', dir, ...a], { encoding: 'utf8' }).trim();
+if (!dir) {
+  console.error('usage: node tools/update-azure-icon-list.mjs <draw.io checkout>');
+  process.exit(2);
+}
+const git = (...args) => execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8' }).trim();
 const commit = git('rev-parse', 'HEAD');
-const prefix = 'src/main/webapp/img/lib/azure2/';
-const files = git('ls-tree', '-r', 'HEAD', '--name-only', prefix).split('\n').filter(f => f.endsWith('.svg')).map(f => f.slice(prefix.length));
-const out = new URL('../skills/graphally/assets/icon-sources/azure.txt', import.meta.url);
-fs.writeFileSync(out, [
+const files = git('ls-tree', '-r', 'HEAD', '--name-only', PREFIX)
+  .split('\n')
+  .filter(file => file.endsWith('.svg'))
+  .map(file => file.slice(PREFIX.length));
+fs.writeFileSync(OUT, [
   "# Azure icons: Microsoft's official set as published in https://github.com/jgraph/drawio",
-  `# commit ${commit}, ${prefix}. One path per line; scripts/fetch-icons.mjs downloads them.`,
+  `# commit ${commit}, ${PREFIX}. One path per line; scripts/fetch-icons.mjs downloads them.`,
   `commit ${commit}`, ...files, ''].join('\n'));
 console.log(`${files.length} icons at ${commit}`);

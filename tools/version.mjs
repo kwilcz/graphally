@@ -27,31 +27,81 @@ const PLACES = [
   { file: 'skills/graphally/package.json', re: /^(  "version": ")(\d+\.\d+\.\d+)(")/m },
 ];
 const SEMVER = /^\d+\.\d+\.\d+$/;
-const read = p => { const m = p.re.exec(fs.readFileSync(path.join(root, p.file), 'utf8')); if (!m) throw new Error(`no version in ${p.file}`); return m[2]; };
-const newer = (a, b) => { const x = a.split('.').map(Number), y = b.split('.').map(Number); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i] ? a : b; return a; };
-const git = (...args) => { try { return execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch { return ''; } };
+const KINDS = ['build', 'minor', 'major'];
 
-const [arg, kind] = process.argv.slice(2);
-if (!arg) console.log(read(PLACES[0]));
-else if (arg === '--check') {
-  const found = PLACES.map(p => `${p.file} ${read(p)}`);
-  if (new Set(PLACES.map(read)).size > 1) { console.log(`the versions differ:\n  ${found.join('\n  ')}\nset them with: node tools/version.mjs <version>`); process.exit(1); }
-  console.log(read(PLACES[0]));
-} else if (arg === '--kind') {
-  const labels = process.argv.slice(3).flatMap(a => a.split(/[\s,]+/));
-  console.log(labels.includes('major') ? 'major' : labels.includes('minor') ? 'minor' : 'build');
-} else if (arg === '--next') {
-  if (!['build', 'minor', 'major'].includes(kind)) { console.error('usage: node tools/version.mjs --next build|minor|major'); process.exit(2); }
-  const tags = git('tag', '--list', 'v*').split('\n').map(t => t.trim().slice(1)).filter(t => SEMVER.test(t));
-  const onMain = /^  version: "(\d+\.\d+\.\d+)"$/m.exec(git('show', 'origin/main:skills/graphally/SKILL.md'))?.[1];
-  const base = [...tags, onMain].filter(Boolean).reduce(newer, '0.0.0');
-  const [major, minor, build] = base.split('.').map(Number);
-  console.log(kind === 'major' ? `${major + 1}.0.0` : kind === 'minor' ? `${major}.${minor + 1}.0` : `${major}.${minor}.${build + 1}`);
-} else if (SEMVER.test(arg)) {
-  for (const p of PLACES) {
-    const f = path.join(root, p.file), text = fs.readFileSync(f, 'utf8');
-    if (!p.re.test(text)) throw new Error(`no version in ${p.file}`);
-    fs.writeFileSync(f, text.replace(p.re, `$1${arg}$3`));
+function fail(message, code) {
+  console.error(message);
+  process.exit(code);
+}
+
+function read(place) {
+  const match = place.re.exec(fs.readFileSync(path.join(root, place.file), 'utf8'));
+  if (!match) throw new Error(`no version in ${place.file}`);
+  return match[2];
+}
+
+// The newer of two versions, a when they are equal.
+function newer(a, b) {
+  const x = a.split('.').map(Number), y = b.split('.').map(Number);
+  const differs = [0, 1, 2].find(i => x[i] !== y[i]);
+  if (differs === undefined) return a;
+  return x[differs] > y[differs] ? a : b;
+}
+
+// git's output, or '' when it fails (no tags, no origin/main).
+function git(...args) {
+  try {
+    return execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+  } catch {
+    return '';
   }
-  console.log(arg);
-} else { console.error(`not a version: ${arg} (want x.y.z)`); process.exit(2); }
+}
+
+function checkAgree() {
+  if (new Set(PLACES.map(read)).size > 1) {
+    const found = PLACES.map(place => `${place.file} ${read(place)}`);
+    console.log(`the versions differ:\n  ${found.join('\n  ')}\nset them with: node tools/version.mjs <version>`);
+    process.exit(1);
+  }
+  console.log(read(PLACES[0]));
+}
+
+function printKind(labelArgs) {
+  const labels = labelArgs.flatMap(arg => arg.split(/[\s,]+/));
+  console.log(KINDS.slice().reverse().find(kind => labels.includes(kind)) ?? 'build');
+}
+
+// The newer of the last v-tag and the version on origin/main.
+function released() {
+  const tags = git('tag', '--list', 'v*').split('\n').map(tag => tag.trim().slice(1)).filter(tag => SEMVER.test(tag));
+  const onMain = /^  version: "(\d+\.\d+\.\d+)"$/m.exec(git('show', 'origin/main:skills/graphally/SKILL.md'))?.[1];
+  return [...tags, onMain].filter(Boolean).reduce(newer, '0.0.0');
+}
+
+function printNext(kind) {
+  if (!KINDS.includes(kind)) fail('usage: node tools/version.mjs --next build|minor|major', 2);
+  const [major, minor, build] = released().split('.').map(Number);
+  const next = { major: `${major + 1}.0.0`, minor: `${major}.${minor + 1}.0`, build: `${major}.${minor}.${build + 1}` };
+  console.log(next[kind]);
+}
+
+function writeVersion(version) {
+  for (const place of PLACES) {
+    const file = path.join(root, place.file), text = fs.readFileSync(file, 'utf8');
+    if (!place.re.test(text)) throw new Error(`no version in ${place.file}`);
+    fs.writeFileSync(file, text.replace(place.re, `$1${version}$3`));
+  }
+  console.log(version);
+}
+
+const COMMANDS = {
+  '--check': checkAgree,
+  '--kind': () => printKind(process.argv.slice(3)),
+  '--next': () => printNext(process.argv[3]),
+};
+
+const arg = process.argv[2];
+if (!arg) console.log(read(PLACES[0]));
+else if (Object.hasOwn(COMMANDS, arg)) COMMANDS[arg]();
+else if (SEMVER.test(arg)) writeVersion(arg);
+else fail(`not a version: ${arg} (want x.y.z)`, 2);
