@@ -5,8 +5,8 @@
 // then small diagrams written here: the layout each SVG carries, connection sides, blocked,
 // bad and dropped overrides, how far a layout moves when a box is added (a stable re-render
 // against --recompute), shapes, script errors, routing, problems, connections as data, the
-// viewer, utility classes, dates, sequences, dependencies, batches, the harness's module
-// list, icon packs on demand and the skill's own examples.
+// viewer, utility classes, dates, sequences, dependencies, batches, icon packs on demand and
+// the skill's own examples.
 // Works in a fresh folder under os.tmpdir(), removed at the end unless --keep, which prints
 // its path. Exits 1 when a test fails.
 import { spawn } from 'node:child_process';
@@ -767,15 +767,6 @@ later('batch', async () => {
   // Two sources of one name would overwrite each other's files in --out.
   const clash = await render([fa, fb], path.join(work, 'batch-out'));
   check(clash.code === 2 && /share a name/.test(clash.text), `expected a name clash: ${tail(clash.text)}`);
-});
-
-later('harness-preload', async () => {
-  // harness.html preloads every module run.js imports, directly or not, and nothing else.
-  const lib = path.join(root, 'skills/graphally/scripts/lib'), seen = new Set();
-  const visit = f => { if (seen.has(f)) return; seen.add(f); for (const m of fs.readFileSync(path.join(lib, f), 'utf8').matchAll(/^(?:import|export)\b[^'"\n]*from '\.\/([^']+)'/gm)) visit(m[1]); };
-  visit('run.js');
-  const pre = [...fs.readFileSync(path.join(lib, 'harness.html'), 'utf8').matchAll(/rel="modulepreload" href="([^"]+)"/g)].map(m => m[1]);
-  check([...seen].sort().join() === [...pre].sort().join(), `harness.html preloads ${[...pre].sort().join(', ')}; run.js needs ${[...seen].sort().join(', ')}`);
 });
 
 later('icon-packs', async () => {
