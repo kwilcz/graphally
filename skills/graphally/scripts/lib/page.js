@@ -12,8 +12,9 @@ import { utilitiesFor } from './utilities.js';
 import { resolveIcon, symbolFor } from './icons.js';
 import { routeEdges } from './route.js';
 import { parseShape, drawShape, SHAPE_CSS } from './shapes.js';
+import * as paint from './paint.js';
+import { fmt, roundTo, openTag, svgElement, attributesOf, boxAttributes } from './svg.js';
 
-const fmt = n => String(Math.round(n * 10) / 10);
 // A polyline with its corners rounded by r: the path of a line with bends.
 function rounded(pts, r) {
   let d = `M${fmt(pts[0].x)},${fmt(pts[0].y)}`;
@@ -161,6 +162,7 @@ export function compilePage(el, opts, m) {
   const ut = document.createElement('style');
   ut.textContent = utilitiesFor(root, problems);
   root.prepend(ut);
+  paint.materializePseudo(root);
   try {
     return build(root, el, id, scripts, lines, opts, m, problems);
   } finally {
@@ -182,10 +184,10 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     ic.dataset.symbol = sym.id;
   }
 
-  const o = root.getBoundingClientRect();
-  const boxOf = e => {
-    const r = e.getBoundingClientRect();
-    return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height };
+  const pageRect = root.getBoundingClientRect();
+  const boxOf = element => {
+    const rect = element.getBoundingClientRect();
+    return { x: rect.left - pageRect.left, y: rect.top - pageRect.top, w: rect.width, h: rect.height };
   };
   const colors = tokenColors(root);
   const paintOf = c => (!c || /rgba\(.*,\s*0\)$/.test(c) || c === 'transparent' ? null : colors.get(c) || portable(c));
@@ -376,45 +378,116 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
 
   // ---------- the page as boxes and text ----------
   const out = [], texts = [], boxes = [];
-  const ctx = document.createElement('canvas').getContext('2d');
-  const ascentOf = cs => { ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; return ctx.measureText('Hg').fontBoundingBoxAscent; };
+
+  // ----- text -----
+  const textMeasure = document.createElement('canvas').getContext('2d');
+  const fontOf = style => `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  const ascentOf = style => {
+    textMeasure.font = fontOf(style);
+    return textMeasure.measureText('Hg').fontBoundingBoxAscent;
+  };
+  const CASE = { uppercase: text => text.toUpperCase(), lowercase: text => text.toLowerCase() };
+  const casedFor = style => CASE[style.textTransform] || (text => text);
+
+  // The lines a text node wraps to, each with its words and its place on the page. The browser
+  // may break a word at a hyphen, so a word is read piece by piece, one piece per line.
+  const linesOf = node => {
+    const range = document.createRange(), lines = [];
+    const rectsOf = (from, to) => {
+      range.setStart(node, from);
+      range.setEnd(node, to);
+      return [...range.getClientRects()].filter(rect => rect.width);
+    };
+    const piecesOf = (start, word) => {
+      const end = start + word.length;
+      if (rectsOf(start, end).length <= 1) return [[word, rectsOf(start, end)[0]]];
+      const breaks = [0];
+      let lineTop = rectsOf(start, start + 1)[0]?.top;
+      for (let index = 1; index < word.length; index++) {
+        const top = rectsOf(start + index, start + index + 1)[0]?.top;
+        if (top != null && lineTop != null && Math.abs(top - lineTop) > 2) breaks.push(index);
+        if (top != null) lineTop = top;
+      }
+      breaks.push(word.length);
+      return breaks.slice(1).map((pieceEnd, piece) =>
+        [word.slice(breaks[piece], pieceEnd), rectsOf(start + breaks[piece], start + pieceEnd)[0]]);
+    };
+    for (const match of node.textContent.matchAll(/\S+/g)) {
+      for (const [word, rect] of piecesOf(match.index, match[0])) {
+        if (!rect) continue;
+        const top = rect.top - pageRect.top;
+        let line = lines.find(candidate => Math.abs(candidate.top - top) < 2);
+        if (!line) {
+          line = { top, left: rect.left - pageRect.left, right: 0, words: [], height: rect.height };
+          lines.push(line);
+        }
+        line.words.push(word);
+        line.right = rect.right - pageRect.left;
+      }
+    }
+    return lines;
+  };
+  // Underline and line-through reach the text from its own element or any one around it.
+  const decorationsOf = owner => {
+    const decorations = new Set();
+    for (let element = owner; element && element !== root; element = element.parentElement) {
+      for (const decoration of getComputedStyle(element).textDecorationLine.split(' ')) {
+        if (decoration === 'underline' || decoration === 'line-through') decorations.add(decoration);
+      }
+    }
+    return [...decorations];
+  };
+  // The style attribute of a line of text: its font, spacing, decoration and colour.
+  const textStyleOf = (style, owner) => {
+    const decorations = decorationsOf(owner);
+    return [
+      `font-family: ${esc(style.fontFamily)}`,
+      `font-size: ${style.fontSize}`,
+      `font-weight: ${style.fontWeight}`,
+      style.fontStyle !== 'normal' && `font-style: ${style.fontStyle}`,
+      style.letterSpacing !== 'normal' && `letter-spacing: ${style.letterSpacing}`,
+      decorations.length && `text-decoration: ${decorations.join(' ')}`,
+      `fill: ${paintOf(style.color) || 'var(--ink)'}`,
+    ].filter(Boolean).join('; ');
+  };
+  // text-overflow: ellipsis on the block that clips a line: the right edge of the block's
+  // content box, where the browser cuts the line. Null when nothing cuts it.
+  const ellipsisEdgeOf = owner => {
+    let block = owner;
+    const isInline = element => getComputedStyle(element).display.startsWith('inline');
+    while (block !== root && isInline(block)) block = block.parentElement;
+    const blockStyle = getComputedStyle(block);
+    if (blockStyle.textOverflow !== 'ellipsis' || blockStyle.overflowX === 'visible') return null;
+    const contentRight = block.getBoundingClientRect().right - pageRect.left;
+    return contentRight - parseFloat(blockStyle.borderRightWidth) - parseFloat(blockStyle.paddingRight);
+  };
+  // The longest start of the text that fits the width with an ellipsis after it.
+  const withEllipsis = (text, style, width) => {
+    textMeasure.font = fontOf(style);
+    let kept = text;
+    while (kept && textMeasure.measureText(`${kept}…`).width > width) kept = kept.slice(0, -1);
+    return `${kept.trimEnd()}…`;
+  };
+  // A text node becomes one <text> per line it wraps to, at the place the browser gave it.
   const textOf = (node, owner) => {
     if (!node.textContent.trim()) return;
-    const cs = getComputedStyle(owner);
-    const fill = paintOf(cs.color) || 'var(--ink)', asc = ascentOf(cs);
-    const range = document.createRange(), lines = [];
-    // A word's pieces, one per line: the browser may break a word at a hyphen.
-    const rects = (i, a, b) => { range.setStart(node, i + a); range.setEnd(node, i + b); return [...range.getClientRects()].filter(r => r.width); };
-    const piecesOf = (i, word) => {
-      if (rects(i, 0, word.length).length <= 1) return [[word, rects(i, 0, word.length)[0]]];
-      const cuts = [0];
-      for (let k = 1, top = rects(i, 0, 1)[0]?.top; k < word.length; k++) {
-        const t = rects(i, k, k + 1)[0]?.top;
-        if (t != null && top != null && Math.abs(t - top) > 2) cuts.push(k);
-        if (t != null) top = t;
+    const style = getComputedStyle(owner);
+    const ascent = ascentOf(style), cased = casedFor(style);
+    const lines = linesOf(node);
+    const textStyle = textStyleOf(style, owner);
+    const ellipsisEdge = ellipsisEdgeOf(owner);
+    for (const line of lines) {
+      let text = cased(line.words.join(' '));
+      if (ellipsisEdge != null && line.right > ellipsisEdge + 0.5) {
+        text = withEllipsis(text, style, ellipsisEdge - line.left);
+        line.right = line.left + textMeasure.measureText(text).width;
       }
-      cuts.push(word.length);
-      return cuts.slice(1).map((end, n) => [word.slice(cuts[n], end), rects(i, cuts[n], end)[0]]);
-    };
-    for (const w of node.textContent.matchAll(/\S+/g)) for (const [word, r] of piecesOf(w.index, w[0])) {
-      if (!r) continue;
-      const top = r.top - o.top;
-      let line = lines.find(l => Math.abs(l.top - top) < 2);
-      if (!line) lines.push(line = { top, left: r.left - o.left, right: 0, words: [], h: r.height });
-      line.words.push(word); line.right = r.right - o.left;
-    }
-    const tt = cs.textTransform, transform = s => tt === 'uppercase' ? s.toUpperCase() : tt === 'lowercase' ? s.toLowerCase() : s;
-    const ls = cs.letterSpacing !== 'normal' ? `; letter-spacing: ${cs.letterSpacing}` : '';
-    // Underline and line-through reach the text from its own element or any one around it.
-    const deco = new Set();
-    for (let a = owner; a && a !== root; a = a.parentElement) for (const d of getComputedStyle(a).textDecorationLine.split(' ')) if (d === 'underline' || d === 'line-through') deco.add(d);
-    const td = deco.size ? `; text-decoration: ${[...deco].join(' ')}` : '';
-    for (const l of lines) {
-      const str = transform(l.words.join(' '));
-      texts.push({ x: l.left, y: l.top, w: l.right - l.left, h: l.h, owner, str });
-      out.push(`<text x="${fmt(l.left)}" y="${fmt(l.top + asc)}" style="font-family: ${esc(cs.fontFamily)}; font-size: ${cs.fontSize}; font-weight: ${cs.fontWeight}${cs.fontStyle !== 'normal' ? `; font-style: ${cs.fontStyle}` : ''}${ls}${td}; fill: ${fill}">${esc(str)}</text>`);
+      texts.push({ x: line.left, y: line.top, w: line.right - line.left, h: line.height, owner, str: text });
+      const position = { x: fmt(line.left), y: fmt(line.top + ascent) };
+      out.push(svgElement('text', { ...position, style: textStyle }, esc(text)));
     }
   };
+
   // clip-path: polygon(…) with %, px and calc(), resolved against the element's own box.
   const len = (v, full) => {
     const expr = v.replace(/^calc\((.*)\)$/, '$1').replace(/(-?[\d.]+)%/g, (_, n) => `(${n}*${full}/100)`).replace(/(-?[\d.]+)px/g, '($1)');
@@ -428,28 +501,296 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       return { x: b.x + len(xs, b.w), y: b.y + len(ys, b.h) };
     });
   };
-  // <img> and inline <svg> (a logo in a header): drawn in the element's content box. An image is
-  // embedded as a data: URL by the CLI (run.js), so the SVG keeps it wherever it is opened.
-  const picture = (e, cs, b) => {
-    const px = s => parseFloat(cs[s]) || 0;
-    const x = b.x + px('borderLeftWidth') + px('paddingLeft'), y = b.y + px('borderTopWidth') + px('paddingTop');
-    const w = b.w - x + b.x - px('borderRightWidth') - px('paddingRight'), h = b.h - y + b.y - px('borderBottomWidth') - px('paddingBottom');
-    const at = `x="${fmt(x)}" y="${fmt(y)}" width="${fmt(w)}" height="${fmt(h)}"`;
-    if (e.tagName === 'svg') {
-      const c = e.cloneNode(true);
-      for (const a of ['x', 'y', 'width', 'height', 'style', 'class', 'id']) c.removeAttribute(a);
-      // Without a viewBox the drawing keeps the size its own width and height gave it.
-      if (!c.hasAttribute('viewBox') && Number(e.getAttribute('width')) > 0 && Number(e.getAttribute('height')) > 0) c.setAttribute('viewBox', `0 0 ${e.getAttribute('width')} ${e.getAttribute('height')}`);
-      c.setAttribute('style', `color: ${paintOf(cs.color) || 'var(--ink)'}`);
-      out.push(new XMLSerializer().serializeToString(c).replace(/^<svg /, `<svg ${at} `));
+  // ----- pictures: icons, images and inline SVG -----
+  const IMAGE_ASPECT = { contain: 'xMidYMid meet', 'scale-down': 'xMidYMid meet', cover: 'xMidYMid slice' };
+  const PICTURE_TAGS = new Set(['ICON', 'IMG', 'svg']);
+  const isPicture = element => PICTURE_TAGS.has(element.tagName);
+  const inkOf = style => paintOf(style.color) || 'var(--ink)';
+
+  // An inline <svg>, copied into the figure at its content box and coloured by its CSS colour.
+  // Without a viewBox, the drawing keeps the size its own width and height gave it.
+  const inlineSvgOf = (element, style, placement) => {
+    const copy = element.cloneNode(true);
+    for (const attribute of ['x', 'y', 'width', 'height', 'style', 'class', 'id']) {
+      copy.removeAttribute(attribute);
+    }
+    const width = element.getAttribute('width'), height = element.getAttribute('height');
+    if (!copy.hasAttribute('viewBox') && Number(width) > 0 && Number(height) > 0) {
+      copy.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    }
+    copy.setAttribute('style', `color: ${inkOf(style)}`);
+    return new XMLSerializer().serializeToString(copy).replace(/^<svg /, `<svg${attributesOf(placement)} `);
+  };
+  // An <img>, embedded as a data: URL by the CLI (run.js) so the SVG keeps it wherever it is
+  // opened. An image that did not load, or could not be embedded, is reported.
+  const imageOf = (element, style, placement) => {
+    const source = element.currentSrc || element.src;
+    const written = element.dataset.src || element.getAttribute('src') || '';
+    if (!element.complete || !element.naturalWidth) {
+      problems.push({
+        rule: 'image-missing', src: written,
+        hint: 'the image did not load: check the path, relative to the diagram file',
+      });
+      return null;
+    }
+    if (!source.startsWith('data:')) {
+      problems.push({
+        rule: 'image-link', warn: true, src: written,
+        hint: 'the SVG links the image instead of holding it: use a file next to the diagram',
+      });
+    }
+    const aspect = IMAGE_ASPECT[style.objectFit] || 'none';
+    return svgElement('image', { href: esc(source), ...placement, preserveAspectRatio: aspect });
+  };
+  const drawPicture = (element, style, box) => {
+    if (element.tagName === 'ICON') {
+      if (!element.dataset.symbol) return;
+      const symbol = { href: `#${element.dataset.symbol}`, ...boxAttributes(box) };
+      out.push(svgElement('use', { ...symbol, style: `color: ${inkOf(style)}` }));
       return;
     }
-    const src = e.currentSrc || e.src, name = e.dataset.src || e.getAttribute('src') || '';
-    if (!e.complete || !e.naturalWidth) { problems.push({ rule: 'image-missing', src: name, hint: 'the image did not load: check the path, relative to the diagram file' }); return; }
-    if (!src.startsWith('data:')) problems.push({ rule: 'image-link', warn: true, src: name, hint: 'the SVG links the image instead of holding it: use a file next to the diagram' });
-    const fit = cs.objectFit, par = fit === 'contain' || fit === 'scale-down' ? 'xMidYMid meet' : fit === 'cover' ? 'xMidYMid slice' : 'none';
-    out.push(`<image href="${esc(src)}" ${at} preserveAspectRatio="${par}"></image>`);
+    const placement = boxAttributes(paint.contentBoxOf(style, box));
+    const drawn = element.tagName === 'svg' ? inlineSvgOf : imageOf;
+    const picture = drawn(element, style, placement);
+    if (picture) out.push(picture);
   };
+
+  // ----- paints: gradients, shadow blurs and clips, collected for the <defs> -----
+  const paints = [];
+  const nextPaintId = kind => `${id}-${kind}${paints.length}`;
+  const opacityValue = opacity => (opacity < 1 ? roundTo(opacity, 3) : null);
+
+  // A linear-gradient() background as a fill: the gradient goes in the defs, the fill points at it.
+  const gradientFill = gradient => {
+    const gradientId = nextPaintId('grad');
+    const stops = gradient.stops.map(stop => {
+      const [color, opacity] = paint.colorAndOpacity(paintOf(stop.color) || 'rgba(0, 0, 0, 0)');
+      return svgElement('stop', {
+        offset: roundTo(stop.at, 4),
+        'stop-color': color,
+        'stop-opacity': opacityValue(opacity),
+      });
+    });
+    const line = { x1: fmt(gradient.x1), y1: fmt(gradient.y1), x2: fmt(gradient.x2), y2: fmt(gradient.y2) };
+    const definition = { id: gradientId, gradientUnits: 'userSpaceOnUse', ...line };
+    paints.push(svgElement('linearGradient', definition, stops.join('')));
+    return `url(#${gradientId})`;
+  };
+  // A Gaussian blur for a shadow. Its region reaches three deviations past the shape, where the
+  // blur has faded out; a CSS blur of B is a Gaussian of deviation B/2.
+  const blurFilter = (shape, blur) => {
+    const filterId = nextPaintId('blur'), reach = blur * 1.5;
+    const region = { x: shape.x - reach, y: shape.y - reach, w: shape.w + 2 * reach, h: shape.h + 2 * reach };
+    const gaussian = svgElement('feGaussianBlur', { stdDeviation: fmt(blur / 2) });
+    const definition = { id: filterId, filterUnits: 'userSpaceOnUse', ...boxAttributes(region) };
+    paints.push(svgElement('filter', definition, gaussian));
+    return `url(#${filterId})`;
+  };
+  // A box-shadow: the box grown by its spread and moved by its offset, then blurred. Its corners
+  // grow with the spread, as a browser draws them.
+  const shadowOf = (shadow, box, cornerRadius) => {
+    const [color, opacity] = paint.colorAndOpacity(paintOf(shadow.color) || 'rgb(0, 0, 0)');
+    const shape = {
+      x: box.x + shadow.x - shadow.spread,
+      y: box.y + shadow.y - shadow.spread,
+      w: box.w + 2 * shadow.spread,
+      h: box.h + 2 * shadow.spread,
+    };
+    return svgElement('rect', {
+      ...boxAttributes(shape),
+      rx: fmt(cornerRadius > 0 ? Math.max(0, cornerRadius + shadow.spread) : 0),
+      style: `fill: ${color}`,
+      'fill-opacity': opacityValue(opacity),
+      filter: shadow.blur > 0 && blurFilter(shape, shadow.blur),
+    });
+  };
+  // overflow other than visible clips what is inside to the padding box, corners included. An
+  // element with nothing inside (an empty Gantt bar) needs no clip.
+  const clipsContent = (element, style) => {
+    if (style.overflowX === 'visible' && style.overflowY === 'visible') return false;
+    return [...element.childNodes].some(child => child.nodeType === 1 || child.textContent.trim());
+  };
+  const openClip = (box, border, cornerRadius) => {
+    const clipId = nextPaintId('clip'), [top, right, bottom, left] = border.widths;
+    const inner = { x: box.x + left, y: box.y + top, w: box.w - left - right, h: box.h - top - bottom };
+    const innerRadius = Math.max(0, cornerRadius - Math.max(top, left));
+    const rect = svgElement('rect', { ...boxAttributes(inner), rx: fmt(innerRadius) });
+    paints.push(svgElement('clipPath', { id: clipId }, rect));
+    out.push(openTag('g', { 'clip-path': `url(#${clipId})` }));
+  };
+  // outline: a ring outside the border, outline-offset away from it, round where the border is.
+  const outlineOf = (style, box, cornerRadius) => {
+    const width = style.outlineStyle === 'none' ? 0 : parseFloat(style.outlineWidth) || 0;
+    if (!width) return null;
+    const outset = (parseFloat(style.outlineOffset) || 0) + width / 2;
+    const ring = { x: box.x - outset, y: box.y - outset, w: box.w + 2 * outset, h: box.h + 2 * outset };
+    return svgElement('rect', {
+      ...boxAttributes(ring),
+      rx: fmt(cornerRadius > 0 ? cornerRadius + outset : 0),
+      style: `fill: none; stroke: ${paintOf(style.outlineColor) || 'var(--ink)'}`,
+      'stroke-width': fmt(width),
+      'stroke-dasharray': paint.DASH_PATTERN[style.outlineStyle],
+    });
+  };
+
+  // ----- turns: rotate, scale and transform -----
+  // A turned element is read unturned and drawn in a group that turns it about its
+  // transform-origin, with all inside it. Its outline on the page, turned, is kept for the page's
+  // size; its boxes and text, read unturned, are marked so that the checks leave them out.
+  const turnedOutlines = [];
+  const startTurn = (element, style) => {
+    const matrix = paint.turnMatrixOf(style);
+    if (!matrix) return null;
+    const [originX, originY] = style.transformOrigin.split(' ').map(parseFloat);
+    const inlineTransforms = [element.style.transform, element.style.rotate, element.style.scale];
+    turnedOutlines.push(boxOf(element));
+    const firstBox = boxes.length, firstText = texts.length;
+    element.style.transform = element.style.rotate = element.style.scale = 'none';
+    const unturned = boxOf(element), pivotX = unturned.x + originX, pivotY = unturned.y + originY;
+    // The matrix turns about the page's origin; shifted so that it turns about the pivot instead.
+    const shiftX = pivotX + matrix.e - matrix.a * pivotX - matrix.c * pivotY;
+    const shiftY = pivotY + matrix.f - matrix.b * pivotX - matrix.d * pivotY;
+    const placed = [matrix.a, matrix.b, matrix.c, matrix.d, shiftX, shiftY];
+    return {
+      group: openTag('g', { transform: `matrix(${placed.map(value => roundTo(value, 4)).join(' ')})` }),
+      end: () => {
+        [element.style.transform, element.style.rotate, element.style.scale] = inlineTransforms;
+        for (const entry of [...boxes.slice(firstBox), ...texts.slice(firstText)]) entry.turned = true;
+      },
+    };
+  };
+
+  // ----- frames: an element's background, border and shadows -----
+  // The frame the computed style describes. A gradient goes into the defs as it is read.
+  const frameOf = (style, box) => {
+    const gradient = paint.linearGradient(style.backgroundImage, box);
+    const background = paintOf(style.backgroundColor) || (gradient && paintOf(gradient.stops[0].color));
+    const frame = {
+      background,
+      fill: gradient ? gradientFill(gradient) : background,
+      shadows: paint.boxShadows(style.boxShadow),
+      border: paint.bordersOf(style),
+      polygon: polygonOf(style.clipPath, box),
+      cornerRadius: paint.cornerRadiusOf(style, box),
+    };
+    frame.visible = Boolean(background || frame.border.drawn || frame.polygon || frame.shadows.length);
+    return frame;
+  };
+  // shape="…": the library's shape, or null; an unknown name is reported with a suggestion.
+  const shapeOf = element => {
+    if (!element.hasAttribute('shape')) return null;
+    const shape = parseShape(element.getAttribute('shape'));
+    if (!shape.error) return shape;
+    const suggestion = closest(shape.error, shape.options);
+    const suggest = suggestion ? { suggest: suggestion } : {};
+    problems.push({ rule: 'unknown-shape', shape: shape.error, ...suggest });
+    return null;
+  };
+  // The library draws the element's background and border as its shape.
+  const drawShapedFrame = (element, shape, frame, box, parentBox) => {
+    const top = frame.border.sides[0];
+    out.push(...drawShape(shape, box, {
+      fill: frame.background || 'none',
+      stroke: top.width ? paintOf(top.color) || 'var(--ink)' : 'none',
+      width: top.width,
+      dash: paint.DASH_PATTERN[top.style] || '',
+    }));
+    return {
+      e: element, b: box, painted: true, parent: parentBox,
+      bg: frame.background, round: shape.round, plain: false,
+    };
+  };
+  // The fill, stroked when all four sides of the border match: a polygon for a clip-path, else a
+  // rectangle inset by half the border, so that the stroke lies inside the box.
+  const frameBodyOf = (frame, box) => {
+    const { border, polygon, cornerRadius } = frame, top = border.sides[0];
+    const fill = `fill: ${frame.fill || 'none'}`;
+    const fillAndStroke = border.uniform
+      ? {
+        style: `${fill}; stroke: ${paintOf(top.color)}`,
+        'stroke-width': top.width,
+        'stroke-dasharray': paint.DASH_PATTERN[top.style],
+      }
+      : { style: fill };
+    if (polygon) {
+      const points = polygon.map(point => `${fmt(point.x)},${fmt(point.y)}`).join(' ');
+      return svgElement('polygon', { points, ...fillAndStroke });
+    }
+    if (border.uniform) {
+      const inset = top.width / 2;
+      const inner = { x: box.x + inset, y: box.y + inset, w: box.w - top.width, h: box.h - top.width };
+      const innerRadius = Math.max(0, cornerRadius - inset);
+      return svgElement('rect', { ...boxAttributes(inner), rx: fmt(innerRadius), ...fillAndStroke });
+    }
+    if (frame.fill) return svgElement('rect', { ...boxAttributes(box), rx: fmt(cornerRadius), ...fillAndStroke });
+    return null;
+  };
+  // Borders that differ per side: a line along each side that has one, drawn just inside it.
+  const sideBordersOf = (border, box) => {
+    const left = box.x, top = box.y, right = box.x + box.w, bottom = box.y + box.h;
+    const edges = [
+      { from: [left, top], to: [right, top], inward: [0, 1] },
+      { from: [right, top], to: [right, bottom], inward: [-1, 0] },
+      { from: [left, bottom], to: [right, bottom], inward: [0, -1] },
+      { from: [left, top], to: [left, bottom], inward: [1, 0] },
+    ];
+    return border.sides.flatMap((side, index) => {
+      if (!side.width) return [];
+      const { from, to, inward } = edges[index];
+      const shiftX = inward[0] * side.width / 2, shiftY = inward[1] * side.width / 2;
+      return [svgElement('line', {
+        x1: fmt(from[0] + shiftX),
+        y1: fmt(from[1] + shiftY),
+        x2: fmt(to[0] + shiftX),
+        y2: fmt(to[1] + shiftY),
+        style: `stroke: ${paintOf(side.color) || 'var(--ink)'}`,
+        'stroke-width': side.width,
+        'stroke-dasharray': paint.DASH_PATTERN[side.style],
+      })];
+    });
+  };
+  // A frame drawn from its parts: shadows, then the body, then the borders that differ per side.
+  // A round frame is a circle to the router; a plain one has nothing drawn.
+  const drawBoxFrame = (element, frame, box, parentBox) => {
+    const { border, polygon, cornerRadius } = frame;
+    if (!polygon) for (const shadow of frame.shadows) out.push(shadowOf(shadow, box, cornerRadius));
+    const body = frameBodyOf(frame, box);
+    if (body) out.push(body);
+    if (!border.uniform && !polygon) out.push(...sideBordersOf(border, box));
+    const circular = cornerRadius >= Math.min(box.w, box.h) / 2 - 0.5 && Math.abs(box.w - box.h) < 2;
+    const round = (Boolean(polygon) && polygon.length === 4) || circular;
+    const plain = !frame.background && !border.drawn && !polygon && !frame.shadows.length;
+    return { e: element, b: box, painted: true, parent: parentBox, bg: frame.background, round, plain };
+  };
+  // Draws an element's frame and enters it in the boxes the router and the checks see. An
+  // element with nothing drawn is entered only when it has an id, for lines to reach it.
+  const drawFrame = (element, style, box, parentBox) => {
+    const frame = frameOf(style, box);
+    const shape = shapeOf(element);
+    let ownBox = null;
+    if (shape) ownBox = drawShapedFrame(element, shape, frame, box, parentBox);
+    else if (frame.visible) ownBox = drawBoxFrame(element, frame, box, parentBox);
+    else if (element.id) ownBox = { e: element, b: box, painted: false, parent: parentBox };
+    if (ownBox) boxes.push(ownBox);
+    return { frame, ownBox };
+  };
+  // A list item with disc bullets: its bullet, before its first line.
+  const bulletOf = (element, style) => {
+    if (style.display !== 'list-item' || style.listStyleType !== 'disc' || !element.firstChild) return null;
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const firstLine = range.getClientRects()[0];
+    if (!firstLine) return null;
+    const fontSize = parseFloat(style.fontSize);
+    return svgElement('circle', {
+      cx: fmt(firstLine.left - pageRect.left - fontSize * 0.7),
+      cy: fmt(firstLine.top - pageRect.top + firstLine.height * 0.55),
+      r: fmt(fontSize * 0.17),
+      style: `fill: ${inkOf(style)}`,
+    });
+  };
+
+  // ----- the walk -----
   let greyed = false;
   // data-step="n": the element appears in its turn when the figure is shown (see motionCss).
   const steps = new Set();
@@ -460,90 +801,86 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     steps.add(Number(v));
     return Number(v);
   };
-  const visit = (e, parentBox) => {
-    const cs = getComputedStyle(e);
-    if (cs.display === 'none' || cs.visibility === 'hidden') return;
-    const b = boxOf(e);
-    // opacity and filter: grayscale() (what disabled does): the element and all inside it are drawn
-    // in a group at that opacity, through a filter that takes the colour out of its icons too.
-    const op = parseFloat(cs.opacity), grey = /grayscale\((?!0\b|0%)/.test(cs.filter);
-    const fade = op < 1 || grey;
+  // The groups an element is drawn in, outermost first: its step and animation when the figure
+  // is shown, its opacity and grey filter (what disabled does), and its turn. Returns the
+  // function that closes them, innermost first.
+  const openGroups = (element, style, turn) => {
+    const opacity = parseFloat(style.opacity), grey = /grayscale\((?!0\b|0%)/.test(style.filter);
     if (grey) greyed = true;
-    const step = stepOf(e), anim = animOf.get(e);
-    if (step) out.push(`<g data-step="${step}">`);
-    if (anim != null) out.push(`<g data-anim="${anim}">`);
-    if (fade) out.push(`<g${op < 1 ? ` opacity="${fmt(op)}"` : ''}${grey ? ` filter="url(#${id}-grey)"` : ''}>`);
-    if (e.tagName === 'ICON' || e.tagName === 'IMG' || e.tagName === 'svg') {
-      if (e.tagName === 'ICON' && e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
-      else if (e.tagName !== 'ICON') picture(e, cs, b);
-      boxes.push({ e, b, painted: true, parent: parentBox });
-      if (fade) out.push('</g>');
-      if (anim != null) out.push('</g>');
-      if (step) out.push('</g>');
-      return;
-    }
-    // The layout the next render reads back (snapshot.mjs), with the author's nudge.
-    const nudge = e.getAttribute('nudge') ? ` data-nudge="${esc(e.getAttribute('nudge'))}"` : '';
-    const open = e.id ? out.push(`<g data-id="${esc(e.id)}" data-box="${[b.x, b.y, b.w, b.h].map(v => Math.round(v * 2) / 2).join(',')}"${nudge}>`) : 0;
-    const bg = paintOf(cs.backgroundColor);
-    const bw = ['Top', 'Right', 'Bottom', 'Left'].map(s => (cs[`border${s}Style`] === 'none' ? 0 : parseFloat(cs[`border${s}Width`]) || 0));
-    const bc = paintOf(cs.borderTopColor), dashed = cs.borderTopStyle === 'dashed' ? ' stroke-dasharray="5 4"' : cs.borderTopStyle === 'dotted' ? ' stroke-dasharray="1.5 3"' : '';
-    const poly = polygonOf(cs.clipPath, b);
-    const rr = cs.borderTopLeftRadius;
-    const rx = Math.min(rr.endsWith('%') ? Math.min(b.w, b.h) * parseFloat(rr) / 100 : parseFloat(rr) || 0, b.w / 2, b.h / 2);
-    const uniform = bw.every(w => w === bw[0]) && bw[0] > 0;
-    let me = null;
-    // shape="…": the library draws the element's background and border as that shape.
-    const spec = e.hasAttribute('shape') ? parseShape(e.getAttribute('shape')) : null;
-    if (spec?.error) problems.push({ rule: 'unknown-shape', shape: spec.error, ...(closest(spec.error, spec.options) ? { suggest: closest(spec.error, spec.options) } : {}) });
-    if (spec && !spec.error) {
-      const st = cs.borderTopStyle;
-      out.push(...drawShape(spec, b, { fill: bg || 'none', stroke: bw[0] ? bc || 'var(--ink)' : 'none', width: bw[0], dash: st === 'dashed' ? '5 4' : st === 'dotted' ? '1.5 3' : '' }));
-      me = { e, b, painted: true, parent: parentBox, bg, round: spec.round, plain: false };
-      boxes.push(me);
-    } else if (bg || uniform || bw.some(Boolean) || poly) {
-      const stroke = uniform ? ` style="fill: ${bg || 'none'}; stroke: ${bc}" stroke-width="${bw[0]}"${dashed}` : ` style="fill: ${bg || 'none'}"`;
-      if (poly) out.push(`<polygon points="${poly.map(p => `${fmt(p.x)},${fmt(p.y)}`).join(' ')}"${stroke}></polygon>`);
-      else if (uniform) { const h = bw[0] / 2; out.push(`<rect x="${fmt(b.x + h)}" y="${fmt(b.y + h)}" width="${fmt(b.w - bw[0])}" height="${fmt(b.h - bw[0])}" rx="${fmt(Math.max(0, rx - h))}"${stroke}></rect>`); }
-      else if (bg) out.push(`<rect x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" rx="${fmt(rx)}"${stroke}></rect>`);
-      if (!uniform && !poly) {
-        const sides = [[b.x, b.y, b.x + b.w, b.y], [b.x + b.w, b.y, b.x + b.w, b.y + b.h], [b.x, b.y + b.h, b.x + b.w, b.y + b.h], [b.x, b.y, b.x, b.y + b.h]];
-        bw.forEach((w, i) => {
-          if (!w) return;
-          const side = ['Top', 'Right', 'Bottom', 'Left'][i], c = paintOf(cs[`border${side}Color`]) || 'var(--ink)', st = cs[`border${side}Style`];
-          const [x1, y1, x2, y2] = sides[i], dx = i === 1 ? -w / 2 : i === 3 ? w / 2 : 0, dy = i === 0 ? w / 2 : i === 2 ? -w / 2 : 0;
-          out.push(`<line x1="${fmt(x1 + dx)}" y1="${fmt(y1 + dy)}" x2="${fmt(x2 + dx)}" y2="${fmt(y2 + dy)}" style="stroke: ${c}" stroke-width="${w}"${st === 'dashed' ? ' stroke-dasharray="5 4"' : st === 'dotted' ? ' stroke-dasharray="1.5 3"' : ''}></line>`);
-        });
-      }
-      me = { e, b, painted: true, parent: parentBox, bg, round: !!poly && poly.length === 4 || (rx >= Math.min(b.w, b.h) / 2 - 0.5 && Math.abs(b.w - b.h) < 2), plain: !bg && !bw.some(Boolean) && !poly };
-      boxes.push(me);
-    } else if (e.id) { me = { e, b, painted: false, parent: parentBox }; boxes.push(me); }
-    if (cs.display === 'list-item' && cs.listStyleType === 'disc') {
-      const first = e.firstChild && document.createRange();
-      if (first) {
-        first.selectNodeContents(e);
-        const r = first.getClientRects()[0];
-        if (r) { const fs = parseFloat(cs.fontSize); out.push(`<circle cx="${fmt(r.left - o.left - fs * 0.7)}" cy="${fmt(r.top - o.top + r.height * 0.55)}" r="${fmt(fs * 0.17)}" style="fill: ${paintOf(cs.color) || 'var(--ink)'}"></circle>`); }
-      }
-    }
-    for (const c of e.childNodes) {
-      if (c.nodeType === 3) textOf(c, e);
-      else if (c.nodeType === 1 && c.tagName !== 'STYLE' && c.tagName !== 'SCRIPT') visit(c, me || parentBox);
-    }
-    if (open) out.push('</g>');
-    if (fade) out.push('</g>');
-    if (anim != null) out.push('</g>');
-    if (step) out.push('</g>');
+    const step = stepOf(element), animation = animOf.get(element);
+    const groups = [
+      step && openTag('g', { 'data-step': step }),
+      animation != null && openTag('g', { 'data-anim': animation }),
+      (opacity < 1 || grey) && openTag('g', {
+        opacity: opacity < 1 && fmt(opacity),
+        filter: grey && `url(#${id}-grey)`,
+      }),
+      turn?.group,
+    ].filter(Boolean);
+    out.push(...groups);
+    return () => {
+      for (let count = 0; count < groups.length; count++) out.push('</g>');
+      turn?.end();
+    };
   };
-  for (const c of root.childNodes) {
-    if (c.nodeType === 3) textOf(c, root);
-    else if (c.nodeType === 1 && c.tagName !== 'STYLE') visit(c, null);
+  // An element's own drawing: its id group (the layout the next render reads back, see
+  // snapshot.mjs), its frame and bullet, what is inside it (clipped when it clips) and its outline.
+  const drawElement = (element, style, box, parentBox) => {
+    if (element.id) {
+      const nudge = element.getAttribute('nudge');
+      const layout = [box.x, box.y, box.w, box.h].map(value => Math.round(value * 2) / 2).join(',');
+      out.push(openTag('g', {
+        'data-id': esc(element.id),
+        'data-box': layout,
+        'data-nudge': nudge ? esc(nudge) : null,
+      }));
+    }
+    const { frame, ownBox } = drawFrame(element, style, box, parentBox);
+    const bullet = bulletOf(element, style);
+    if (bullet) out.push(bullet);
+    const clipped = clipsContent(element, style);
+    if (clipped) openClip(box, frame.border, frame.cornerRadius);
+    for (const child of element.childNodes) {
+      if (child.nodeType === 3) textOf(child, element);
+      else if (isDrawnElement(child)) visit(child, ownBox || parentBox);
+    }
+    if (clipped) out.push('</g>');
+    const outline = outlineOf(style, box, frame.cornerRadius);
+    if (outline) out.push(outline);
+    if (element.id) out.push('</g>');
+  };
+  const isDrawnElement = node => node.nodeType === 1 && node.tagName !== 'STYLE' && node.tagName !== 'SCRIPT';
+  const visit = (element, parentBox) => {
+    const style = getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden') return;
+    const turn = startTurn(element, style);
+    const box = boxOf(element);
+    const closeGroups = openGroups(element, style, turn);
+    if (isPicture(element)) {
+      drawPicture(element, style, box);
+      boxes.push({ e: element, b: box, painted: true, parent: parentBox });
+    } else {
+      drawElement(element, style, box, parentBox);
+    }
+    closeGroups();
+  };
+  for (const child of root.childNodes) {
+    if (child.nodeType === 3) textOf(child, root);
+    else if (child.nodeType === 1 && child.tagName !== 'STYLE') visit(child, null);
   }
 
   // ---------- connectors: route.js on the page's boxes ----------
   const far = drawingsReach(drawings);
-  const W = Math.ceil(Math.max(root.scrollWidth, ...boxes.map(x => x.b.x + x.b.w + S.pad), ...texts.map(t => t.x + t.w + S.pad), far.x + S.pad));
-  const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), far.y + S.pad, 2 * S.pad));
+  // The page's size: what it shows, a turned element by its outline on the page.
+  const shownRects = [
+    ...boxes.filter(entry => !entry.turned).map(entry => entry.b),
+    ...texts.filter(text => !text.turned),
+    ...turnedOutlines,
+  ];
+  const rightEdges = shownRects.map(rect => rect.x + rect.w + S.pad);
+  const bottomEdges = shownRects.map(rect => rect.y + rect.h + S.pad);
+  const W = Math.ceil(Math.max(root.scrollWidth, ...rightEdges, far.x + S.pad));
+  const H = Math.ceil(Math.max(...bottomEdges, far.y + S.pad, 2 * S.pad));
   const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H, opts.previous);
   for (const r of routes) if (r.labelCrowded) problems.push({ rule: 'label-crowded', edge: `${r.edge.from} -> ${r.edge.to}`, label: r.edge.label, hint: 'widen the gap the line runs through, or shorten the label' });
   overlaps(routes, problems);
@@ -603,12 +940,14 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     }
     if (d.anim != null) drawOut.push('</g>');
   }
-  check(texts, problems);
-  overflows(boxes, texts, root, problems);
+  // Turned boxes and text were read unturned, so the checks on overlap leave them out.
+  const unturnedTexts = texts.filter(text => !text.turned);
+  check(unturnedTexts, problems);
+  overflows(boxes.filter(entry => !entry.turned), unturnedTexts, root, problems);
   const defs = [...[...markers].map(k => {
     const [mid, kind, color] = k.split('|'), [ref, body] = MARKER[kind];
     return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
-  }), ...symbols.values(), ...(greyed ? [`<filter id="${id}-grey" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix></filter>`] : [])];
+  }), ...symbols.values(), ...paints, ...(greyed ? [`<filter id="${id}-grey" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix></filter>`] : [])];
   const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
   const style = (opts.standalone ? `<style>${opts.css}</style>\n` : '') + (stepOrder.length || flows || anims.length ? `<style>${motionCss(stepOrder, delayOf, animCss(anims, id, problems))}</style>\n` : '');
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
@@ -658,27 +997,44 @@ const arcPoint = (c, r, deg) => ({ x: c.x + r * Math.cos(deg * Math.PI / 180), y
 // How far right and down the script's drawings reach, so the figure grows to hold them. A
 // path counts its points and control points (a curve stays inside them); text is measured
 // roughly, from its size.
+// The points of a path's data, control points included (a curve stays inside them).
+const pointsOfPath = path =>
+  [...path.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(match => ({ x: Number(match[1]), y: Number(match[2]) }));
+
 function drawingsReach(drawings) {
-  let x = 0, y = 0;
-  const reach = (px, py) => { if (px > x) x = px; if (py > y) y = py; };
-  for (const d of drawings) {
-    const o = d.o || {};
-    if (d.kind === 'path') {
-      const w = (o.width || 1.5) / 2 + 5;
-      const pts = d.pts || [...d.d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: Number(m[1]), y: Number(m[2]) }));
-      for (const p of pts) reach(p.x + w, p.y + w);
-    } else if (d.kind === 'text') {
-      const size = o.size || 12, wide = d.str.length * size * 0.6, anchor = o.anchor || 'middle';
-      reach(d.p.x + (anchor === 'start' ? wide : anchor === 'middle' ? wide / 2 : 0), d.p.y + size);
-    } else if (d.kind === 'gate' || d.kind === 'icon') {
-      const s = (o.size || (d.kind === 'gate' ? 30 : 24)) / 2;
-      reach(d.p.x + s, d.p.y + s);
-    } else if (d.kind === 'shape') {
-      const size = o.size || 44, w = o.w || size, h = o.h || (o.w ? w : size);
-      reach(d.p.x + w / 2, d.p.y + h / 2);
+  let right = 0, bottom = 0;
+  const reach = (x, y) => {
+    if (x > right) right = x;
+    if (y > bottom) bottom = y;
+  };
+  for (const drawing of drawings) {
+    const options = drawing.o || {};
+    if (drawing.kind === 'path') {
+      // Room for half the stroke, and for an arrowhead or tail mark at an end that has one:
+      // a plain rule drawn to the page's edge stays inside it.
+      const ends = endsOf(options, false, []), halfStroke = (options.width || 1.5) / 2;
+      const points = drawing.pts || pointsOfPath(drawing.d);
+      points.forEach((point, index) => {
+        const isHead = index === points.length - 1 && ends.head !== 'none';
+        const isTail = index === 0 && ends.tail !== 'none';
+        const margin = halfStroke + (isHead || isTail ? 5 : 0);
+        reach(point.x + margin, point.y + margin);
+      });
+    } else if (drawing.kind === 'text') {
+      // Text is measured roughly: a character is about 0.6 of the font size wide.
+      const size = options.size || 12, width = drawing.str.length * size * 0.6;
+      const rightOfAnchor = { start: width, middle: width / 2, end: 0 }[options.anchor || 'middle'] ?? 0;
+      reach(drawing.p.x + rightOfAnchor, drawing.p.y + size);
+    } else if (drawing.kind === 'gate' || drawing.kind === 'icon') {
+      const half = (options.size || (drawing.kind === 'gate' ? 30 : 24)) / 2;
+      reach(drawing.p.x + half, drawing.p.y + half);
+    } else if (drawing.kind === 'shape') {
+      const size = options.size || 44, width = options.w || size;
+      const height = options.h || (options.w ? width : size);
+      reach(drawing.p.x + width / 2, drawing.p.y + height / 2);
     }
   }
-  return { x, y };
+  return { x: right, y: bottom };
 }
 
 function pathBuilder(start, drawings, point) {
@@ -967,29 +1323,68 @@ function check(texts, problems) {
 // inside it: those are left alone. Only a drawn block has an edge to stick out of; a plain
 // wrapper has none, and an inline span's box is its line, not a frame.
 function overflows(boxes, texts, root, problems) {
-  const cs = e => getComputedStyle(e);
-  const drawn = new Map(boxes.filter(b => b.painted && !b.plain && b.e.tagName !== 'ICON' && cs(b.e).display !== 'inline').map(b => [b.e, b]));
-  const holder = e => { for (let p = e.parentElement; p && p !== root; p = p.parentElement) if (drawn.has(p)) return drawn.get(p); return null; };
-  // Placed on purpose: the element or an ancestor below its holder is absolutely positioned.
-  const placed = (e, h) => { for (let p = e; p && p !== h?.e && p !== root; p = p.parentElement) if (/^(absolute|fixed)$/.test(cs(p).position)) return true; return false; };
-  const name = e => e.id || `${e.tagName.toLowerCase()}${[...e.classList].filter(c => !c.startsWith('[')).map(c => `.${c}`).join('')}`;
-  const past = (q, a) => [['left', q.x - a.x], ['right', a.x + a.w - q.x - q.w], ['top', q.y - a.y], ['bottom', a.y + a.h - q.y - q.h]].filter(([, d]) => d > 1);
-  const warn = (what, h, sides) => problems.push({ rule: 'box-overflow', warn: true, box: what, in: name(h.e), by: sides.map(([k, d]) => `${k} ${Math.round(d)}px`).join(', '),
-    hint: 'widen the box that holds it, or narrow what is inside; leave it when it is meant' });
-  for (const b of boxes) {
-    if (!b.painted) continue;
-    const h = holder(b.e), sides = h && !placed(b.e, h) && past(h.b, b.b);
-    if (sides?.length) warn(name(b.e), h, sides);
+  const styleOf = element => getComputedStyle(element);
+  const isFrame = entry =>
+    entry.painted && !entry.plain && entry.e.tagName !== 'ICON' && styleOf(entry.e).display !== 'inline';
+  const framed = new Map(boxes.filter(isFrame).map(entry => [entry.e, entry]));
+  // The element's ancestors up to the page, nearest first.
+  const ancestorsOf = function* (element, stop = root) {
+    for (let ancestor = element.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      if (ancestor === stop || ancestor === root) return;
+      yield ancestor;
+    }
+  };
+  const holderOf = element => {
+    for (const ancestor of ancestorsOf(element)) if (framed.has(ancestor)) return framed.get(ancestor);
+    return null;
+  };
+  // Left alone on purpose: the element or an ancestor below its holder is absolutely positioned,
+  // or an ancestor clips it (overflow: hidden, truncate).
+  const leftAlone = (element, holder) => {
+    // A text's holder may be its own element: then nothing lies between them.
+    const belowHolder = element === holder.e ? [] : [element, ...ancestorsOf(element, holder.e)];
+    if (belowHolder.some(node => /^(absolute|fixed)$/.test(styleOf(node).position))) return true;
+    return [...ancestorsOf(element)].some(ancestor => styleOf(ancestor).overflowX !== 'visible');
+  };
+  // An element's name in a warning: its id, else its tag and classes (utility classes left out).
+  const nameOf = element => {
+    if (element.id) return element.id;
+    const classes = [...element.classList].filter(name => !name.startsWith('[')).map(name => `.${name}`);
+    return `${element.tagName.toLowerCase()}${classes.join('')}`;
+  };
+  // How far a rect sticks out of its holder on each side, where it is more than a pixel.
+  const overhangOf = (holderRect, rect) => [
+    ['left', holderRect.x - rect.x],
+    ['right', rect.x + rect.w - holderRect.x - holderRect.w],
+    ['top', holderRect.y - rect.y],
+    ['bottom', rect.y + rect.h - holderRect.y - holderRect.h],
+  ].filter(([, distance]) => distance > 1);
+  const warn = (what, holder, sides) => problems.push({
+    rule: 'box-overflow', warn: true, box: what, in: nameOf(holder.e),
+    by: sides.map(([side, distance]) => `${side} ${Math.round(distance)}px`).join(', '),
+    hint: 'widen the box that holds it, or narrow what is inside; leave it when it is meant',
+  });
+  // The sides where something sticks out of its holder; none when it has no holder or is left alone.
+  const sidesOut = (element, holder, rect) => {
+    if (!holder || leftAlone(element, holder)) return [];
+    return overhangOf(holder.b, rect);
+  };
+  for (const entry of boxes) {
+    if (!entry.painted) continue;
+    const holder = holderOf(entry.e), sides = sidesOut(entry.e, holder, entry.b);
+    if (sides.length) warn(nameOf(entry.e), holder, sides);
   }
   // Text: once per element, by the line that sticks out furthest.
-  const worst = new Map();
-  for (const t of texts) {
-    const h = drawn.get(t.owner) || holder(t.owner), sides = h && !placed(t.owner, h) && past(h.b, t);
-    if (!sides?.length) continue;
-    const far = Math.max(...sides.map(([, d]) => d)), was = worst.get(t.owner);
-    if (!was || far > was.far) worst.set(t.owner, { far, h, sides, str: t.str });
+  const worstLines = new Map();
+  for (const text of texts) {
+    const holder = framed.get(text.owner) || holderOf(text.owner), sides = sidesOut(text.owner, holder, text);
+    if (!sides.length) continue;
+    const furthest = Math.max(...sides.map(([, distance]) => distance)), worst = worstLines.get(text.owner);
+    if (worst && furthest <= worst.furthest) continue;
+    worstLines.set(text.owner, { furthest, holder, sides, str: text.str });
   }
-  for (const { h, sides, str } of worst.values()) warn(`text "${str.length > 24 ? `${str.slice(0, 24)}…` : str}"`, h, sides);
+  const quoted = str => (str.length > 24 ? `${str.slice(0, 24)}…` : str);
+  for (const { holder, sides, str } of worstLines.values()) warn(`text "${quoted(str)}"`, holder, sides);
 }
 
 // An arrowhead or tail mark on an end segment shorter than 12px sits on the bend before it.
