@@ -29,87 +29,136 @@ function blocksOf(router) {
   return blocks;
 }
 
-// The places a label may go on a route, each scored: lower is nearer the line's middle and the
-// better side of it.
-function candidatesOf(points, width) {
-  let total = 0, run = 0;
-  for (let index = 1; index < points.length; index++) {
-    const point = points[index], before = points[index - 1];
-    total += Math.abs(point.x - before.x) + Math.abs(point.y - before.y);
+const runLength = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+
+function routeLength(points) {
+  let total = 0;
+  for (let index = 1; index < points.length; index++) total += runLength(points[index], points[index - 1]);
+  return total;
+}
+
+// Every few pixels along a run, its middle first.
+function fractionsAlong(length) {
+  const fractions = [0.5];
+  for (let d = 6; d < length / 2; d += 6) fractions.push(0.5 - d / length, 0.5 + d / length);
+  return fractions;
+}
+
+// The places for a label at a fraction along a run: above or below a horizontal run, beside an
+// upright one, or on the line itself, its halo interrupting it, in a narrow channel.
+function spotsAt(run, t, width) {
+  const { a, b, length, middle, horizontal } = run;
+  const cx = a.x + (b.x - a.x) * t, cy = a.y + (b.y - a.y) * t, score = middle + Math.abs(t - 0.5) * 0.4;
+  const at = (x, y, extra, inline) => ({ x, y, w: width, h: HEIGHT, score: score + extra, ...inline });
+  const spots = [];
+  if (horizontal && length >= Math.min(width + 16, width * 0.75 + 24)) {
+    spots.push(at(cx - width / 2, cy - HEIGHT - 3, 0), at(cx - width / 2, cy + 4, 0.15));
   }
-  const candidates = [];
+  if (!horizontal && length >= HEIGHT + 16) {
+    spots.push(at(cx + 7, cy - HEIGHT / 2, 0.25), at(cx - 7 - width, cy - HEIGHT / 2, 0.35));
+  }
+  if (!horizontal && length >= HEIGHT + 24) spots.push(at(cx - width / 2, cy - HEIGHT / 2, 0.6, { inline: true }));
+  if (horizontal && length >= width + 24) spots.push(at(cx - width / 2, cy - HEIGHT / 2, 0.7, { inline: true }));
+  return spots;
+}
+
+// The places a label may go on a route, best first: lower scores lie nearer the line's middle
+// and on the better side of it. Runs shorter than 18px hold none.
+function candidatesOf(points, width) {
+  const total = routeLength(points), candidates = [];
+  let travelled = 0;
   for (let s = 0; s + 1 < points.length; s++) {
-    const a = points[s], b = points[s + 1], length = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-    const middle = Math.abs(run + length / 2 - total / 2) / (total || 1);
-    run += length;
-    if (length < 18) continue;
-    const horizontal = Math.abs(a.y - b.y) < 0.01;
-    // Every few pixels along the run, its middle first.
-    const fractions = [0.5];
-    for (let d = 6; d < length / 2; d += 6) fractions.push(0.5 - d / length, 0.5 + d / length);
-    for (const t of fractions) {
-      const cx = a.x + (b.x - a.x) * t, cy = a.y + (b.y - a.y) * t, score = middle + Math.abs(t - 0.5) * 0.4;
-      const at = (x, y, extra, inline) =>
-        candidates.push({ x, y, w: width, h: HEIGHT, score: score + extra, ...inline });
-      if (horizontal && length >= Math.min(width + 16, width * 0.75 + 24)) {
-        at(cx - width / 2, cy - HEIGHT - 3, 0);
-        at(cx - width / 2, cy + 4, 0.15);
-      }
-      if (!horizontal && length >= HEIGHT + 16) {
-        at(cx + 7, cy - HEIGHT / 2, 0.25);
-        at(cx - 7 - width, cy - HEIGHT / 2, 0.35);
-      }
-      // On the line itself, the halo interrupting it: for narrow channels.
-      if (!horizontal && length >= HEIGHT + 24) at(cx - width / 2, cy - HEIGHT / 2, 0.6, { inline: true });
-      if (horizontal && length >= width + 24) at(cx - width / 2, cy - HEIGHT / 2, 0.7, { inline: true });
-    }
+    const a = points[s], b = points[s + 1], length = runLength(a, b);
+    const middle = Math.abs(travelled + length / 2 - total / 2) / (total || 1);
+    travelled += length;
+    const run = { a, b, length, middle, horizontal: Math.abs(a.y - b.y) < 0.01 };
+    if (length >= 18) candidates.push(...fractionsAlong(length).flatMap(t => spotsAt(run, t, width)));
   }
   return candidates.sort((a, b) => a.score - b.score);
 }
 
+// Each run of a line, widened by 6px: another label there would read as on that line.
+const nearBoxes = points => points.slice(1).map((q, index) => {
+  const p = points[index], x = Math.min(p.x, q.x) - 6, y = Math.min(p.y, q.y) - 6;
+  return { x, y, w: Math.abs(p.x - q.x) + 12, h: Math.abs(p.y - q.y) + 12 };
+});
+const covered = (spot, rects) => rects.filter(rect => intersects(spot, rect)).length;
+
+// Where labels may go: what blocks them, the labels placed so far, and the lines near each route.
+class LabelSpace {
+  constructor(router, routes) {
+    this.geometry = router.geometry;
+    this.obstacles = router.obstacles;
+    this.blocks = blocksOf(router);
+    this.placed = [];
+    this.nearLines = routes.map(route => nearBoxes(route.points));
+  }
+
+  offPage(r) {
+    const { width, height } = this.geometry;
+    return r.x < 2 || r.y < 2 || r.x + r.w > width - 2 || r.y + r.h > height - 2;
+  }
+
+  hits(r) {
+    return this.blocks.some(b => intersects(r, b)) || this.placed.some(b => intersects(r, b)) || this.offPage(r);
+  }
+
+  crossesLine(spot, index) {
+    return this.nearLines.some((boxes, other) => other !== index && boxes.some(b => intersects(spot, b)));
+  }
+
+  // Best: touches nothing. Next: lies over another line (its halo cuts the line).
+  cleanSpot(candidates, index) {
+    return candidates.find(c => !this.hits(c) && !this.crossesLine(c, index)) || candidates.find(c => !this.hits(c));
+  }
+
+  // Nowhere clean: the spot that covers the least, text and boxes weighing most.
+  leastCovering(candidates, index) {
+    const cost = c => 10 * covered(c, this.obstacles) + 10 * covered(c, this.placed) + 3 * covered(c, this.blocks)
+      + (this.crossesLine(c, index) ? 1 : 0) + c.score + (this.offPage(c) ? 100 : 0);
+    return candidates.reduce((best, c) => (!best || cost(c) < cost(best) ? c : best), null);
+  }
+
+  // Only a label over a node, over an obstacle whose id has a '#', or over another label is a
+  // problem worth a re-render; touching a box border is the best the space allows.
+  isCrowded(spot) {
+    return this.obstacles.some(o => intersects(spot, o) && (o.node || o.id.includes('#')))
+      || this.placed.some(b => intersects(spot, b));
+  }
+
+  // A placed label keeps its neighbours a little apart.
+  place(spot) { this.placed.push({ x: spot.x - 4, y: spot.y - 1, w: spot.w + 8, h: spot.h + 2 }); }
+}
+
+// With no candidate at all: the middle between the line's ends.
+function middleSpot(points, width) {
+  const a = points[0], b = points.at(-1);
+  return { x: (a.x + b.x) / 2 - width / 2, y: (a.y + b.y) / 2 - HEIGHT / 2, w: width, h: HEIGHT };
+}
+
+function placeLabel(space, route, index, width) {
+  const candidates = candidatesOf(route.points, width);
+  let spot = space.cleanSpot(candidates, index);
+  if (!spot) {
+    spot = space.leastCovering(candidates, index) || middleSpot(route.points, width);
+    route.labelCrowded = space.isCrowded(spot);
+  }
+  space.place(spot);
+  route.label = { text: route.edge.label, x: spot.x, y: spot.y, w: width, h: HEIGHT };
+}
+
+// Longest labels first: they have the fewest places to go. The lines of a bundle that merged
+// into one tree carry one label, drawn on the first of them to be placed; a line of the bundle
+// that runs on its own keeps its label.
 export function placeLabels(router, routes) {
-  const { geometry, obstacles, measurer } = router, blocks = blocksOf(router), placed = [];
-  const { width: pageWidth, height: pageHeight } = geometry;
-  const offPage = r => r.x < 2 || r.y < 2 || r.x + r.w > pageWidth - 2 || r.y + r.h > pageHeight - 2;
-  const hits = r => blocks.some(b => intersects(r, b)) || placed.some(b => intersects(r, b)) || offPage(r);
-  // Another line within a few pixels makes a label ambiguous, as if on that line.
-  const nearLines = routes.map(route => route.points.slice(1).map((q, index) => {
-    const p = route.points[index];
-    const x = Math.min(p.x, q.x) - 6, y = Math.min(p.y, q.y) - 6;
-    return { x, y, w: Math.abs(p.x - q.x) + 12, h: Math.abs(p.y - q.y) + 12 };
-  }));
-  const widthOf = text => measurer.width(text, T.edge);
-  // Longest labels first: they have the fewest places to go.
+  const space = new LabelSpace(router, routes), widthOf = text => router.measurer.width(text, T.edge);
   const order = routes.map((route, index) => index).filter(index => routes[index].edge.label)
     .sort((a, b) => widthOf(routes[b].edge.label) - widthOf(routes[a].edge.label));
   const labelledTrees = new Set();
   for (const index of order) {
-    const route = routes[index], text = route.edge.label;
-    // The lines of a bundle that merged into one tree carry one label, drawn on the first of them
-    // to be placed; a line of the bundle that runs on its own keeps its label.
-    if (route.tree && labelledTrees.has(route.tree)) continue;
-    if (route.tree) labelledTrees.add(route.tree);
-    const width = widthOf(text), candidates = candidatesOf(route.points, width);
-    const crossesLine = c =>
-      nearLines.some((boxes, other) => other !== index && boxes.some(b => intersects(c, b)));
-    // Best: touches nothing. Next: lies over another line (its halo cuts the line).
-    let spot = candidates.find(c => !hits(c) && !crossesLine(c)) || candidates.find(c => !hits(c));
-    if (!spot) {
-      // Nowhere clean: the spot that covers the least, text and boxes weighing most.
-      const covered = (c, list) => list.filter(b => intersects(c, b)).length;
-      const cost = c => 10 * covered(c, obstacles) + 10 * covered(c, placed) + 3 * covered(c, blocks)
-        + (crossesLine(c) ? 1 : 0) + c.score + (offPage(c) ? 100 : 0);
-      spot = candidates.reduce((best, c) => (!best || cost(c) < cost(best) ? c : best), null);
-      if (!spot) {
-        const a = route.points[0], b = route.points.at(-1);
-        spot = { x: (a.x + b.x) / 2 - width / 2, y: (a.y + b.y) / 2 - HEIGHT / 2, w: width, h: HEIGHT };
-      }
-      // Only a label over a node, over an obstacle whose id has a '#', or over another label is a
-      // problem worth a re-render; touching a box border is the best the space allows.
-      route.labelCrowded = obstacles.some(o => intersects(spot, o) && (o.node || o.id.includes('#')))
-        || placed.some(b => intersects(spot, b));
-    }
-    placed.push({ x: spot.x - 4, y: spot.y - 1, w: spot.w + 8, h: spot.h + 2 });   // keep neighbours apart
-    route.label = { text, x: spot.x, y: spot.y, w: width, h: HEIGHT };
+    const { tree } = routes[index];
+    if (tree && labelledTrees.has(tree)) continue;
+    if (tree) labelledTrees.add(tree);
+    placeLabel(space, routes[index], index, widthOf(routes[index].edge.label));
   }
 }

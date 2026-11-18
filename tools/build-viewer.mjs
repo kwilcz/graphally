@@ -19,29 +19,62 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const skill = path.join(root, 'skills/graphally');
 const { findPack } = await import(path.join(skill, 'scripts/lib/iconpack.mjs'));
 
-const pack = name => {
-  const f = findPack(skill, name);
-  if (!f) throw new Error(`no ${name} icon pack: run node skills/graphally/scripts/fetch-icons.mjs`);
-  const p = JSON.parse(fs.readFileSync(f, 'utf8'));
-  if (Object.values(p).some(e => !e.file)) throw new Error(`the ${name} pack predates the viewer: run node skills/graphally/scripts/fetch-icons.mjs --force`);
-  return Object.fromEntries(Object.entries(p).map(([k, e]) => [k, `${e.folder}/${e.file}`]));
-};
-const commit = fs.readFileSync(path.join(skill, 'assets/icon-sources/azure.txt'), 'utf8').match(/^commit\s+(\w+)/m)[1];
-const index = {
-  azure: { base: `https://raw.githubusercontent.com/jgraph/drawio/${commit}/src/main/webapp/img/lib/azure2/`, files: pack('azure') },
-  aws: { base: `https://cdn.jsdelivr.net/npm/${AWS}/icons/`, files: pack('aws') },
-  font: `https://cdn.jsdelivr.net/npm/${INTER}/web/`,
-};
+const FETCH_ICONS = 'node skills/graphally/scripts/fetch-icons.mjs';
+const BANNER = '/* graphally viewer · Copyright (c) 2026 Kamil Wilczyński (kwilcz) · Apache License 2.0 · ' +
+  'https://github.com/kwilcz/graphally */';
 
+// A pack's index: icon name -> its file upstream.
+function packFiles(name) {
+  const file = findPack(skill, name);
+  if (!file) throw new Error(`no ${name} icon pack: run ${FETCH_ICONS}`);
+  const pack = JSON.parse(fs.readFileSync(file, 'utf8'));
+  if (Object.values(pack).some(entry => !entry.file)) {
+    throw new Error(`the ${name} pack predates the viewer: run ${FETCH_ICONS} --force`);
+  }
+  return Object.fromEntries(Object.entries(pack).map(([key, entry]) => [key, `${entry.folder}/${entry.file}`]));
+}
+
+// The draw.io commit the Azure icons are taken from.
+function drawioCommit() {
+  const sources = fs.readFileSync(path.join(skill, 'assets/icon-sources/azure.txt'), 'utf8');
+  return sources.match(/^commit\s+(\w+)/m)[1];
+}
+
+function iconIndex() {
+  return {
+    azure: {
+      base: `https://raw.githubusercontent.com/jgraph/drawio/${drawioCommit()}/src/main/webapp/img/lib/azure2/`,
+      files: packFiles('azure'),
+    },
+    aws: { base: `https://cdn.jsdelivr.net/npm/${AWS}/icons/`, files: packFiles('aws') },
+    font: `https://cdn.jsdelivr.net/npm/${INTER}/web/`,
+  };
+}
+
+// The bundle's entry: the viewer, started with the index.
+function writeEntry(tmp, index) {
+  fs.writeFileSync(path.join(tmp, 'index.json'), JSON.stringify(index));
+  const viewer = JSON.stringify(path.join(skill, 'scripts/lib/viewer.js'));
+  const entry = `import { start } from ${viewer};\nimport index from './index.json';\nstart(index);\n`;
+  fs.writeFileSync(path.join(tmp, 'entry.js'), entry);
+}
+
+function bundle(entry, out) {
+  const windows = process.platform === 'win32';
+  const args = [
+    '--yes', ESBUILD, entry, '--bundle', '--format=iife', '--minify', '--legal-comments=none',
+    '--loader:.css=text', `--banner:js=${BANNER}`, `--outfile=${out}`, '--log-level=warning',
+  ];
+  execFileSync(windows ? 'npx.cmd' : 'npx', args, { stdio: 'inherit', shell: windows });
+}
+
+const index = iconIndex();
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'graphally-viewer-'));
 try {
-  fs.writeFileSync(path.join(tmp, 'index.json'), JSON.stringify(index));
-  fs.writeFileSync(path.join(tmp, 'entry.js'), `import { start } from ${JSON.stringify(path.join(skill, 'scripts/lib/viewer.js'))};\nimport index from './index.json';\nstart(index);\n`);
+  writeEntry(tmp, index);
   const out = path.join(skill, 'viewer/graphally.min.js');
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  const banner = '/* graphally viewer · Copyright (c) 2026 Kamil Wilczyński (kwilcz) · Apache License 2.0 · https://github.com/kwilcz/graphally */';
-  execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['--yes', ESBUILD, path.join(tmp, 'entry.js'), '--bundle', '--format=iife', '--minify', '--legal-comments=none',
-    '--loader:.css=text', `--banner:js=${banner}`, `--outfile=${out}`, '--log-level=warning'], { stdio: 'inherit', shell: process.platform === 'win32' });
+  bundle(path.join(tmp, 'entry.js'), out);
   console.log(`${path.relative(root, out)}: ${Math.round(fs.statSync(out).size / 1024)} KB`);
 } finally {
   fs.rmSync(tmp, { recursive: true, force: true });

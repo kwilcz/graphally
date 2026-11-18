@@ -18,20 +18,17 @@ export function sharedSpan(startA, lengthA, startB, lengthB) {
 // How far apart a connection's two boxes are, centre to centre.
 export const spanOf = connection => manhattan(center(connection.source.rect), center(connection.target.rect));
 
+const same = (a, b) => Math.abs(a - b) < 0.01;
+const samePoint = (p, q) => same(p.x, q.x) && same(p.y, q.y);
+const inLine = ([a, b, c]) => (same(a.x, b.x) && same(b.x, c.x)) || (same(a.y, b.y) && same(b.y, c.y));
+
 // A polyline without repeated points and without the middle point of three in a line.
 export function simplify(points) {
   const simple = [];
   for (const point of points) {
-    const last = simple.at(-1);
-    if (last && Math.abs(last.x - point.x) < 0.01 && Math.abs(last.y - point.y) < 0.01) continue;
+    if (simple.length && samePoint(simple.at(-1), point)) continue;
     simple.push({ x: point.x, y: point.y });
-    while (simple.length >= 3) {
-      const [a, b, c] = simple.slice(-3);
-      const inLine = (Math.abs(a.x - b.x) < 0.01 && Math.abs(b.x - c.x) < 0.01)
-        || (Math.abs(a.y - b.y) < 0.01 && Math.abs(b.y - c.y) < 0.01);
-      if (!inLine) break;
-      simple.splice(-2, 1);
-    }
+    while (simple.length >= 3 && inLine(simple.slice(-3))) simple.splice(-2, 1);
   }
   return simple;
 }

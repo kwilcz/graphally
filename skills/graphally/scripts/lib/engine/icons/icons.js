@@ -104,45 +104,63 @@ export const loadedPacks = () => [...packs.keys()];
 const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const stem = w => w.replace(/(ies)$/, 'y').replace(/(ses|xes)$/, (m) => m.slice(0, -2)).replace(/s$/, '');
 
+// A generic icon: a name of its own (user, globe) or a word that means one (person, internet).
+function genericIcon(name) {
+  const generic = GENERIC_ALIASES[name] || (GENERIC[name] ? name : null);
+  return generic && GENERIC[generic] ? { key: `g-${generic}`, kind: 'generic', def: { viewBox: '0 0 24 24', body: GENERIC[generic] } } : null;
+}
+
+const packIcon = (vendor, key) => ({ key: `${vendor}-${key}`, kind: vendor, def: packs.get(vendor)[key] });
+
+// An exact name or an alias, in every pack in turn.
+function exactIcon(vendors, name) {
+  const dashed = name.replace(/ /g, '-');
+  for (const vendor of vendors.filter(each => packs.get(each))) {
+    const pack = packs.get(vendor), alias = ALIASES[vendor][name];
+    if (pack[dashed]) return packIcon(vendor, dashed);
+    if (alias && pack[alias]) return packIcon(vendor, alias);
+  }
+  return null;
+}
+
+// How well an icon's name matches the words wanted: the share found, less a little for each word
+// it has that was not asked for.
+function looseScore(key, want) {
+  const have = key.split('-').map(stem).filter(word => word !== 'aws' && word !== 'amazon');
+  const found = want.filter(word => have.includes(word)).length;
+  return found ? found / want.length - (have.length - found) * 0.04 : 0;
+}
+
+function bestLooseMatch(pack, want) {
+  let best = { key: null, score: 0 };
+  for (const key of Object.keys(pack)) {
+    const score = looseScore(key, want);
+    if (score > best.score) best = { key, score };
+  }
+  return best;
+}
+
+// The best loose word match in each pack in turn, when it is close enough.
+function looseIcon(vendors, want) {
+  for (const vendor of vendors.filter(each => packs.get(each))) {
+    const best = bestLooseMatch(packs.get(vendor), want);
+    if (best.key && best.score >= 0.99 - 0.04 * 3) return packIcon(vendor, best.key);
+  }
+  return null;
+}
+
 // Returns { key, kind: 'azure'|'aws'|'generic', def } or { error, suggestions, missing }.
-// order: which vendor pack wins for a name both could mean (<diagram icons=aws>).
+// order: which vendor pack wins for a name both could mean (<diagram icons=aws>). "aws:lambda" or
+// "azure/app-services" looks in one pack only.
 export function resolveIcon(name, order = ['azure', 'aws']) {
   if (!name) return null;
-  const raw = String(name).trim();
-  // "aws:lambda", "azure/app-services": one pack only.
-  const pre = /^(azure|aws)[:/](.+)$/i.exec(raw);
-  const vendors = pre ? [pre[1].toLowerCase()] : [...new Set([...order, 'azure', 'aws'])];
-  const n = norm(pre ? pre[2] : raw);
-  if (!pre) {
-    const g = GENERIC_ALIASES[n] || (GENERIC[n] ? n : null);
-    if (g && GENERIC[g]) return { key: `g-${g}`, kind: 'generic', def: { viewBox: '0 0 24 24', body: GENERIC[g] } };
-  }
-  const dashed = n.replace(/ /g, '-');
-  const hit = (v, key) => ({ key: `${v}-${key}`, kind: v, def: packs.get(v)[key] });
-  // Exact names and aliases in every pack first, then loose word matches.
-  for (const v of vendors) {
-    const pack = packs.get(v);
-    if (!pack) continue;
-    if (pack[dashed]) return hit(v, dashed);
-    const alias = ALIASES[v][n];
-    if (alias && pack[alias]) return hit(v, alias);
-  }
-  const want = n.split(' ').map(stem);
-  for (const v of vendors) {
-    const pack = packs.get(v);
-    if (!pack) continue;
-    let best = null, bestScore = 0;
-    for (const key of Object.keys(pack)) {
-      const have = key.split('-').map(stem).filter(w => w !== 'aws' && w !== 'amazon');
-      const got = want.filter(w => have.includes(w)).length;
-      if (!got) continue;
-      const score = got / want.length - (have.length - got) * 0.04;
-      if (score > bestScore) { best = key; bestScore = score; }
-    }
-    if (best && bestScore >= 0.99 - 0.04 * 3) return hit(v, best);
-  }
+  const raw = String(name).trim(), prefixed = /^(azure|aws)[:/](.+)$/i.exec(raw);
+  const vendors = prefixed ? [prefixed[1].toLowerCase()] : [...new Set([...order, 'azure', 'aws'])];
+  const wanted = norm(prefixed ? prefixed[2] : raw), want = wanted.split(' ').map(stem);
+  const found = (!prefixed && genericIcon(wanted)) || exactIcon(vendors, wanted) || looseIcon(vendors, want);
+  if (found) return found;
   // A name meant for a pack that is not downloaded yet says so.
-  const missing = vendors.filter(v => !packs.get(v) && (pre || ALIASES[v][n]));
+  const missing = vendors.filter(vendor => !packs.get(vendor) && (prefixed || ALIASES[vendor][wanted]));
   return { error: true, suggestions: suggest(want, vendors), missing };
 }
 

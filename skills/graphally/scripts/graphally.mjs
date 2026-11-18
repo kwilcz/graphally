@@ -11,7 +11,8 @@
 // four), and print in the order given. The work is render() in lib/api.mjs; this reads the flags.
 import { render } from './lib/api.mjs';
 
-const USAGE = 'usage: node graphally.mjs render <file.html>... [--png | --png1x | --png2x] [--dark | --themes] [--inline] [--out dir] [--json] [--recompute] [--no-viewer] [--jobs n]';
+const USAGE = 'usage: node graphally.mjs render <file.html>... [--png | --png1x | --png2x] [--dark | --themes]'
+  + ' [--inline] [--out dir] [--json] [--recompute] [--no-viewer] [--jobs n]';
 const argv = process.argv.slice(2);
 if (argv[0] === 'render') argv.shift();
 const flag = f => argv.includes(f);
@@ -20,8 +21,10 @@ const files = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--ou
 if (!files.length) { console.error(USAGE); process.exit(2); }
 try {
   const r = await render(files, {
-    out: opt('--out'), png: flag('--png'), png1x: flag('--png1x'), png2x: flag('--png2x'), dark: flag('--dark'), themes: flag('--themes'), inline: flag('--inline'),
-    json: flag('--json'), recompute: flag('--recompute'), viewer: !flag('--no-viewer'), jobs: opt('--jobs'), debug: flag('--debug'),
+    out: opt('--out'), png: flag('--png'), png1x: flag('--png1x'), png2x: flag('--png2x'),
+    dark: flag('--dark'), themes: flag('--themes'), inline: flag('--inline'),
+    json: flag('--json'), recompute: flag('--recompute'), viewer: !flag('--no-viewer'),
+    jobs: opt('--jobs'), debug: flag('--debug'),
     log: line => console.log(line),
   });
   process.exitCode = r.exitCode;

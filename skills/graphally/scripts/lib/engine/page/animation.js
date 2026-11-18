@@ -38,26 +38,28 @@ function spreadOffsets(keyframes) {
   return frames;
 }
 
-// A keyframe's CSS declarations; a value CSS cannot take as plain text is reported instead.
-function declarationsOf(frame, report) {
-  const declarations = [];
-  for (const [key, value] of Object.entries(frame)) {
-    if (key === 'offset') continue;
-    if (key === 'easing') {
-      if (plain(value)) declarations.push(`animation-timing-function: ${value}`);
-      else report('animate easing', value, 'an easing as in CSS: linear, ease-in-out, cubic-bezier(…)');
-      continue;
-    }
-    if (!KEYFRAME[key]) {
-      report('animate', key, 'a keyframe takes opacity, rotate, translate, scale, offset and easing');
-      continue;
-    }
-    const css = KEYFRAME[key](value);
-    if (plain(css)) declarations.push(`${key}: ${css}`);
-    else report(`animate ${key}`, value, 'a number, or a plain CSS value');
+// One property of a keyframe as a CSS declaration, or null (and a problem) when CSS cannot take it
+// as plain text.
+function declarationOf(key, value, report) {
+  if (key === 'easing') {
+    if (plain(value)) return `animation-timing-function: ${value}`;
+    report('animate easing', value, 'an easing as in CSS: linear, ease-in-out, cubic-bezier(…)');
+    return null;
   }
-  return declarations;
+  if (!KEYFRAME[key]) {
+    report('animate', key, 'a keyframe takes opacity, rotate, translate, scale, offset and easing');
+    return null;
+  }
+  const css = KEYFRAME[key](value);
+  if (plain(css)) return `${key}: ${css}`;
+  report(`animate ${key}`, value, 'a number, or a plain CSS value');
+  return null;
 }
+
+const declarationsOf = (frame, report) => Object.entries(frame)
+  .filter(([key]) => key !== 'offset')
+  .map(([key, value]) => declarationOf(key, value, report))
+  .filter(Boolean);
 
 // An option's value when it is allowed, else its default.
 const chosen = (value, isAllowed, fallback) => (isAllowed(value ?? fallback) ? value ?? fallback : fallback);

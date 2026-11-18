@@ -8,10 +8,10 @@ import { polygon, circlePath, roundRect } from './paths.js';
 import { GLYPH, glyph } from './glyphs.js';
 
 const TASK_TYPES = ['user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
-const BOTTOM_MARKERS = ['loop', 'multi', 'collection', 'sequential', 'ad-hoc', 'compensation', 'subprocess'];
 
 // Two arcs, each ending in a solid head drawn to scale (a line marker would swamp them).
-function cycleArrows({ cx, cy, r, ink, line }) {
+function cycleArrows({ base, cx, cy, r, ink, line }) {
+  if (!base.cycle) return [];
   const radius = r * 0.52, width = Math.max(1.3, r * 0.13), head = r * 0.36;
   const pointAt = degrees =>
     [cx + radius * Math.cos(degrees * Math.PI / 180), cy + radius * Math.sin(degrees * Math.PI / 180)];
@@ -55,72 +55,82 @@ function centralGlyphs({ base, has, marks, cx, cy, r, ink, line }) {
   return [];
 }
 
-// The markers side by side at the bottom middle of an activity. Multi-instance (BPMN 2.0.2,
-// 10.3.5): three upright bars run the instances in parallel, three flat ones one after another.
-// Ad-hoc (~) and compensation (the event's rewind glyph) sit among them.
-function bottomMarkers({ base, has, marks, box, inset, cx, ink, line }) {
-  if (base.event || base.gateway) return [];
-  // Sequential multi-instance shows only its flat bars.
-  const shown = marks
-    .filter(mark => BOTTOM_MARKERS.includes(mark))
-    .filter(mark => !(mark === 'multi' && has('sequential')));
-  return shown.flatMap((mark, index) => {
-    const size = 12, mx = cx + (index - (shown.length - 1) / 2) * (size + 6);
-    const my = box.y + box.h - inset - size / 2 - 5;
-    if (mark === 'ad-hoc' || mark === 'compensation') return glyph(mark, mx, my, 13, false, ink);
-    if (mark === 'subprocess') {
-      const half = size / 2;
-      const left = fmt(mx - half), right = fmt(mx + half), top = fmt(my - half), bottom = fmt(my + half);
-      const square = `M${left},${top} H${right} V${bottom} H${left} Z`;
-      const plus = `M${fmt(mx - 3.5)},${fmt(my)} H${fmt(mx + 3.5)}`
-        + ` M${fmt(mx)},${fmt(my - 3.5)} V${fmt(my + 3.5)}`;
-      return [line(`${square} ${plus}`, 1.2)];
-    }
-    if (mark === 'loop') {
-      return [line(`M${fmt(mx + 4.5)},${fmt(my + 3.5)} A5.5,5.5 0 1 0 ${fmt(mx - 4.5)},${fmt(my + 3.5)}`
-        + ` M${fmt(mx - 4.5)},${fmt(my + 3.5)} l-0.5,-3.5 M${fmt(mx - 4.5)},${fmt(my + 3.5)} l3.3,-1`, 1.3)];
-    }
-    if (mark === 'sequential') {
-      return [line(`M${fmt(mx - 5)},${fmt(my - 4)} H${fmt(mx + 5)} M${fmt(mx - 5)},${fmt(my)} H${fmt(mx + 5)}`
-        + ` M${fmt(mx - 5)},${fmt(my + 4)} H${fmt(mx + 5)}`, 1.5)];
-    }
-    return [line(`M${fmt(mx - 4)},${fmt(my - 5)} V${fmt(my + 5)} M${fmt(mx)},${fmt(my - 5)} V${fmt(my + 5)}`
-      + ` M${fmt(mx + 4)},${fmt(my - 5)} V${fmt(my + 5)}`, 1.5)];
-  });
+// How each marker along an activity's bottom is drawn, centred on mx,my.
+const BOTTOM_DRAWN = {
+  'ad-hoc': ({ mx, my, ink }) => glyph('ad-hoc', mx, my, 13, false, ink),
+  compensation: ({ mx, my, ink }) => glyph('compensation', mx, my, 13, false, ink),
+  subprocess: ({ mx, my, line }) => {
+    const left = fmt(mx - 6), right = fmt(mx + 6), top = fmt(my - 6), bottom = fmt(my + 6);
+    const plus = `M${fmt(mx - 3.5)},${fmt(my)} H${fmt(mx + 3.5)} M${fmt(mx)},${fmt(my - 3.5)} V${fmt(my + 3.5)}`;
+    return [line(`M${left},${top} H${right} V${bottom} H${left} Z ${plus}`, 1.2)];
+  },
+  loop: ({ mx, my, line }) => {
+    const end = `${fmt(mx - 4.5)},${fmt(my + 3.5)}`;
+    return [line(`M${fmt(mx + 4.5)},${fmt(my + 3.5)} A5.5,5.5 0 1 0 ${end} M${end} l-0.5,-3.5 M${end} l3.3,-1`, 1.3)];
+  },
+  sequential: ({ mx, my, line }) => {
+    const bar = dy => `M${fmt(mx - 5)},${fmt(my + dy)} H${fmt(mx + 5)}`;
+    return [line(`${bar(-4)} ${bar(0)} ${bar(4)}`, 1.5)];
+  },
+  multi: ({ mx, my, line }) => [line(uprightBars(mx, my), 1.5)],
+  collection: ({ mx, my, line }) => [line(uprightBars(mx, my), 1.5)],
+};
+
+// Three upright bars: multi-instance in parallel, or a collection.
+function uprightBars(mx, my) {
+  const bar = dx => `M${fmt(mx + dx)},${fmt(my - 5)} V${fmt(my + 5)}`;
+  return `${bar(-4)} ${bar(0)} ${bar(4)}`;
 }
 
-// The markers of a shape, in drawing order. shape: { base, spec, box, inset, style, ink, line,
-// broken }, where line(d, width, fill, extra) draws a stroke in the ink colour.
+// The markers side by side at the bottom middle of an activity. Multi-instance (BPMN 2.0.2,
+// 10.3.5): three upright bars run the instances in parallel, three flat ones one after another;
+// sequential multi-instance shows only its flat bars. Ad-hoc (~) and compensation (the event's
+// rewind glyph) sit among them.
+function bottomMarkers({ base, has, marks, box, inset, cx, ink, line }) {
+  if (base.event || base.gateway) return [];
+  const shown = marks.filter(mark => Object.hasOwn(BOTTOM_DRAWN, mark) && !(mark === 'multi' && has('sequential')));
+  const my = box.y + box.h - inset - 12 / 2 - 5;
+  const centreXOf = index => cx + (index - (shown.length - 1) / 2) * (12 + 6);
+  return shown.flatMap((mark, index) => BOTTOM_DRAWN[mark]({ mx: centreXOf(index), my, ink, line }));
+}
+
+// An intermediate event's second ring, inside the first.
+function eventRing({ base, cx, cy, r, inset, style, line, broken }) {
+  if (base.event !== 'event') return [];
+  const width = Math.min(style.width || 1.5, 1.5);
+  return [line(circlePath(cx, cy, r - inset - 3.5), width, 'none', { 'stroke-dasharray': broken ? '3.4 2.2' : null })];
+}
+
+// A task's type sits in its top-left corner (BPMN 2.0.2, 10.3.3); send and receive are the
+// message glyph, filled and open, as on a throwing and a catching event.
+function taskType({ base, marks, box, inset, ink }) {
+  const type = !base.event && !base.gateway && marks.find(mark => TASK_TYPES.includes(mark));
+  if (!type) return [];
+  const name = type === 'send' || type === 'receive' ? 'message' : type;
+  return glyph(name, box.x + inset + 14, box.y + inset + 14, 16, type === 'send', ink);
+}
+
+// A transaction (10.3.7) is drawn with a double border.
+function transactionBorder({ base, has, box, inset, style, line }) {
+  if (base.event || base.gateway || !has('transaction')) return [];
+  const inner = { x: box.x + inset + 3, y: box.y + inset + 3, w: box.w - 2 * inset - 6, h: box.h - 2 * inset - 6 };
+  return [line(roundRect(inner, 7), Math.max(1, style.width || 1.5))];
+}
+
+// A data object (10.4.1) is an input with an open arrow in its corner, an output with a filled
+// one, and a collection with three bars below, as a multi-instance task.
+function dataArrow({ spec, has, box, inset, ink }) {
+  if (spec.base !== 'note' || !(has('input') || has('output'))) return [];
+  return glyph('arrow', box.x + inset + 10, box.y + inset + 10, 13, has('output'), ink);
+}
+
+const MARKERS = [eventRing, cycleArrows, centralGlyphs, taskType, transactionBorder, dataArrow, bottomMarkers];
+
+// The markers of a shape, in drawing order. line(d, width, fill, extra) draws a stroke in the
+// ink colour.
 export function markersOf({ base, spec, box, inset, style, ink, line, broken }) {
   const cx = box.x + box.w / 2, cy = box.y + box.h / 2, r = Math.min(box.w, box.h) / 2;
-  const { marks } = spec, has = mark => marks.includes(mark);
-  const shape = { base, has, marks, box, inset, cx, cy, r, ink, line };
-  const drawn = [];
-  if (base.event === 'event') {
-    const ring = circlePath(cx, cy, r - inset - 3.5), width = Math.min(style.width || 1.5, 1.5);
-    drawn.push(line(ring, width, 'none', { 'stroke-dasharray': broken ? '3.4 2.2' : null }));
-  }
-  if (base.cycle) drawn.push(...cycleArrows(shape));
-  drawn.push(...centralGlyphs(shape));
-  // A task's type sits in its top-left corner (BPMN 2.0.2, 10.3.3); send and receive are the
-  // message glyph, filled and open, as on a throwing and a catching event.
-  const type = !base.event && !base.gateway && marks.find(mark => TASK_TYPES.includes(mark));
-  if (type) {
-    const name = type === 'send' || type === 'receive' ? 'message' : type;
-    drawn.push(...glyph(name, box.x + inset + 14, box.y + inset + 14, 16, type === 'send', ink));
-  }
-  // A transaction (10.3.7) is drawn with a double border.
-  if (!base.event && !base.gateway && has('transaction')) {
-    const inner = {
-      x: box.x + inset + 3, y: box.y + inset + 3, w: box.w - 2 * inset - 6, h: box.h - 2 * inset - 6,
-    };
-    drawn.push(line(roundRect(inner, 7), Math.max(1, style.width || 1.5)));
-  }
-  // A data object (10.4.1) is an input with an open arrow in its corner, an output with a filled
-  // one, and a collection with three bars below, as a multi-instance task.
-  if (spec.base === 'note' && (has('input') || has('output'))) {
-    drawn.push(...glyph('arrow', box.x + inset + 10, box.y + inset + 10, 13, has('output'), ink));
-  }
-  drawn.push(...bottomMarkers(shape));
-  return drawn;
+  const has = mark => spec.marks.includes(mark);
+  const shape = { base, spec, has, marks: spec.marks, box, inset, style, cx, cy, r, ink, line, broken };
+  return MARKERS.flatMap(draw => draw(shape));
 }

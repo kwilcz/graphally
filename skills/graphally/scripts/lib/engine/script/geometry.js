@@ -66,45 +66,50 @@ function markBox(mark) {
   return { x: mark.at.x - w / 2, y: mark.at.y - h / 2, w, h };
 }
 
+// Every box a reference names: a box the script already has, a list, an id or a selector. A name
+// that matches nothing is an error, with the nearest id.
+function findBoxes(figure, reference) {
+  if (reference && reference.el) return [reference];
+  if (Array.isArray(reference)) return reference.flatMap(each => findBoxes(figure, each));
+  const name = String(reference), { root } = figure;
+  const found = [...root.querySelectorAll(SELECTOR.test(name) ? name : `#${CSS.escape(name)}`)];
+  if (found.length) return found.map(element => boxGeometry(element, figure.boxOf(element)));
+  const suggestion = closestName(name, [...root.querySelectorAll('[id]')].map(element => element.id));
+  throw new Error(`no element "${name}"${suggestion ? `; did you mean "${suggestion}"?` : ''}`);
+}
+
+// A box (element, id or selector) or a point. Anything else is an error with the script's line,
+// not a line drawn to NaN.
+function spotOf(figure, reference) {
+  if (reference && reference.el) return reference;
+  if (typeof reference === 'string' || Array.isArray(reference)) return findBoxes(figure, reference)[0];
+  if (reference && Number.isFinite(reference.x) && Number.isFinite(reference.y)) return reference;
+  const shown = typeof reference === 'object' ? JSON.stringify(reference) : String(reference);
+  throw new Error(`${shown} is not an element or a point`);
+}
+
+const centreOf = spot => (spot.el ? spot.center : spot);
+
+// Two boxes: their facing sides. Points: as given.
+function facingEnds(from, to) {
+  if (!from.el || !to.el) return [centreOf(from), centreOf(to)];
+  const dx = to.center.x - from.center.x, dy = to.center.y - from.center.y;
+  if (Math.abs(dx) * from.h >= Math.abs(dy) * from.w) return dx > 0 ? [from.right, to.left] : [from.left, to.right];
+  return dy > 0 ? [from.bottom, to.top] : [from.top, to.bottom];
+}
+
 // What the script names, made geometry: boxes by reference, points by box or point.
 export function createGeometry(figure) {
-  const { root } = figure;
-  const geometryOf = element => boxGeometry(element, figure.boxOf(element));
-  const ids = () => [...root.querySelectorAll('[id]')].map(element => element.id);
-  // Every box a reference names: a box the script already has, a list, an id or a selector.
-  const find = reference => {
-    if (reference && reference.el) return [reference];
-    if (Array.isArray(reference)) return reference.flatMap(find);
-    const name = String(reference);
-    const found = [...root.querySelectorAll(SELECTOR.test(name) ? name : `#${CSS.escape(name)}`)];
-    if (!found.length) {
-      const suggestion = closestName(name, ids());
-      throw new Error(`no element "${name}"${suggestion ? `; did you mean "${suggestion}"?` : ''}`);
-    }
-    return found.map(geometryOf);
+  const spot = reference => spotOf(figure, reference), point = reference => centreOf(spot(reference));
+  return {
+    geometryOf: element => boxGeometry(element, figure.boxOf(element)),
+    find: reference => findBoxes(figure, reference),
+    spot,
+    point,
+    facingEnds: (from, to) => facingEnds(spot(from), spot(to)),
+    originOf: (value, box) => (value != null && typeof value === 'object'
+      ? point(value)
+      : originAt(String(value ?? 'center').trim().split(/\s+/), box)),
+    markBox,
   };
-  // A box (element, id or selector) or a point. Anything else is an error with the script's
-  // line, not a line drawn to NaN.
-  const spot = reference => {
-    if (reference && reference.el) return reference;
-    if (typeof reference === 'string' || Array.isArray(reference)) return find(reference)[0];
-    if (reference && Number.isFinite(reference.x) && Number.isFinite(reference.y)) return reference;
-    const shown = typeof reference === 'object' ? JSON.stringify(reference) : String(reference);
-    throw new Error(`${shown} is not an element or a point`);
-  };
-  const point = reference => { const found = spot(reference); return found.el ? found.center : found; };
-  // Two boxes: their facing sides. Points: as given.
-  const facingEnds = (fromRef, toRef) => {
-    const from = spot(fromRef), to = spot(toRef);
-    if (!from.el || !to.el) return [from.el ? from.center : from, to.el ? to.center : to];
-    const dx = to.center.x - from.center.x, dy = to.center.y - from.center.y;
-    const sideways = Math.abs(dx) * from.h >= Math.abs(dy) * from.w;
-    if (sideways) return dx > 0 ? [from.right, to.left] : [from.left, to.right];
-    return dy > 0 ? [from.bottom, to.top] : [from.top, to.bottom];
-  };
-  const originOf = (value, box) => {
-    if (value != null && typeof value === 'object') return point(value);
-    return originAt(String(value ?? 'center').trim().split(/\s+/), box);
-  };
-  return { geometryOf, find, spot, point, facingEnds, originOf, markBox };
 }

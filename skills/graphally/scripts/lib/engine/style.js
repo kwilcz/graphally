@@ -29,13 +29,23 @@ export const hostTheme = css => String(css || '')
   .replace(/(?::root|svg\.graphally)\[data-theme="dark"\]/g, ':host([data-theme="dark"])')
   .replace(/:root|svg\.graphally/g, ':host');
 
+// Each declaration of a CSS text, made !important.
+const important = declarations => declarations
+  .replace(/;?\s*$/, '')
+  .split(';')
+  .map(declaration => `${declaration.trim()} !important`)
+  .join('; ');
+
+// The host inherits nothing and sits out of the flow.
+const HOST_RESET = 'all: initial !important; display: block !important; position: absolute !important';
+
 // A shadow root in a host that takes nothing from the page (no inherited font, colour or
 // spacing), placed out of the way, with css in it. The caller removes the host.
 export function shadowBox(css, place = 'left: 0; top: 0') {
   const host = document.createElement('div');
   const root = host.attachShadow({ mode: 'open' });
   const style = document.createElement('style');
-  style.textContent = `:host { all: initial !important; display: block !important; position: absolute !important; ${place.replace(/;?\s*$/, '').split(';').map(d => `${d.trim()} !important`).join('; ')}; }\n${css}`;
+  style.textContent = `:host { ${HOST_RESET}; ${important(place)}; }\n${css}`;
   root.append(style);
   document.body.appendChild(host);
   return { host, root };

@@ -37,30 +37,31 @@ function linesOf(node, pageRect) {
     return [...range.getClientRects()].filter(rect => rect.width);
   };
   for (const match of node.textContent.matchAll(/\S+/g)) {
-    for (const [word, rect] of piecesOf(rectsOf, match.index, match[0])) {
-      if (!rect) continue;
-      const top = rect.top - pageRect.top;
-      let line = lines.find(candidate => Math.abs(candidate.top - top) < 2);
-      if (!line) {
-        line = { top, left: rect.left - pageRect.left, right: 0, words: [], height: rect.height };
-        lines.push(line);
-      }
-      line.words.push(word);
-      line.right = rect.right - pageRect.left;
-    }
+    const pieces = piecesOf(rectsOf, match.index, match[0]).filter(([, rect]) => rect);
+    for (const [word, rect] of pieces) addToLine(lines, word, rect, pageRect);
   }
   return lines;
 }
 
+// A piece of a word on the line at its height, a new line when none is there yet.
+function addToLine(lines, word, rect, pageRect) {
+  const top = rect.top - pageRect.top;
+  let line = lines.find(candidate => Math.abs(candidate.top - top) < 2);
+  if (!line) {
+    line = { top, left: rect.left - pageRect.left, right: 0, words: [], height: rect.height };
+    lines.push(line);
+  }
+  line.words.push(word);
+  line.right = rect.right - pageRect.left;
+}
+
 // Underline and line-through reach the text from its own element or any one around it.
 function decorationsOf(owner, root) {
-  const decorations = new Set();
+  const lines = [];
   for (let element = owner; element && element !== root; element = element.parentElement) {
-    for (const decoration of getComputedStyle(element).textDecorationLine.split(' ')) {
-      if (decoration === 'underline' || decoration === 'line-through') decorations.add(decoration);
-    }
+    lines.push(...getComputedStyle(element).textDecorationLine.split(' '));
   }
-  return [...decorations];
+  return [...new Set(lines.filter(line => line === 'underline' || line === 'line-through'))];
 }
 
 // The style attribute of a line of text: its font, spacing, decoration and colour.

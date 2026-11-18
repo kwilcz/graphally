@@ -103,28 +103,35 @@ const withoutRepeats = path =>
   path.filter((point, index) => !index || point[0] !== path[index - 1][0] || point[1] !== path[index - 1][1]);
 const runLength = (from, to) => Math.abs(to[0] - from[0]) + Math.abs(to[1] - from[1]);
 
-// The shortest clear path, a corner counting as 40px, trying tighter bends only when the
-// roomier ones find none.
-function shortestClearPath(xs, from, to, layout, isFree) {
-  const isClear = path => path.every((point, index) => {
-    if (!index) return true;
-    const [previousX, previousY] = path[index - 1];
-    return isFree(previousX, previousY, point[0], point[1]);
+// Every way there is: out of from by each way it may leave, into to by each way it may arrive,
+// at each candidate x; each with its runs' lengths and its score, a corner counting as 40px.
+function candidatePaths(xs, from, to, layout) {
+  const paths = [...xs].flatMap(x => leavingPaths(x, from, layout)
+    .flatMap(leave => arrivingPaths(x, to, layout).map(arrive => withoutRepeats([...leave, ...arrive]))));
+  return paths.map(path => {
+    const lengths = path.slice(1).map((point, index) => runLength(path[index], point));
+    return { path, lengths, score: (path.length - 2) * 40 + lengths.reduce((sum, length) => sum + length, 0) };
   });
+}
+
+// The cheapest clear way whose runs fit the bend; the first of equals.
+function cheapestClear(candidates, bend, isClear) {
+  let best = null;
+  for (const candidate of candidates) {
+    if (!fitsBend(candidate.lengths, bend) || (best && candidate.score >= best.score)) continue;
+    if (isClear(candidate.path)) best = candidate;
+  }
+  return best?.path || null;
+}
+
+// The shortest clear path, trying tighter bends only when the roomier ones find none.
+function shortestClearPath(xs, from, to, layout, isFree) {
+  const isFreeLeg = (start, end) => isFree(start[0], start[1], end[0], end[1]);
+  const isClear = path => path.every((point, index) => !index || isFreeLeg(path[index - 1], point));
+  const candidates = candidatePaths(xs, from, to, layout);
   for (const bend of [BEND, 12, 6, 0]) {
-    let best = Infinity, found = null;
-    for (const x of xs) {
-      for (const leave of leavingPaths(x, from, layout)) {
-        for (const arrive of arrivingPaths(x, to, layout)) {
-          const path = withoutRepeats([...leave, ...arrive]);
-          const lengths = path.slice(1).map((point, index) => runLength(path[index], point));
-          if (!fitsBend(lengths, bend)) continue;
-          const score = (path.length - 2) * 40 + lengths.reduce((sum, length) => sum + length, 0);
-          if (score < best && isClear(path)) { best = score; found = path; }
-        }
-      }
-    }
-    if (found) return found;
+    const path = cheapestClear(candidates, bend, isClear);
+    if (path) return path;
   }
   return null;
 }
@@ -135,6 +142,16 @@ const fallbackPath = (to, layout) => [
   [layout.entry, layout.toRow], [layout.entry, layout.toY], [to.x, layout.toY],
 ];
 
+// The upright runs of a dependency, which the lines into other tasks keep off.
+function recordUprightRuns(figure, corners, to) {
+  for (let index = 1; index < corners.length; index++) {
+    const [x, y] = corners[index], [previousX, previousY] = corners[index - 1];
+    if (x === previousX) {
+      figure.dependRuns.push({ x, y1: Math.min(y, previousY), y2: Math.max(y, previousY), to: to.el });
+    }
+  }
+}
+
 export function drawDependency(figure, geometry, fromRef, toRef, options) {
   const [from, to] = [geometry.spot(fromRef), geometry.spot(toRef)];
   if (!from.el || !to.el) throw new Error('depend(a, b) takes two elements');
@@ -144,13 +161,8 @@ export function drawDependency(figure, geometry, fromRef, toRef, options) {
   const runs = figure.dependRuns.filter(run => run.to !== to.el);
   const layout = layoutOf(geometry, from, to);
   const xs = candidateXs(from, to, bars, layout);
-  const clearPath = shortestClearPath(xs, from, to, layout, clearanceOf(bars, runs));
-  const corners = clearPath || fallbackPath(to, layout);
-  for (let index = 1; index < corners.length; index++) {
-    const [x, y] = corners[index], [previousX, previousY] = corners[index - 1];
-    if (x !== previousX) continue;
-    figure.dependRuns.push({ x, y1: Math.min(y, previousY), y2: Math.max(y, previousY), to: to.el });
-  }
+  const corners = shortestClearPath(xs, from, to, layout, clearanceOf(bars, runs)) || fallbackPath(to, layout);
+  recordUprightRuns(figure, corners, to);
   const points = corners.map(([x, y]) => pointAt(x, y));
   figure.drawings.push({
     kind: 'path', path: roundedPath(points, 4), options: { arrow: true, ...options },

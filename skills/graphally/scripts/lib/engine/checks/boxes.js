@@ -2,8 +2,11 @@
 // Checks on the page's boxes and text: what overlaps, and what sticks out of what holds it.
 import { S } from '../style.js';
 import { excerpt } from '../shared/messages.js';
+import { pairsOf } from '../shared/maps.js';
 
 const styleOf = element => getComputedStyle(element);
+const isPositioned = element => /^(absolute|fixed)$/.test(styleOf(element).position);
+const clipsOverflow = element => styleOf(element).overflowX !== 'visible';
 
 // The content is wider than the width the author set.
 export function checkPageWidth(figure, size) {
@@ -17,20 +20,16 @@ export function checkPageWidth(figure, size) {
 
 const ownerName = owner => owner.id || owner.tagName.toLowerCase();
 
+const overlap = (a, b, start, size) => Math.min(a[start] + a[size], b[start] + b[size]) - Math.max(a[start], b[start]);
+
 // Two lines of text of different elements on top of each other.
 function textOverlaps(texts, problems) {
-  for (let first = 0; first < texts.length; first++) {
-    for (let second = first + 1; second < texts.length; second++) {
-      const a = texts[first], b = texts[second];
-      if (a.owner === b.owner) continue;
-      const overlapX = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
-      const overlapY = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
-      if (overlapX <= 2 || overlapY <= 2) continue;
-      problems.push({
-        rule: 'text-overlap', a: ownerName(a.owner), b: ownerName(b.owner),
-        hint: 'give the text more room, or move one of them',
-      });
-    }
+  for (const [a, b] of pairsOf(texts)) {
+    if (a.owner === b.owner || overlap(a, b, 'x', 'w') <= 2 || overlap(a, b, 'y', 'h') <= 2) continue;
+    problems.push({
+      rule: 'text-overlap', a: ownerName(a.owner), b: ownerName(b.owner),
+      hint: 'give the text more room, or move one of them',
+    });
   }
 }
 
@@ -62,49 +61,70 @@ const overhangOf = (holder, rect) => [
 const isFrame = entry => entry.painted && !entry.plain && entry.element.tagName !== 'ICON'
   && styleOf(entry.element).display !== 'inline';
 
+// The painted boxes that hold what is inside them, and what sticks out of them.
+class Holders {
+  constructor(boxes, root) {
+    this.root = root;
+    this.frames = new Map(boxes.filter(isFrame).map(entry => [entry.element, entry]));
+  }
+
+  // The nearest painted box around an element.
+  holderOf(element) {
+    const ancestor = [...ancestorsOf(element, this.root)].find(each => this.frames.has(each));
+    return ancestor ? this.frames.get(ancestor) : null;
+  }
+
+  // A text's holder may be its own element.
+  holderOfText(owner) { return this.frames.get(owner) || this.holderOf(owner); }
+
+  // The element or an ancestor below its holder is absolutely positioned.
+  positionedBelow(element, holder) {
+    if (element === holder.element) return false;
+    return [element, ...ancestorsOf(element, this.root, holder.element)].some(isPositioned);
+  }
+
+  // An ancestor clips it (overflow: hidden, truncate).
+  clipped(element) { return [...ancestorsOf(element, this.root)].some(clipsOverflow); }
+
+  // The sides where a rect sticks out of its holder; none when it has none or is left alone.
+  sidesOut(element, holder, rect) {
+    if (!holder || this.positionedBelow(element, holder) || this.clipped(element)) return [];
+    return overhangOf(holder.box, rect);
+  }
+}
+
+const overflowWarning = (what, holder, sides) => ({
+  rule: 'box-overflow', warn: true, box: what, in: nameOf(holder.element),
+  by: sides.map(([side, distance]) => `${side} ${Math.round(distance)}px`).join(', '),
+  hint: 'widen the box that holds it, or narrow what is inside; leave it when it is meant',
+});
+
+// Text: once per element, by the line that sticks out furthest.
+function worstTextLines(texts, holders) {
+  const worst = new Map();
+  for (const line of texts) {
+    const holder = holders.holderOfText(line.owner), sides = holders.sidesOut(line.owner, holder, line);
+    const furthest = Math.max(...sides.map(([, distance]) => distance)), known = worst.get(line.owner);
+    const furthestSoFar = sides.length && !(known && furthest <= known.furthest);
+    if (furthestSoFar) worst.set(line.owner, { furthest, holder, sides, text: line.text });
+  }
+  return [...worst.values()];
+}
+
 // A box, an icon or a line of text that sticks out of the painted box holding it: a node wider
 // than its group, a word wider than its card. A warning, not a problem: it may be meant, so the
 // render still passes. What is placed with position: absolute is placed on purpose (a badge
 // hung on a corner, a BPMN timer on a task's edge, a label beside its bar), and so is all
 // inside it: those are left alone.
 function boxOverflows(boxes, texts, root, problems) {
-  const frames = new Map(boxes.filter(isFrame).map(entry => [entry.element, entry]));
-  const holderOf = element => {
-    for (const ancestor of ancestorsOf(element, root)) if (frames.has(ancestor)) return frames.get(ancestor);
-    return null;
-  };
-  // Left alone on purpose: the element or an ancestor below its holder is absolutely
-  // positioned, or an ancestor clips it (overflow: hidden, truncate). A text's holder may be its
-  // own element: then nothing lies between them.
-  const leftAlone = (element, holder) => {
-    if (element !== holder.element) {
-      const belowHolder = [element, ...ancestorsOf(element, root, holder.element)];
-      if (belowHolder.some(node => /^(absolute|fixed)$/.test(styleOf(node).position))) return true;
-    }
-    return [...ancestorsOf(element, root)].some(ancestor => styleOf(ancestor).overflowX !== 'visible');
-  };
-  const sidesOut = (element, holder, rect) =>
-    (!holder || leftAlone(element, holder) ? [] : overhangOf(holder.box, rect));
-  const warn = (what, holder, sides) => problems.push({
-    rule: 'box-overflow', warn: true, box: what, in: nameOf(holder.element),
-    by: sides.map(([side, distance]) => `${side} ${Math.round(distance)}px`).join(', '),
-    hint: 'widen the box that holds it, or narrow what is inside; leave it when it is meant',
-  });
-  for (const entry of boxes) {
-    if (!entry.painted) continue;
-    const holder = holderOf(entry.element), sides = sidesOut(entry.element, holder, entry.box);
-    if (sides.length) warn(nameOf(entry.element), holder, sides);
+  const holders = new Holders(boxes, root);
+  for (const entry of boxes.filter(each => each.painted)) {
+    const holder = holders.holderOf(entry.element), sides = holders.sidesOut(entry.element, holder, entry.box);
+    if (sides.length) problems.push(overflowWarning(nameOf(entry.element), holder, sides));
   }
-  // Text: once per element, by the line that sticks out furthest.
-  const worstLines = new Map();
-  for (const line of texts) {
-    const holder = frames.get(line.owner) || holderOf(line.owner), sides = sidesOut(line.owner, holder, line);
-    if (!sides.length) continue;
-    const furthest = Math.max(...sides.map(([, distance]) => distance)), worst = worstLines.get(line.owner);
-    if (worst && furthest <= worst.furthest) continue;
-    worstLines.set(line.owner, { furthest, holder, sides, text: line.text });
+  for (const { holder, sides, text } of worstTextLines(texts, holders)) {
+    problems.push(overflowWarning(`text "${excerpt(text)}"`, holder, sides));
   }
-  for (const { holder, sides, text } of worstLines.values()) warn(`text "${excerpt(text)}"`, holder, sides);
 }
 
 // Turned boxes and text were read unturned, so the checks leave them out.

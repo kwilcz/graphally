@@ -25,35 +25,33 @@ function directionOf(args, box) {
   return { x: x / length, y: y / length };
 }
 
-// The colour stops of a linear-gradient(), each at an offset along the gradient line (0 to 1).
-// A stop with two positions is two stops; a stop without one shares the room between its
-// neighbours; no stop sits before the one ahead of it.
+// One argument's stops: a stop with two positions is two stops, one without a position is one
+// whose offset is filled in later. A bare position is a colour hint, which bends the blend
+// between two stops: left out.
+function argumentStops(arg, lineLength) {
+  const words = splitTopLevel(arg, ' '), color = words.shift();
+  if (!COLOR.test(color)) return [];
+  const offsetOf = position => parseFloat(position) / (position.endsWith('%') ? 100 : lineLength);
+  return words.length ? words.map(position => ({ color, at: offsetOf(position) })) : [{ color, at: null }];
+}
+
+// Stops without an offset share the room between their neighbours evenly.
+function fillOffsets(stops, index) {
+  let next = index;
+  while (stops[next].at == null) next++;
+  const from = stops[index - 1].at, step = (stops[next].at - from) / (next - index + 1);
+  for (let missing = index; missing < next; missing++) stops[missing].at = from + step * (missing - index + 1);
+}
+
+// The colour stops of a linear-gradient(), each at an offset along the gradient line (0 to 1);
+// no stop sits before the one ahead of it.
 function stopsOf(args, lineLength) {
-  const stops = [];
-  for (const arg of args) {
-    const words = splitTopLevel(arg, ' '), color = words.shift();
-    // A bare position is a colour hint, which bends the blend between two stops: left out.
-    if (!COLOR.test(color)) continue;
-    const offsetOf = position => parseFloat(position) / (position.endsWith('%') ? 100 : lineLength);
-    const offsets = words.map(offsetOf);
-    if (!offsets.length) stops.push({ color, at: null });
-    for (const at of offsets) stops.push({ color, at });
-  }
+  const stops = args.flatMap(arg => argumentStops(arg, lineLength));
   if (stops.length < 2) return null;
   stops[0].at ??= 0;
   stops.at(-1).at ??= 1;
-  for (let index = 1; index < stops.length; index++) {
-    if (stops[index].at != null) continue;
-    let next = index;
-    while (stops[next].at == null) next++;
-    const from = stops[index - 1].at, step = (stops[next].at - from) / (next - index + 1);
-    for (let missing = index; missing < next; missing++) {
-      stops[missing].at = from + step * (missing - index + 1);
-    }
-  }
-  for (let index = 1; index < stops.length; index++) {
-    stops[index].at = Math.max(stops[index].at, stops[index - 1].at);
-  }
+  for (let index = 1; index < stops.length; index++) if (stops[index].at == null) fillOffsets(stops, index);
+  for (let index = 1; index < stops.length; index++) stops[index].at = Math.max(stops[index].at, stops[index - 1].at);
   return stops;
 }
 

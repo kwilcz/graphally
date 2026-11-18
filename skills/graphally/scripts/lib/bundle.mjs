@@ -37,37 +37,40 @@ function modulesFrom(folder, entry) {
   return ordered;
 }
 
+// The bindings a module imports from another, checked against what that module exports.
+function importedNames(file, list, from, exportsOf) {
+  return namesOf(list).map(binding => {
+    if (!exportsOf.get(from).includes(binding.name)) {
+      throw new Error(`bundle: ${file} imports ${binding.name}, which ${from} does not export`);
+    }
+    return binding;
+  });
+}
+
 // A module's code with its imports read from the modules before it, and what it exports: its
 // names, and the properties of the object the bundle keeps for it. exportsOf holds the names of
 // the modules before it.
 function scoped(file, source, table, exportsOf) {
   const names = [], properties = [];
-  const moduleOf = specifier => `${table}[${JSON.stringify(resolve(file, specifier))}]`;
-  const imported = (list, specifier) => namesOf(list).map(binding => {
-    if (!exportsOf.get(resolve(file, specifier)).includes(binding.name)) {
-      const from = resolve(file, specifier);
-      throw new Error(`bundle: ${file} imports ${binding.name}, which ${from} does not export`);
+  const moduleOf = from => `${table}[${JSON.stringify(from)}]`;
+  const importing = (list, specifier) => importedNames(file, list, resolve(file, specifier), exportsOf);
+  const imports = (_, list, specifier) => {
+    const bindings = importing(list, specifier).map(({ name, alias }) => (alias === name ? name : `${name}: ${alias}`));
+    return `const { ${bindings.join(', ')} } = ${moduleOf(resolve(file, specifier))};`;
+  };
+  const reexports = (_, list, specifier) => {
+    for (const { name, alias } of importing(list, specifier)) {
+      names.push(alias);
+      properties.push(`${alias}: ${moduleOf(resolve(file, specifier))}.${name}`);
     }
-    return binding;
-  });
-  const code = source
-    .replace(IMPORT, (_, list, specifier) => {
-      const bindings = imported(list, specifier)
-        .map(({ name, alias }) => (alias === name ? name : `${name}: ${alias}`));
-      return `const { ${bindings.join(', ')} } = ${moduleOf(specifier)};`;
-    })
-    .replace(REEXPORT, (_, list, specifier) => {
-      for (const { name, alias } of imported(list, specifier)) {
-        names.push(alias);
-        properties.push(`${alias}: ${moduleOf(specifier)}.${name}`);
-      }
-      return '';
-    })
-    .replace(DECLARATION, (_, declaration, name) => {
-      names.push(name);
-      properties.push(name);
-      return declaration;
-    });
+    return '';
+  };
+  const declarations = (_, declaration, name) => {
+    names.push(name);
+    properties.push(name);
+    return declaration;
+  };
+  const code = source.replace(IMPORT, imports).replace(REEXPORT, reexports).replace(DECLARATION, declarations);
   return { code, names, properties };
 }
 
