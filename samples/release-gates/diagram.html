@@ -52,6 +52,13 @@ Focal point: the four large numbered stops on the road.
   .dots i.on { background: var(--green); border-color: var(--green); }
   .total { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 12px 18px; border-radius: 10px; background: var(--card); border: 1.5px solid var(--line); font-size: 13px; color: var(--muted); }
   .total b { font-size: 24px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  /* Three marks of emphasis, each carrying part of the point. The live road deepens from the
+     safe road's blue to full green as exposure grows (5% at the canary, 100% in production).
+     The stops, the focal point, sit on the road as stations: a ring in the page colour and a
+     soft shadow. Checkpoint 4, where real users first get the change, is ringed in green. */
+  .track.b { background: linear-gradient(90deg, var(--icon-soft) 25%, var(--green)); }
+  .stop { box-shadow: 0 0 0 3px var(--card), 0 2px 6px rgba(16, 24, 40, 0.22); }
+  #s4 { outline: 1.5px dashed var(--green); outline-offset: 5px; }
 </style>
 
 <div class=pipe>

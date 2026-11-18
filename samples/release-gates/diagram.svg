@@ -31,7 +31,14 @@
 <symbol id="pg-g-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.2 7.5 9.5 4.4-1.3 7.5-4.9 7.5-9.5V6z" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.2 7.5 9.5 4.4-1.3 7.5-4.9 7.5-9.5V6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="pg-g-server" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="7" rx="1.5" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="4" y="13.5" width="16" height="7" rx="1.5" style="fill: var(--icon-soft, #dbe6f6)"/><rect x="4" y="3.5" width="16" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="13.5" width="16" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7h.01M7.5 17h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="pg-g-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" style="fill: var(--icon-soft, #dbe6f6)"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-<symbol id="pg-g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs>
+<symbol id="pg-g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill: var(--icon-soft, #dbe6f6)"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<linearGradient id="pg-grad0" gradientUnits="userSpaceOnUse" x1="824" y1="277.9" x2="1218" y2="277.9"><stop offset="0.25" stop-color="var(--icon-soft)"></stop><stop offset="1" stop-color="var(--green)"></stop></linearGradient>
+<filter id="pg-blur1" filterUnits="userSpaceOnUse" x="105" y="260.9" width="38" height="38"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter>
+<filter id="pg-blur2" filterUnits="userSpaceOnUse" x="297" y="252.9" width="54" height="54"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter>
+<filter id="pg-blur3" filterUnits="userSpaceOnUse" x="497" y="252.9" width="54" height="54"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter>
+<filter id="pg-blur4" filterUnits="userSpaceOnUse" x="697" y="252.9" width="54" height="54"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter>
+<filter id="pg-blur5" filterUnits="userSpaceOnUse" x="897" y="252.9" width="54" height="54"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter>
+<filter id="pg-blur6" filterUnits="userSpaceOnUse" x="1095" y="250.9" width="58" height="58"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter></defs>
 <rect class="g-bg" width="1248" height="683" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Four checkpoints stand between your code and every customer</text>
@@ -61,27 +68,40 @@
 <text x="1091.4" y="210.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 500; fill: var(--ink)">Production</text>
 <text x="1101.4" y="230.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">all users</text>
 <rect x="124" y="262.9" width="700" height="30" rx="0" style="fill: var(--icon-soft)"></rect>
-<polygon points="824,262.9 1192,262.9 1218,277.9 1192,292.9 824,292.9" style="fill: rgb(178, 216, 192)"></polygon>
+<polygon points="824,262.9 1192,262.9 1218,277.9 1192,292.9 824,292.9" style="fill: url(#pg-grad0)"></polygon>
 <g data-id="s0" data-box="114,268,20,20">
+<rect x="114" y="269.9" width="20" height="20" rx="10" style="fill: rgb(16, 24, 40)" fill-opacity="0.22" filter="url(#pg-blur1)"></rect>
+<rect x="111" y="264.9" width="26" height="26" rx="13" style="fill: var(--card)"></rect>
 <rect x="114" y="267.9" width="20" height="20" rx="10" style="fill: var(--ink)"></rect>
 </g>
 <g data-id="s1" data-box="306,260,36,36">
+<rect x="306" y="261.9" width="36" height="36" rx="18" style="fill: rgb(16, 24, 40)" fill-opacity="0.22" filter="url(#pg-blur2)"></rect>
+<rect x="303" y="256.9" width="42" height="42" rx="21" style="fill: var(--card)"></rect>
 <rect x="306" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
 <text x="320.3" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">1</text>
 </g>
 <g data-id="s2" data-box="506,260,36,36">
+<rect x="506" y="261.9" width="36" height="36" rx="18" style="fill: rgb(16, 24, 40)" fill-opacity="0.22" filter="url(#pg-blur3)"></rect>
+<rect x="503" y="256.9" width="42" height="42" rx="21" style="fill: var(--card)"></rect>
 <rect x="506" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
 <text x="518.6" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">2</text>
 </g>
 <g data-id="s3" data-box="706,260,36,36">
+<rect x="706" y="261.9" width="36" height="36" rx="18" style="fill: rgb(16, 24, 40)" fill-opacity="0.22" filter="url(#pg-blur4)"></rect>
+<rect x="703" y="256.9" width="42" height="42" rx="21" style="fill: var(--card)"></rect>
 <rect x="706" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
 <text x="718.5" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">3</text>
 </g>
 <g data-id="s4" data-box="906,260,36,36">
+<rect x="906" y="261.9" width="36" height="36" rx="18" style="fill: rgb(16, 24, 40)" fill-opacity="0.22" filter="url(#pg-blur5)"></rect>
+<rect x="903" y="256.9" width="42" height="42" rx="21" style="fill: var(--card)"></rect>
 <rect x="906" y="259.9" width="36" height="36" rx="18" style="fill: var(--woad)"></rect>
 <text x="918.3" y="283.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: var(--card)">4</text>
+<rect x="900.5" y="254.4" width="47" height="47" rx="23.5" style="fill: none; stroke: var(--green)" stroke-width="1" stroke-dasharray="5 4"></rect>
 </g>
 <g data-id="s5" data-box="1104,258,40,40">
+<rect x="1104" y="259.9" width="40" height="40" rx="20" style="fill: rgb(16, 24, 40)" fill-opacity="0.22" filter="url(#pg-blur6)"></rect>
+<rect x="1101" y="254.9" width="46" height="46" rx="23" style="fill: var(--card)"></rect>
 <rect x="1104" y="257.9" width="40" height="40" rx="20" style="fill: var(--green)"></rect>
 </g>
 <g data-id="rail" data-box="382.5,320,283,29">
