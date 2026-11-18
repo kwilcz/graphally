@@ -28,39 +28,40 @@ function backgroundOf(diagram, { width, height }) {
   return `${svgElement('rect', { class: 'g-bg', width, height, style: `fill: ${fill}` })}\n`;
 }
 
-export function assembleSvg(figure, { routes, lines, marks, markers, steps, size }) {
-  const { diagram, options, id } = figure;
+function defsOf(figure, markers) {
   const defs = [...markers.defs(), ...figure.symbols.values(), ...figure.paints];
-  if (figure.greyed) defs.push(greyFilter(id));
-  const stylesheet = stylesheetOf(figure, routes, steps);
-  const heading = [diagram.getAttribute('title'), diagram.getAttribute('subtitle')].filter(Boolean);
-  const label = heading.join('. ') || 'Diagram';
-  const svgTag = openTag('svg', {
+  return figure.greyed ? [...defs, greyFilter(figure.id)] : defs;
+}
+
+function svgOpenTag({ diagram, options }, { width, height }) {
+  const label = [diagram.getAttribute('title'), diagram.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
+  return openTag('svg', {
     xmlns: 'http://www.w3.org/2000/svg',
     class: 'graphally',
     'data-theme': options.theme === 'dark' ? 'dark' : null,
     'data-source': options.source ? escapeXml(options.source) : null,
-    viewBox: `0 0 ${size.width} ${size.height}`,
-    width: size.width,
-    height: size.height,
+    viewBox: `0 0 ${width} ${height}`,
+    width,
+    height,
     role: 'img',
     'aria-label': escapeXml(label),
   });
-  const layers = [figure.out, lines.lines, marks.marks, [...lines.labels, ...marks.labels]];
-  const content = layers.map(layer => layer.join('\n')).join('\n');
-  const head = `${stylesheet}<defs>${defs.join('\n')}</defs>\n${backgroundOf(diagram, size)}`;
-  const svg = `${svgTag}\n${head}<g>\n${content}\n</g>\n</svg>`;
-  return {
-    svg,
-    width: size.width,
-    height: size.height,
-    problems: figure.problems,
-    stats: {
-      nodes: figure.boxes.filter(entry => entry.element.id).length,
-      groups: 0,
-      edges: routes.length,
-      crossings: countCrossings(routes),
-    },
-    snapshot: null,
-  };
+}
+
+// Bottom to top: the page, the lines, the script's drawings, and every label.
+const layersOf = (figure, lines, marks) =>
+  [figure.out, lines.lines, marks.marks, [...lines.labels, ...marks.labels]].map(layer => layer.join('\n')).join('\n');
+
+const statsOf = (figure, routes) => ({
+  nodes: figure.boxes.filter(entry => entry.element.id).length,
+  groups: 0,
+  edges: routes.length,
+  crossings: countCrossings(routes),
+});
+
+export function assembleSvg(figure, { routes, lines, marks, markers, steps, size }) {
+  const defs = defsOf(figure, markers), stylesheet = stylesheetOf(figure, routes, steps);
+  const head = `${stylesheet}<defs>${defs.join('\n')}</defs>\n${backgroundOf(figure.diagram, size)}`;
+  const svg = `${svgOpenTag(figure, size)}\n${head}<g>\n${layersOf(figure, lines, marks)}\n</g>\n</svg>`;
+  return { svg, width: size.width, height: size.height, problems: figure.problems, stats: statsOf(figure, routes), snapshot: null };
 }

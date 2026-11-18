@@ -1,7 +1,8 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // <script type="graphally" before>: runs on the page before it is laid out, to make or place
 // elements (rows from a list, bars on a timeline). Dates come from time.js.
-import { schedule, timeline } from '../time/time.js';
+import { schedule } from '../time/schedule.js';
+import { timeline } from '../time/timeline.js';
 import { sequence } from '../sequence/sequence.js';
 import { runAuthorScript } from './run-script.js';
 

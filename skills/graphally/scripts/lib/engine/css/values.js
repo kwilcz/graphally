@@ -7,17 +7,16 @@ export function splitTopLevel(list, separator = ',') {
   const items = [];
   let depth = 0, current = '';
   const isSeparator = character => (separator === ' ' ? /\s/.test(character) : character === separator);
+  const flush = () => {
+    if (current.trim()) items.push(current.trim());
+    current = '';
+  };
   for (const character of list) {
-    if (character === '(') depth++;
-    if (character === ')') depth--;
-    if (depth === 0 && isSeparator(character)) {
-      if (current.trim()) items.push(current.trim());
-      current = '';
-    } else {
-      current += character;
-    }
+    depth += character === '(' ? 1 : character === ')' ? -1 : 0;
+    if (depth === 0 && isSeparator(character)) flush();
+    else current += character;
   }
-  if (current.trim()) items.push(current.trim());
+  flush();
   return items;
 }
 

@@ -20,26 +20,27 @@ function contentText(content, element) {
 const copied = property =>
   property !== 'content' && !property.startsWith('--') && !/^(animation|transition)/.test(property);
 
+// A <g-pseudo> with a pseudo-element's computed style and text; null where there is none.
+function standInFor(element, which) {
+  const style = getComputedStyle(element, `::${which}`);
+  if (style.content === 'none' || style.content === 'normal' || style.display === 'none') return null;
+  const stand = document.createElement('g-pseudo');
+  for (const property of [...style].filter(copied)) stand.style.setProperty(property, style.getPropertyValue(property));
+  stand.textContent = contentText(style.content, element);
+  return { element, which, stand };
+}
+
+// Every pseudo-element's stand-in, read before any is added, as adding one restyles the page.
+function standInsOf(root) {
+  const elements = [...root.querySelectorAll('*')].filter(element => element instanceof HTMLElement && !SKIPPED_TAGS.test(element.tagName));
+  return elements.flatMap(element => ['before', 'after'].map(which => standInFor(element, which))).filter(Boolean);
+}
+
 // ::before and ::after have no box the page can read, so each becomes a real element: a
 // <g-pseudo> with the pseudo-element's computed style and text, in its place among the
 // element's children. The pseudo-elements themselves are then switched off.
 export function materializePseudo(root) {
-  const replacements = [];
-  for (const element of [...root.querySelectorAll('*')]) {
-    if (!(element instanceof HTMLElement) || SKIPPED_TAGS.test(element.tagName)) continue;
-    for (const which of ['before', 'after']) {
-      const style = getComputedStyle(element, `::${which}`);
-      if (style.content === 'none' || style.content === 'normal' || style.display === 'none') continue;
-      const stand = document.createElement('g-pseudo');
-      for (const property of style) {
-        if (!copied(property)) continue;
-        stand.style.setProperty(property, style.getPropertyValue(property));
-      }
-      stand.textContent = contentText(style.content, element);
-      replacements.push({ element, which, stand });
-    }
-  }
-  for (const { element, which, stand } of replacements) {
+  for (const { element, which, stand } of standInsOf(root)) {
     element.setAttribute(`data-g-${which}`, '');
     if (which === 'before') element.prepend(stand);
     else element.append(stand);

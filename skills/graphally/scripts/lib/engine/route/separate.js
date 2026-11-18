@@ -44,23 +44,27 @@ function spread(routes, cluster, horizontal) {
   });
 }
 
+// Runs on one line that overlap along it, each group as one cluster.
+function clustersOf(runs) {
+  const clusters = [];
+  let cluster = [], reach = -Infinity;
+  for (const run of [...runs].sort((a, b) => a.lo - b.lo)) {
+    if (run.lo > reach - 1 && cluster.length) {
+      clusters.push(cluster);
+      cluster = [];
+      reach = -Infinity;
+    }
+    cluster.push(run);
+    reach = Math.max(reach, run.hi);
+  }
+  return cluster.length ? [...clusters, cluster] : clusters;
+}
+
 export function separateParallels(routes) {
   for (const horizontal of [true, false]) {
     const byLine = new Map();
     for (const run of runsOf(routes, horizontal)) listAt(byLine, Math.round(run.at)).push(run);
-    for (const runs of byLine.values()) {
-      runs.sort((a, b) => a.lo - b.lo);
-      let cluster = [], reach = -Infinity;
-      for (const run of runs) {
-        if (run.lo > reach - 1 && cluster.length) {
-          spread(routes, cluster, horizontal);
-          cluster = [];
-          reach = -Infinity;
-        }
-        cluster.push(run);
-        reach = Math.max(reach, run.hi);
-      }
-      if (cluster.length) spread(routes, cluster, horizontal);
-    }
+    const clusters = [...byLine.values()].flatMap(clustersOf);
+    for (const cluster of clusters) spread(routes, cluster, horizontal);
   }
 }

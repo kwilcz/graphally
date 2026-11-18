@@ -7,22 +7,28 @@
 // that owns it.
 import { CONTAINER_MARGIN } from './costs.js';
 
+const range = (from, to) => Array.from({ length: Math.max(0, to - from) }, (_, offset) => from + offset);
+
+// The first index of the sorted values above low (or at least as high as high, when inclusive).
+function searchSorted(values, bound, from, inclusive) {
+  let low = from, high = values.length;
+  while (low < high) {
+    const middle = (low + high) >> 1;
+    if (inclusive ? values[middle] >= bound : values[middle] > bound) high = middle;
+    else low = middle + 1;
+  }
+  return low;
+}
+
 // The index range [first, last) of the sorted values strictly between low and high.
 function indexRange(values, low, high) {
-  let first = 0, end = values.length;
-  while (first < end) {
-    const middle = (first + end) >> 1;
-    if (values[middle] > low) end = middle;
-    else first = middle + 1;
-  }
-  let last = first;
-  end = values.length;
-  while (last < end) {
-    const middle = (last + end) >> 1;
-    if (values[middle] >= high) end = middle;
-    else last = middle + 1;
-  }
-  return [first, last];
+  const first = searchSorted(values, low, 0, false);
+  return [first, searchSorted(values, high, first, true)];
+}
+
+// Calls visit(cell) for every cell in the index ranges.
+function eachCell(nx, [i0, i1], [j0, j1], visit) {
+  for (let j = j0; j < j1; j++) for (let i = i0; i < i1; i++) visit(j * nx + i);
 }
 
 // The grid lines of one axis: those given, and the centre of every gap of more than 24px
@@ -32,149 +38,134 @@ function gridLines(lines, size) {
   for (let i = 0; i + 1 < sorted.length; i++) {
     if (sorted[i + 1] - sorted[i] > 24) lines.add((sorted[i] + sorted[i + 1]) / 2);
   }
-  const rounded = [...lines]
-    .map(value => Math.round(value * 2) / 2)
-    .filter(value => value >= 0 && value <= size);
+  const rounded = [...lines].map(value => Math.round(value * 2) / 2).filter(value => value >= 0 && value <= size);
   return [...new Set(rounded.sort((a, b) => a - b))];
 }
 
-// Each box is marked on the cells it covers, found by binary search, instead of every cell
-// being tested against every box. A point is inside an obstacle when it is more than 0.01
-// within it, inside a container when strictly within it.
-function markInside(flags, nx, xValues, yValues, x0, x1, y0, y1) {
-  const [i0, i1] = indexRange(xValues, x0, x1), [j0, j1] = indexRange(yValues, y0, y1);
-  for (let j = j0; j < j1; j++) for (let i = i0; i < i1; i++) flags[j * nx + i] = 1;
+function gridLinesThrough({ geometry, obstacles, containers }, extraX, extraY) {
+  const xLines = new Set([2, geometry.width - 2, ...extraX]), yLines = new Set([2, geometry.height - 2, ...extraY]);
+  const add = (x0, x1, y0, y1) => {
+    xLines.add(x0);
+    xLines.add(x1);
+    yLines.add(y0);
+    yLines.add(y1);
+  };
+  for (const o of obstacles) add(o.x, o.x + o.w, o.y, o.y + o.h);
+  const margin = CONTAINER_MARGIN;
+  for (const c of containers) add(c.x - margin, c.x + c.w + margin, c.y - margin, c.y + c.h + margin);
+  for (const run of geometry.taken || []) {
+    if (run.x1 === run.x2) xLines.add(run.x1);
+    else yLines.add(run.y1);
+  }
+  return { xs: gridLines(xLines, geometry.width), ys: gridLines(yLines, geometry.height) };
+}
+
+// The lines, and the midpoints of the segments between them, where segments are tested.
+function linesOf(xs, ys) {
+  const midpoints = values => range(0, values.length - 1).map(i => (values[i] + values[i + 1]) / 2);
+  return { xs, ys, nx: xs.length, ny: ys.length, cells: xs.length * ys.length, midX: midpoints(xs), midY: midpoints(ys) };
+}
+
+// The points and segments inside an obstacle: more than 0.01 within it.
+function obstacleFlags(obstacles, { nx, cells, xs, ys, midX, midY }) {
+  const flags = { point: new Uint8Array(cells), runH: new Uint8Array(cells), runV: new Uint8Array(cells) };
+  const mark = (target, xValues, yValues, o) => {
+    const across = indexRange(xValues, o.x + 0.01, o.x + o.w - 0.01), down = indexRange(yValues, o.y + 0.01, o.y + o.h - 0.01);
+    eachCell(nx, across, down, cell => { target[cell] = 1; });
+  };
+  for (const o of obstacles) {
+    mark(flags.point, xs, ys, o);
+    mark(flags.runH, midX, ys, o);
+    mark(flags.runV, xs, midY, o);
+  }
+  return flags;
 }
 
 // The innermost container around each segment: the deepest, the first of equals.
-function markContainer(container, index, owner, depth, nx, xValues, yValues) {
-  const [i0, i1] = indexRange(xValues, container.x, container.x + container.w);
-  const [j0, j1] = indexRange(yValues, container.y, container.y + container.h);
-  for (let j = j0; j < j1; j++) {
-    for (let i = i0; i < i1; i++) {
-      const cell = j * nx + i;
-      if (container.depth > depth[cell]) {
-        depth[cell] = container.depth;
-        owner[cell] = index;
-      }
-    }
-  }
+function markInnermost(container, index, { owner, depth }, nx, xValues, yValues) {
+  const across = indexRange(xValues, container.x, container.x + container.w);
+  const down = indexRange(yValues, container.y, container.y + container.h);
+  eachCell(nx, across, down, cell => {
+    if (container.depth <= depth[cell]) return;
+    depth[cell] = container.depth;
+    owner[cell] = index;
+  });
 }
 
-// Running along a container's border (within 5px of it) reads as part of the box.
-function markBorders(container, hugH, hugV, { nx, xs, ys, midX, midY }) {
+// The lines within 5px of a container's two edges on one axis (searched within 6px of each).
+const nearEdge = (line, start, size) => Math.abs(line - start) < 5 || Math.abs(line - start - size) < 5;
+function edgeLines(values, start, size) {
+  const ranges = [indexRange(values, start - 6, start + 6), indexRange(values, start + size - 6, start + size + 6)];
+  return ranges.flatMap(([first, last]) => range(first, last)).filter(index => nearEdge(values[index], start, size));
+}
+
+// Running along a container's border reads as part of the box: the segments along its top and
+// bottom, and down its sides, are flagged.
+function markBorders(container, flags, { nx, xs, ys, midX, midY }) {
   const { x, y, w, h } = container;
-  const [across0, across1] = indexRange(midX, x - 2, x + w + 2);
-  for (const [first, last] of [indexRange(ys, y - 6, y + 6), indexRange(ys, y + h - 6, y + h + 6)]) {
-    for (let j = first; j < last; j++) {
-      const line = ys[j];
-      if (!(Math.abs(line - y) < 5 || Math.abs(line - y - h) < 5)) continue;
-      for (let i = across0; i < across1; i++) hugH[j * nx + i] = 1;
-    }
+  const [across0, across1] = indexRange(midX, x - 2, x + w + 2), [down0, down1] = indexRange(midY, y - 2, y + h + 2);
+  for (const j of edgeLines(ys, y, h)) for (let i = across0; i < across1; i++) flags.hugH[j * nx + i] = 1;
+  for (const i of edgeLines(xs, x, w)) for (let j = down0; j < down1; j++) flags.hugV[j * nx + i] = 1;
+}
+
+function containerFlags(containers, lines) {
+  const { cells, nx, xs, ys, midX, midY } = lines;
+  const horizontal = { owner: new Int16Array(cells).fill(-1), depth: new Float64Array(cells).fill(-1) };
+  const vertical = { owner: new Int16Array(cells).fill(-1), depth: new Float64Array(cells).fill(-1) };
+  const borders = { hugH: new Uint8Array(cells), hugV: new Uint8Array(cells) };
+  containers.forEach((container, index) => {
+    markInnermost(container, index, horizontal, nx, midX, ys);
+    markInnermost(container, index, vertical, nx, xs, midY);
+    markBorders(container, borders, lines);
+  });
+  return { innerH: horizontal.owner, innerV: vertical.owner, ...borders };
+}
+
+// A segment is free when both its ends are and nothing stands on it; only a free one keeps its
+// container and border flags.
+function segments({ nx, ny, cells }, inside, around) {
+  const grid = {
+    freePoint: inside.point.map(flag => (flag ? 0 : 1)),
+    freeH: new Uint8Array(cells), freeV: new Uint8Array(cells),
+    containerH: new Int16Array(cells), containerV: new Int16Array(cells),
+    hugH: new Uint8Array(cells), hugV: new Uint8Array(cells),
+  };
+  const open = (cell, next, run, inner, hug, axis) => {
+    if (!grid.freePoint[cell] || !grid.freePoint[next]) return;
+    grid[`free${axis}`][cell] = run[cell] ? 0 : 1;
+    grid[`container${axis}`][cell] = inner[cell];
+    grid[`hug${axis}`][cell] = hug[cell];
+  };
+  for (let cell = 0; cell < cells; cell++) {
+    if (cell % nx + 1 < nx) open(cell, cell + 1, inside.runH, around.innerH, around.hugH, 'H');
+    if (((cell / nx) | 0) + 1 < ny) open(cell, cell + nx, inside.runV, around.innerV, around.hugV, 'V');
   }
-  const [down0, down1] = indexRange(midY, y - 2, y + h + 2);
-  for (const [first, last] of [indexRange(xs, x - 6, x + 6), indexRange(xs, x + w - 6, x + w + 6)]) {
-    for (let i = first; i < last; i++) {
-      const line = xs[i];
-      if (!(Math.abs(line - x) < 5 || Math.abs(line - x - w) < 5)) continue;
-      for (let j = down0; j < down1; j++) hugV[j * nx + i] = 1;
-    }
-  }
+  return grid;
 }
 
 // Lines drawn by other means (the drawing script) are taken: running along one costs as
 // overlap, crossing one as a crossing. A grid line within 3px of a drawn line counts as on it.
-function markTaken(taken, usedH, usedV, { nx, ny, xs, ys }) {
-  const near = (values, at) => values.flatMap((value, index) => (Math.abs(value - at) <= 3 ? [index] : []));
+function takenFlags(taken, { nx, ny, cells, xs, ys }) {
+  const used = { usedH: new Uint8Array(cells), usedV: new Uint8Array(cells) };
+  const near = (values, at) => range(0, values.length).filter(index => Math.abs(values[index] - at) <= 3);
+  const within = (values, count, lo, hi) => range(0, count - 1).filter(k => values[k] >= lo - 0.5 && values[k + 1] <= hi + 0.5);
   for (const run of taken) {
-    if (run.x1 === run.x2) {
-      const lo = Math.min(run.y1, run.y2), hi = Math.max(run.y1, run.y2);
-      for (const i of near(xs, run.x1)) {
-        for (let j = 0; j + 1 < ny; j++) {
-          if (ys[j] >= lo - 0.5 && ys[j + 1] <= hi + 0.5) usedV[j * nx + i] = 1;
-        }
-      }
-    } else {
-      const lo = Math.min(run.x1, run.x2), hi = Math.max(run.x1, run.x2);
-      for (const j of near(ys, run.y1)) {
-        for (let i = 0; i + 1 < nx; i++) {
-          if (xs[i] >= lo - 0.5 && xs[i + 1] <= hi + 0.5) usedH[j * nx + i] = 1;
-        }
-      }
-    }
+    const upright = run.x1 === run.x2;
+    const [lo, hi] = upright ? [Math.min(run.y1, run.y2), Math.max(run.y1, run.y2)] : [Math.min(run.x1, run.x2), Math.max(run.x1, run.x2)];
+    const lines = upright ? near(xs, run.x1) : near(ys, run.y1), steps = upright ? within(ys, ny, lo, hi) : within(xs, nx, lo, hi);
+    const mark = upright ? (line, step) => { used.usedV[step * nx + line] = 1; } : (line, step) => { used.usedH[line * nx + step] = 1; };
+    for (const line of lines) steps.forEach(step => mark(line, step));
   }
+  return used;
 }
 
 export function buildGrid(router, extraX, extraY) {
-  const { geometry, obstacles, containers } = router, taken = geometry.taken || [];
-  const xLines = new Set([2, geometry.width - 2, ...extraX]);
-  const yLines = new Set([2, geometry.height - 2, ...extraY]);
-  for (const o of obstacles) {
-    xLines.add(o.x);
-    xLines.add(o.x + o.w);
-    yLines.add(o.y);
-    yLines.add(o.y + o.h);
-  }
-  for (const c of containers) {
-    xLines.add(c.x - CONTAINER_MARGIN);
-    xLines.add(c.x + c.w + CONTAINER_MARGIN);
-    yLines.add(c.y - CONTAINER_MARGIN);
-    yLines.add(c.y + c.h + CONTAINER_MARGIN);
-  }
-  for (const run of taken) {
-    if (run.x1 === run.x2) xLines.add(run.x1);
-    else yLines.add(run.y1);
-  }
-  const xs = gridLines(xLines, geometry.width), ys = gridLines(yLines, geometry.height);
-  const nx = xs.length, ny = ys.length, cells = nx * ny;
-  // Segments are tested at their midpoints.
-  const midX = [], midY = [];
-  for (let i = 0; i + 1 < nx; i++) midX.push((xs[i] + xs[i + 1]) / 2);
-  for (let j = 0; j + 1 < ny; j++) midY.push((ys[j] + ys[j + 1]) / 2);
-  const lines = { nx, ny, xs, ys, midX, midY };
-
-  const pointInside = new Uint8Array(cells);
-  const runInsideH = new Uint8Array(cells), runInsideV = new Uint8Array(cells);
-  for (const o of obstacles) {
-    const x0 = o.x + 0.01, x1 = o.x + o.w - 0.01, y0 = o.y + 0.01, y1 = o.y + o.h - 0.01;
-    markInside(pointInside, nx, xs, ys, x0, x1, y0, y1);
-    markInside(runInsideH, nx, midX, ys, x0, x1, y0, y1);
-    markInside(runInsideV, nx, xs, midY, x0, x1, y0, y1);
-  }
-  const innerH = new Int16Array(cells).fill(-1), innerV = new Int16Array(cells).fill(-1);
-  const depthH = new Float64Array(cells).fill(-1), depthV = new Float64Array(cells).fill(-1);
-  const bordersH = new Uint8Array(cells), bordersV = new Uint8Array(cells);
-  containers.forEach((container, index) => {
-    markContainer(container, index, innerH, depthH, nx, midX, ys);
-    markContainer(container, index, innerV, depthV, nx, xs, midY);
-    markBorders(container, bordersH, bordersV, lines);
-  });
-
-  // A segment is free when both its ends are and nothing stands on it.
-  const freePoint = new Uint8Array(cells), freeH = new Uint8Array(cells), freeV = new Uint8Array(cells);
-  const containerH = new Int16Array(cells), containerV = new Int16Array(cells);
-  const hugH = new Uint8Array(cells), hugV = new Uint8Array(cells);
-  for (let cell = 0; cell < cells; cell++) freePoint[cell] = pointInside[cell] ? 0 : 1;
-  for (let j = 0; j < ny; j++) {
-    for (let i = 0; i < nx; i++) {
-      const cell = j * nx + i;
-      if (i + 1 < nx && freePoint[cell] && freePoint[cell + 1]) {
-        freeH[cell] = runInsideH[cell] ? 0 : 1;
-        containerH[cell] = innerH[cell];
-        hugH[cell] = bordersH[cell];
-      }
-      if (j + 1 < ny && freePoint[cell] && freePoint[cell + nx]) {
-        freeV[cell] = runInsideV[cell] ? 0 : 1;
-        containerV[cell] = innerV[cell];
-        hugV[cell] = bordersV[cell];
-      }
-    }
-  }
-  const usedH = new Uint8Array(cells), usedV = new Uint8Array(cells);
-  markTaken(taken, usedH, usedV, lines);
+  const { xs, ys } = gridLinesThrough(router, extraX, extraY), lines = linesOf(xs, ys);
+  const grid = segments(lines, obstacleFlags(router.obstacles, lines), containerFlags(router.containers, lines));
   return {
-    xs, ys, nx, ny, freePoint, freeH, freeV, containerH, containerV, hugH, hugV, usedH, usedV,
-    bundleH: new Int16Array(cells), bundleV: new Int16Array(cells),
+    ...grid, ...takenFlags(router.geometry.taken || [], lines),
+    xs, ys, nx: lines.nx, ny: lines.ny,
+    bundleH: new Int16Array(lines.cells), bundleV: new Int16Array(lines.cells),
     endLength: router.endLength,
     indexOfX: new Map(xs.map((value, index) => [value, index])),
     indexOfY: new Map(ys.map((value, index) => [value, index])),

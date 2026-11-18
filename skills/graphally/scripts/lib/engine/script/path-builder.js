@@ -10,41 +10,38 @@ export const arcPoint = (centre, radius, degrees) => ({
 
 const pair = point => `${fmt(point.x)},${fmt(point.y)}`;
 
-// A path from a start point; point() turns what the script names into a point. The path's
-// points (control points and an arc's samples included) let the page grow to hold it.
+// Each command as [path data, the points it adds]: control points and an arc's samples count, so
+// the page grows to hold the path.
+const lineCommand = end => [`L${pair(end)}`, [end]];
+const quadraticCommand = (control, end) => [`Q${pair(control)} ${pair(end)}`, [control, end]];
+const cubicCommand = (first, second, end) => [`C${pair(first)} ${pair(second)} ${pair(end)}`, [first, second, end]];
+
+// arc(centre, radius, startDegrees, endDegrees): a line to the arc's start, then the arc.
+function arcCommand(centre, radius, from, to) {
+  const start = arcPoint(centre, radius, from), end = arcPoint(centre, radius, to);
+  const sweep = to > from ? 1 : 0, large = Math.abs(to - from) > 180 ? 1 : 0;
+  const samples = Array.from({ length: 25 }, (_, step) => arcPoint(centre, radius, from + (to - from) * step / 24));
+  return [`L${pair(start)} A${fmt(radius)},${fmt(radius)} 0 ${large} ${sweep} ${pair(end)}`, samples];
+}
+
+// A path from a start point; point() turns what the script names into a point.
 export function pathBuilder(start, drawings, point) {
-  const commands = [`M${pair(start)}`], item = { kind: 'path', path: '', options: {}, points: [start] };
-  drawings.push(item);
-  const add = (command, ...points) => {
-    item.points.push(...points);
+  const commands = [`M${pair(start)}`], mark = { kind: 'path', path: commands[0], options: {}, points: [start] };
+  drawings.push(mark);
+  const add = ([command, points]) => {
+    mark.points.push(...points);
     commands.push(command);
-    item.path = commands.join(' ');
+    mark.path = commands.join(' ');
     return builder;
   };
   const builder = {
-    mark: item,
-    lineTo: to => { const end = point(to); return add(`L${pair(end)}`, end); },
-    quadraticCurveTo: (control, to) => {
-      const [bend, end] = [point(control), point(to)];
-      return add(`Q${pair(bend)} ${pair(end)}`, bend, end);
-    },
-    bezierCurveTo: (control1, control2, to) => {
-      const [first, second, end] = [point(control1), point(control2), point(to)];
-      return add(`C${pair(first)} ${pair(second)} ${pair(end)}`, first, second, end);
-    },
-    // arc(centre, radius, startDegrees, endDegrees): degrees clockwise from the right.
-    arc: (centreRef, radius, from, to) => {
-      const centre = point(centreRef);
-      const startPoint = arcPoint(centre, radius, from), endPoint = arcPoint(centre, radius, to);
-      const sweep = to > from ? 1 : 0, large = Math.abs(to - from) > 180 ? 1 : 0;
-      const sampleAt = step => arcPoint(centre, radius, from + (to - from) * step / 24);
-      const samples = Array.from({ length: 25 }, (_, step) => sampleAt(step));
-      const arc = `A${fmt(radius)},${fmt(radius)} 0 ${large} ${sweep} ${pair(endPoint)}`;
-      return add(`L${pair(startPoint)} ${arc}`, ...samples);
-    },
-    closePath: () => add('Z'),
-    style: options => { Object.assign(item.options, options); return builder; },
+    mark,
+    lineTo: to => add(lineCommand(point(to))),
+    quadraticCurveTo: (control, to) => add(quadraticCommand(point(control), point(to))),
+    bezierCurveTo: (first, second, to) => add(cubicCommand(point(first), point(second), point(to))),
+    arc: (centre, radius, from, to) => add(arcCommand(point(centre), radius, from, to)),
+    closePath: () => add(['Z', []]),
+    style: options => { Object.assign(mark.options, options); return builder; },
   };
-  item.path = commands.join(' ');
   return builder;
 }

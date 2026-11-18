@@ -2,6 +2,7 @@
 // Checks on the routed lines and the script's drawn lines: what reads wrong once drawn.
 import { endsOf } from '../page/markers.js';
 import { pointsOfPath } from '../page/page-size.js';
+import { pairsOf } from '../shared/maps.js';
 
 // An end mark needs a run this long before it, or it sits on the bend.
 const SHORTEST_END = 12;
@@ -34,18 +35,14 @@ function shareTrack([p, q], [u, v]) {
   return end - start > 12;
 }
 
-// Two routed lines on one stretch of the same track read as one line.
+// Two routed lines on one stretch of the same track read as one line; a bundle's lines merged
+// into one trunk are meant to.
 function overlappingLines(routes, problems) {
-  const straightRuns = routes.map(route => segmentsOf(route.points).filter(isStraight));
-  for (let first = 0; first < routes.length; first++) {
-    for (let second = first + 1; second < routes.length; second++) {
-      if (routes[first].tree && routes[first].tree === routes[second].tree) continue;   // a bundle's trunk
-      if (!straightRuns[first].some(a => straightRuns[second].some(b => shareTrack(a, b)))) continue;
-      problems.push({
-        rule: 'lines-overlap', a: routes[first].edge.key, b: routes[second].edge.key,
-        hint: 'give one of them via points or other sides',
-      });
-    }
+  const lines = routes.map(route => ({ route, runs: segmentsOf(route.points).filter(isStraight) }));
+  for (const [a, b] of pairsOf(lines)) {
+    if (a.route.tree && a.route.tree === b.route.tree) continue;
+    if (!a.runs.some(run => b.runs.some(other => shareTrack(run, other)))) continue;
+    problems.push({ rule: 'lines-overlap', a: a.route.edge.key, b: b.route.edge.key, hint: 'give one of them via points or other sides' });
   }
 }
 
@@ -87,11 +84,6 @@ function crosses([a, b], [c, d]) {
 // How many times the routed lines cross each other, for the render's stats.
 export function countCrossings(routes) {
   const segments = routes.map(route => segmentsOf(route.points));
-  let count = 0;
-  for (let first = 0; first < segments.length; first++) {
-    for (let second = first + 1; second < segments.length; second++) {
-      for (const a of segments[first]) for (const b of segments[second]) if (crosses(a, b)) count++;
-    }
-  }
-  return count;
+  const crossingsBetween = ([a, b]) => a.reduce((count, run) => count + b.filter(other => crosses(run, other)).length, 0);
+  return pairsOf(segments).reduce((count, pair) => count + crossingsBetween(pair), 0);
 }
