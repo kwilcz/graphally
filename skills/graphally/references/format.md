@@ -52,11 +52,12 @@ is about choosing one.
 - What is drawn: background colours and `linear-gradient()`, borders (solid, dashed,
   dotted, per side), `border-radius`, `box-shadow`, `outline`, `clip-path: polygon(…)`,
   `overflow: hidden` (with `text-overflow: ellipsis`), `transform` and `rotate`/`scale`,
-  `::before` and `::after` (with `content: attr(data-n)`), shapes, text with its font, size, weight, style, colour,
-  `text-transform`, `letter-spacing`, underline and line-through, list bullets, `<icon>`,
-  and images: `<img src="logo.svg">` (a path relative to the diagram file; the SVG holds
-  the image, so it travels with it) and inline `<svg>`, sized with CSS (`height: 28px`)
-  like any element. A logo goes in a header this way.
+  `::before` and `::after` (with `content: attr(data-n)`), shapes, text with its font,
+  size, weight, style, colour, `text-transform`, `letter-spacing`, underline and
+  line-through, list bullets, `<icon>`, and images: `<img src="logo.svg">` (a path
+  relative to the diagram file; the SVG holds the image, so it travels with it) and inline
+  `<svg>`, sized with CSS (`height: 28px`) like any element. A logo goes in a header this
+  way.
 - What is not drawn: inset shadows, radial and conic gradients, background images,
   `filter` other than `grayscale()`, vertical text. Draw such marks in the script instead.
 - So a component's own CSS carries over: a card's shadow, a badge's dot made with
