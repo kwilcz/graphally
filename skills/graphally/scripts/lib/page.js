@@ -579,8 +579,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
         if (r) { const fs = parseFloat(cs.fontSize); out.push(`<circle cx="${fmt(r.left - o.left - fs * 0.7)}" cy="${fmt(r.top - o.top + r.height * 0.55)}" r="${fmt(fs * 0.17)}" style="fill: ${paintOf(cs.color) || 'var(--ink)'}"></circle>`); }
       }
     }
-    // overflow other than visible clips what is inside to the padding box, corners included.
-    const clip = cs.overflowX !== 'visible' || cs.overflowY !== 'visible';
+    // overflow other than visible clips what is inside to the padding box, corners included
+    // (only when something is inside: an empty bar with overflow: hidden needs no clip).
+    const clip = (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') && [...e.childNodes].some(c => c.nodeType === 1 || c.textContent.trim());
     if (clip) {
       const cid = `${id}-clip${paints.length}`, [bt, br, bb, bl] = bw;
       paints.push(`<clipPath id="${cid}"><rect x="${fmt(b.x + bl)}" y="${fmt(b.y + bt)}" width="${fmt(b.w - bl - br)}" height="${fmt(b.h - bt - bb)}" rx="${fmt(Math.max(0, rx - Math.max(bt, bl)))}"></rect></clipPath>`);
