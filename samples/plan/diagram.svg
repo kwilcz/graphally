@@ -28,16 +28,7 @@
 <marker id="pg-m1" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--rust)"></path></marker>
 <clipPath id="pg-clip0"><rect x="521.4" y="172.4" width="219.5" height="18" rx="3"></rect></clipPath>
 <clipPath id="pg-clip1"><rect x="743" y="212.4" width="122.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip2"><rect x="893.6" y="252.4" width="281.5" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip3"><rect x="867" y="322.4" width="184.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip4"><rect x="831.6" y="362.4" width="246.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip5"><rect x="1053.1" y="402.4" width="122" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip6"><rect x="1177.1" y="472.4" width="184.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip7"><rect x="1079.7" y="512.4" width="184.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip8"><rect x="1363.2" y="552.4" width="308.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip9"><rect x="1177.1" y="662.4" width="246.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip10"><rect x="1363.2" y="742.4" width="122.1" height="18" rx="3"></rect></clipPath>
-<clipPath id="pg-clip11"><rect x="1575.9" y="782.9" width="60" height="18" rx="3"></rect></clipPath></defs>
+<clipPath id="pg-clip2"><rect x="831.6" y="362.4" width="246.1" height="18" rx="3"></rect></clipPath></defs>
 <rect class="g-bg" width="1848" height="879" style="fill: var(--bg)"></rect>
 <g>
 <text x="24" y="39" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, sans-serif; font-size: 15px; font-weight: 600; fill: var(--ink)">Logistics move to AKS</text>
@@ -83,8 +74,6 @@
 <text x="393" y="265" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--rust)">Blocked</text>
 <g data-id="fw" data-box="892.5,251.5,283.5,20">
 <rect x="893.1" y="251.9" width="282.5" height="19" rx="3.5" style="fill: var(--lane-d); stroke: var(--rust)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<g clip-path="url(#pg-clip2)">
-</g>
 </g>
 <rect x="25" y="281.9" width="1798" height="30" rx="0" style="fill: var(--lane-b)"></rect>
 <text x="39" y="300.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.48px; fill: var(--ink)">PLATFORM</text>
@@ -95,8 +84,6 @@
 <text x="393" y="335" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--green)">On track</text>
 <g data-id="aks" data-box="866,321.5,186,20">
 <rect x="866.5" y="321.9" width="185.1" height="19" rx="3.5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip3)">
-</g>
 </g>
 <line x1="25" y1="391.4" x2="1823" y2="391.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="374.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">PostgreSQL and Service Bus</text>
@@ -105,7 +92,7 @@
 <text x="393" y="375" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--amber)">At risk</text>
 <g data-id="pg" data-box="830.5,361.5,248,20">
 <rect x="831.1" y="361.9" width="247.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip4)">
+<g clip-path="url(#pg-clip2)">
 <rect x="831.6" y="362.4" width="135.4" height="18" rx="0" style="fill: var(--icon-soft)"></rect>
 </g>
 </g>
@@ -115,8 +102,6 @@
 <text x="393" y="415" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="mon" data-box="1052,401.5,124,20">
 <rect x="1052.6" y="401.9" width="123" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip5)">
-</g>
 </g>
 <rect x="25" y="431.9" width="1798" height="30" rx="0" style="fill: var(--lane-c)"></rect>
 <text x="39" y="450.8" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.48px; fill: var(--ink)">APPLICATIONS</text>
@@ -126,8 +111,6 @@
 <text x="393" y="485" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="pilot" data-box="1176,471.5,186,20">
 <rect x="1176.6" y="471.9" width="185.1" height="19" rx="3.5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip6)">
-</g>
 </g>
 <line x1="25" y1="541.4" x2="1823" y2="541.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="524.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Data migration rehearsal</text>
@@ -135,8 +118,6 @@
 <text x="393" y="525" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="rehearse" data-box="1078.5,511.5,186,20">
 <rect x="1079.2" y="511.9" width="185.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip7)">
-</g>
 </g>
 <line x1="25" y1="581.4" x2="1823" y2="581.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="564.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Move remaining services</text>
@@ -144,8 +125,6 @@
 <text x="393" y="565" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="rest" data-box="1362,551.5,310,20">
 <rect x="1362.7" y="551.9" width="309.1" height="19" rx="3.5" style="fill: var(--woad); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip8)">
-</g>
 </g>
 <line x1="25" y1="621.4" x2="1823" y2="621.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="604.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Go-live</text>
@@ -162,8 +141,6 @@
 <text x="393" y="675" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="runbooks" data-box="1176,661.5,248,20">
 <rect x="1176.6" y="661.9" width="247.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip9)">
-</g>
 </g>
 <line x1="25" y1="731.4" x2="1823" y2="731.4" style="stroke: var(--line)" stroke-width="1"></line>
 <text x="39" y="714.9" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">Go / no-go review</text>
@@ -178,16 +155,12 @@
 <text x="393" y="755" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="load" data-box="1362,741.5,124,20">
 <rect x="1362.7" y="741.9" width="123.1" height="19" rx="3.5" style="fill: var(--card); stroke: var(--woad)" stroke-width="1"></rect>
-<g clip-path="url(#pg-clip10)">
-</g>
 </g>
 <text x="39" y="795.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: var(--ink)">External pen test</text>
 <text x="265" y="795.4" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 400; fill: var(--muted)">Security vendor</text>
 <text x="393" y="795.5" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: var(--muted)">Planned</text>
 <g data-id="pen" data-box="1575,782,62,20">
 <rect x="1575.4" y="782.4" width="61" height="19" rx="3.5" style="fill: none; stroke: var(--muted)" stroke-width="1" stroke-dasharray="5 4"></rect>
-<g clip-path="url(#pg-clip11)">
-</g>
 </g>
 <g data-id="today" data-box="1016.5,83,0,729">
 </g>
