@@ -52,25 +52,13 @@ Focal point: the four large numbered stops on the road.
   .dots i.on { background: var(--green); border-color: var(--green); }
   .total { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 12px 18px; border-radius: 10px; background: var(--card); border: 1.5px solid var(--line); font-size: 13px; color: var(--muted); }
   .total b { font-size: 24px; font-weight: 700; color: var(--ink); white-space: nowrap; }
-
-  /* Depth and light: the same figure, drawn with the CSS graphally supports. */
-  .zone.safe { background: linear-gradient(180deg, var(--card), var(--wash)); border: 1px solid var(--line); }
-  .zone.live { background: linear-gradient(180deg, var(--card), var(--lane-b)); border: 1px solid var(--line); }
-  .zl { display: flex; align-items: center; gap: 8px; }
-  .zl::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); box-shadow: 0 0 0 3px color-mix(in srgb, var(--muted) 18%, transparent); }
-  .zl.live::before { background: var(--green); box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 22%, transparent); }
-  .st .figure { padding: 14px 10px 12px; border-radius: 12px; background: var(--card); box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 20px -8px rgba(16, 24, 40, 0.18); }
-  .track.a { border-radius: 15px 0 0 15px; background: linear-gradient(90deg, var(--wash), var(--icon-soft)); }
-  .track.b { background: linear-gradient(90deg, var(--lane-b), var(--green)); }
-  .stop { box-shadow: 0 0 0 6px color-mix(in srgb, var(--woad) 16%, transparent), 0 3px 8px rgba(16, 24, 40, 0.25); }
-  .stop.start { box-shadow: 0 0 0 5px color-mix(in srgb, var(--ink) 12%, transparent); }
-  .stop.end { box-shadow: 0 0 0 7px color-mix(in srgb, var(--green) 20%, transparent), 0 3px 8px rgba(16, 24, 40, 0.25); }
-  .rail { display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px -4px color-mix(in srgb, var(--rust) 45%, transparent); }
-  .rail::before { content: "!"; width: 16px; height: 16px; border-radius: 50%; background: var(--rust); color: var(--card); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-  .tbar { background: linear-gradient(90deg, var(--woad), var(--teal)); }
-  .dots i.on { box-shadow: 0 0 0 2px color-mix(in srgb, var(--green) 20%, transparent); }
-  .total { border: 1px solid var(--line); background: linear-gradient(90deg, var(--card), var(--wash)); box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 10px 24px -12px rgba(16, 24, 40, 0.22); }
-  .total::before { content: "Total"; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--card); background: var(--ink); padding: 3px 8px; border-radius: 4px; }
+  /* Three marks of emphasis, each carrying part of the point. The live road deepens from the
+     safe road's blue to full green as exposure grows (5% at the canary, 100% in production).
+     The stops, the focal point, sit on the road as stations: a ring in the page colour and a
+     soft shadow. Checkpoint 4, where real users first get the change, is ringed in green. */
+  .track.b { background: linear-gradient(90deg, var(--icon-soft) 25%, var(--green)); }
+  .stop { box-shadow: 0 0 0 3px var(--card), 0 2px 6px rgba(16, 24, 40, 0.22); }
+  #s4 { outline: 1.5px dashed var(--green); outline-offset: 5px; }
 </style>
 
 <div class=pipe>
