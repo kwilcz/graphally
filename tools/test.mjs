@@ -516,6 +516,8 @@ later('page-css-paint', async () => {
   check(/<clipPath id=/.test(svg) && /clip-path="url\(#/.test(svg) && />a long[^<]*…<\/text>/.test(svg), 'the clipped text has no ellipsis');
   check(/<g transform="matrix\(0.7071 0.7071 -0.7071 0.7071 /.test(svg), 'the rotated box is not turned');
   check(/>#7<\/text>/.test(svg), 'content: attr() is not read');
+  // A plain rule drawn edge to edge, and a label turned upright in a narrow column, stay inside the page.
+  ok0(await render(write(d, page('<div class="flex"><div style="width: 20px; position: relative"><span style="position: absolute; left: -60px; top: 60px; width: 140px; rotate: -90deg">Systems lane</span></div><div id=w style="flex: 1; height: 140px"></div></div>', "draw.moveTo(el('w').left).lineTo(el('w').right).style({ dashed: true });", 'width=300')), out));
 });
 
 // A logo in a header: an <img> goes into the SVG as a data: URL, an inline <svg> as it is.

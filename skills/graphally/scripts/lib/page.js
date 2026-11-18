@@ -485,6 +485,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     return `<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(w)}" height="${fmt(h)}" rx="${fmt(rx > 0 ? Math.max(0, rx + s.spread) : 0)}" style="fill: ${c}"${a < 1 ? ` fill-opacity="${fine(a, 3)}"` : ''}${filter}></rect>`;
   };
   let greyed = false;
+  const turned = [];
   // data-step="n": the element appears in its turn when the figure is shown (see motionCss).
   const steps = new Set();
   const stepOf = e => {
@@ -503,8 +504,11 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     let undo = null, turnTag = '';
     if (turn) {
       const [ox, oy] = cs.transformOrigin.split(' ').map(parseFloat), was = [e.style.transform, e.style.rotate, e.style.scale];
+      // Where the turned element shows: the page's extent counts this, not its unturned boxes.
+      turned.push(boxOf(e));
+      const nb = boxes.length, nt = texts.length;
       e.style.transform = e.style.rotate = e.style.scale = 'none';
-      undo = () => { [e.style.transform, e.style.rotate, e.style.scale] = was; };
+      undo = () => { [e.style.transform, e.style.rotate, e.style.scale] = was; for (const x of [...boxes.slice(nb), ...texts.slice(nt)]) x.turned = true; };
       const r = boxOf(e), px = r.x + ox, py = r.y + oy, { a, b: mb, c, d, e: tx, f: ty } = turn;
       turnTag = `<g transform="matrix(${[a, mb, c, d, px + tx - a * px - c * py, py + ty - mb * px - d * py].map(v => fine(v, 4)).join(' ')})">`;
     }
@@ -603,8 +607,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
 
   // ---------- connectors: route.js on the page's boxes ----------
   const far = drawingsReach(drawings);
-  const W = Math.ceil(Math.max(root.scrollWidth, ...boxes.map(x => x.b.x + x.b.w + S.pad), ...texts.map(t => t.x + t.w + S.pad), far.x + S.pad));
-  const H = Math.ceil(Math.max(...boxes.map(x => x.b.y + x.b.h + S.pad), ...texts.map(t => t.y + t.h + S.pad), far.y + S.pad, 2 * S.pad));
+  const shown = [...boxes.filter(x => !x.turned).map(x => x.b), ...texts.filter(t => !t.turned), ...turned];
+  const W = Math.ceil(Math.max(root.scrollWidth, ...shown.map(r => r.x + r.w + S.pad), far.x + S.pad));
+  const H = Math.ceil(Math.max(...shown.map(r => r.y + r.h + S.pad), far.y + S.pad, 2 * S.pad));
   const routes = connectors(boxes, texts, edges, drawings, problems, m, W, H, opts.previous);
   for (const r of routes) if (r.labelCrowded) problems.push({ rule: 'label-crowded', edge: `${r.edge.from} -> ${r.edge.to}`, label: r.edge.label, hint: 'widen the gap the line runs through, or shorten the label' });
   overlaps(routes, problems);
@@ -664,8 +669,9 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     }
     if (d.anim != null) drawOut.push('</g>');
   }
-  check(texts, problems);
-  overflows(boxes, texts, root, problems);
+  // Turned boxes and text are read unturned, so they are left out of the checks on overlap.
+  check(texts.filter(t => !t.turned), problems);
+  overflows(boxes.filter(x => !x.turned), texts.filter(t => !t.turned), root, problems);
   const defs = [...[...markers].map(k => {
     const [mid, kind, color] = k.split('|'), [ref, body] = MARKER[kind];
     return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
@@ -725,9 +731,11 @@ function drawingsReach(drawings) {
   for (const d of drawings) {
     const o = d.o || {};
     if (d.kind === 'path') {
-      const w = (o.width || 1.5) / 2 + 5;
+      // Room for half the stroke, and for an arrowhead or tail mark at an end that has one:
+      // a plain rule drawn to the page's edge stays inside it.
+      const en = endsOf(o, false, []), half = (o.width || 1.5) / 2;
       const pts = d.pts || [...d.d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => ({ x: Number(m[1]), y: Number(m[2]) }));
-      for (const p of pts) reach(p.x + w, p.y + w);
+      pts.forEach((p, i) => { const w = half + ((i === pts.length - 1 && en.head !== 'none') || (i === 0 && en.tail !== 'none') ? 5 : 0); reach(p.x + w, p.y + w); });
     } else if (d.kind === 'text') {
       const size = o.size || 12, wide = d.str.length * size * 0.6, anchor = o.anchor || 'middle';
       reach(d.p.x + (anchor === 'start' ? wide : anchor === 'middle' ? wide / 2 : 0), d.p.y + size);
