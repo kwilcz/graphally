@@ -105,7 +105,7 @@ Every kind of diagram is a page, so no kind needs a layout algorithm of its own:
 - **Anything else**: phase and role charts, matrices, step cards; bands of cards line up
   with a chart's columns through `subgrid`.
 
-`shape="…"` on an element draws it from a library of path templates (`shapes.js`:
+`shape="…"` on an element draws it from a library of path templates (`shapes/`:
 flowchart, BPMN, stores, block arrows) over the box the browser gave it, with its background
 and border as fill and outline.
 
