@@ -77,7 +77,7 @@ async function download(pairs, onProgress) {
 
 // ---------- turning SVG files into a pack ----------
 
-// svgEntry and kebab live in iconsvg.js, which the browser viewer shares.
+// svgEntry and kebab live in engine/icons/icon-svg.js, which the browser viewer shares.
 export { svgEntry, kebab };
 
 // ---------- the two vendors ----------
