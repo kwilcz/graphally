@@ -3,8 +3,13 @@
 // SVG: linear gradients, box shadows and transforms. ::before and ::after are turned into real
 // elements before the page is read, so the walk sees their boxes like any other.
 
+// The dash pattern of a border or outline style, as SVG's stroke-dasharray.
+export const DASH_PATTERN = { dashed: '5 4', dotted: '1.5 3' };
+
+const SIDES = ['Top', 'Right', 'Bottom', 'Left'];
 const COLOR = /^(?:(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix)\(.*\)|#[\da-f]+|[a-z]+)$/i;
 const LENGTH = /^-?[\d.]+(px)?$/;
+const SKIPPED_TAGS = /^(ICON|IMG|SVG|STYLE|SCRIPT|G-PSEUDO)$/i;
 const RADIANS_PER = { deg: Math.PI / 180, rad: 1, turn: 2 * Math.PI, grad: Math.PI / 200 };
 
 // Splits a CSS list at its top-level separators, leaving those inside parentheses alone:
@@ -36,6 +41,45 @@ export function colorAndOpacity(color) {
   return [`rgb(${red}, ${green}, ${blue})`, Number(alpha)];
 }
 
+// An element's border, side by side (top, right, bottom, left): each side's width, style and
+// colour. A side whose style is none has no width. Uniform: all four sides alike and drawn.
+export function bordersOf(style) {
+  const sides = SIDES.map(side => ({
+    width: style[`border${side}Style`] === 'none' ? 0 : parseFloat(style[`border${side}Width`]) || 0,
+    style: style[`border${side}Style`],
+    color: style[`border${side}Color`],
+  }));
+  const widths = sides.map(side => side.width);
+  return {
+    sides,
+    widths,
+    uniform: widths.every(width => width === widths[0]) && widths[0] > 0,
+    drawn: widths.some(Boolean),
+  };
+}
+
+// The corner radius an element is drawn with: its top-left radius, in pixels or as a share of
+// its shorter side, and never more than half the box.
+export function cornerRadiusOf(style, box) {
+  const value = style.borderTopLeftRadius;
+  const shorterSide = Math.min(box.w, box.h);
+  const radius = value.endsWith('%') ? shorterSide * parseFloat(value) / 100 : parseFloat(value) || 0;
+  return Math.min(radius, box.w / 2, box.h / 2);
+}
+
+// The box inside an element's border and padding, where its content is drawn.
+export function contentBoxOf(style, box) {
+  const pixels = property => parseFloat(style[property]) || 0;
+  const left = box.x + pixels('borderLeftWidth') + pixels('paddingLeft');
+  const top = box.y + pixels('borderTopWidth') + pixels('paddingTop');
+  return {
+    x: left,
+    y: top,
+    w: box.w - left + box.x - pixels('borderRightWidth') - pixels('paddingRight'),
+    h: box.h - top + box.y - pixels('borderBottomWidth') - pixels('paddingBottom'),
+  };
+}
+
 // The direction a linear-gradient() runs in, as a unit vector (x right, y down).
 function directionOf(args, box) {
   const angle = /^(-?[\d.]+)(deg|rad|turn|grad)$/.exec(args[0]);
@@ -62,8 +106,10 @@ function stopsOf(args, lineLength) {
   const stops = [];
   for (const arg of args) {
     const words = splitTopLevel(arg, ' '), color = words.shift();
-    if (!COLOR.test(color)) continue;                                     // a colour hint: the curve is left to the browser
-    const offsets = words.map(position => (position.endsWith('%') ? parseFloat(position) / 100 : parseFloat(position) / lineLength));
+    // A bare position is a colour hint, which bends the blend between two stops: left out.
+    if (!COLOR.test(color)) continue;
+    const offsetOf = position => parseFloat(position) / (position.endsWith('%') ? 100 : lineLength);
+    const offsets = words.map(offsetOf);
     if (!offsets.length) stops.push({ color, at: null });
     for (const at of offsets) stops.push({ color, at });
   }
@@ -75,9 +121,13 @@ function stopsOf(args, lineLength) {
     let next = index;
     while (stops[next].at == null) next++;
     const from = stops[index - 1].at, step = (stops[next].at - from) / (next - index + 1);
-    for (let missing = index; missing < next; missing++) stops[missing].at = from + step * (missing - index + 1);
+    for (let missing = index; missing < next; missing++) {
+      stops[missing].at = from + step * (missing - index + 1);
+    }
   }
-  for (let index = 1; index < stops.length; index++) stops[index].at = Math.max(stops[index].at, stops[index - 1].at);
+  for (let index = 1; index < stops.length; index++) {
+    stops[index].at = Math.max(stops[index].at, stops[index - 1].at);
+  }
   return stops;
 }
 
@@ -93,7 +143,13 @@ export function linearGradient(backgroundImage, box) {
   const stops = stopsOf(args, lineLength);
   if (!stops) return null;
   const centreX = box.x + box.w / 2, centreY = box.y + box.h / 2, half = lineLength / 2;
-  return { x1: centreX - direction.x * half, y1: centreY - direction.y * half, x2: centreX + direction.x * half, y2: centreY + direction.y * half, stops };
+  return {
+    x1: centreX - direction.x * half,
+    y1: centreY - direction.y * half,
+    x2: centreX + direction.x * half,
+    y2: centreY + direction.y * half,
+    stops,
+  };
 }
 
 // A computed box-shadow as a list in painting order: the last in the CSS list is painted first.
@@ -121,10 +177,13 @@ export function turnMatrixOf(style) {
   if (!parts.length) return null;
   try {
     const matrix = new DOMMatrix(parts.join(' '));
-    const linearChange = Math.abs(matrix.a - 1) + Math.abs(matrix.b) + Math.abs(matrix.c) + Math.abs(matrix.d - 1);
-    return linearChange < 1e-6 ? null : matrix;
+    // How far the matrix's linear part is from the identity: nothing means only a move.
+    const linearPart = [matrix.a - 1, matrix.b, matrix.c, matrix.d - 1];
+    const change = linearPart.reduce((sum, value) => sum + Math.abs(value), 0);
+    return change < 1e-6 ? null : matrix;
   } catch {
-    return null;                                                          // a 3D rotate the matrix cannot hold
+    // A rotate about a 3D axis, which a 2D matrix cannot hold.
+    return null;
   }
 }
 
@@ -140,19 +199,24 @@ function contentText(content, element) {
   }).join('');
 }
 
+// The properties a stand-in takes over: all but content (its text is set apart), custom
+// properties and animations, which would replay on the stand-in.
+const copied = property =>
+  property !== 'content' && !property.startsWith('--') && !/^(animation|transition)/.test(property);
+
 // ::before and ::after have no box the page can read, so each becomes a real element: a
 // <g-pseudo> with the pseudo-element's computed style and text, in its place among the
 // element's children. The pseudo-elements themselves are then switched off.
 export function materializePseudo(root) {
   const replacements = [];
   for (const element of [...root.querySelectorAll('*')]) {
-    if (!(element instanceof HTMLElement) || /^(ICON|IMG|SVG|STYLE|SCRIPT|G-PSEUDO)$/i.test(element.tagName)) continue;
+    if (!(element instanceof HTMLElement) || SKIPPED_TAGS.test(element.tagName)) continue;
     for (const which of ['before', 'after']) {
       const style = getComputedStyle(element, `::${which}`);
       if (style.content === 'none' || style.content === 'normal' || style.display === 'none') continue;
       const stand = document.createElement('g-pseudo');
       for (const property of style) {
-        if (property === 'content' || property.startsWith('--') || /^(animation|transition)/.test(property)) continue;
+        if (!copied(property)) continue;
         stand.style.setProperty(property, style.getPropertyValue(property));
       }
       stand.textContent = contentText(style.content, element);
