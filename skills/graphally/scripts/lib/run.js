@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Browser side of the CLI: load a diagram file, resolve parts, compile every <diagram>.
-import { compile, registerPack } from './index.js';
-import { resolveIcon } from './icons.js';
+import { compile, registerPack } from './engine/index.js';
+import { resolveIcon } from './engine/icons/icons.js';
 
 const NS_ATTRS = ['id'];
 try {

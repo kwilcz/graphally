@@ -14,9 +14,9 @@
 // site, a wiki). Each is isolated: its <style> applies to it alone, the page's CSS does not
 // reach it, and it is shown in a shadow root, so its SVG ids do not meet another diagram's.
 // The page restyles a diagram only through the theme's tokens, set on .graphally-view.
-import { compile, registerPack } from './index.js';
-import { svgEntry } from './iconsvg.js';
-import { hostTheme } from './style.js';
+import { compile, registerPack } from './engine/index.js';
+import { svgEntry } from './engine/icons/icon-svg.js';
+import { hostTheme } from './engine/style.js';
 import THEME from '../../assets/theme.css';
 
 const WEIGHTS = { 400: 'Regular', 500: 'Medium', 600: 'SemiBold', 700: 'Bold' };

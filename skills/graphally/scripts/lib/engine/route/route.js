@@ -8,7 +8,7 @@
 // chooses which side of each node an edge uses; the second spreads edges that share a side
 // and routes again with fixed ports. Then parallel segments are separated and labels are
 // placed where they collide with nothing.
-import { S, T } from './style.js';
+import { S, T } from '../style.js';
 
 const BEND = 36, CROSS = 70, OVERLAP = 22, FOREIGN = 2.2;
 // An end segment shorter than MIN_END puts the arrowhead on the bend before it. The page's small

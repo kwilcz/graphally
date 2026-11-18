@@ -5,15 +5,15 @@
 // curve, draw.moveTo(…).lineTo(…), gate, text, icon, shape. Nobody writes a coordinate.
 // This file turns the laid-out page into SVG: backgrounds, borders, clip-path shapes, text
 // line by line, icons; then the connectors (routed by route.js) and the script's drawings.
-import { S, T, hostTheme, shadowBox } from './style.js';
-import { schedule, timeline } from './time.js';
-import { sequence } from './seq.js';
-import { utilitiesFor } from './utilities.js';
-import { resolveIcon, symbolFor } from './icons.js';
-import { routeEdges } from './route.js';
-import { parseShape, drawShape, SHAPE_CSS } from './shapes.js';
-import * as paint from './paint.js';
-import { fmt, roundTo, openTag, svgElement, attributesOf, boxAttributes } from './svg.js';
+import { S, T, hostTheme, shadowBox } from '../style.js';
+import { schedule, timeline } from '../time/time.js';
+import { sequence } from '../sequence/sequence.js';
+import { utilitiesFor } from '../css/utilities.js';
+import { resolveIcon, symbolFor } from '../icons/icons.js';
+import { routeEdges } from '../route/route.js';
+import { parseShape, drawShape, SHAPE_CSS } from '../shapes/shapes.js';
+import * as paint from '../css/paint.js';
+import { fmt, roundTo, openTag, svgElement, attributesOf, boxAttributes } from '../svg.js';
 
 // A polyline with its corners rounded by r: the path of a line with bends.
 function rounded(pts, r) {

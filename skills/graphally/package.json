@@ -12,7 +12,7 @@
   "bin": { "graphally": "scripts/graphally.mjs" },
   "exports": {
     ".": "./scripts/lib/api.mjs",
-    "./engine": "./scripts/lib/index.js",
+    "./engine": "./scripts/lib/engine/index.js",
     "./edits": "./scripts/lib/edits.mjs",
     "./viewer": "./viewer/graphally.min.js",
     "./theme.css": "./assets/theme.css",

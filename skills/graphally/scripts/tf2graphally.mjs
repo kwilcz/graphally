@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { terraformToDiagram } from './lib/terraform.js';
-import { registerPack, resolveIcon } from './lib/icons.js';
+import { registerPack, resolveIcon } from './lib/engine/icons/icons.js';
 import { loadPacks } from './lib/iconpack.mjs';
 import { withViewer } from './lib/viewerheader.mjs';
 
