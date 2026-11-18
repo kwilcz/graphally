@@ -783,7 +783,7 @@ later('icon-packs', async () => {
     const fetched = async name => {
       await tab.goto(`${server.origin}/scripts/lib/harness.html?${new URLSearchParams({ src: `${server.origin}/src/${name}`, prev: '' })}`);
       await tab.ready();
-      return tab.evaluate(`performance.getEntriesByType('resource').filter(e => e.name.includes('/icons/')).length`);
+      return tab.evaluate(`performance.getEntriesByType('resource').filter(e => /\\/icons\\/\\w+\\.json$/.test(e.name)).length`);
     };
     check(await fetched('plain.html') === 0, 'the packs were fetched for a diagram with generic icons only');
     check(await fetched('cloud.html') === Object.keys(packs).length, 'the packs were not fetched for a diagram with an Azure icon');
