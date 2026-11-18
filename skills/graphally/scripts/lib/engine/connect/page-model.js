@@ -53,17 +53,12 @@ function keysOf(boxes) {
 }
 
 export function pageModel({ boxes, texts, drawings, calls, problems, previous, size }) {
-  const rootGroup = { id: '__root', kind: 'group', style: 'root', children: [], parent: null, depth: -1 };
+  const rootGroup = { id: '__root', style: 'root', parent: null, depth: -1 };
   // previous: the layout of the last render; a line keeps the sides it used there (soft).
-  const model = {
-    nodes: new Map(), groups: new Map(), edges: [], problems, previous: previous || null, attrs: {},
-  };
+  const model = { nodes: new Map(), groups: new Map(), edges: [], problems, previous: previous || null };
   model.groups.set('__root', rootGroup);
   // The author set the gaps; a 6px clearance lets lines use any gap wider than 12px.
-  const geometry = {
-    nodes: new Map(), groups: new Map(), extraObstacles: [], title: null, legend: null,
-    width: size.width, height: size.height, nodePad: 6,
-  };
+  const geometry = { nodes: new Map(), groups: new Map(), extraObstacles: [], ...size, nodePad: 6 };
   geometry.taken = takenRuns(drawings);
   // An icon without an id is part of the box it sits in: that box stays one solid card.
   const isDecor = entry => entry.element.tagName === 'ICON' && !entry.element.id;
@@ -100,12 +95,9 @@ export function pageModel({ boxes, texts, drawings, calls, problems, previous, s
     }
     const parent = ensure(entry.parent), key = keyOf.get(entry), isGroup = holdsBoxes.has(entry);
     const style = entry.plain || !entry.painted ? 'plain' : 'box';
-    const object = isGroup
-      ? { id: key, kind: 'group', style, children: [], parent, depth: parent.depth + 1 }
-      : { id: key, kind: 'node', parent, shape: '' };
+    const object = isGroup ? { id: key, style, parent, depth: parent.depth + 1 } : { id: key, parent };
     objectOf.set(entry, object);
     (isGroup ? model.groups : model.nodes).set(key, object);
-    parent.children?.push(object);
     const lane = isRow(entry) ? { lane: true } : {};
     if (isGroup) geometry.groups.set(key, { ...wholePixels(entry.box), group: object, ...lane });
     else geometry.nodes.set(key, { ...wholePixels(entry.box), node: object, round: entry.round });

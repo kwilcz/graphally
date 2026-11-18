@@ -54,7 +54,12 @@ export function serve(skillRoot, srcDir, files = {}) {
     const file = hit || path.resolve(root, rel);
     if ((!hit && (!root || !file.startsWith(path.resolve(root) + path.sep))) || !fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404); res.end(); return; }
     const type = types[path.extname(file).toLowerCase()] || 'application/octet-stream';
-    res.writeHead(200, { 'content-type': /^(text|application)\//.test(type) || type.endsWith('xml') ? `${type}; charset=utf-8` : type });
+    const headers = { 'content-type': /^(text|application)\//.test(type) || type.endsWith('xml') ? `${type}; charset=utf-8` : type };
+    // The skill's own files (the engine, the theme, the icon packs) do not change while the
+    // server runs, and each run has a fresh browser profile: every page after the first reads
+    // them from the cache instead of fetching and compiling each module again.
+    if (root === skillRoot) headers['cache-control'] = 'max-age=3600';
+    res.writeHead(200, headers);
     fs.createReadStream(file).pipe(res);
   });
   return new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve({ origin: `http://127.0.0.1:${server.address().port}`, close: () => { server.closeAllConnections?.(); server.close(); } })));

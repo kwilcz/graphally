@@ -4,7 +4,7 @@
 import { S, T } from '../style.js';
 import { fmt, openTag, svgElement, escapeXml, roundedPath } from '../svg.js';
 import { toneOf } from '../shared/tokens.js';
-import { SIDES } from '../connect/connectors.js';
+import { SIDES } from '../route/geometry.js';
 import { haloAt } from './colors.js';
 import { flowMarks } from './motion.js';
 

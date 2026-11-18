@@ -1,11 +1,9 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // The script's connections, routed by route.js round the page's boxes.
 import { routeEdges } from '../route/route.js';
+import { SIDES } from '../route/geometry.js';
 import { endsOf } from '../page/markers.js';
 import { pageModel } from './page-model.js';
-
-// The sides of a box, as route.js numbers them.
-export const SIDES = ['right', 'bottom', 'left', 'top'];
 
 // The sides a line leaves and enters by, where the author fixed them, as route.js's numbers.
 function sidesFixed(options, problems) {
@@ -45,7 +43,7 @@ function edgeOf(call, index, from, to, key, problems) {
 // routed leg by leg; joinLegs joins the legs again. The label goes on the middle leg.
 function addLegs({ model, geometry, rootGroup }, edge, via) {
   const waypoints = via.map((point, index) => {
-    const id = `${edge.key}~${index + 1}`, node = { id, kind: 'node', parent: rootGroup, shape: '' };
+    const id = `${edge.key}~${index + 1}`, node = { id, parent: rootGroup };
     model.nodes.set(id, node);
     const at = { x: Math.round(point.x), y: Math.round(point.y), w: 0, h: 0 };
     geometry.nodes.set(id, { ...at, node, round: true, virtual: true });
