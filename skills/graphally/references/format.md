@@ -52,7 +52,7 @@ is about choosing one.
 - What is drawn: background colours and `linear-gradient()`, borders (solid, dashed,
   dotted, per side), `border-radius`, `box-shadow`, `outline`, `clip-path: polygon(…)`,
   `overflow: hidden` (with `text-overflow: ellipsis`), `transform` and `rotate`/`scale`,
-  `::before` and `::after`, shapes, text with its font, size, weight, style, colour,
+  `::before` and `::after` (with `content: attr(data-n)`), shapes, text with its font, size, weight, style, colour,
   `text-transform`, `letter-spacing`, underline and line-through, list bullets, `<icon>`,
   and images: `<img src="logo.svg">` (a path relative to the diagram file; the SVG holds
   the image, so it travels with it) and inline `<svg>`, sized with CSS (`height: 28px`)

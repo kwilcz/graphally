@@ -103,7 +103,8 @@ export function materializePseudo(root) {
       if (ps.content === 'none' || ps.content === 'normal' || ps.display === 'none') continue;
       const s = document.createElement('g-pseudo');
       for (const p of ps) if (p !== 'content' && !p.startsWith('--') && !/^(animation|transition)/.test(p)) s.style.setProperty(p, ps.getPropertyValue(p));
-      s.textContent = [...ps.content.matchAll(/"((?:[^"\\]|\\.)*)"/g)].map(m => m[1].replace(/\\([\da-f]{1,6})\s?/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1')).join('');
+      // Strings and attr(name): content: attr(data-step) numbers a list from its markup.
+      s.textContent = [...ps.content.matchAll(/"((?:[^"\\]|\\.)*)"|attr\(\s*([\w-]+)\s*\)/g)].map(m => (m[2] ? e.getAttribute(m[2]) || '' : m[1].replace(/\\([\da-f]{1,6})\s?/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1'))).join('');
       made.push([e, which, s]);
     }
   }
