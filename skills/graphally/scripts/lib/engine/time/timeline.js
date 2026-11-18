@@ -5,12 +5,14 @@
 // dated elements go on them, and the months, quarters and years come back, ready to label a header.
 import { dayOf, isoOf, nextMonthStart } from './dates.js';
 
+const startAndEnd = element => [dayOf(element.dataset.start), dayOf(element.dataset.end)];
+
 // The range: as given, else the dated elements inside out to whole months, with half a month of
 // room after the last date for labels that follow a bar. Null when nothing inside is dated.
 function rangeOf(box, from, to) {
   let lo = dayOf(from), hi = dayOf(to);
   if (!Number.isNaN(lo) && !Number.isNaN(hi)) return { lo, hi };
-  const days = [...box.querySelectorAll('[data-start]')].flatMap(element => [dayOf(element.dataset.start), dayOf(element.dataset.end)]);
+  const days = [...box.querySelectorAll('[data-start]')].flatMap(startAndEnd);
   const dated = days.filter(Number.isFinite);
   if (!dated.length) return null;
   if (Number.isNaN(lo)) lo = dayOf(`${isoOf(Math.min(...dated)).slice(0, 7)}-01`);
@@ -23,7 +25,8 @@ function rangeOf(box, from, to) {
 function monthBegunAt(day, index, step, hi, months) {
   const iso = isoOf(day), reached = isoOf(Math.min(day + step - 1, hi - 1)).slice(0, 7);
   const isNew = month => !months.some(each => each.month === month);
-  const begins = index === 0 || (step === 1 ? iso.endsWith('-01') : reached !== isoOf(day - 1).slice(0, 7) && isNew(reached));
+  const begins = index === 0
+    || (step === 1 ? iso.endsWith('-01') : reached !== isoOf(day - 1).slice(0, 7) && isNew(reached));
   const month = step === 1 || index === 0 ? iso.slice(0, 7) : reached;
   return begins && isNew(month) ? month : null;
 }
@@ -63,7 +66,10 @@ function spansOf(months, keyOf) {
     if (last && last.key === key) last.to = month;
     else groups.push({ key, from: month, to: month });
   }
-  return groups.map((group, index) => ({ label: group.key, column: `${group.from.name} / ${groups[index + 1] ? groups[index + 1].from.name : 'end'}` }));
+  return groups.map((group, index) => {
+    const next = groups[index + 1];
+    return { label: group.key, column: `${group.from.name} / ${next ? next.from.name : 'end'}` };
+  });
 }
 
 const quarterOf = month => `Q${Math.floor((Number(month.slice(5)) - 1) / 3) + 1} ${month.slice(0, 4)}`;
@@ -90,9 +96,18 @@ function invalidRange(box, range, from, to, step) {
   if (!box) return [{}, 'timeline(container): no such container'];
   if (!range) return [{}, 'no dated elements inside: give from and to, or call schedule() first'];
   const { lo, hi } = range;
-  if (Number.isNaN(lo) || Number.isNaN(hi) || hi <= lo) return [{ value: `${from}..${to}` }, 'from and to as YYYY-MM-DD, to after from'];
+  if (Number.isNaN(lo) || Number.isNaN(hi) || hi <= lo) {
+    return [{ value: `${from}..${to}` }, 'from and to as YYYY-MM-DD, to after from'];
+  }
   if ((hi - lo) / step > 1500) return [{}, `${Math.round(hi - lo)} days is too long by the day: give unit: 'week'`];
   return null;
+}
+
+// The grid's columns: the lead column, if any, then one track per day (or week), its lines named.
+function templateColumnsOf(lines, lead, hi) {
+  const leadTrack = lead ? `[lead] ${lead} ` : '';
+  const tracks = lines.map(names => `[${names.join(' ')}] minmax(0, 1fr)`).join(' ');
+  return `${leadTrack}${tracks} [d${isoOf(hi)} end]`;
 }
 
 export function timeline(box, { from, to, lead = '', unit = 'day' } = {}, problems) {
@@ -106,7 +121,7 @@ export function timeline(box, { from, to, lead = '', unit = 'day' } = {}, proble
   for (let day = lo; day < hi; day += step) starts.push(day);
   const { lines, months } = namedLines(starts, step, hi);
   box.style.display = box.style.display || 'grid';
-  box.style.gridTemplateColumns = `${lead ? `[lead] ${lead} ` : ''}${lines.map(names => `[${names.join(' ')}] minmax(0, 1fr)`).join(' ')} [d${isoOf(hi)} end]`;
+  box.style.gridTemplateColumns = templateColumnsOf(lines, lead, hi);
   finishMonths(months, hi);
   const lineAt = lineFinder(starts, lo, step);
   placeDated(box, range, lineAt);

@@ -3,7 +3,8 @@
 // and an end date is a boundary: a task that follows another starts on the day the other ends.
 const DAY = 86400000;
 
-export const dayOf = value => (/^\d{4}-\d{2}-\d{2}$/.test(String(value || '')) ? Date.parse(`${value}T00:00:00Z`) / DAY : NaN);
+const isIsoDate = value => /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''));
+export const dayOf = value => (isIsoDate(value) ? Date.parse(`${value}T00:00:00Z`) / DAY : NaN);
 export const isoOf = day => new Date(day * DAY).toISOString().slice(0, 10);
 
 // A duration in days: "10", "10d" or "2w".

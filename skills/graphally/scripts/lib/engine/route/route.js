@@ -22,7 +22,8 @@ import { placeLabels } from './labels.js';
 function connectionsOf(router) {
   const { model } = router, { bundleOf, fansIn } = bundlesOf(model.edges);
   const endOf = id => ({ id, rect: router.rectOf(id), isGroup: model.groups.has(id) });
-  const routable = model.edges.filter(edge => edge.from !== edge.to && router.rectOf(edge.from) && router.rectOf(edge.to));
+  const isRoutable = edge => edge.from !== edge.to && router.rectOf(edge.from) && router.rectOf(edge.to);
+  const routable = model.edges.filter(isRoutable);
   const connections = routable.map(edge => ({
     edge, bundle: bundleOf(edge), fanIn: fansIn(edge), marks: marksOf(edge),
     source: endOf(edge.from), target: endOf(edge.to),
@@ -43,7 +44,9 @@ function firstPassLines({ geometry, endLength }, connections) {
   for (const rect of rects) addLines(lines, [rect.x + rect.w / 2], [rect.y + rect.h / 2]);
   const real = endLength ? rects.filter(rect => !rect.virtual) : [];
   for (const rect of real) {
-    addLines(lines, [rect.x - endLength, rect.x + rect.w + endLength], [rect.y - endLength, rect.y + rect.h + endLength]);
+    const xs = [rect.x - endLength, rect.x + rect.w + endLength];
+    const ys = [rect.y - endLength, rect.y + rect.h + endLength];
+    addLines(lines, xs, ys);
   }
   for (const { source: { rect: a }, target: { rect: b } } of connections) {
     const acrossY = sharedSpan(a.y, a.h, b.y, b.h), acrossX = sharedSpan(a.x, a.w, b.x, b.w);
@@ -62,7 +65,9 @@ class SideUse {
 
   penalize(end, ports, direction) {
     if (!end.rect.round) return;
-    for (const port of ports) port.penalty = (port.penalty || 0) + SIDE_TAKEN * this.count(end.id, port.side, direction);
+    for (const port of ports) {
+      port.penalty = (port.penalty || 0) + SIDE_TAKEN * this.count(end.id, port.side, direction);
+    }
   }
 
   record({ source, target }, path) {
@@ -75,7 +80,9 @@ function logFirstRoute(grid, { source, target }, starts, goals, path) {
   if (!globalThis.__routeDebug) return;
   const at = port => [port.side, grid.xs[port.i], grid.ys[port.j]];
   const chose = path && [path.startSide, path.goalSide, Math.round(path.cost)];
-  (globalThis.__routeLog ||= []).push({ e: `${source.id}->${target.id}`, starts: starts.map(at), goals: goals.map(at), chose });
+  (globalThis.__routeLog ||= []).push({
+    e: `${source.id}->${target.id}`, starts: starts.map(at), goals: goals.map(at), chose,
+  });
 }
 
 function routeFirst(router, grid, connection, sideUse) {

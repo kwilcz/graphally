@@ -90,7 +90,8 @@ function bottomMarkers({ base, has, marks, box, inset, cx, ink, line }) {
   if (base.event || base.gateway) return [];
   const shown = marks.filter(mark => Object.hasOwn(BOTTOM_DRAWN, mark) && !(mark === 'multi' && has('sequential')));
   const my = box.y + box.h - inset - 12 / 2 - 5;
-  return shown.flatMap((mark, index) => BOTTOM_DRAWN[mark]({ mx: cx + (index - (shown.length - 1) / 2) * (12 + 6), my, ink, line }));
+  const centreXOf = index => cx + (index - (shown.length - 1) / 2) * (12 + 6);
+  return shown.flatMap((mark, index) => BOTTOM_DRAWN[mark]({ mx: centreXOf(index), my, ink, line }));
 }
 
 // An intermediate event's second ring, inside the first.

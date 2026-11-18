@@ -40,7 +40,9 @@ function modulesFrom(folder, entry) {
 // The bindings a module imports from another, checked against what that module exports.
 function importedNames(file, list, from, exportsOf) {
   return namesOf(list).map(binding => {
-    if (!exportsOf.get(from).includes(binding.name)) throw new Error(`bundle: ${file} imports ${binding.name}, which ${from} does not export`);
+    if (!exportsOf.get(from).includes(binding.name)) {
+      throw new Error(`bundle: ${file} imports ${binding.name}, which ${from} does not export`);
+    }
     return binding;
   });
 }

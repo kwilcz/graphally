@@ -22,7 +22,10 @@ import { registerLazyPacks } from './viewer/lazy-icons.js';
 import { viewOf, show, problemsList, failureNote } from './viewer/diagram-view.js';
 
 const prefersDark = () => globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches;
-const INCLUDE_PROBLEM = { rule: 'include', hint: 'a file opened from disk cannot read its parts: render it with graphally, or put the parts in this file' };
+const INCLUDE_PROBLEM = {
+  rule: 'include',
+  hint: 'a file opened from disk cannot read its parts: render it with graphally, or put the parts in this file',
+};
 
 async function fontsLoaded() {
   await document.fonts.ready;
@@ -31,11 +34,14 @@ async function fontsLoaded() {
 }
 
 // An <img> is laid out at its own size, so it must have loaded first.
-const imagesDecoded = diagrams => Promise.all(diagrams.flatMap(diagram => [...diagram.querySelectorAll('img')].map(image => image.decode().catch(() => {}))));
+const decodeImagesIn = diagram => [...diagram.querySelectorAll('img')]
+  .map(image => image.decode().catch(() => {}));
+const imagesDecoded = diagrams => Promise.all(diagrams.flatMap(decodeImagesIn));
 
 // A file of diagrams and nothing else (what graphally writes) is theirs to colour.
+const DIAGRAM_FILE_TAGS = /^(DIAGRAM|SCRIPT|STYLE|LINK|META|TEMPLATE|NOSCRIPT)$/;
 const isDiagramFile = () => [...document.body.children]
-  .every(child => /^(DIAGRAM|SCRIPT|STYLE|LINK|META|TEMPLATE|NOSCRIPT)$/.test(child.tagName) || child.classList.contains('graphally-view'));
+  .every(child => DIAGRAM_FILE_TAGS.test(child.tagName) || child.classList.contains('graphally-view'));
 
 // The first compile names the icons the diagram draws; a second draws them, once fetched.
 async function compileWithIcons(diagram, options, icons) {
@@ -53,7 +59,9 @@ async function diagramNodes(diagram, view, icons, alone) {
   const theme = diagram.getAttribute('theme') || (prefersDark() ? 'dark' : 'light');
   const options = { standalone: false, css: THEME, theme, source: location.pathname.split('/').pop() };
   view.dataset.theme = theme;
-  if (alone && diagram.getAttribute('theme')) document.documentElement.dataset.graphallyTheme = diagram.getAttribute('theme');
+  if (alone && diagram.getAttribute('theme')) {
+    document.documentElement.dataset.graphallyTheme = diagram.getAttribute('theme');
+  }
   const result = await compileWithIcons(diagram, options, icons);
   const problems = result.problems.filter(problem => !problem.warn);
   if (diagram.querySelector('include')) problems.unshift(INCLUDE_PROBLEM);
@@ -83,7 +91,10 @@ async function renderAll(icons) {
 }
 
 export function start(index) {
-  const sources = { azure: index.azure.base, aws: index.aws.base, font: index.font, ...(globalThis.graphallyOptions || {}) };
+  const sources = {
+    azure: index.azure.base, aws: index.aws.base, font: index.font,
+    ...(globalThis.graphallyOptions || {}),
+  };
   addPageStyle(sources.font);
   keepDiagramStylesMuted();
   const icons = registerLazyPacks(index, sources), render = () => renderAll(icons);

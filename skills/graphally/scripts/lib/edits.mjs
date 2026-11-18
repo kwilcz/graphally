@@ -17,7 +17,8 @@ import { connectionsBlock, withEmptyBlock, keyOf, asObject, CONNECTION_EDITS } f
 function nudgeEdit(text, edit) {
   const tag = tagOf(text, edit.id), [x0, y0] = (getAttribute(tag.text, 'nudge') || '0,0').split(',').map(Number);
   const moving = edit.op === 'move';
-  const x = Math.round(moving ? x0 + Number(edit.dx) : Number(edit.x)), y = Math.round(moving ? y0 + Number(edit.dy) : Number(edit.y));
+  const x = Math.round(moving ? x0 + Number(edit.dx) : Number(edit.x));
+  const y = Math.round(moving ? y0 + Number(edit.dy) : Number(edit.y));
   if (!Number.isFinite(x) || !Number.isFinite(y)) throw new Error('move needs numbers');
   return splice(text, tag, setAttribute(tag.text, 'nudge', x || y ? `${x},${y}` : null));
 }
@@ -37,7 +38,10 @@ function connectionEdit(text, edit) {
   return splice(found.text, found.block, body);
 }
 
-const EDITS = { move: nudgeEdit, nudge: nudgeEdit, connect: connectionEdit, line: connectionEdit, unline: connectionEdit };
+const EDITS = {
+  move: nudgeEdit, nudge: nudgeEdit,
+  connect: connectionEdit, line: connectionEdit, unline: connectionEdit,
+};
 
 function applyEdit(source, edit, diagram) {
   const span = diagramSpan(source, diagram);

@@ -13,7 +13,8 @@ export const pointsOfPath = path =>
 function pathReach(drawing, options) {
   const ends = endsOf(options, false, []), halfStroke = (options.width || 1.5) / 2;
   const points = drawing.points || pointsOfPath(drawing.path);
-  const marked = index => (index === points.length - 1 && ends.head !== 'none') || (index === 0 && ends.tail !== 'none');
+  const marked = index => (index === points.length - 1 && ends.head !== 'none')
+    || (index === 0 && ends.tail !== 'none');
   return points.map((point, index) => {
     const margin = halfStroke + (marked(index) ? 5 : 0);
     return { x: point.x + margin, y: point.y + margin };
@@ -39,7 +40,10 @@ function shapeReach({ at }, options) {
 
 // How far right and down each kind of drawing reaches.
 const REACH = { path: pathReach, text: textReach, gate: squareReach(30), icon: squareReach(24), shape: shapeReach };
-const reachOf = drawing => (Object.hasOwn(REACH, drawing.kind) ? REACH[drawing.kind](drawing, drawing.options || {}) : []);
+function reachOf(drawing) {
+  if (!Object.hasOwn(REACH, drawing.kind)) return [];
+  return REACH[drawing.kind](drawing, drawing.options || {});
+}
 
 function drawingsReach(drawings) {
   let right = 0, bottom = 0;

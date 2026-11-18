@@ -17,7 +17,10 @@ function hasCurl() {
   return curlFound;
 }
 
-const CURL_ARGS = ['--silent', '--show-error', '--fail', '--location', '--retry', '2', '--create-dirs', '--max-time', '120', '--parallel', '--parallel-max', '16', '-K', '-'];
+const CURL_ARGS = [
+  '--silent', '--show-error', '--fail', '--location', '--retry', '2', '--create-dirs',
+  '--max-time', '120', '--parallel', '--parallel-max', '16', '-K', '-',
+];
 
 function curlDownload(pairs) {
   const config = pairs.map(([url, file]) => `url = "${url}"\noutput = "${file.replace(/\\/g, '/')}"`).join('\n');
@@ -26,7 +29,8 @@ function curlDownload(pairs) {
     let errors = '';
     curl.stderr.on('data', data => { errors += data; });
     curl.on('error', reject);
-    curl.on('close', code => (code === 0 ? resolve() : reject(new Error(errors.trim().split('\n').pop() || `curl exited with ${code}`))));
+    const curlError = code => new Error(errors.trim().split('\n').pop() || `curl exited with ${code}`);
+    curl.on('close', code => (code === 0 ? resolve() : reject(curlError(code))));
     curl.stdin.end(`${config}\n`);
   });
 }

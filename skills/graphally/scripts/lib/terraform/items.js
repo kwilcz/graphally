@@ -29,7 +29,9 @@ function countOf({ body }) {
 function skuOf(resource, type) {
   const key = SKU_OF[type];
   if (!key) return '';
-  const raw = key.includes('.') ? resource.body.blocks.find(block => block.type === 'sku')?.attrs.tier : resource.body.attrs[key];
+  const raw = key.includes('.')
+    ? resource.body.blocks.find(block => block.type === 'sku')?.attrs.tier
+    : resource.body.attrs[key];
   return literal(raw || '', resource.scope);
 }
 
@@ -39,7 +41,10 @@ function itemOf(draft, resource) {
     return { resource, id: idOf(draft, resource), label: resource.name, kind, icon: 'repo', details: [] };
   }
   if (!isAzure(resource)) {
-    return { resource, id: idOf(draft, resource), label: labelOf(resource), kind: resource.type.replace(/_/g, ' '), icon: '', details: [] };
+    return {
+      resource, id: idOf(draft, resource), label: labelOf(resource),
+      kind: resource.type.replace(/_/g, ' '), icon: '', details: [],
+    };
   }
   const type = azureType(resource);
   if (IGNORE.test(type) || type in CHILD || PLUMBING.test(type)) return null;
@@ -60,7 +65,8 @@ export function addItems(draft) {
 }
 
 // One child is named ("sqldb-orders", "work node pool"); several are counted ("2 databases").
-const named = (name, word) => (name.toLowerCase().includes(word.split(' ')[0]) || /db|database/i.test(name) ? name : `${name} ${word}`);
+const namesItsKind = (name, word) => name.toLowerCase().includes(word.split(' ')[0]) || /db|database/i.test(name);
+const named = (name, word) => (namesItsKind(name, word) ? name : `${name} ${word}`);
 
 export function foldChildren(draft) {
   const children = new Map();

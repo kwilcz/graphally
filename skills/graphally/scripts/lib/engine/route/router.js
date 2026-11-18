@@ -9,7 +9,8 @@ import { portsOf } from './ports.js';
 // The override of each end: out at the source, in at the target.
 export const DIRECTION = { source: 'out', target: 'in' };
 
-const strictlyInside = ({ x, y }, o) => x > o.x + 0.01 && x < o.x + o.w - 0.01 && y > o.y + 0.01 && y < o.y + o.h - 0.01;
+const strictlyInside = ({ x, y }, o) => x > o.x + 0.01 && x < o.x + o.w - 0.01
+  && y > o.y + 0.01 && y < o.y + o.h - 0.01;
 const inside = ({ x, y }, o) => x > o.x && x < o.x + o.w && y > o.y && y < o.y + o.h;
 
 // Lanes are rows to cross, not containers to avoid.
@@ -78,7 +79,9 @@ export class Router {
   freePorts(connection, which, grid) {
     const ports = portsOf(connection, which, grid, this.clearance);
     const fixedSide = connection.edge.override?.[DIRECTION[which]];
-    return fixedSide == null ? this.preferPrevious(connection, which, ports) : this.onFixedSide(connection, which, ports, fixedSide);
+    return fixedSide == null
+      ? this.preferPrevious(connection, which, ports)
+      : this.onFixedSide(connection, which, ports, fixedSide);
   }
 
   // An override fixes the side (hard): only ports there. If that side is blocked, all ports stay

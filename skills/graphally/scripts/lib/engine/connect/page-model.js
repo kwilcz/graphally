@@ -43,7 +43,9 @@ function runsOfPath(path) {
 }
 
 // The script's straight lines (gate lines, arrows) are taken: connections avoid running on them.
-const takenRuns = drawings => drawings.filter(drawing => drawing.kind === 'path').flatMap(drawing => runsOfPath(drawing.path));
+const takenRuns = drawings => drawings
+  .filter(drawing => drawing.kind === 'path')
+  .flatMap(drawing => runsOfPath(drawing.path));
 
 // Each box's name for the router: its id, else its tag and classes and a number (div.lane@2).
 function keysOf(boxes) {
@@ -87,7 +89,8 @@ class BoxRoles {
   }
 
   isPartOfParent(entry) {
-    return this.isStrip(entry) || this.isBackdrop(entry) || (this.isDecor(entry) && entry.parent && !this.isGroup(entry.parent));
+    return this.isStrip(entry) || this.isBackdrop(entry)
+      || (this.isDecor(entry) && entry.parent && !this.isGroup(entry.parent));
   }
 
   // A row of a stack (a BPMN lane, a band of a phase chart) is a band to cross, not a box to
@@ -112,9 +115,15 @@ class PageModel {
   constructor({ boxes, drawings, calls, problems, previous, size }) {
     this.rootGroup = { id: '__root', style: 'root', parent: null, depth: -1 };
     // previous: the layout of the last render; a line keeps the sides it used there (soft).
-    this.model = { nodes: new Map(), groups: new Map([['__root', this.rootGroup]]), edges: [], problems, previous: previous || null };
+    this.model = {
+      nodes: new Map(), groups: new Map([['__root', this.rootGroup]]), edges: [],
+      problems, previous: previous || null,
+    };
     // The author set the gaps; a 6px clearance lets lines use any gap wider than 12px.
-    this.geometry = { nodes: new Map(), groups: new Map(), extraObstacles: [], ...size, nodePad: 6, taken: takenRuns(drawings) };
+    this.geometry = {
+      nodes: new Map(), groups: new Map(), extraObstacles: [],
+      ...size, nodePad: 6, taken: takenRuns(drawings),
+    };
     this.roles = new BoxRoles(boxes, calls);
     this.keyOf = keysOf(boxes);
     this.objectOf = new Map();
@@ -123,7 +132,10 @@ class PageModel {
   // The router's object for a box: its own, or its parent's when it is part of it.
   ensure(entry) {
     if (!entry) return this.rootGroup;
-    if (!this.objectOf.has(entry)) this.objectOf.set(entry, this.roles.isPartOfParent(entry) ? this.ensure(entry.parent) : this.add(entry));
+    if (!this.objectOf.has(entry)) {
+      const object = this.roles.isPartOfParent(entry) ? this.ensure(entry.parent) : this.add(entry);
+      this.objectOf.set(entry, object);
+    }
     return this.objectOf.get(entry);
   }
 

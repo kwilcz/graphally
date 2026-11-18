@@ -82,5 +82,7 @@ export function portsOf(connection, which, grid, clearance) {
   const end = connection[which], { rect } = end;
   const other = connection[which === 'source' ? 'target' : 'source'].rect;
   const acrossY = sharedSpan(rect.y, rect.h, other.y, other.h), acrossX = sharedSpan(rect.x, rect.w, other.x, other.w);
-  return [0, 1, 2, 3].flatMap(side => portsOnSide(end, side, side % 2 === 0 ? acrossY : acrossX, grid, clearance)).filter(Boolean);
+  return [0, 1, 2, 3]
+    .flatMap(side => portsOnSide(end, side, side % 2 === 0 ? acrossY : acrossX, grid, clearance))
+    .filter(Boolean);
 }

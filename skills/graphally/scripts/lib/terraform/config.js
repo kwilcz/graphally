@@ -15,11 +15,13 @@ const SCOPE_BLOCKS = {
   output: (scope, block) => { scope.outputs[block.labels[0]] = block.attrs.value || ''; },
 };
 
+const blocksIn = (dir, file) => parseHcl(fs.readFileSync(path.join(dir, file), 'utf8')).blocks;
+
 // The blocks of a module's .tf files, in file order: its scope filled in, its resources and data
 // sources, and the modules it calls.
 function readModule(dir, scope) {
   const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter(file => file.endsWith('.tf')).sort() : [];
-  const blocks = files.flatMap(file => parseHcl(fs.readFileSync(path.join(dir, file), 'utf8')).blocks.map(block => [block, file]));
+  const blocks = files.flatMap(file => blocksIn(dir, file).map(block => [block, file]));
   for (const [block] of blocks) if (Object.hasOwn(SCOPE_BLOCKS, block.type)) SCOPE_BLOCKS[block.type](scope, block);
   return {
     resources: blocks.filter(([block]) => block.type === 'resource' || block.type === 'data'),
@@ -57,14 +59,19 @@ class Config {
     }
     const instance = key => `${address}["${key.key}"]`;
     this.expanded.set(address, keys.map(instance));
-    for (const key of keys) this.resources.set(instance(key), { ...resource, addr: instance(key), name: `${name}_${key.key}`, each: key });
+    const instanceResource = key => ({ ...resource, addr: instance(key), name: `${name}_${key.key}`, each: key });
+    for (const key of keys) this.resources.set(instance(key), instanceResource(key));
   }
 
   // A local module is read as part of the configuration; a remote one is one resource.
   addCall(call, dir, scope) {
     const source = literal(call.attrs.source), [name] = call.labels, address = `${scope.prefix}module.${name}`;
-    if (isLocalSource(source)) this.load(path.resolve(dir, source), `${address}.`, call.attrs, scope, name);
-    else this.resources.set(address, { addr: address, type: 'module', name, remote: source, body: call, scope, file: '' });
+    if (isLocalSource(source)) {
+      this.load(path.resolve(dir, source), `${address}.`, call.attrs, scope, name);
+      return;
+    }
+    const resource = { addr: address, type: 'module', name, remote: source, body: call, scope, file: '' };
+    this.resources.set(address, resource);
   }
 }
 
@@ -94,8 +101,12 @@ function referencesIn(config, raw, scope, seen = new Set()) {
   const add = addresses => addresses.forEach(address => found.add(address));
   const follow = (expression, inScope) => add(referencesIn(config, expression, inScope, seen));
   add(directReferences(config, raw, scope));
-  for (const [, name] of raw.matchAll(/\bvar\.([\w-]+)/g)) if (scope.args[name] !== undefined && scope.parent) follow(scope.args[name], scope.parent);
-  for (const [, name] of raw.matchAll(/\blocal\.([\w-]+)/g)) if (scope.locals[name] !== undefined) follow(scope.locals[name], scope);
+  for (const [, name] of raw.matchAll(/\bvar\.([\w-]+)/g)) {
+    if (scope.args[name] !== undefined && scope.parent) follow(scope.args[name], scope.parent);
+  }
+  for (const [, name] of raw.matchAll(/\blocal\.([\w-]+)/g)) {
+    if (scope.locals[name] !== undefined) follow(scope.locals[name], scope);
+  }
   for (const [, module, output] of raw.matchAll(/\bmodule\.([\w-]+)\.([\w-]+)/g)) {
     const child = config.modules.find(each => each.prefix === `${scope.prefix}module.${module}.`);
     if (child && child.outputs[output] !== undefined) follow(child.outputs[output], child);

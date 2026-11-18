@@ -4,7 +4,8 @@
 // The span of the n-th <diagram> (or the one with that id) in the file.
 export function diagramSpan(source, which) {
   const all = [...source.matchAll(/<diagram\b[^>]*>[\s\S]*?<\/diagram>/g)];
-  const hasId = match => new RegExp(`\\bid\\s*=\\s*["']?${which}["'\\s>]`).test(match[0].slice(0, match[0].indexOf('>') + 1));
+  const startTag = match => match[0].slice(0, match[0].indexOf('>') + 1);
+  const hasId = match => new RegExp(`\\bid\\s*=\\s*["']?${which}["'\\s>]`).test(startTag(match));
   const match = typeof which === 'string' ? all.find(hasId) : all[which || 0];
   if (!match) throw new Error(typeof which === 'string' ? `no <diagram id=${which}>` : 'no <diagram> in the file');
   return { start: match.index, end: match.index + match[0].length, text: match[0] };
@@ -15,7 +16,8 @@ const escapeRegExp = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // The start tag of the element with this id, inside the diagram.
 export function tagOf(text, id) {
   const name = escapeRegExp(id), attributes = `(?:[^>"']|"[^"]*"|'[^']*')*`;
-  const match = text.match(new RegExp(`<([a-zA-Z][\\w-]*)\\b${attributes}?\\bid\\s*=\\s*(?:"${name}"|'${name}'|${name})(?=[\\s/>])${attributes}>`));
+  const idAttribute = `\\bid\\s*=\\s*(?:"${name}"|'${name}'|${name})(?=[\\s/>])`;
+  const match = text.match(new RegExp(`<([a-zA-Z][\\w-]*)\\b${attributes}?${idAttribute}${attributes}>`));
   if (!match) throw new Error(`no element with id "${id}"`);
   return { start: match.index, end: match.index + match[0].length, text: match[0] };
 }

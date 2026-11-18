@@ -47,7 +47,9 @@ class Search {
   estimate(point) {
     const { grid, goalXs, goalYs } = this, x = grid.xs[point % grid.nx], y = grid.ys[(point / grid.nx) | 0];
     let nearest = Infinity;
-    for (let t = 0; t < goalXs.length; t++) nearest = Math.min(nearest, Math.abs(goalXs[t] - x) + Math.abs(goalYs[t] - y));
+    for (let t = 0; t < goalXs.length; t++) {
+      nearest = Math.min(nearest, Math.abs(goalXs[t] - x) + Math.abs(goalYs[t] - y));
+    }
     return nearest;
   }
 
@@ -88,7 +90,9 @@ class Search {
     const segment = next === 2 ? point - 1 : next === 3 ? point - grid.nx : point, horizontal = next % 2 === 0;
     if (!(horizontal ? grid.freeH[segment] : grid.freeV[segment])) return;
     const nextPoint = j * grid.nx + i;
-    const length = horizontal ? Math.abs(grid.xs[i] - grid.xs[point % grid.nx]) : Math.abs(grid.ys[j] - grid.ys[(point / grid.nx) | 0]);
+    const length = horizontal
+      ? Math.abs(grid.xs[i] - grid.xs[point % grid.nx])
+      : Math.abs(grid.ys[j] - grid.ys[(point / grid.nx) | 0]);
     const cost = this.stepCost(state, direction, next, segment, nextPoint, length);
     this.reach(nextPoint * 4 + next, this.cost[state] + cost, state, nextPoint);
   }
@@ -134,10 +138,12 @@ class Search {
     const { grid } = this;
     if (horizontal) {
       const j = (point / grid.nx) | 0;
-      return this.isForeign(grid.usedV, grid.bundleV, j > 0, point - grid.nx) || this.isForeign(grid.usedV, grid.bundleV, j < grid.ny - 1, point);
+      return this.isForeign(grid.usedV, grid.bundleV, j > 0, point - grid.nx)
+        || this.isForeign(grid.usedV, grid.bundleV, j < grid.ny - 1, point);
     }
     const i = point % grid.nx;
-    return this.isForeign(grid.usedH, grid.bundleH, i > 0, point - 1) || this.isForeign(grid.usedH, grid.bundleH, i < grid.nx - 1, point);
+    return this.isForeign(grid.usedH, grid.bundleH, i > 0, point - 1)
+      || this.isForeign(grid.usedH, grid.bundleH, i < grid.nx - 1, point);
   }
 
   isForeign(used, owner, inside, segment) { return inside && used[segment] && owner[segment] !== this.bundle; }
@@ -154,7 +160,8 @@ class Search {
       }
     }
     const start = this.starts[startIndex], cells = states.reverse().map(each => (each / 4) | 0);
-    const points = [start.boundary, ...cells.map(cell => ({ x: grid.xs[cell % grid.nx], y: grid.ys[(cell / grid.nx) | 0] })), best.goal.boundary];
+    const pointOf = cell => ({ x: grid.xs[cell % grid.nx], y: grid.ys[(cell / grid.nx) | 0] });
+    const points = [start.boundary, ...cells.map(pointOf), best.goal.boundary];
     return {
       points, cells, startSide: start.side, goalSide: best.goal.side,
       startCoord: start.coord, goalCoord: best.goal.coord, cost: best.cost, start, goal: best.goal,

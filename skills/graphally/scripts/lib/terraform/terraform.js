@@ -54,10 +54,13 @@ function buildDraft(root) {
   return draft;
 }
 
+// A resource the configuration deploys: not a data source, not a module call.
+const isPlainResource = resource => !resource.data && resource.type !== 'module';
+
 // icons(name): whether an icon name is known, so the draft names only icons that draw.
 export function terraformToDiagram(root, { title, icons } = {}) {
   const draft = buildDraft(root), { config } = draft, lines = pageLines(draft, icons);
-  const resources = [...config.resources.values()].filter(resource => !resource.data && resource.type !== 'module').length;
+  const resources = [...config.resources.values()].filter(isPlainResource).length;
   const modules = config.modules.length - 1;
   const subtitle = `From Terraform: ${resources} resources${modules ? ` in ${modules + 1} modules` : ''}`;
   const html = draftHtml(draft, lines, title || path.basename(path.resolve(root)), subtitle);

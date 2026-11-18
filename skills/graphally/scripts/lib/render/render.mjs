@@ -21,16 +21,21 @@ async function downloadMissingPacks(log) {
     try {
       await fetchPacks(SKILL_ROOT, [name]);
     } catch (error) {
-      log(`note: ${name} icons not downloaded (${error.message.split('\n')[0]}); run node ${path.join(SKILL_ROOT, 'scripts/fetch-icons.mjs')} when online`);
+      const reason = error.message.split('\n')[0];
+      const fetchIcons = path.join(SKILL_ROOT, 'scripts/fetch-icons.mjs');
+      log(`note: ${name} icons not downloaded (${reason}); run node ${fetchIcons} when online`);
     }
   }
 }
+
+// A job's earlier layouts, as the server serves them.
+const previousFileOf = job => [`/previous/${job.index}.json`, { body: JSON.stringify(job.previous) }];
 
 // What the server serves besides the files: the icon packs, the earlier layouts, and the
 // browser side as one module.
 function servedFiles(jobs, options) {
   const packs = PACKS.map(name => [`/icons/${name}.json`, findPack(SKILL_ROOT, name)]).filter(([, file]) => file);
-  const previous = options.recompute ? [] : jobs.map(job => [`/previous/${job.index}.json`, { body: JSON.stringify(job.previous) }]);
+  const previous = options.recompute ? [] : jobs.map(previousFileOf);
   const run = { body: bundle(path.join(SKILL_ROOT, 'scripts/lib'), 'run.js'), type: 'text/javascript' };
   return Object.fromEntries([...packs, ...previous, ['/scripts/lib/run.js', run]]);
 }
@@ -74,7 +79,8 @@ async function runJobs(jobs, options, log) {
   try {
     server = await serve(SKILL_ROOT, jobs.map(job => path.dirname(path.resolve(job.file))), servedFiles(jobs, options));
     browser = await launch();
-    const pages = await Promise.all(Array.from({ length: pageCount(jobs.length, options.jobs) }, () => openPage(browser)));
+    const count = pageCount(jobs.length, options.jobs);
+    const pages = await Promise.all(Array.from({ length: count }, () => openPage(browser)));
     const context = { options, server, scale: pngScale(options), dark: options.themes && !options.dark };
     await renderAll(pages, jobs, context, log);
     return Math.max(...jobs.map(job => job.exit));
@@ -87,6 +93,9 @@ async function runJobs(jobs, options, log) {
   }
 }
 
+// What render() reports of one file.
+const resultOf = job => ({ file: job.file, exit: job.exit, lines: job.out, diagrams: job.diagrams });
+
 export async function render(files, options = {}) {
   const lines = [], log = line => {
     lines.push(line);
@@ -97,5 +106,5 @@ export async function render(files, options = {}) {
   const jobs = list.map((file, index) => createJob(file, index, options));
   await downloadMissingPacks(log);
   const exitCode = await runJobs(jobs, options, log);
-  return { exitCode, lines, files: jobs.map(job => ({ file: job.file, exit: job.exit, lines: job.out, diagrams: job.diagrams })) };
+  return { exitCode, lines, files: jobs.map(resultOf) };
 }

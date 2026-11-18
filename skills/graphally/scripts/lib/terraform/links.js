@@ -9,7 +9,8 @@ import { KIND, USE, isAzure, azureType } from './azure.js';
 // use, <-> for both ways, -- for no direction, ~> for a dashed one.
 function addLink(draft, from, to, label, op = '->') {
   if (!from || !to || from === to || !draft.item(from) || !draft.item(to)) return;
-  const same = draft.links.find(link => (link.from === from && link.to === to) || (op === '<->' && link.from === to && link.to === from));
+  const same = draft.links.find(link => (link.from === from && link.to === to)
+    || (op === '<->' && link.from === to && link.to === from));
   if (!same) {
     draft.links.push({ from, to, label, op });
   } else if (label && (!same.label || same.weak)) {
@@ -59,22 +60,36 @@ function roleOf(resource, scope) {
     .replace(new RegExp(`^${kind.replace(/^Azure /, '')} +`, 'i'), '');
 }
 
+// A role assignment's link reads its role, or just "role".
+const roleLabel = (resource, scope) => roleOf(resource, scope) || 'role';
+
 const FOLDERS = {
   subnet_network_security_group_association: foldNsgAssociation,
   subnet_route_table_association: foldRouteTableAssociation,
-  virtual_network_peering: linkFolder(/^virtual_network_name$/, /^remote_virtual_network_id$/, 'peering', '<->', 'peerings'),
-  private_dns_zone_virtual_network_link: linkFolder(/^private_dns_zone_name$/, /^virtual_network_id$/, 'VNet link', '--', 'DNS zone links'),
-  role_assignment: linkFolder(/^principal_id$/, /^scope$/, (resource, scope) => roleOf(resource, scope) || 'role', '->', 'role assignments'),
+  virtual_network_peering: linkFolder(
+    /^virtual_network_name$/, /^remote_virtual_network_id$/, 'peering', '<->', 'peerings',
+  ),
+  private_dns_zone_virtual_network_link: linkFolder(
+    /^private_dns_zone_name$/, /^virtual_network_id$/, 'VNet link', '--', 'DNS zone links',
+  ),
+  role_assignment: linkFolder(/^principal_id$/, /^scope$/, roleLabel, '->', 'role assignments'),
   monitor_diagnostic_setting: linkFolder(
-    /^target_resource_id$/, /^log_analytics_workspace_id$|^storage_account_id$|^eventhub_authorization_rule_id$/, 'diagnostics', '~>', 'diagnostic settings',
+    /^target_resource_id$/, /^log_analytics_workspace_id$|^storage_account_id$|^eventhub_authorization_rule_id$/,
+    'diagnostics', '~>', 'diagnostic settings',
   ),
 };
 const SWIFT = linkFolder(/^app_service_id$/, /^subnet_id$/, 'VNet integration', '->', 'VNet integrations');
-const folderOf = type => (Object.hasOwn(FOLDERS, type) ? FOLDERS[type] : /_swift_connection$/.test(type) ? SWIFT : null);
+
+function folderOf(type) {
+  if (Object.hasOwn(FOLDERS, type)) return FOLDERS[type];
+  return /_swift_connection$/.test(type) ? SWIFT : null;
+}
+
+const refersTo = (item, address) => item.resource.refs.some(ref => ref.to === address);
 
 // An NSG shown as "NSG" on its subnets needs no box of its own.
 function dropUnusedNsgs(draft, usedNsgs) {
-  const referenced = address => [...draft.items.values()].some(other => other.resource.refs.some(ref => ref.to === address));
+  const referenced = address => [...draft.items.values()].some(other => refersTo(other, address));
   for (const address of [...usedNsgs].filter(each => !referenced(each))) draft.items.delete(address);
 }
 
@@ -112,10 +127,12 @@ function linkReference(draft, from, ref) {
 }
 
 // A reference to an item that is not the box it sits in.
-const isDrawnReference = (draft, resource, ref) => draft.items.has(ref.to) && draft.parentOf.get(resource.addr) !== ref.to;
+const isDrawnReference = (draft, resource, ref) => draft.items.has(ref.to)
+  && draft.parentOf.get(resource.addr) !== ref.to;
 
 export function linkReferences(draft) {
   for (const { resource } of [...draft.items.values()]) {
-    for (const ref of resource.refs.filter(each => isDrawnReference(draft, resource, each))) linkReference(draft, resource.addr, ref);
+    const drawn = resource.refs.filter(each => isDrawnReference(draft, resource, each));
+    for (const ref of drawn) linkReference(draft, resource.addr, ref);
   }
 }

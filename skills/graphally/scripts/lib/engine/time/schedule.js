@@ -39,7 +39,10 @@ class Scheduler {
     let start = dayOf(data.start ?? data.at), end = dayOf(data.end);
     const after = Number.isNaN(start) && data.after ? this.dependenciesOf(element) : [];
     if (after.length) start = Math.max(...after.map(dependency => this.resolve(dependency, seen).e));
-    if (Number.isNaN(end) && !Number.isNaN(start)) end = start + (Number.isNaN(lengthOf(data.duration)) ? 0 : lengthOf(data.duration));
+    if (Number.isNaN(end) && !Number.isNaN(start)) {
+      const duration = lengthOf(data.duration);
+      end = start + (Number.isNaN(duration) ? 0 : duration);
+    }
     if (Number.isNaN(start)) {
       this.problems.push({ rule: 'no-start', id: element.id, hint: 'give data-start (or data-at), or data-after' });
       start = end = 0;

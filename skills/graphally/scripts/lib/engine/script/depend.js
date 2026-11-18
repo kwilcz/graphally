@@ -126,7 +126,8 @@ function cheapestClear(candidates, bend, isClear) {
 
 // The shortest clear path, trying tighter bends only when the roomier ones find none.
 function shortestClearPath(xs, from, to, layout, isFree) {
-  const isClear = path => path.every((point, index) => !index || isFree(path[index - 1][0], path[index - 1][1], point[0], point[1]));
+  const isFreeLeg = (start, end) => isFree(start[0], start[1], end[0], end[1]);
+  const isClear = path => path.every((point, index) => !index || isFreeLeg(path[index - 1], point));
   const candidates = candidatePaths(xs, from, to, layout);
   for (const bend of [BEND, 12, 6, 0]) {
     const path = cheapestClear(candidates, bend, isClear);
@@ -145,7 +146,9 @@ const fallbackPath = (to, layout) => [
 function recordUprightRuns(figure, corners, to) {
   for (let index = 1; index < corners.length; index++) {
     const [x, y] = corners[index], [previousX, previousY] = corners[index - 1];
-    if (x === previousX) figure.dependRuns.push({ x, y1: Math.min(y, previousY), y2: Math.max(y, previousY), to: to.el });
+    if (x === previousX) {
+      figure.dependRuns.push({ x, y1: Math.min(y, previousY), y2: Math.max(y, previousY), to: to.el });
+    }
   }
 }
 

@@ -18,7 +18,15 @@ import {
 import { isArbitrary, arbitrary, unbracket, lengthOf, colorOf, negated } from './utility-values.js';
 
 // What starts a utility; a class that starts like one and does not parse is a problem.
-const PREFIX = /^-?(p[xytrbl]?|m[xytrbl]?|gap|w|h|min-[wh]|max-[wh]|size|basis|flex|grid|col|row|justify|items|self|content|place|text|font|leading|tracking|rounded|border|bg|top|right|bottom|left|inset|z|order|opacity|space|aspect|outline)-|^\[[\w-]+:|^[a-z0-9-]+:[a-z]/;
+const UTILITY_NAMES = [
+  'p[xytrbl]?', 'm[xytrbl]?', 'gap', 'w', 'h', 'min-[wh]', 'max-[wh]', 'size', 'basis',
+  'flex', 'grid', 'col', 'row', 'justify', 'items', 'self', 'content', 'place',
+  'text', 'font', 'leading', 'tracking', 'rounded', 'border', 'bg',
+  'top', 'right', 'bottom', 'left', 'inset', 'z', 'order', 'opacity', 'space', 'aspect', 'outline',
+];
+const ARBITRARY_PROPERTY = '^\\[[\\w-]+:';   // [grid-template-areas:'a_b']
+const VARIANT = '^[a-z0-9-]+:[a-z]';         // hover:bg-wash, md:flex
+const PREFIX = new RegExp(`^-?(${UTILITY_NAMES.join('|')})-|${ARBITRARY_PROPERTY}|${VARIANT}`);
 const OFFSET = /top|right|bottom|left|inset/;
 
 // Spacing: p-4, mx-auto, gap-x-2, -mt-2, top-1/2. Only margins and offsets may be negative;
@@ -33,8 +41,8 @@ function spacing([, name, value], negative) {
 
 // space-x-4: a margin after each child but the last.
 function spaceBetween([, axis, value]) {
-  const length = lengthOf(value);
-  return length == null ? null : { nested: '>:not(:last-child)', css: `margin-${axis === 'x' ? 'right' : 'bottom'}:${length}` };
+  const length = lengthOf(value), side = axis === 'x' ? 'right' : 'bottom';
+  return length == null ? null : { nested: '>:not(:last-child)', css: `margin-${side}:${length}` };
 }
 
 function boxSize([, name, value]) {
@@ -49,7 +57,9 @@ function justify([, rest]) {
   return which && lookup(SELF, value) ? `justify-${which}:${SELF[value]}` : null;
 }
 
-const alignItems = ([, value]) => (lookup(ALIGN, value) && !/between|around|evenly/.test(value) ? `align-items:${ALIGN[value]}` : null);
+// align-items takes the ALIGN values but those that distribute space (between, around, evenly).
+const isItemAlignment = value => lookup(ALIGN, value) && !/between|around|evenly/.test(value);
+const alignItems = ([, value]) => (isItemAlignment(value) ? `align-items:${ALIGN[value]}` : null);
 const alignSelf = ([, value]) => (lookup(SELF, value) ? `align-self:${SELF[value]}` : null);
 const alignContent = ([, value]) => (lookup(ALIGN, value) ? `align-content:${ALIGN[value]}` : null);
 
@@ -171,7 +181,10 @@ export function utility(cls) {
 }
 
 // Every class the page uses, each once, in the order it first appears.
-const classesOf = root => [...new Set([root, ...root.querySelectorAll('[class]')].flatMap(element => [...element.classList]))];
+const classesOf = root => {
+  const elements = [root, ...root.querySelectorAll('[class]')];
+  return [...new Set(elements.flatMap(element => [...element.classList]))];
+};
 
 function hintFor(cls) {
   if (/^(bg|text|border)-[a-z]+-\d{2,3}$/.test(cls)) {
@@ -181,9 +194,14 @@ function hintFor(cls) {
   return 'Tailwind names, a spacing step of 4px (gap-6 is 24px); arbitrary values in brackets: w-[130px]';
 }
 
+// A class that starts like a utility but is none.
+const unknownUtility = cls => ({ rule: 'unknown-utility', class: cls, hint: hintFor(cls) });
+
 function ruleFor(cls, declarations) {
   const selector = `.graphally-page .${CSS.escape(cls)}`;
-  return typeof declarations === 'string' ? `${selector} { ${declarations} }` : `${selector} ${declarations.nested} { ${declarations.css} }`;
+  return typeof declarations === 'string'
+    ? `${selector} { ${declarations} }`
+    : `${selector} ${declarations.nested} { ${declarations.css} }`;
 }
 
 // CSS for every utility class in root. A utility beats a building block (.node, .group, which
@@ -195,7 +213,7 @@ export function utilitiesFor(root, problems) {
   for (const cls of classesOf(root)) {
     const declarations = utility(cls);
     if (declarations != null) rules.push(ruleFor(cls, declarations));
-    else if (PREFIX.test(cls) && !own.includes(`.${cls}`)) problems.push({ rule: 'unknown-utility', class: cls, hint: hintFor(cls) });
+    else if (PREFIX.test(cls) && !own.includes(`.${cls}`)) problems.push(unknownUtility(cls));
   }
   return rules.join('\n');
 }

@@ -120,4 +120,8 @@ const IGNORED = [
 export const IGNORE = new RegExp(`^(${IGNORED.join('|')})$`);
 
 // Plumbing: drawn as the links and labels it stands for (links.js), not as a box.
-export const PLUMBING = /_association$|_peering$|_virtual_network_link$|^role_assignment$|^monitor_diagnostic_setting$|_swift_connection$/;
+const PLUMBING_TYPES = [
+  '_association$', '_peering$', '_virtual_network_link$', '^role_assignment$',
+  '^monitor_diagnostic_setting$', '_swift_connection$',
+];
+export const PLUMBING = new RegExp(PLUMBING_TYPES.join('|'));

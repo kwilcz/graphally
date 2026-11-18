@@ -10,7 +10,8 @@ import { drawDependency } from './depend.js';
 import { runAuthorScript } from './run-script.js';
 
 const pathPoint = point => `${fmt(point.x)},${fmt(point.y)}`;
-const between = (from, to, fraction) => pointAt(from.x + (to.x - from.x) * fraction, from.y + (to.y - from.y) * fraction);
+const partWay = (a, b, fraction) => a + (b - a) * fraction;
+const between = (from, to, fraction) => pointAt(partWay(from.x, to.x, fraction), partWay(from.y, to.y, fraction));
 const middle = (from, to) => pointAt((from.x + to.x) / 2, (from.y + to.y) / 2);
 
 // A curve's control point: off the middle of the straight line, square to it, by the bend.
@@ -59,13 +60,17 @@ function linesApi(figure, { facingEnds, point }) {
       return line(from, to, `M${pathPoint(from)} L${pathPoint(to)}`, middle(from, to), options);
     },
     curve(a, b, options = {}) {
-      const [from, to] = facingEnds(a, b), control = curveControl(from, to, options.bend === undefined ? 40 : options.bend);
+      const [from, to] = facingEnds(a, b);
+      const control = curveControl(from, to, options.bend === undefined ? 40 : options.bend);
       const via = pointAt((from.x + 2 * control.x + to.x) / 4, (from.y + 2 * control.y + to.y) / 4);
       return line(from, to, `M${pathPoint(from)} Q${pathPoint(control)} ${pathPoint(to)}`, via, options);
     },
     draw: {
       moveTo: start => pathBuilder(point(start), figure.drawings, point),
-      arc: (centre, radius, from, to) => pathBuilder(arcPoint(point(centre), radius, from), figure.drawings, point).arc(centre, radius, from, to),
+      arc: (centre, radius, from, to) => {
+        const start = arcPoint(point(centre), radius, from);
+        return pathBuilder(start, figure.drawings, point).arc(centre, radius, from, to);
+      },
     },
   };
 }
@@ -89,7 +94,9 @@ function marksApi(figure, { point }) {
 // where it rests.
 function animateApi(figure, { find, originOf, markBox }) {
   return function animate(reference, frames, options = {}) {
-    if (!Array.isArray(frames) || !frames.length) throw new Error('animate takes a list of keyframes, as element.animate does');
+    if (!Array.isArray(frames) || !frames.length) {
+      throw new Error('animate takes a list of keyframes, as element.animate does');
+    }
     const marked = reference?.mark, targets = marked ? [marked] : find(reference);
     for (const target of targets) {
       const index = figure.animations.length;

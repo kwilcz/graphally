@@ -5,6 +5,8 @@ import { excerpt } from '../shared/messages.js';
 import { pairsOf } from '../shared/maps.js';
 
 const styleOf = element => getComputedStyle(element);
+const isPositioned = element => /^(absolute|fixed)$/.test(styleOf(element).position);
+const clipsOverflow = element => styleOf(element).overflowX !== 'visible';
 
 // The content is wider than the width the author set.
 export function checkPageWidth(figure, size) {
@@ -78,11 +80,11 @@ class Holders {
   // The element or an ancestor below its holder is absolutely positioned.
   positionedBelow(element, holder) {
     if (element === holder.element) return false;
-    return [element, ...ancestorsOf(element, this.root, holder.element)].some(node => /^(absolute|fixed)$/.test(styleOf(node).position));
+    return [element, ...ancestorsOf(element, this.root, holder.element)].some(isPositioned);
   }
 
   // An ancestor clips it (overflow: hidden, truncate).
-  clipped(element) { return [...ancestorsOf(element, this.root)].some(ancestor => styleOf(ancestor).overflowX !== 'visible'); }
+  clipped(element) { return [...ancestorsOf(element, this.root)].some(clipsOverflow); }
 
   // The sides where a rect sticks out of its holder; none when it has none or is left alone.
   sidesOut(element, holder, rect) {
@@ -103,7 +105,8 @@ function worstTextLines(texts, holders) {
   for (const line of texts) {
     const holder = holders.holderOfText(line.owner), sides = holders.sidesOut(line.owner, holder, line);
     const furthest = Math.max(...sides.map(([, distance]) => distance)), known = worst.get(line.owner);
-    if (sides.length && !(known && furthest <= known.furthest)) worst.set(line.owner, { furthest, holder, sides, text: line.text });
+    const furthestSoFar = sides.length && !(known && furthest <= known.furthest);
+    if (furthestSoFar) worst.set(line.owner, { furthest, holder, sides, text: line.text });
   }
   return [...worst.values()];
 }
@@ -119,7 +122,9 @@ function boxOverflows(boxes, texts, root, problems) {
     const holder = holders.holderOf(entry.element), sides = holders.sidesOut(entry.element, holder, entry.box);
     if (sides.length) problems.push(overflowWarning(nameOf(entry.element), holder, sides));
   }
-  for (const { holder, sides, text } of worstTextLines(texts, holders)) problems.push(overflowWarning(`text "${excerpt(text)}"`, holder, sides));
+  for (const { holder, sides, text } of worstTextLines(texts, holders)) {
+    problems.push(overflowWarning(`text "${excerpt(text)}"`, holder, sides));
+  }
 }
 
 // Turned boxes and text were read unturned, so the checks leave them out.

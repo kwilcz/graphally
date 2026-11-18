@@ -54,7 +54,9 @@ function spotsAt(run, t, width) {
   if (horizontal && length >= Math.min(width + 16, width * 0.75 + 24)) {
     spots.push(at(cx - width / 2, cy - HEIGHT - 3, 0), at(cx - width / 2, cy + 4, 0.15));
   }
-  if (!horizontal && length >= HEIGHT + 16) spots.push(at(cx + 7, cy - HEIGHT / 2, 0.25), at(cx - 7 - width, cy - HEIGHT / 2, 0.35));
+  if (!horizontal && length >= HEIGHT + 16) {
+    spots.push(at(cx + 7, cy - HEIGHT / 2, 0.25), at(cx - 7 - width, cy - HEIGHT / 2, 0.35));
+  }
   if (!horizontal && length >= HEIGHT + 24) spots.push(at(cx - width / 2, cy - HEIGHT / 2, 0.6, { inline: true }));
   if (horizontal && length >= width + 24) spots.push(at(cx - width / 2, cy - HEIGHT / 2, 0.7, { inline: true }));
   return spots;
@@ -97,7 +99,9 @@ class LabelSpace {
     return r.x < 2 || r.y < 2 || r.x + r.w > width - 2 || r.y + r.h > height - 2;
   }
 
-  hits(r) { return this.blocks.some(b => intersects(r, b)) || this.placed.some(b => intersects(r, b)) || this.offPage(r); }
+  hits(r) {
+    return this.blocks.some(b => intersects(r, b)) || this.placed.some(b => intersects(r, b)) || this.offPage(r);
+  }
 
   crossesLine(spot, index) {
     return this.nearLines.some((boxes, other) => other !== index && boxes.some(b => intersects(spot, b)));
@@ -118,7 +122,8 @@ class LabelSpace {
   // Only a label over a node, over an obstacle whose id has a '#', or over another label is a
   // problem worth a re-render; touching a box border is the best the space allows.
   isCrowded(spot) {
-    return this.obstacles.some(o => intersects(spot, o) && (o.node || o.id.includes('#'))) || this.placed.some(b => intersects(spot, b));
+    return this.obstacles.some(o => intersects(spot, o) && (o.node || o.id.includes('#')))
+      || this.placed.some(b => intersects(spot, b));
   }
 
   // A placed label keeps its neighbours a little apart.

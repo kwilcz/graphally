@@ -27,7 +27,8 @@ const make = (cls, html = '') => {
   element.innerHTML = html;
   return element;
 };
-const escapeHtml = text => String(text).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const HTML_ENTITIES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+const escapeHtml = text => String(text).replace(/[&<>"]/g, c => HTML_ENTITIES[c]);
 const guardOf = guard => (guard ? `<span class=guard>[${escapeHtml(guard)}]</span>` : '');
 
 // Rows in document order: a fragment takes a row for its tab and one to close it, an else a row
@@ -50,7 +51,8 @@ class SequenceLayout {
   layOutColumns() {
     const { box, ids } = this;
     box.style.display = 'grid';
-    box.style.gridTemplateColumns = `${ids.map((id, i) => `[${i ? `${ids[i - 1]}-e ` : ''}${id}-s] minmax(0, 1fr)`).join(' ')} [${ids.at(-1)}-e]`;
+    const trackOf = (id, i) => `[${i ? `${ids[i - 1]}-e ` : ''}${id}-s] minmax(0, 1fr)`;
+    box.style.gridTemplateColumns = `${ids.map(trackOf).join(' ')} [${ids.at(-1)}-e]`;
     for (const participant of this.participants) {
       participant.style.gridRow = '1';
       participant.style.gridColumn = `${participant.id}-s / ${participant.id}-e`;
@@ -79,7 +81,10 @@ class SequenceLayout {
     element.style.gridColumn = this.span(Math.min(a, b), Math.max(a, b));
     if (a === b) element.classList.add('self');
     element.append(this.labelOf(element));
-    this.messages.push({ element, a, b, row: this.row++, reply: element.matches('.reply'), async: element.matches('.async') });
+    this.messages.push({
+      element, a, b, row: this.row++,
+      reply: element.matches('.reply'), async: element.matches('.async'),
+    });
   }
 
   // The message's text in a label, numbered unless told not to.
@@ -87,8 +92,13 @@ class SequenceLayout {
     const label = document.createElement('span');
     label.className = 'label';
     label.append(...element.childNodes);
-    if (this.options.number) label.prepend(Object.assign(document.createElement('span'), { className: 'num', textContent: String(++this.count) }));
+    if (this.options.number) label.prepend(this.nextNumber());
     return label;
+  }
+
+  // The next message number, in the span that shows it.
+  nextNumber() {
+    return Object.assign(document.createElement('span'), { className: 'num', textContent: String(++this.count) });
   }
 
   // A fragment spans the participants its messages touch; a message to oneself loops and is
@@ -99,7 +109,8 @@ class SequenceLayout {
     const before = this.messages.length;
     this.walk(element, depth + 1);
     const last = this.ids.length - 1;
-    fragment.cols = this.messages.slice(before).flatMap(m => (m.a === m.b ? [m.a, Math.min(m.a + 1, last)] : [m.a, m.b]));
+    const columnsTouched = m => (m.a === m.b ? [m.a, Math.min(m.a + 1, last)] : [m.a, m.b]);
+    fragment.cols = this.messages.slice(before).flatMap(columnsTouched);
     fragment.end = this.row++;
     element.style.display = 'contents';
   }
@@ -156,7 +167,8 @@ class SequenceLayout {
       const reply = this.messages.slice(index + 1).find(m => m.reply && m.a === call.b && m.b === call.a);
       const activation = make('activation');
       Object.assign(activation.style, {
-        gridRow: `${call.row + 1} / ${(reply ? reply.row : call.row + 1) + 1}`, gridColumn: `${this.ids[call.b]}-s / ${this.ids[call.b]}-e`,
+        gridRow: `${call.row + 1} / ${(reply ? reply.row : call.row + 1) + 1}`,
+        gridColumn: `${this.ids[call.b]}-s / ${this.ids[call.b]}-e`,
       });
       return [activation];
     });
@@ -180,6 +192,8 @@ const rejected = (problems, hint) => {
 export function sequence(box, { number = true, activations = true } = {}, problems) {
   if (!box) return rejected(problems, 'sequence(container): no such container');
   const participants = [...box.querySelectorAll(':scope > [data-who]')];
-  if (!participants.length) return rejected(problems, 'no participants: mark them data-who, as direct children of the container');
+  if (!participants.length) {
+    return rejected(problems, 'no participants: mark them data-who, as direct children of the container');
+  }
   return new SequenceLayout(box, participants, { number, activations }, problems).run();
 }

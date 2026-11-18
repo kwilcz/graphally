@@ -107,7 +107,9 @@ export function createGeometry(figure) {
     spot,
     point,
     facingEnds: (from, to) => facingEnds(spot(from), spot(to)),
-    originOf: (value, box) => (value != null && typeof value === 'object' ? point(value) : originAt(String(value ?? 'center').trim().split(/\s+/), box)),
+    originOf: (value, box) => (value != null && typeof value === 'object'
+      ? point(value)
+      : originAt(String(value ?? 'center').trim().split(/\s+/), box)),
     markBox,
   };
 }

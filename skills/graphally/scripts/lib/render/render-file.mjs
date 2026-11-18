@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { reportDiagram } from './report.mjs';
 
-const RESULTS = 'window.__results.map(({ id, svg, width, height, problems, stats, snapshot }) => ({ id, svg, width, height, problems, stats, snapshot }))';
+const RESULTS = 'window.__results.map(({ id, svg, width, height, problems, stats, snapshot }) =>'
+  + ' ({ id, svg, width, height, problems, stats, snapshot }))';
 
 function pageUrl({ origin }, job, options) {
   const query = new URLSearchParams({
@@ -28,7 +29,8 @@ async function compileFile(page, job, { options, server }) {
 }
 
 // The dark copy: the same layout, the dark tokens.
-const darkCopy = svg => svg.replace(/^<svg ([^>]*?)class="graphally"(?! data-theme)/, '<svg $1class="graphally" data-theme="dark"');
+const UNTHEMED_ROOT = /^<svg ([^>]*?)class="graphally"(?! data-theme)/;
+const darkCopy = svg => svg.replace(UNTHEMED_ROOT, '<svg $1class="graphally" data-theme="dark"');
 
 async function captureDark(page, selector, file, box, fast) {
   await page.evaluate(`${selector}.setAttribute('data-theme', 'dark')`);
@@ -36,13 +38,17 @@ async function captureDark(page, selector, file, box, fast) {
   await page.evaluate(`${selector}.removeAttribute('data-theme')`);
 }
 
+// The expression for where the element the selector finds sits on the page, scrolling included.
+const pageBoxExpression = selector => `(() => { const b = ${selector}.getBoundingClientRect();`
+  + ' return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()';
+
 // Previews are encoded for speed; --png2x is for publishing, encoded small. A later diagram of the
 // file sits below the first: the window grows to hold it, so the capture stays inside the window.
 async function writePngs(page, job, { scale, dark }, result, index, name) {
   const fast = scale <= 1, selector = `document.querySelectorAll('.out svg')[${index}]`;
   const width = Math.max(800, result.width), height = Math.max(600, result.height);
   await page.viewport(width, height, scale);
-  const box = await page.evaluate(`(() => { const b = ${selector}.getBoundingClientRect(); return { x: b.x + scrollX, y: b.y + scrollY, width: b.width, height: b.height }; })()`);
+  const box = await page.evaluate(pageBoxExpression(selector));
   if (box.y + box.height > height) await page.viewport(width, box.y + box.height, scale);
   const png = path.join(job.outDir, `${name}.png`);
   fs.writeFileSync(png, await page.screenshot(box, { fast }));
@@ -52,10 +58,12 @@ async function writePngs(page, job, { scale, dark }, result, index, name) {
 
 // --themes: the dark copy beside it (<name>-dark.svg).
 async function writeDiagram(page, job, context, result, index, name) {
-  const svg = path.join(job.outDir, `${name}.svg`), darkSvg = path.join(job.outDir, `${name}-dark.svg`), { dark, options } = context;
+  const svg = path.join(job.outDir, `${name}.svg`), darkSvg = path.join(job.outDir, `${name}-dark.svg`);
+  const { dark, options } = context;
   fs.writeFileSync(svg, `${result.svg}\n`);
   if (dark) fs.writeFileSync(darkSvg, `${darkCopy(result.svg)}\n`);
-  const png = options.png || options.png1x || options.png2x ? await writePngs(page, job, context, result, index, name) : null;
+  const wantsPng = options.png || options.png1x || options.png2x;
+  const png = wantsPng ? await writePngs(page, job, context, result, index, name) : null;
   const { id, width, height, problems, stats } = result;
   return { id, svg, ...(dark ? { darkSvg } : {}), ...(png ? { png } : {}), width, height, problems, stats };
 }

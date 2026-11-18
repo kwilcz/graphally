@@ -16,8 +16,13 @@ function droppedNudges(previous, next) {
 function droppedSides(previous, next) {
   return Object.entries(previous.overrides?.edges || {}).flatMap(([key, was]) => {
     const now = next.overrides?.edges?.[key];
-    if (!now) return [`  note: override dropped: sides of ${key} (${has(next.edges, key) ? 'attribute' : 'connection'} removed)`];
-    return ['out', 'in'].filter(end => was[end] && !now[end]).map(end => `  note: override dropped: ${end} side of ${key} (attribute removed)`);
+    if (!now) {
+      const removed = has(next.edges, key) ? 'attribute' : 'connection';
+      return [`  note: override dropped: sides of ${key} (${removed} removed)`];
+    }
+    return ['out', 'in']
+      .filter(end => was[end] && !now[end])
+      .map(end => `  note: override dropped: ${end} side of ${key} (attribute removed)`);
   });
 }
 
@@ -27,9 +32,14 @@ const droppedOverrides = (previous, next) => [...droppedNudges(previous, next), 
 
 const counted = count => `${count} warning${count > 1 ? 's' : ''}`;
 
+function verdictOf(problems, warnings) {
+  if (problems.length) return `${problems.length} problem(s):`;
+  return warnings.length ? `ok, ${counted(warnings.length)}:` : 'ok';
+}
+
 function summaryLine(result, svg, problems, warnings) {
   const { nodes, edges, crossings } = result.stats;
-  const verdict = problems.length ? `${problems.length} problem(s):` : warnings.length ? `ok, ${counted(warnings.length)}:` : 'ok';
+  const verdict = verdictOf(problems, warnings);
   return `${svg}  ${result.width}×${result.height}  ${nodes} nodes, ${edges} edges, ${crossings} crossings  ${verdict}`;
 }
 
@@ -39,8 +49,10 @@ function offlineNote(offline) {
     + `run node ${path.join(SKILL_ROOT, 'scripts/fetch-icons.mjs')} when online`;
 }
 
+const fieldText = value => (Array.isArray(value) ? value.join('|') : value);
+
 function problemLine({ rule, hint, warn, ...fields }) {
-  const values = Object.entries(fields).map(([key, value]) => `${key}=${Array.isArray(value) ? value.join('|') : value}`).join(' ');
+  const values = Object.entries(fields).map(([key, value]) => `${key}=${fieldText(value)}`).join(' ');
   return `  ${warn ? 'warning: ' : ''}${rule}: ${values}${hint ? `  (${hint})` : ''}`;
 }
 

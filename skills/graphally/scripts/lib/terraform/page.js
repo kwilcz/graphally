@@ -46,6 +46,18 @@ function flowRanks(draft, children, within) {
   return ranks;
 }
 
+// The sort key of an item among its siblings. Network boxes keep source order (subnets in
+// address order, as written); the rest follow the flow.
+function siblingOrder(items, ranks) {
+  const position = new Map([...items.keys()].map((address, index) => [address, index]));
+  return item => {
+    const rank = NETWORK_RANK[azureType(item.resource)];
+    return (rank ?? 3) * 1e6
+      + (rank !== undefined ? 0 : (ranks.get(item.resource.addr) || 0) * 1e3)
+      + position.get(item.resource.addr);
+  };
+}
+
 function createLayout(draft, icons) {
   const { items, boxes } = draft, children = new Map();
   for (const item of items.values()) {
@@ -57,12 +69,7 @@ function createLayout(draft, icons) {
     for (const child of children.get(address) || []) within(child.resource.addr).forEach(each => found.add(each));
     return found;
   };
-  const ranks = flowRanks(draft, children, within), position = new Map([...items.keys()].map((address, index) => [address, index]));
-  // Network boxes keep source order (subnets in address order, as written); the rest follow the flow.
-  const orderOf = item => {
-    const rank = NETWORK_RANK[azureType(item.resource)];
-    return (rank ?? 3) * 1e6 + (rank !== undefined ? 0 : (ranks.get(item.resource.addr) || 0) * 1e3) + position.get(item.resource.addr);
-  };
+  const ranks = flowRanks(draft, children, within), orderOf = siblingOrder(items, ranks);
   return {
     draft, ranks, within, lines: [],
     isBox: item => boxes.has(item.resource.addr),
@@ -77,7 +84,10 @@ const joined = parts => parts.filter(Boolean).join(' · ');
 function boxDetail(item, type, detail) {
   const { body } = item.resource;
   if (type === 'virtual_network') return joined([cidrOf(body.attrs.address_space, item.resource), detail]);
-  if (type === 'subnet') return joined([cidrOf(body.attrs.address_prefixes || body.attrs.address_prefix, item.resource), ...item.details]);
+  if (type === 'subnet') {
+    const prefixes = body.attrs.address_prefixes || body.attrs.address_prefix;
+    return joined([cidrOf(prefixes, item.resource), ...item.details]);
+  }
   return type === 'resource_group' ? detail : joined([item.kind, detail]);
 }
 
@@ -107,11 +117,17 @@ function writeBox(layout, item, depth, children, detail) {
   lines.push(`${pad}</div>`);
 }
 
+// A figure's kind, with how many there are: ×N for a for_each, ×3 for a count of 3.
+function countedKind({ kind, count }) {
+  if (count === 'each' || count === 'N') return `${kind} ×N`;
+  return Number.isFinite(count) ? `${kind} ×${count}` : kind;
+}
+
 function writeFigure(layout, item, depth, detail) {
-  const { count } = item;
-  const kind = count === 'each' || count === 'N' ? `${item.kind} ×N` : Number.isFinite(count) ? `${item.kind} ×${count}` : item.kind;
+  const kind = countedKind(item);
   const small = joined([kind, detail]), external = item.resource.type === 'module' ? ' external' : '';
-  const label = `${layout.iconTag(item.icon)}${escapeHtml(item.label)}${small ? `<small>${escapeHtml(small)}</small>` : ''}`;
+  const smallTag = small ? `<small>${escapeHtml(small)}</small>` : '';
+  const label = `${layout.iconTag(item.icon)}${escapeHtml(item.label)}${smallTag}`;
   layout.lines.push(`${'  '.repeat(depth)}<div class="figure${external}" id=${item.id}>${label}</div>`);
 }
 

@@ -16,7 +16,9 @@ export const PACKS = ['azure', 'aws'];
 
 // Where packs live: the skill's assets/icons/, else a user cache when the skill folder is read-only.
 export function iconDirs(skillRoot) {
-  const cache = process.env.XDG_CACHE_HOME || (process.platform === 'win32' ? process.env.LOCALAPPDATA : null) || path.join(os.homedir(), '.cache');
+  const cache = process.env.XDG_CACHE_HOME
+    || (process.platform === 'win32' ? process.env.LOCALAPPDATA : null)
+    || path.join(os.homedir(), '.cache');
   return [path.join(skillRoot, 'assets/icons'), path.join(cache, 'graphally/icons')];
 }
 
@@ -52,7 +54,10 @@ function readPack(file) {
 
 // The downloaded packs, by vendor.
 export function loadPacks(skillRoot) {
-  const packs = PACKS.map(name => [name, findPack(skillRoot, name)]).filter(([, file]) => file).map(([name, file]) => [name, readPack(file)]);
+  const packs = PACKS
+    .map(name => [name, findPack(skillRoot, name)])
+    .filter(([, file]) => file)
+    .map(([name, file]) => [name, readPack(file)]);
   return Object.fromEntries(packs.filter(([, pack]) => pack));
 }
 

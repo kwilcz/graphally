@@ -12,8 +12,16 @@ import { download } from './download.mjs';
 
 const AWS_PACKAGE = 'aws-icons', AWS_VERSION = '3.3.0';
 
+// The lines of assets/icon-sources/azure.txt: the commit, then the icons' paths.
+function readAzureList(skillRoot) {
+  return fs.readFileSync(path.join(skillRoot, 'assets/icon-sources/azure.txt'), 'utf8')
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#'));
+}
+
 export async function fetchAzure(skillRoot, tmp, log) {
-  const list = fs.readFileSync(path.join(skillRoot, 'assets/icon-sources/azure.txt'), 'utf8').split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+  const list = readAzureList(skillRoot);
   const commit = list.shift().replace(/^commit\s+/, '');
   const base = `https://raw.githubusercontent.com/jgraph/drawio/${commit}/src/main/webapp/img/lib/azure2/`;
   log?.(`azure: ${list.length} icons from github.com/jgraph/drawio`);

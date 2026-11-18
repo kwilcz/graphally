@@ -42,7 +42,10 @@ function overlappingLines(routes, problems) {
   for (const [a, b] of pairsOf(lines)) {
     if (a.route.tree && a.route.tree === b.route.tree) continue;
     if (!a.runs.some(run => b.runs.some(other => shareTrack(run, other)))) continue;
-    problems.push({ rule: 'lines-overlap', a: a.route.edge.key, b: b.route.edge.key, hint: 'give one of them via points or other sides' });
+    problems.push({
+      rule: 'lines-overlap', a: a.route.edge.key, b: b.route.edge.key,
+      hint: 'give one of them via points or other sides',
+    });
   }
 }
 
@@ -81,9 +84,12 @@ function crosses([a, b], [c, d]) {
     && y > Math.min(upright[0].y, upright[1].y) + 1 && y < Math.max(upright[0].y, upright[1].y) - 1;
 }
 
+// How many of the other runs one run crosses.
+const crossingsOf = (run, others) => others.filter(other => crosses(run, other)).length;
+
 // How many times the routed lines cross each other, for the render's stats.
 export function countCrossings(routes) {
   const segments = routes.map(route => segmentsOf(route.points));
-  const crossingsBetween = ([a, b]) => a.reduce((count, run) => count + b.filter(other => crosses(run, other)).length, 0);
+  const crossingsBetween = ([a, b]) => a.reduce((count, run) => count + crossingsOf(run, b), 0);
   return pairsOf(segments).reduce((count, pair) => count + crossingsBetween(pair), 0);
 }

@@ -27,7 +27,8 @@ function readEdge(attributes, layout) {
   if (!key || !attributes['data-sides']) return;
   const [out, inn] = attributes['data-sides'].split(',');
   layout.edges[key] = { out, in: inn };
-  const fixed = Object.fromEntries(['out', 'in'].filter(end => attributes[`data-${end}`]).map(end => [end, attributes[`data-${end}`]]));
+  const fixedEnds = ['out', 'in'].filter(end => attributes[`data-${end}`]);
+  const fixed = Object.fromEntries(fixedEnds.map(end => [end, attributes[`data-${end}`]]));
   if (Object.keys(fixed).length) layout.overrides.edges[key] = fixed;
 }
 
@@ -35,7 +36,10 @@ function readEdge(attributes, layout) {
 // or null when the SVG carries no layout (not a graphally render, or an older one).
 export function readLayout(svg) {
   const root = attrsOf((svg.match(/<svg\b[^>]*>/) || [''])[0]);
-  const layout = { id: root['data-diagram'] || '', source: root['data-source'] || '', nodes: {}, groups: {}, edges: {}, overrides: { nodes: {}, edges: {} } };
+  const layout = {
+    id: root['data-diagram'] || '', source: root['data-source'] || '',
+    nodes: {}, groups: {}, edges: {}, overrides: { nodes: {}, edges: {} },
+  };
   let found = false;
   for (const [tag] of svg.matchAll(/<g\b[^>]*\sdata-(?:id|group|edge)="[^>]*>/g)) {
     const attributes = attrsOf(tag);

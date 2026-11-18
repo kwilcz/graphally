@@ -38,8 +38,9 @@ export function bundlesOf(edges) {
   const fanIns = groupBy(edges, edge => meaningOf(edge) && `>${edge.to}|${meaningOf(edge)}`);
   const fanOuts = groupBy(edges, edge => meaningOf(edge) && `<${edge.from}|${meaningOf(edge)}`);
   const keyOf = new Map();
-  for (const [key, list] of fanIns) if (fans(list, 'from')) list.forEach(edge => keyOf.set(edge, key));
-  for (const [key, list] of fanOuts) if (fans(list, 'to')) list.filter(edge => !keyOf.has(edge)).forEach(edge => keyOf.set(edge, key));
+  const bundle = (list, key) => list.forEach(edge => keyOf.set(edge, key));
+  for (const [key, list] of fanIns) if (fans(list, 'from')) bundle(list, key);
+  for (const [key, list] of fanOuts) if (fans(list, 'to')) bundle(list.filter(edge => !keyOf.has(edge)), key);
   const numbers = new Map([...new Set(keyOf.values())].map((key, index) => [key, index + 1]));
   return {
     bundleOf: edge => numbers.get(keyOf.get(edge)) || 0,

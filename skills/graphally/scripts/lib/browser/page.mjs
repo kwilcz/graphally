@@ -12,6 +12,9 @@ function withTimeout(promise, timeout, message) {
   return Promise.race([promise, late]).finally(() => clearTimeout(timer));
 }
 
+// The message of an exception thrown in the page.
+const exceptionMessage = details => details.exception?.description || details.text;
+
 class Page {
   constructor(browser, targetId, sessionId, scale) {
     Object.assign(this, { browser, targetId, sessionId, scale, errors: [] });
@@ -21,7 +24,8 @@ class Page {
   // A call that gets no answer within a minute fails, so a stuck page ends the render with an
   // error instead of hanging it.
   call(method, params) {
-    return withTimeout(this.browser.send(method, params, this.sessionId), ANSWER_WITHIN, `the browser did not answer ${method} within 60 s`);
+    const answer = this.browser.send(method, params, this.sessionId);
+    return withTimeout(answer, ANSWER_WITHIN, `the browser did not answer ${method} within 60 s`);
   }
 
   // A page signals that it is done by calling graphallyReady(): the event arrives here, with no
@@ -31,7 +35,7 @@ class Page {
   listen(message) {
     if (message.sessionId !== this.sessionId) return;
     const { method, params } = message;
-    if (method === 'Runtime.exceptionThrown') this.errors.push(params.exceptionDetails.exception?.description || params.exceptionDetails.text);
+    if (method === 'Runtime.exceptionThrown') this.errors.push(exceptionMessage(params.exceptionDetails));
     else if (method === 'Runtime.bindingCalled' && params.name === 'graphallyReady') this.markReady(params.payload);
   }
 
@@ -55,12 +59,13 @@ class Page {
   async viewport(width, height, scale = this.scale) {
     const bounds = { width: Math.ceil(width * scale) + 64, height: Math.ceil(height * scale) + 320 };
     await this.browser.send('Browser.setWindowBounds', { windowId: this.windowId, bounds });
-    return this.call('Emulation.setDeviceMetricsOverride', { width: Math.ceil(width), height: Math.ceil(height), deviceScaleFactor: scale, mobile: false });
+    const metrics = { width: Math.ceil(width), height: Math.ceil(height), deviceScaleFactor: scale, mobile: false };
+    return this.call('Emulation.setDeviceMetricsOverride', metrics);
   }
 
   async evaluate(expression) {
     const result = await this.call('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
-    if (result.exceptionDetails) throw new Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text);
+    if (result.exceptionDetails) throw new Error(exceptionMessage(result.exceptionDetails));
     return result.result.value;
   }
 
@@ -83,15 +88,24 @@ class Page {
 
   // fast: a quicker PNG encoding, about a third faster and a third larger, for previews.
   async screenshot(clip, { fast = false } = {}) {
-    const options = { format: 'png', clip: { ...clip, scale: 1 }, captureBeyondViewport: true, ...(fast ? { optimizeForSpeed: true } : {}) };
+    const options = {
+      format: 'png', clip: { ...clip, scale: 1 }, captureBeyondViewport: true,
+      ...(fast ? { optimizeForSpeed: true } : {}),
+    };
     const { data } = await this.call('Page.captureScreenshot', options);
     return Buffer.from(data, 'base64');
   }
 }
 
+// The target id of a blank page in a window of its own.
+async function openWindowTarget(browser) {
+  const { targetId } = await browser.send('Target.createTarget', { url: 'about:blank', newWindow: true });
+  return targetId;
+}
+
 // Each page beyond the first gets a window of its own, so none sits behind another.
 export async function openPage(browser, { width = 1400, height = 900, scale = 1 } = {}) {
-  const targetId = browser.takeSpare?.() || (await browser.send('Target.createTarget', { url: 'about:blank', newWindow: true })).targetId;
+  const targetId = browser.takeSpare?.() || (await openWindowTarget(browser));
   const { sessionId } = await browser.send('Target.attachToTarget', { targetId, flatten: true });
   const page = new Page(browser, targetId, sessionId, scale);
   browser.on(message => page.listen(message));

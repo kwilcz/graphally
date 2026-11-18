@@ -2,6 +2,7 @@
 // ::before and ::after, made real elements so the page can read their boxes.
 
 const SKIPPED_TAGS = /^(ICON|IMG|SVG|STYLE|SCRIPT|G-PSEUDO)$/i;
+const mayHavePseudo = element => element instanceof HTMLElement && !SKIPPED_TAGS.test(element.tagName);
 
 // The text of a computed content value: its strings, with CSS escapes, and attr(name) read
 // from the element (content: attr(data-step) numbers a list from its markup).
@@ -32,7 +33,7 @@ function standInFor(element, which) {
 
 // Every pseudo-element's stand-in, read before any is added, as adding one restyles the page.
 function standInsOf(root) {
-  const elements = [...root.querySelectorAll('*')].filter(element => element instanceof HTMLElement && !SKIPPED_TAGS.test(element.tagName));
+  const elements = [...root.querySelectorAll('*')].filter(mayHavePseudo);
   return elements.flatMap(element => ['before', 'after'].map(which => standInFor(element, which))).filter(Boolean);
 }
 

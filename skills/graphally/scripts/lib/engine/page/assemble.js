@@ -34,7 +34,8 @@ function defsOf(figure, markers) {
 }
 
 function svgOpenTag({ diagram, options }, { width, height }) {
-  const label = [diagram.getAttribute('title'), diagram.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
+  const titles = [diagram.getAttribute('title'), diagram.getAttribute('subtitle')];
+  const label = titles.filter(Boolean).join('. ') || 'Diagram';
   return openTag('svg', {
     xmlns: 'http://www.w3.org/2000/svg',
     class: 'graphally',
@@ -63,5 +64,8 @@ export function assembleSvg(figure, { routes, lines, marks, markers, steps, size
   const defs = defsOf(figure, markers), stylesheet = stylesheetOf(figure, routes, steps);
   const head = `${stylesheet}<defs>${defs.join('\n')}</defs>\n${backgroundOf(figure.diagram, size)}`;
   const svg = `${svgOpenTag(figure, size)}\n${head}<g>\n${layersOf(figure, lines, marks)}\n</g>\n</svg>`;
-  return { svg, width: size.width, height: size.height, problems: figure.problems, stats: statsOf(figure, routes), snapshot: null };
+  return {
+    svg, width: size.width, height: size.height,
+    problems: figure.problems, stats: statsOf(figure, routes), snapshot: null,
+  };
 }

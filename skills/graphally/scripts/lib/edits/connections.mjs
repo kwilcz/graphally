@@ -48,19 +48,24 @@ export function withEmptyBlock(text) {
 
 // A connection's key: its id, else from->to, with #2, #3 for repeats.
 export function keyOf(entry, seen) {
-  const { id, from, to } = Array.isArray(entry) ? { from: entry[0], to: entry[1] } : entry, base = id || `${from}->${to}`;
+  const { id, from, to } = Array.isArray(entry) ? { from: entry[0], to: entry[1] } : entry;
+  const base = id || `${from}->${to}`;
   const count = (seen.get(base) || 0) + 1;
   seen.set(base, count);
   return count > 1 ? `${base}#${count}` : base;
 }
 
 // An entry as an object: ["a", "b", "label"] is { from, to, label }.
-export const asObject = entry => (Array.isArray(entry) ? { from: entry[0], to: entry[1], ...(entry[2] ? { label: entry[2] } : {}) } : { ...entry });
+const arrayAsObject = entry => ({ from: entry[0], to: entry[1], ...(entry[2] ? { label: entry[2] } : {}) });
+export const asObject = entry => (Array.isArray(entry) ? arrayAsObject(entry) : { ...entry });
+
+// A value as JSON, with a space after each comma between its items.
+const formatValue = value => JSON.stringify(value).replace(/,(?=["[\d-])/g, ', ');
 
 // One entry in the house style: { "from": "a", "to": "b", "label": "x" }.
 function formatEntry(entry) {
   if (Array.isArray(entry)) return JSON.stringify(entry).replace(/,/g, ', ');
-  const fields = Object.entries(entry).map(([key, value]) => `${JSON.stringify(key)}: ${JSON.stringify(value).replace(/,(?=["[\d-])/g, ', ')}`);
+  const fields = Object.entries(entry).map(([key, value]) => `${JSON.stringify(key)}: ${formatValue(value)}`);
   return `{ ${fields.join(', ')} }`;
 }
 

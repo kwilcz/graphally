@@ -8,6 +8,7 @@
 import { CONTAINER_MARGIN } from './costs.js';
 
 const range = (from, to) => Array.from({ length: Math.max(0, to - from) }, (_, offset) => from + offset);
+const minMax = (a, b) => [Math.min(a, b), Math.max(a, b)];
 
 // The first index of the sorted values above low (or at least as high as high, when inclusive).
 function searchSorted(values, bound, from, inclusive) {
@@ -63,14 +64,18 @@ function gridLinesThrough({ geometry, obstacles, containers }, extraX, extraY) {
 // The lines, and the midpoints of the segments between them, where segments are tested.
 function linesOf(xs, ys) {
   const midpoints = values => range(0, values.length - 1).map(i => (values[i] + values[i + 1]) / 2);
-  return { xs, ys, nx: xs.length, ny: ys.length, cells: xs.length * ys.length, midX: midpoints(xs), midY: midpoints(ys) };
+  return {
+    xs, ys, nx: xs.length, ny: ys.length, cells: xs.length * ys.length,
+    midX: midpoints(xs), midY: midpoints(ys),
+  };
 }
 
 // The points and segments inside an obstacle: more than 0.01 within it.
 function obstacleFlags(obstacles, { nx, cells, xs, ys, midX, midY }) {
   const flags = { point: new Uint8Array(cells), runH: new Uint8Array(cells), runV: new Uint8Array(cells) };
   const mark = (target, xValues, yValues, o) => {
-    const across = indexRange(xValues, o.x + 0.01, o.x + o.w - 0.01), down = indexRange(yValues, o.y + 0.01, o.y + o.h - 0.01);
+    const across = indexRange(xValues, o.x + 0.01, o.x + o.w - 0.01);
+    const down = indexRange(yValues, o.y + 0.01, o.y + o.h - 0.01);
     eachCell(nx, across, down, cell => { target[cell] = 1; });
   };
   for (const o of obstacles) {
@@ -148,12 +153,16 @@ function segments({ nx, ny, cells }, inside, around) {
 function takenFlags(taken, { nx, ny, cells, xs, ys }) {
   const used = { usedH: new Uint8Array(cells), usedV: new Uint8Array(cells) };
   const near = (values, at) => range(0, values.length).filter(index => Math.abs(values[index] - at) <= 3);
-  const within = (values, count, lo, hi) => range(0, count - 1).filter(k => values[k] >= lo - 0.5 && values[k + 1] <= hi + 0.5);
+  const within = (values, count, lo, hi) => range(0, count - 1)
+    .filter(k => values[k] >= lo - 0.5 && values[k + 1] <= hi + 0.5);
   for (const run of taken) {
     const upright = run.x1 === run.x2;
-    const [lo, hi] = upright ? [Math.min(run.y1, run.y2), Math.max(run.y1, run.y2)] : [Math.min(run.x1, run.x2), Math.max(run.x1, run.x2)];
-    const lines = upright ? near(xs, run.x1) : near(ys, run.y1), steps = upright ? within(ys, ny, lo, hi) : within(xs, nx, lo, hi);
-    const mark = upright ? (line, step) => { used.usedV[step * nx + line] = 1; } : (line, step) => { used.usedH[line * nx + step] = 1; };
+    const [lo, hi] = upright ? minMax(run.y1, run.y2) : minMax(run.x1, run.x2);
+    const lines = upright ? near(xs, run.x1) : near(ys, run.y1);
+    const steps = upright ? within(ys, ny, lo, hi) : within(xs, nx, lo, hi);
+    const mark = upright
+      ? (line, step) => { used.usedV[step * nx + line] = 1; }
+      : (line, step) => { used.usedH[line * nx + step] = 1; };
     for (const line of lines) steps.forEach(step => mark(line, step));
   }
   return used;

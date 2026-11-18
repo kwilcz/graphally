@@ -10,7 +10,8 @@ const text = url => fetch(url).then(response => response.text());
 function readRequest() {
   const query = new URLSearchParams(location.search);
   return {
-    src: new URL(query.get('src')), theme: query.get('theme'), inline: query.get('inline') === '1', debug: query.get('debug') === '1',
+    src: new URL(query.get('src')), theme: query.get('theme'),
+    inline: query.get('inline') === '1', debug: query.get('debug') === '1',
     source: query.get('source') || '', previousAt: query.get('prev') ?? '/previous.json',
   };
 }
@@ -18,7 +19,9 @@ function readRequest() {
 // Layout snapshots of the earlier renders, served by the CLI (none with --recompute).
 async function readPrevious(previousAt) {
   if (!previousAt) return [];
-  const previous = await fetch(new URL(previousAt, location.href)).then(response => (response.ok ? response.json() : [])).catch(() => []);
+  const previous = await fetch(new URL(previousAt, location.href))
+    .then(response => (response.ok ? response.json() : []))
+    .catch(() => []);
   return Array.isArray(previous) ? previous : [];
 }
 
@@ -32,7 +35,9 @@ function namespacePart(content) {
 
 // A part's images are relative to the part.
 function rebaseImages(content, url) {
-  for (const image of content.querySelectorAll('img[src]')) image.setAttribute('src', new URL(image.getAttribute('src'), url).href);
+  for (const image of content.querySelectorAll('img[src]')) {
+    image.setAttribute('src', new URL(image.getAttribute('src'), url).href);
+  }
 }
 
 // <include src="parts/app.html"> is replaced by the part, whose links resolve locally.
@@ -79,7 +84,10 @@ async function embedImage(image, base) {
   await image.decode().catch(() => {});
 }
 
-const embedImages = (root, base) => Promise.all([...root.querySelectorAll('img[src]')].map(image => embedImage(image, base)));
+const embedImages = (root, base) => {
+  const images = [...root.querySelectorAll('img[src]')];
+  return Promise.all(images.map(image => embedImage(image, base)));
+};
 
 // Icon packs are served at /icons/<vendor>.json when downloaded (scripts/fetch-icons.mjs). They
 // weigh 3 MB, so they are fetched only when the diagram may need them: an <icon> that is not a
@@ -87,11 +95,14 @@ const embedImages = (root, base) => Promise.all([...root.querySelectorAll('img[s
 function mayNeedPacks(host) {
   const generic = name => resolveIcon(name)?.kind === 'generic';
   const icons = [...host.querySelectorAll('icon')].some(icon => !generic(icon.getAttribute('name') || ''));
-  return icons || [...host.querySelectorAll('script[type="graphally"]')].some(script => /icon/i.test(script.textContent));
+  return icons
+    || [...host.querySelectorAll('script[type="graphally"]')].some(script => /icon/i.test(script.textContent));
 }
 
 async function loadPacks() {
-  const fetchPack = vendor => fetch(new URL(`/icons/${vendor}.json`, location.href)).then(response => (response.ok ? response.json() : null)).catch(() => null);
+  const fetchPack = vendor => fetch(new URL(`/icons/${vendor}.json`, location.href))
+    .then(response => (response.ok ? response.json() : null))
+    .catch(() => null);
   const packs = await Promise.all(['azure', 'aws'].map(fetchPack));
   ['azure', 'aws'].forEach((vendor, index) => { if (packs[index]) registerPack(vendor, packs[index]); });
 }
@@ -112,7 +123,10 @@ function compileAll(host, previous, css, request) {
     const id = diagram.id || '', k = taken.get(id) || 0;
     taken.set(id, k + 1);
     const theme = request.theme || diagram.getAttribute('theme') || 'light';
-    const options = { standalone: !request.inline, css, theme, debug: request.debug, previous: previous.filter(layout => (layout?.id || '') === id)[k], source: request.source };
+    const options = {
+      standalone: !request.inline, css, theme, debug: request.debug,
+      previous: previous.filter(layout => (layout?.id || '') === id)[k], source: request.source,
+    };
     const result = compile(diagram, options), wrap = document.createElement('div');
     wrap.className = 'out';
     wrap.innerHTML = result.svg;
@@ -125,7 +139,11 @@ function compileAll(host, previous, css, request) {
 async function run() {
   const request = readRequest();
   if (request.theme === 'dark') document.documentElement.dataset.theme = 'dark';
-  const [previous, css, source] = await Promise.all([readPrevious(request.previousAt), text(new URL('../../assets/theme.css', import.meta.url)), text(request.src)]);
+  const [previous, css, source] = await Promise.all([
+    readPrevious(request.previousAt),
+    text(new URL('../../assets/theme.css', import.meta.url)),
+    text(request.src),
+  ]);
   const host = document.createElement('div');
   host.innerHTML = source;
   await resolveIncludes(host, request.src);

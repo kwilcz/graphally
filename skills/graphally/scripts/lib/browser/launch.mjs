@@ -11,16 +11,19 @@ import { DevtoolsPipe } from './devtools-pipe.mjs';
 
 const ARGS = [
   '--headless=new', '--remote-debugging-pipe', '--no-first-run', '--no-default-browser-check',
-  '--disable-gpu', '--hide-scrollbars', '--mute-audio', '--disable-extensions', '--disable-background-networking', '--disable-sync',
-  '--disable-component-update', '--password-store=basic', '--use-mock-keychain',
+  '--disable-gpu', '--hide-scrollbars', '--mute-audio', '--disable-extensions',
+  '--disable-background-networking', '--disable-sync', '--disable-component-update',
+  '--password-store=basic', '--use-mock-keychain',
   // Several pages render at once, and Chrome would throttle all but the one in front: their
   // timers slow down and a screenshot waits for a frame that comes seconds late, or never.
-  '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding',
+  '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
+  '--disable-renderer-backgrounding',
 ];
 
 // Chrome keeps Unix sockets in its profile and its temporary folder, and socket paths stop at
 // about 108 characters: a long TMPDIR (deep in a project) makes it exit at start. Use /tmp then.
-const tempBase = () => (process.platform !== 'win32' && os.tmpdir().length > 60 && fs.existsSync('/tmp') ? '/tmp' : os.tmpdir());
+const needsShortTemp = () => process.platform !== 'win32' && os.tmpdir().length > 60 && fs.existsSync('/tmp');
+const tempBase = () => (needsShortTemp() ? '/tmp' : os.tmpdir());
 
 function argsFor(profile) {
   const args = [...ARGS.slice(0, 2), `--user-data-dir=${profile}`, ...ARGS.slice(2), 'about:blank'];
@@ -76,7 +79,10 @@ export async function launch() {
   const child = spawn(executable, argsFor(profile), { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'], ...env });
   const errors = lastErrors(child.stdio[2]), pipe = new DevtoolsPipe(child.stdio[3], child.stdio[4]);
   // The install hint helps only when the browser could not be started; an exit is the browser's own error.
-  child.on('error', error => pipe.fail(new Error(`could not start ${executable}: ${error.message}${errors()}\n${BROWSER_HINT}`)));
+  child.on('error', error => {
+    const message = `could not start ${executable}: ${error.message}${errors()}\n${BROWSER_HINT}`;
+    pipe.fail(new Error(message));
+  });
   child.on('exit', code => pipe.fail(new Error(`the browser (${executable}) exited (code ${code})${errors()}`)));
   await pipe.send('Browser.getVersion');
   const browser = new Browser(child, pipe, profile);

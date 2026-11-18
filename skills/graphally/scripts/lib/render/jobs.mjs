@@ -12,7 +12,8 @@ const refuse = message => Object.assign(new Error(message), { exitCode: 2 });
 export function checkFiles(files, options) {
   for (const file of files) if (!fs.existsSync(file)) throw refuse(`no such file: ${file}`);
   if (options.out && new Set(files.map(baseOf)).size < files.length) {
-    throw refuse('two sources share a name, so their files would overwrite each other in --out: render them separately, or without --out');
+    throw refuse('two sources share a name, so their files would overwrite each other in --out:'
+      + ' render them separately, or without --out');
   }
 }
 
@@ -51,7 +52,9 @@ function layoutIn(file) {
 
 // The layouts of the earlier renders; a layout recorded for another source file is skipped.
 function readPrevious(dir, base, source) {
-  return renderedNames(dir, base).map(name => layoutIn(path.join(dir, name))).filter(layout => layout && (!layout.source || layout.source === source));
+  return renderedNames(dir, base)
+    .map(name => layoutIn(path.join(dir, name)))
+    .filter(layout => layout && (!layout.source || layout.source === source));
 }
 
 export function createJob(file, index, options) {

@@ -8,8 +8,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const TYPES = {
-  '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
-  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp',
+  '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript',
+  '.css': 'text/css', '.json': 'application/json',
+  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp',
 };
 
 // The folder a URL is served from, and the path in it.
@@ -44,7 +46,8 @@ function handler(skillRoot, srcDir, files) {
     // The skill's own files (the engine, the theme, the icon packs) do not change while the
     // server runs, and each run has a fresh browser profile: every page after the first reads
     // them from the cache instead of fetching and compiling each module again.
-    response.writeHead(200, { 'content-type': contentType(file), ...(root === skillRoot ? { 'cache-control': 'max-age=3600' } : {}) });
+    const caching = root === skillRoot ? { 'cache-control': 'max-age=3600' } : {};
+    response.writeHead(200, { 'content-type': contentType(file), ...caching });
     fs.createReadStream(file).pipe(response);
   };
 }
@@ -55,5 +58,7 @@ export function serve(skillRoot, srcDir, files = {}) {
     server.closeAllConnections?.();
     server.close();
   };
-  return new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve({ origin: `http://127.0.0.1:${server.address().port}`, close })));
+  return new Promise(resolve => server.listen(0, '127.0.0.1', () => {
+    resolve({ origin: `http://127.0.0.1:${server.address().port}`, close });
+  }));
 }

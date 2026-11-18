@@ -19,7 +19,10 @@ export function show(shadow, nodes) {
   shadow.replaceChildren(css, view);
 }
 
-const valueText = value => (Array.isArray(value) ? value.join('|') : typeof value === 'object' ? JSON.stringify(value) : value);
+function valueText(value) {
+  if (Array.isArray(value)) return value.join('|');
+  return typeof value === 'object' ? JSON.stringify(value) : value;
+}
 
 function problemItem({ rule, hint, ...fields }) {
   const item = document.createElement('li');

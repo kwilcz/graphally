@@ -7,15 +7,17 @@ import { azureType } from './azure.js';
 import { idOf } from './items.js';
 
 const SUBNET_KEY = /(^|\.)(subnet_id|vnet_subnet_id|infrastructure_subnet_id|delegated_subnet_id)$/;
+const PLAN_KEY = /^service_plan_id$|^app_service_plan_id$/;
+const ofAzureType = type => ref => ref && azureType(ref) === type;
 
 function parentOf(draft, resource, type) {
   const { refsOf } = draft;
   let parent = null;
   if (type === 'subnet') parent = refsOf(resource, /^virtual_network_name$|^virtual_network_id$/)[0];
-  if (!parent) parent = refsOf(resource, SUBNET_KEY).filter(ref => ref && azureType(ref) === 'subnet')[0];
-  if (!parent && /web_app|function_app/.test(type)) parent = refsOf(resource, /^service_plan_id$|^app_service_plan_id$/)[0];
+  if (!parent) parent = refsOf(resource, SUBNET_KEY).filter(ofAzureType('subnet'))[0];
+  if (!parent && /web_app|function_app/.test(type)) parent = refsOf(resource, PLAN_KEY)[0];
   if (!parent && /_slot$/.test(type)) parent = refsOf(resource, /^app_service_id$/)[0];
-  if (!parent) parent = refsOf(resource, /^resource_group_name$/).find(ref => ref && azureType(ref) === 'resource_group');
+  if (!parent) parent = refsOf(resource, /^resource_group_name$/).find(ofAzureType('resource_group'));
   return parent;
 }
 
@@ -32,18 +34,26 @@ function literalGroup(draft, resource) {
   return key;
 }
 
+// The box a resource is drawn in: its parent, when that is drawn; with no parent, a resource group
+// named as a literal. A resource group itself has none.
+function holderOf(draft, resource, type, parent) {
+  if (parent) return draft.items.has(parent.addr) ? parent.addr : null;
+  return type !== 'resource_group' ? literalGroup(draft, resource) : null;
+}
+
 function placeItem(draft, { resource }) {
   const type = azureType(resource), parent = parentOf(draft, resource, type);
-  const holder = parent && draft.items.has(parent.addr) ? parent.addr : !parent && type !== 'resource_group' ? literalGroup(draft, resource) : null;
+  const holder = holderOf(draft, resource, type, parent);
   if (!holder) return;
   draft.parentOf.set(resource.addr, holder);
   draft.boxes.add(holder);
 }
 
 const ALWAYS_BOXES = ['subnet', 'virtual_network', 'resource_group'];
+const isAlwaysBox = item => ALWAYS_BOXES.includes(azureType(item.resource));
 
 export function placeItems(draft) {
   // A literal resource group added here is visited too: it has no parent.
   for (const item of draft.items.values()) placeItem(draft, item);
-  for (const item of draft.items.values()) if (ALWAYS_BOXES.includes(azureType(item.resource))) draft.boxes.add(item.resource.addr);
+  for (const item of draft.items.values()) if (isAlwaysBox(item)) draft.boxes.add(item.resource.addr);
 }

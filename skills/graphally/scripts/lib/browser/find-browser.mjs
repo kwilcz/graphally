@@ -5,7 +5,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-export const BROWSER_HINT = 'graphally needs Chrome, Chromium or Edge. Install one, run `npx playwright install chromium`, or set CHROMIUM_PATH to a browser executable.';
+export const BROWSER_HINT = 'graphally needs Chrome, Chromium or Edge.'
+  + ' Install one, run `npx playwright install chromium`, or set CHROMIUM_PATH to a browser executable.';
 
 const isFile = file => {
   try {
@@ -15,16 +16,22 @@ const isFile = file => {
   }
 };
 
-const fromEnvironment = () => ['CHROMIUM_PATH', 'CHROME_PATH', 'PUPPETEER_EXECUTABLE_PATH'].map(name => process.env[name]);
+const BROWSER_PATH_VARIABLES = ['CHROMIUM_PATH', 'CHROME_PATH', 'PUPPETEER_EXECUTABLE_PATH'];
+const fromEnvironment = () => BROWSER_PATH_VARIABLES.map(name => process.env[name]);
 
 function fromInstallPlaces() {
   if (process.platform === 'darwin') {
     const app = name => `/Applications/${name}.app/Contents/MacOS/${name}`;
-    return [app('Google Chrome'), app('Chromium'), app('Microsoft Edge'), path.join(os.homedir(), app('Google Chrome').slice(1))];
+    const chromeInHome = path.join(os.homedir(), app('Google Chrome').slice(1));
+    return [app('Google Chrome'), app('Chromium'), app('Microsoft Edge'), chromeInHome];
   }
   if (process.platform !== 'win32') return [];
   const roots = [process.env.PROGRAMFILES, process.env['PROGRAMFILES(X86)'], process.env.LOCALAPPDATA].filter(Boolean);
-  const inside = ['Google/Chrome/Application/chrome.exe', 'Chromium/Application/chrome.exe', 'Microsoft/Edge/Application/msedge.exe'];
+  const inside = [
+    'Google/Chrome/Application/chrome.exe',
+    'Chromium/Application/chrome.exe',
+    'Microsoft/Edge/Application/msedge.exe',
+  ];
   return roots.flatMap(root => inside.map(file => path.join(root, file)));
 }
 
@@ -32,7 +39,10 @@ function fromInstallPlaces() {
 function fromPath() {
   if (process.platform === 'win32') return [];
   const dirs = (process.env.PATH || '').split(path.delimiter).filter(Boolean);
-  const names = ['google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser', 'chrome', 'microsoft-edge', 'microsoft-edge-stable'];
+  const names = [
+    'google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser', 'chrome',
+    'microsoft-edge', 'microsoft-edge-stable',
+  ];
   return names.flatMap(name => dirs.map(dir => path.join(dir, name)));
 }
 
@@ -44,10 +54,17 @@ const PLAYWRIGHT_BINARIES = [
 // The chromium-<build> folders of a Playwright cache, newest first.
 function chromiumBuilds(dir) {
   try {
-    return fs.readdirSync(dir).filter(name => /^chromium-\d+$/.test(name)).sort((a, b) => b.split('-')[1] - a.split('-')[1]);
+    return fs.readdirSync(dir)
+      .filter(name => /^chromium-\d+$/.test(name))
+      .sort((a, b) => b.split('-')[1] - a.split('-')[1]);
   } catch {
     return [];
   }
+}
+
+// The browser executables a Playwright cache may hold, newest build first.
+function binariesIn(dir) {
+  return chromiumBuilds(dir).flatMap(build => PLAYWRIGHT_BINARIES.map(file => path.join(dir, build, file)));
 }
 
 // Browsers downloaded by Playwright (`npx playwright install chromium`), newest first.
@@ -55,7 +72,7 @@ function fromPlaywright() {
   const home = os.homedir();
   const caches = [process.env.PLAYWRIGHT_BROWSERS_PATH, path.join(home, '.cache/ms-playwright'),
     path.join(home, 'Library/Caches/ms-playwright'), path.join(home, 'AppData/Local/ms-playwright')].filter(Boolean);
-  return caches.flatMap(dir => chromiumBuilds(dir).flatMap(build => PLAYWRIGHT_BINARIES.map(file => path.join(dir, build, file))));
+  return caches.flatMap(dir => binariesIn(dir));
 }
 
 export function findBrowser() {
