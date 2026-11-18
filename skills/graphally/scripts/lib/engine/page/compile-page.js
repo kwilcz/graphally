@@ -6,7 +6,7 @@ import { S, hostTheme, shadowBox } from '../style.js';
 import { escapeXml } from '../svg.js';
 import { utilitiesFor } from '../css/utilities.js';
 import { materializePseudo } from '../css/pseudo.js';
-import { SHAPE_CSS } from '../shapes/shapes.js';
+import { SHAPE_CSS } from '../shapes/shape-css.js';
 import { runBeforeScripts } from '../script/before-script.js';
 import { PAGE_CSS } from './page-css.js';
 import { buildFigure } from './build-figure.js';
