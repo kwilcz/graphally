@@ -12,8 +12,10 @@ import { utilitiesFor } from './utilities.js';
 import { resolveIcon, symbolFor } from './icons.js';
 import { routeEdges } from './route.js';
 import { parseShape, drawShape, SHAPE_CSS } from './shapes.js';
+import { linearGradient, boxShadows, turnOf, materializePseudo, rgbaSplit } from './paint.js';
 
 const fmt = n => String(Math.round(n * 10) / 10);
+const fine = (n, d) => String(Math.round(n * 10 ** d) / 10 ** d);
 // A polyline with its corners rounded by r: the path of a line with bends.
 function rounded(pts, r) {
   let d = `M${fmt(pts[0].x)},${fmt(pts[0].y)}`;
@@ -161,6 +163,7 @@ export function compilePage(el, opts, m) {
   const ut = document.createElement('style');
   ut.textContent = utilitiesFor(root, problems);
   root.prepend(ut);
+  materializePseudo(root);
   try {
     return build(root, el, id, scripts, lines, opts, m, problems);
   } finally {
@@ -409,8 +412,18 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     const deco = new Set();
     for (let a = owner; a && a !== root; a = a.parentElement) for (const d of getComputedStyle(a).textDecorationLine.split(' ')) if (d === 'underline' || d === 'line-through') deco.add(d);
     const td = deco.size ? `; text-decoration: ${[...deco].join(' ')}` : '';
+    // text-overflow: ellipsis on the block that clips the line: cut it where the browser does.
+    let blk = owner;
+    while (blk !== root && getComputedStyle(blk).display.startsWith('inline')) blk = blk.parentElement;
+    const bcs = getComputedStyle(blk), cut = bcs.textOverflow === 'ellipsis' && bcs.overflowX !== 'visible'
+      ? blk.getBoundingClientRect().right - o.left - parseFloat(bcs.borderRightWidth) - parseFloat(bcs.paddingRight) : Infinity;
     for (const l of lines) {
-      const str = transform(l.words.join(' '));
+      let str = transform(l.words.join(' '));
+      if (l.right > cut + 0.5) {
+        while (str && ctx.measureText(`${str}…`).width > cut - l.left) str = str.slice(0, -1);
+        str = `${str.trimEnd()}…`;
+        l.right = l.left + ctx.measureText(str).width;
+      }
       texts.push({ x: l.left, y: l.top, w: l.right - l.left, h: l.h, owner, str });
       out.push(`<text x="${fmt(l.left)}" y="${fmt(l.top + asc)}" style="font-family: ${esc(cs.fontFamily)}; font-size: ${cs.fontSize}; font-weight: ${cs.fontWeight}${cs.fontStyle !== 'normal' ? `; font-style: ${cs.fontStyle}` : ''}${ls}${td}; fill: ${fill}">${esc(str)}</text>`);
     }
@@ -450,6 +463,27 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     const fit = cs.objectFit, par = fit === 'contain' || fit === 'scale-down' ? 'xMidYMid meet' : fit === 'cover' ? 'xMidYMid slice' : 'none';
     out.push(`<image href="${esc(src)}" ${at} preserveAspectRatio="${par}"></image>`);
   };
+  // Gradients, shadow blurs and clips, for the defs.
+  const paints = [];
+  const stopOf = s => { const [c, a] = rgbaSplit(paintOf(s.color) || 'rgba(0, 0, 0, 0)'); return `<stop offset="${fine(s.at, 4)}" stop-color="${c}"${a < 1 ? ` stop-opacity="${fine(a, 3)}"` : ''}></stop>`; };
+  const gradientFill = g => {
+    const gid = `${id}-grad${paints.length}`;
+    paints.push(`<linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="${fmt(g.x1)}" y1="${fmt(g.y1)}" x2="${fmt(g.x2)}" y2="${fmt(g.y2)}">${g.stops.map(stopOf).join('')}</linearGradient>`);
+    return `url(#${gid})`;
+  };
+  // A box-shadow: the box grown by its spread, moved by its offset, blurred (a CSS blur of B
+  // is a Gaussian of deviation B/2). The corners grow with the spread, as the browser draws them.
+  const shadowOf = (s, b, rx) => {
+    const [c, a] = rgbaSplit(paintOf(s.color) || 'rgb(0, 0, 0)');
+    const x = b.x + s.x - s.spread, y = b.y + s.y - s.spread, w = b.w + 2 * s.spread, h = b.h + 2 * s.spread;
+    let filter = '';
+    if (s.blur > 0) {
+      const fid = `${id}-blur${paints.length}`, m = s.blur * 1.5;
+      paints.push(`<filter id="${fid}" filterUnits="userSpaceOnUse" x="${fmt(x - m)}" y="${fmt(y - m)}" width="${fmt(w + 2 * m)}" height="${fmt(h + 2 * m)}"><feGaussianBlur stdDeviation="${fmt(s.blur / 2)}"></feGaussianBlur></filter>`);
+      filter = ` filter="url(#${fid})"`;
+    }
+    return `<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(w)}" height="${fmt(h)}" rx="${fmt(rx > 0 ? Math.max(0, rx + s.spread) : 0)}" style="fill: ${c}"${a < 1 ? ` fill-opacity="${fine(a, 3)}"` : ''}${filter}></rect>`;
+  };
   let greyed = false;
   // data-step="n": the element appears in its turn when the figure is shown (see motionCss).
   const steps = new Set();
@@ -463,6 +497,17 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
   const visit = (e, parentBox) => {
     const cs = getComputedStyle(e);
     if (cs.display === 'none' || cs.visibility === 'hidden') return;
+    // rotate, scale, transform: the element is read untransformed and drawn in a group that
+    // turns it about its transform-origin; what is inside comes along.
+    const turn = turnOf(cs);
+    let undo = null, turnTag = '';
+    if (turn) {
+      const [ox, oy] = cs.transformOrigin.split(' ').map(parseFloat), was = [e.style.transform, e.style.rotate, e.style.scale];
+      e.style.transform = e.style.rotate = e.style.scale = 'none';
+      undo = () => { [e.style.transform, e.style.rotate, e.style.scale] = was; };
+      const r = boxOf(e), px = r.x + ox, py = r.y + oy, { a, b: mb, c, d, e: tx, f: ty } = turn;
+      turnTag = `<g transform="matrix(${[a, mb, c, d, px + tx - a * px - c * py, py + ty - mb * px - d * py].map(v => fine(v, 4)).join(' ')})">`;
+    }
     const b = boxOf(e);
     // opacity and filter: grayscale() (what disabled does): the element and all inside it are drawn
     // in a group at that opacity, through a filter that takes the colour out of its icons too.
@@ -473,19 +518,22 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
     if (step) out.push(`<g data-step="${step}">`);
     if (anim != null) out.push(`<g data-anim="${anim}">`);
     if (fade) out.push(`<g${op < 1 ? ` opacity="${fmt(op)}"` : ''}${grey ? ` filter="url(#${id}-grey)"` : ''}>`);
+    if (turnTag) out.push(turnTag);
+    const close = () => { if (turnTag) out.push('</g>'); if (fade) out.push('</g>'); if (anim != null) out.push('</g>'); if (step) out.push('</g>'); undo?.(); };
     if (e.tagName === 'ICON' || e.tagName === 'IMG' || e.tagName === 'svg') {
       if (e.tagName === 'ICON' && e.dataset.symbol) out.push(`<use href="#${e.dataset.symbol}" x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" style="color: ${paintOf(cs.color) || 'var(--ink)'}"></use>`);
       else if (e.tagName !== 'ICON') picture(e, cs, b);
       boxes.push({ e, b, painted: true, parent: parentBox });
-      if (fade) out.push('</g>');
-      if (anim != null) out.push('</g>');
-      if (step) out.push('</g>');
+      close();
       return;
     }
     // The layout the next render reads back (snapshot.mjs), with the author's nudge.
     const nudge = e.getAttribute('nudge') ? ` data-nudge="${esc(e.getAttribute('nudge'))}"` : '';
     const open = e.id ? out.push(`<g data-id="${esc(e.id)}" data-box="${[b.x, b.y, b.w, b.h].map(v => Math.round(v * 2) / 2).join(',')}"${nudge}>`) : 0;
-    const bg = paintOf(cs.backgroundColor);
+    const grad = linearGradient(cs.backgroundImage, b);
+    const bg = paintOf(cs.backgroundColor) || (grad && paintOf(grad.stops[0].color));
+    const fill = grad ? gradientFill(grad) : bg;
+    const shadows = boxShadows(cs.boxShadow);
     const bw = ['Top', 'Right', 'Bottom', 'Left'].map(s => (cs[`border${s}Style`] === 'none' ? 0 : parseFloat(cs[`border${s}Width`]) || 0));
     const bc = paintOf(cs.borderTopColor), dashed = cs.borderTopStyle === 'dashed' ? ' stroke-dasharray="5 4"' : cs.borderTopStyle === 'dotted' ? ' stroke-dasharray="1.5 3"' : '';
     const poly = polygonOf(cs.clipPath, b);
@@ -501,11 +549,12 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
       out.push(...drawShape(spec, b, { fill: bg || 'none', stroke: bw[0] ? bc || 'var(--ink)' : 'none', width: bw[0], dash: st === 'dashed' ? '5 4' : st === 'dotted' ? '1.5 3' : '' }));
       me = { e, b, painted: true, parent: parentBox, bg, round: spec.round, plain: false };
       boxes.push(me);
-    } else if (bg || uniform || bw.some(Boolean) || poly) {
-      const stroke = uniform ? ` style="fill: ${bg || 'none'}; stroke: ${bc}" stroke-width="${bw[0]}"${dashed}` : ` style="fill: ${bg || 'none'}"`;
+    } else if (bg || uniform || bw.some(Boolean) || poly || shadows.length) {
+      if (!poly) for (const s of shadows) out.push(shadowOf(s, b, rx));
+      const stroke = uniform ? ` style="fill: ${fill || 'none'}; stroke: ${bc}" stroke-width="${bw[0]}"${dashed}` : ` style="fill: ${fill || 'none'}"`;
       if (poly) out.push(`<polygon points="${poly.map(p => `${fmt(p.x)},${fmt(p.y)}`).join(' ')}"${stroke}></polygon>`);
       else if (uniform) { const h = bw[0] / 2; out.push(`<rect x="${fmt(b.x + h)}" y="${fmt(b.y + h)}" width="${fmt(b.w - bw[0])}" height="${fmt(b.h - bw[0])}" rx="${fmt(Math.max(0, rx - h))}"${stroke}></rect>`); }
-      else if (bg) out.push(`<rect x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" rx="${fmt(rx)}"${stroke}></rect>`);
+      else if (fill) out.push(`<rect x="${fmt(b.x)}" y="${fmt(b.y)}" width="${fmt(b.w)}" height="${fmt(b.h)}" rx="${fmt(rx)}"${stroke}></rect>`);
       if (!uniform && !poly) {
         const sides = [[b.x, b.y, b.x + b.w, b.y], [b.x + b.w, b.y, b.x + b.w, b.y + b.h], [b.x, b.y + b.h, b.x + b.w, b.y + b.h], [b.x, b.y, b.x, b.y + b.h]];
         bw.forEach((w, i) => {
@@ -515,7 +564,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
           out.push(`<line x1="${fmt(x1 + dx)}" y1="${fmt(y1 + dy)}" x2="${fmt(x2 + dx)}" y2="${fmt(y2 + dy)}" style="stroke: ${c}" stroke-width="${w}"${st === 'dashed' ? ' stroke-dasharray="5 4"' : st === 'dotted' ? ' stroke-dasharray="1.5 3"' : ''}></line>`);
         });
       }
-      me = { e, b, painted: true, parent: parentBox, bg, round: !!poly && poly.length === 4 || (rx >= Math.min(b.w, b.h) / 2 - 0.5 && Math.abs(b.w - b.h) < 2), plain: !bg && !bw.some(Boolean) && !poly };
+      me = { e, b, painted: true, parent: parentBox, bg, round: !!poly && poly.length === 4 || (rx >= Math.min(b.w, b.h) / 2 - 0.5 && Math.abs(b.w - b.h) < 2), plain: !bg && !bw.some(Boolean) && !poly && !shadows.length };
       boxes.push(me);
     } else if (e.id) { me = { e, b, painted: false, parent: parentBox }; boxes.push(me); }
     if (cs.display === 'list-item' && cs.listStyleType === 'disc') {
@@ -526,14 +575,26 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
         if (r) { const fs = parseFloat(cs.fontSize); out.push(`<circle cx="${fmt(r.left - o.left - fs * 0.7)}" cy="${fmt(r.top - o.top + r.height * 0.55)}" r="${fmt(fs * 0.17)}" style="fill: ${paintOf(cs.color) || 'var(--ink)'}"></circle>`); }
       }
     }
+    // overflow other than visible clips what is inside to the padding box, corners included.
+    const clip = cs.overflowX !== 'visible' || cs.overflowY !== 'visible';
+    if (clip) {
+      const cid = `${id}-clip${paints.length}`, [bt, br, bb, bl] = bw;
+      paints.push(`<clipPath id="${cid}"><rect x="${fmt(b.x + bl)}" y="${fmt(b.y + bt)}" width="${fmt(b.w - bl - br)}" height="${fmt(b.h - bt - bb)}" rx="${fmt(Math.max(0, rx - Math.max(bt, bl)))}"></rect></clipPath>`);
+      out.push(`<g clip-path="url(#${cid})">`);
+    }
     for (const c of e.childNodes) {
       if (c.nodeType === 3) textOf(c, e);
       else if (c.nodeType === 1 && c.tagName !== 'STYLE' && c.tagName !== 'SCRIPT') visit(c, me || parentBox);
     }
+    if (clip) out.push('</g>');
+    // outline: a ring outside the border, round where the border is (outline-offset apart).
+    const ow = cs.outlineStyle === 'none' ? 0 : parseFloat(cs.outlineWidth) || 0;
+    if (ow) {
+      const g = (parseFloat(cs.outlineOffset) || 0) + ow / 2, os = cs.outlineStyle;
+      out.push(`<rect x="${fmt(b.x - g)}" y="${fmt(b.y - g)}" width="${fmt(b.w + 2 * g)}" height="${fmt(b.h + 2 * g)}" rx="${fmt(rx > 0 ? rx + g : 0)}" style="fill: none; stroke: ${paintOf(cs.outlineColor) || 'var(--ink)'}" stroke-width="${fmt(ow)}"${os === 'dashed' ? ' stroke-dasharray="5 4"' : os === 'dotted' ? ' stroke-dasharray="1.5 3"' : ''}></rect>`);
+    }
     if (open) out.push('</g>');
-    if (fade) out.push('</g>');
-    if (anim != null) out.push('</g>');
-    if (step) out.push('</g>');
+    close();
   };
   for (const c of root.childNodes) {
     if (c.nodeType === 3) textOf(c, root);
@@ -608,7 +669,7 @@ function build(root, el, id, scripts, lines, opts, m, problems) {
   const defs = [...[...markers].map(k => {
     const [mid, kind, color] = k.split('|'), [ref, body] = MARKER[kind];
     return `<marker id="${mid}" viewBox="0 0 10 10" refX="${ref}" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse">${body(color)}</marker>`;
-  }), ...symbols.values(), ...(greyed ? [`<filter id="${id}-grey" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix></filter>`] : [])];
+  }), ...symbols.values(), ...paints, ...(greyed ? [`<filter id="${id}-grey" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix></filter>`] : [])];
   const label = [el.getAttribute('title'), el.getAttribute('subtitle')].filter(Boolean).join('. ') || 'Diagram';
   const style = (opts.standalone ? `<style>${opts.css}</style>\n` : '') + (stepOrder.length || flows || anims.length ? `<style>${motionCss(stepOrder, delayOf, animCss(anims, id, problems))}</style>\n` : '');
   const theme = opts.theme === 'dark' ? ' data-theme="dark"' : '';
@@ -971,7 +1032,13 @@ function overflows(boxes, texts, root, problems) {
   const drawn = new Map(boxes.filter(b => b.painted && !b.plain && b.e.tagName !== 'ICON' && cs(b.e).display !== 'inline').map(b => [b.e, b]));
   const holder = e => { for (let p = e.parentElement; p && p !== root; p = p.parentElement) if (drawn.has(p)) return drawn.get(p); return null; };
   // Placed on purpose: the element or an ancestor below its holder is absolutely positioned.
-  const placed = (e, h) => { for (let p = e; p && p !== h?.e && p !== root; p = p.parentElement) if (/^(absolute|fixed)$/.test(cs(p).position)) return true; return false; };
+  // Placed on purpose: the element or an ancestor below its holder is absolutely positioned;
+  // or cut off on purpose: an ancestor clips it (overflow: hidden, truncate).
+  const placed = (e, h) => {
+    for (let p = e; p && p !== h?.e && p !== root; p = p.parentElement) if (/^(absolute|fixed)$/.test(cs(p).position)) return true;
+    for (let p = e.parentElement; p && p !== root; p = p.parentElement) if (cs(p).overflowX !== 'visible') return true;
+    return false;
+  };
   const name = e => e.id || `${e.tagName.toLowerCase()}${[...e.classList].filter(c => !c.startsWith('[')).map(c => `.${c}`).join('')}`;
   const past = (q, a) => [['left', q.x - a.x], ['right', a.x + a.w - q.x - q.w], ['top', q.y - a.y], ['bottom', a.y + a.h - q.y - q.h]].filter(([, d]) => d > 1);
   const warn = (what, h, sides) => problems.push({ rule: 'box-overflow', warn: true, box: what, in: name(h.e), by: sides.map(([k, d]) => `${k} ${Math.round(d)}px`).join(', '),

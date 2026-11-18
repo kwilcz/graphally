@@ -494,6 +494,28 @@ later('page-data', async () => {
 
 // The viewer: a diagram file opened from disk renders itself as the CLI renders it. A local
 // server stands in for the icon CDNs, serving each icon back from the downloaded packs.
+// Component styling: gradients, shadows, outlines, ::before/::after, clipping with an ellipsis,
+// and turns are drawn, not dropped.
+later('page-css-paint', async () => {
+  const d = folder('page-css-paint'), out = path.join(d, 'out');
+  const css = `<style>
+    .g { width: 80px; height: 30px; background: linear-gradient(90deg, #ff0000, #0000ff); }
+    .s { width: 80px; height: 30px; background: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 0 3px #00ff00; border-radius: 6px; }
+    .o { width: 80px; height: 30px; outline: 2px solid #ff00ff; outline-offset: 2px; }
+    .p::before { content: ""; display: block; width: 10px; height: 10px; background: #00ffff; }
+    .t { width: 60px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .r { width: 10px; height: 10px; background: #123456; transform: rotate(45deg); }
+  </style>`;
+  ok0(await render(write(d, page(`${css}<div class="flex gap-6 items-center"><div class=g></div><div class=s></div><div class=o></div><div class=p>x</div><div class=t>a long name that does not fit</div><div class=r></div></div>`, '', 'width=500')), out));
+  const svg = svgOf(out);
+  check(/<linearGradient id="[^"]+" gradientUnits="userSpaceOnUse"[^>]*><stop offset="0" stop-color="rgb\(255, 0, 0\)"><\/stop><stop offset="1" stop-color="rgb\(0, 0, 255\)">/.test(svg) && /fill: url\(#/.test(svg), 'the gradient is not drawn');
+  check(/<feGaussianBlur stdDeviation="4">/.test(svg) && /fill: rgb\(0, 0, 0\)" fill-opacity="0.2" filter="url\(#/.test(svg) && /fill: rgb\(0, 255, 0\)"><\/rect>/.test(svg), 'the shadows are not drawn');
+  check(/rx="0" style="fill: none; stroke: rgb\(255, 0, 255\)" stroke-width="2"/.test(svg), 'the outline is not drawn');
+  check(/width="10" height="10"[^>]*style="fill: rgb\(0, 255, 255\)"/.test(svg), 'the ::before box is not drawn');
+  check(/<clipPath id=/.test(svg) && /clip-path="url\(#/.test(svg) && />a long[^<]*…<\/text>/.test(svg), 'the clipped text has no ellipsis');
+  check(/<g transform="matrix\(0.7071 0.7071 -0.7071 0.7071 /.test(svg), 'the rotated box is not turned');
+});
+
 // A logo in a header: an <img> goes into the SVG as a data: URL, an inline <svg> as it is.
 later('page-images', async () => {
   const d = folder('page-images'), out = path.join(d, 'out');

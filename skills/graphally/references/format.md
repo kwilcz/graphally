@@ -49,14 +49,18 @@ is about choosing one.
   each side. The height follows the content, the script's drawings included.
 - Any CSS for layout works: grid (with `grid-column: span 2`, `subgrid`), flexbox,
   `position: absolute` inside a `position: relative` box, margins, padding.
-- What is drawn: background colours, borders (solid, dashed, dotted, per side),
-  `border-radius`, `clip-path: polygon(…)`, shapes, text with its font, size, weight,
-  style, colour, `text-transform`, `letter-spacing`, underline and line-through, list
-  bullets, `<icon>`, and images: `<img src="logo.svg">` (a path relative to the diagram
-  file; the SVG holds the image, so it travels with it) and inline `<svg>`, sized with CSS
-  (`height: 28px`) like any element. A logo goes in a header this way.
-- What is not drawn: shadows, gradients, transforms, rotated or vertical text, CSS
-  background images, `::before` and `::after`. Draw such marks in the script instead.
+- What is drawn: background colours and `linear-gradient()`, borders (solid, dashed,
+  dotted, per side), `border-radius`, `box-shadow`, `outline`, `clip-path: polygon(…)`,
+  `overflow: hidden` (with `text-overflow: ellipsis`), `transform` and `rotate`/`scale`,
+  `::before` and `::after`, shapes, text with its font, size, weight, style, colour,
+  `text-transform`, `letter-spacing`, underline and line-through, list bullets, `<icon>`,
+  and images: `<img src="logo.svg">` (a path relative to the diagram file; the SVG holds
+  the image, so it travels with it) and inline `<svg>`, sized with CSS (`height: 28px`)
+  like any element. A logo goes in a header this way.
+- What is not drawn: inset shadows, radial and conic gradients, background images,
+  `filter` other than `grayscale()`, vertical text. Draw such marks in the script instead.
+- So a component's own CSS carries over: a card's shadow, a badge's dot made with
+  `::before`, a focus ring, a truncated name, a chevron turned with `rotate(45deg)`.
 - Colours: any CSS colour, or the theme tokens, which follow the dark theme: `var(--ink)`
   (text), `--muted`, `--line`, `--card` (white), `--wash`, `--bg`; strong `--woad` (blue),
   `--rust` (red), `--teal`, `--green`, `--purple`, `--amber`; pale `--lane-a` (blue),
