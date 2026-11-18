@@ -232,7 +232,6 @@ version, through trusted publishing (no token is kept) while the repository vari
 | [`samples/`](samples) | briefs and the diagrams drawn from them; [the showcase](samples/README.md) |
 | [`docs/design.md`](docs/design.md) | how graphally works, illustrated with diagrams it drew ([sources](docs/diagrams)) |
 | [`tools/`](tools) | maintenance scripts, such as rebuilding the icon pack |
-| [`AGENTS.md`](AGENTS.md) | how to work on the code: commands, conventions, pull requests |
 
 ## Licence
 
