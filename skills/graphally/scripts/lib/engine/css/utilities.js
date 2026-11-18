@@ -11,8 +11,9 @@
 // and any property: [grid-template-areas:'a_b'] (an underscore is a space). A class that
 // starts like a utility but means nothing is reported, so a typo does not pass in silence.
 // Variants (hover:, md:) mean nothing in a picture and are not supported.
+import { TOKENS as TOKEN_NAMES } from '../shared/tokens.js';
 
-const TOKENS = new Set(['ink', 'muted', 'line', 'woad', 'rust', 'teal', 'green', 'purple', 'amber', 'wash', 'card', 'bg', 'icon-soft', 'vnet', 'note', 'lane-a', 'lane-b', 'lane-c', 'lane-d']);
+const TOKENS = new Set(TOKEN_NAMES);
 const ALIGN = { start: 'flex-start', end: 'flex-end', center: 'center', between: 'space-between', around: 'space-around', evenly: 'space-evenly', stretch: 'stretch', baseline: 'baseline', normal: 'normal' };
 const SELF = { auto: 'auto', start: 'start', end: 'end', center: 'center', stretch: 'stretch', baseline: 'baseline' };
 const TEXT = { xs: ['11px', '15px'], sm: ['11.5px', '16px'], base: ['13px', '18px'], lg: ['15px', '20px'], xl: ['17px', '23px'], '2xl': ['22px', '28px'], '3xl': ['28px', '34px'] };

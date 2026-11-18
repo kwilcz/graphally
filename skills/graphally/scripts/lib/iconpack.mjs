@@ -11,7 +11,7 @@ import { gunzipSync } from 'node:zlib';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { svgEntry, kebab } from './iconsvg.js';
+import { svgEntry, kebab } from './engine/icons/icon-svg.js';
 
 export const PACKS = ['azure', 'aws'];
 const AWS_PACKAGE = 'aws-icons', AWS_VERSION = '3.3.0';
@@ -77,7 +77,7 @@ async function download(pairs, onProgress) {
 
 // ---------- turning SVG files into a pack ----------
 
-// svgEntry and kebab live in iconsvg.js, which the browser viewer shares.
+// svgEntry and kebab live in engine/icons/icon-svg.js, which the browser viewer shares.
 export { svgEntry, kebab };
 
 // ---------- the two vendors ----------
