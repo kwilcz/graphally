@@ -134,6 +134,7 @@ export function compilePage(el, opts, m) {
       (type === 'application/json' ? lines : c.hasAttribute('before') ? before : scripts).push(c.textContent);
     } else root.appendChild(c.cloneNode(true));
   }
+  expandComponents(root, problems);
   // nudge="dx,dy" moves an element from where the layout put it (the edit command writes it).
   for (const e of root.querySelectorAll('[nudge]')) {
     const v = e.getAttribute('nudge').split(',').map(Number);
@@ -168,6 +169,41 @@ export function compilePage(el, opts, m) {
     return build(root, el, id, scripts, lines, opts, m, problems);
   } finally {
     box.host.remove();
+  }
+}
+
+// <template id="svc-card"> defines a component; <svc-card> uses it. The use's children fill the
+// template's <slot>; <slot name="title"> takes the use's title="…" attribute, or its child with
+// slot="title"; {title} in an attribute of the template takes it too. The use's id, class and
+// other attributes go on the template's top element. Components may use components.
+function expandComponents(root, problems) {
+  const defs = new Map();
+  for (const tp of [...root.querySelectorAll('template[id]')]) { defs.set(tp.id.toLowerCase(), tp); tp.remove(); }
+  for (let pass = 0; pass < 8 && defs.size; pass++) {
+    let more = false;
+    for (const [name, tp] of defs) {
+      let uses;
+      try { uses = [...root.querySelectorAll(name)]; } catch { problems.push({ rule: 'bad-component', name, hint: 'a component id is a tag name: letters, digits and hyphens, as in svc-card' }); defs.delete(name); continue; }
+      for (const use of uses) {
+        const frag = tp.content.cloneNode(true), top = frag.firstElementChild, named = new Set();
+        const arg = n => use.getAttribute(n);
+        for (const e of frag.querySelectorAll('*')) for (const at of [...e.attributes]) if (at.value.includes('{')) e.setAttribute(at.name, at.value.replace(/\{([\w-]+)\}/g, (_, n) => { named.add(n); return arg(n) ?? ''; }));
+        for (const s of [...frag.querySelectorAll('slot[name]')]) {
+          const n = s.getAttribute('name'), kid = [...use.children].find(c => c.getAttribute('slot') === n);
+          named.add(n);
+          if (kid) { kid.removeAttribute('slot'); s.replaceWith(kid); } else if (arg(n) != null) s.replaceWith(arg(n)); else s.replaceWith(...s.childNodes);
+        }
+        const rest = frag.querySelector('slot:not([name])');
+        if (rest) rest.replaceWith(...use.childNodes);
+        if (top) for (const at of use.attributes) {
+          if (at.name === 'class') top.classList.add(...at.value.split(/\s+/).filter(Boolean));
+          else if (!named.has(at.name)) top.setAttribute(at.name, at.value);
+        }
+        use.replaceWith(frag);
+        more = true;
+      }
+    }
+    if (!more) break;
   }
 }
 
