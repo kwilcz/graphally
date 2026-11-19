@@ -6,9 +6,10 @@
 import { S } from '../style.js';
 import { pairsOf } from '../shared/maps.js';
 
-// Room a hop leaves before a rounded bend, and before a line's end (its arrowhead or its box).
-const BEND_ROOM = S.edge.radius + 1;
-const END_ROOM = 12;
+// Room a hop leaves before a bend (its rounding and a straight stretch after it), and before a
+// line's end (its arrowhead or its box, and a straight stretch).
+const BEND_ROOM = S.edge.radius + 4;
+const END_ROOM = 14;
 
 const isFlat = ([from, to]) => Math.abs(from.y - to.y) < 0.5;
 const isUpright = ([from, to]) => Math.abs(from.x - to.x) < 0.5;
@@ -69,14 +70,19 @@ function uprightSide(routes, place) {
   return Math.max(from.x, to.x) - place.x > place.x - Math.min(from.x, to.x) ? 1 : -1;
 }
 
+// Whether every line in the runs is dashed: dashes would cut a small arc into pieces.
+const allDashed = (routes, runs) => [...runs.keys()].every(route => routes[route].edge.ends?.dash);
+
 // The lines that jump at a crossing, where along their run, and to which side: the flat ones,
-// upwards, when all have room; else the upright ones.
+// upwards, when all have room; else the upright ones. A solid line jumps a dashed one rather
+// than the other way round, when it has room.
 function jumpersAt(routes, place) {
   const fits = (runs, at) => [...runs].every(([route, segment]) => hasRoom(routes[route].points, segment, at));
   const jump = (runs, at, side) => [...runs].map(([route, segment]) => ({ route, segment, at, side }));
-  if (fits(place.flat, place.x)) return jump(place.flat, place.x, 1);
-  if (fits(place.upright, place.y)) return jump(place.upright, place.y, uprightSide(routes, place));
-  return [];
+  const flat = () => fits(place.flat, place.x) && jump(place.flat, place.x, 1);
+  const upright = () => fits(place.upright, place.y) && jump(place.upright, place.y, uprightSide(routes, place));
+  const uprightFirst = allDashed(routes, place.flat) && !allDashed(routes, place.upright);
+  return (uprightFirst ? upright() || flat() : flat() || upright()) || [];
 }
 
 // Each route's hops, { segment, at, side }, in the order of the routes: side 1 bulges up from a
