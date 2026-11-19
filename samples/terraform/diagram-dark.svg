@@ -173,12 +173,12 @@
 <text x="1482" y="601.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">tracking topic</text>
 </g>
 </g>
-<g data-edge="id_aks-&gt;kv_kv" data-sides="right,left"><path d="M1337,466.5 L1433,466.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;kv_kv" data-sides="right,left"><path d="M1337,466.5 L1381,466.5 A4,4 0 0 1 1389,466.5 L1433,466.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="agw_ingress-&gt;aks_main" data-sides="right,left"><path d="M671,529 L769,529" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="aks_main-&gt;log_law" data-sides="right,left"><path d="M1019,541.5 L1067,541.5 Q1073,541.5 1073,547.5 L1073,576 Q1073,582 1079,582 L1087,582" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="aks_main-&gt;id_aks" data-sides="right,left"><path d="M1019,516.5 L1067,516.5 Q1073,516.5 1073,510.5 L1073,481 Q1073,475 1079,475 L1087,475" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="ho-&gt;vgw_vpn" data-sides="right,left"><path d="M274,208 L421,208" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
-<g data-edge="id_aks-&gt;sb_events" data-sides="right,left"><path d="M1337,483.5 L1413,483.5 Q1419,483.5 1419,489.5 L1419,565 Q1419,571 1425,571 L1433,571" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;sb_events" data-sides="right,left"><path d="M1337,483.5 L1381,483.5 A4,4 0 0 1 1389,483.5 L1413,483.5 Q1419,483.5 1419,489.5 L1419,565 Q1419,571 1425,571 L1433,571" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="vnet_hub-&gt;vnet_spoke" data-sides="bottom,top"><path d="M637.5,288 L637.5,402" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
 <g data-edge="dispatch-&gt;agw_ingress" data-sides="right,left"><path d="M274,279 L354,279 Q360,279 360,285 L360,523 Q360,529 366,529 L421,529" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="pe_sb-&gt;sb_events" data-sides="right,left"><path d="M1019,676 L1413,676 Q1419,676 1419,670 L1419,599 Q1419,593 1425,593 L1433,593" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>

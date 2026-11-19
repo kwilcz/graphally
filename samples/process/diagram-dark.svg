@@ -152,7 +152,7 @@
 <g data-edge="finrej-&gt;notice" data-sides="right,left"><path d="M1883,477 L1891,477 Q1897,477 1897,471 L1897,133 Q1897,127 1903,127 L2008,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="pay-&gt;paidnote" data-sides="right,bottom" data-in="bottom"><path d="M1883,622 L2020,622 Q2026,622 2026,616 L2026,248" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="submit-&gt;validate" data-sides="right,left"><path d="M509,136 L520,136 Q526,136 526,142 L526,616 Q526,622 532,622 L540,622" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="valid-&gt;correct" data-sides="top,right" data-out="top"><path d="M777,600 L777,234.5 Q777,228.5 771,228.5 L327,228.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="valid-&gt;correct" data-sides="top,right" data-out="top"><path d="M777,600 L777,234.5 Q777,228.5 771,228.5 L530,228.5 A4,4 0 0 0 522,228.5 L327,228.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="reject-&gt;notice" data-sides="right,left"><path d="M1378,333 L1891,333 Q1897,333 1897,327 L1897,133 Q1897,127 1903,127 L2008,127" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
 
 <text class="g-edge" x="1693.6" y="471" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">no</text>
