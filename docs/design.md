@@ -136,10 +136,13 @@ parallel segments are pulled apart.
 Lines that share an end and say the same thing bundle: a connection with a list of sources
 or targets, or lines with the same label in the same style. A bundle meets its shared box
 at one point and routes as a tree: its longest line first, then each other line joins the
-lines already drawn. Joining costs what riding the rest of the tree to the shared box
-would, and a turn onto it costs a bend, so a line joins near the box rather than far up the
-tree. The bundle draws one trunk and carries one label, and every arrowhead in it sits at
-least 36px past the trunk's last bend.
+lines already drawn. Its lines gather on one line across their way: the one through the
+unshared end nearest the shared box. Of two ways that cost the same, a line turns there, so
+lines from boxes side by side meet right beside them and run to the shared box as one.
+Joining costs what riding the rest of the tree to the shared box would, and a turn onto it
+costs a bend, so no line climbs far up the tree to come back down with it. The bundle draws
+one trunk and carries one label, and every arrowhead in it sits at least 36px past the
+trunk's last bend.
 
 Labels are placed longest first, at candidate positions along their line. A candidate must
 avoid boxes, text, group borders, other labels and other lines.

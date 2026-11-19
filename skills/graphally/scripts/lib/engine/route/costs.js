@@ -9,6 +9,10 @@ export const CROSS = 70;
 export const OVERLAP = 22;
 // Per pixel, riding a line of the route's own bundle: their shared trunk is drawn once.
 export const RIDE = 0.35;
+// Per pixel between a bundle line's bend and the line its bundle gathers on (trees.js), the extra
+// for the bend. It only decides between ways that cost the same: the lines turn where they can
+// all meet, as far from the shared box as that is, and run to it on one long trunk.
+export const GATHER = 0.001;
 // Per pixel, the extra for running through a container the line does not belong to.
 export const FOREIGN = 2.2;
 // An end segment shorter than MIN_END puts the arrowhead on the bend before it. The page's small

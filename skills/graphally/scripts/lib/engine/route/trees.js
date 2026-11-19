@@ -76,19 +76,44 @@ function joinTrunk(path) {
   return { ...joined, points, cells };
 }
 
+// The line a bundle gathers on: across the way to the shared box, through the unshared end
+// nearest that box. Lines from boxes side by side meet right beside them, and a line from
+// further away runs on to meet the one whose box is nearest. Null for a bundle of one, or one
+// whose lines meet the shared box at different ports and so cannot share a trunk.
+function gatherLine(grid, connections, members, portsFor) {
+  const fanIn = connections[members[0]].fanIn;
+  const ends = members.map(member => {
+    const [starts, goals] = portsFor(member);
+    return fanIn ? { own: starts[0], shared: goals[0] } : { own: goals[0], shared: starts[0] };
+  }).filter(end => end.own && end.shared);
+  const atShared = end => end.shared.i === ends[0].shared.i && end.shared.j === ends[0].shared.j;
+  if (ends.length < 2 || !ends.every(atShared)) return null;
+  const across = ends[0].shared.side % 2 === 0 ? 'x' : 'y';
+  const at = port => (across === 'x' ? grid.xs[port.i] : grid.ys[port.j]);
+  const shared = at(ends[0].shared);
+  const nearest = ends.map(end => at(end.own)).reduce((a, b) => (Math.abs(b - shared) < Math.abs(a - shared) ? b : a));
+  return { across, at: nearest };
+}
+
+// A connection and the rest of its bundle, longest first: the order a tree is routed in.
+function membersOf(connections, index) {
+  const { bundle } = connections[index];
+  if (!bundle) return [index];
+  return connections.map((other, j) => (other.bundle === bundle ? j : -1)).filter(j => j >= 0)
+    .sort((a, b) => spanOf(connections[b]) - spanOf(connections[a]));
+}
+
 // Routes every connection on the grid of fixed ports; portsFor(index) gives its starts and goals.
 export function routeTrees(grid, connections, portsFor) {
   const paths = new Array(connections.length).fill(null), routed = new Set();
   connections.forEach((connection, index) => {
     if (routed.has(index)) return;
-    const members = connection.bundle
-      ? connections.map((other, j) => (other.bundle === connection.bundle ? j : -1)).filter(j => j >= 0)
-        .sort((a, b) => spanOf(connections[b]) - spanOf(connections[a]))
-      : [index];
+    const members = membersOf(connections, index);
+    const gather = connection.bundle ? gatherLine(grid, connections, members, portsFor) : null;
     for (const member of members) {
       const line = connections[member], [starts, goals] = portsFor(member);
       addTrunkPorts(grid, connections, paths, member, starts, goals);
-      const path = joinTrunk(astar(grid, starts, goals, line));
+      const path = joinTrunk(astar(grid, starts, goals, { ...line, gather }));
       if (path) {
         // A line that reached the shared end's port on its own still meets the others there.
         const sharedEnd = other => (line.fanIn ? other.cells.at(-1) : other.cells[0]);
