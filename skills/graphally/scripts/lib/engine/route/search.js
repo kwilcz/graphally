@@ -3,7 +3,7 @@
 // state is a grid point and the direction it was reached in (point * 4 + direction), so a bend
 // can be priced. A route's cost is its length, weighted inside foreign containers and along
 // container borders, plus bends, crossings and overlap with earlier routes.
-import { BEND, CROSS, OVERLAP, FOREIGN, MIN_END, STUB } from './costs.js';
+import { BEND, CROSS, OVERLAP, RIDE, FOREIGN, MIN_END, STUB } from './costs.js';
 import { Heap } from './heap.js';
 
 const DX = [1, 0, -1, 0], DY = [0, 1, 0, -1];   // east, south, west, north
@@ -101,7 +101,7 @@ class Search {
     const horizontal = next % 2 === 0;
     let cost = length * this.weightOf(segment, horizontal);
     if (next !== direction) cost = this.withTurn(cost, state, next, nextPoint, length);
-    if (this.ridesTrunk(segment, horizontal)) return length * 0.35;
+    if (this.ridesTrunk(segment, horizontal)) return length * RIDE + (next !== direction ? BEND : 0);
     return cost + this.usedOf(segment, horizontal) * OVERLAP + (this.crosses(nextPoint, horizontal) ? CROSS : 0);
   }
 

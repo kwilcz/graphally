@@ -7,6 +7,8 @@ export const BEND = 36;
 export const CROSS = 70;
 // Running on a segment an earlier route uses.
 export const OVERLAP = 22;
+// Per pixel, riding a line of the route's own bundle: their shared trunk is drawn once.
+export const RIDE = 0.35;
 // Per pixel, the extra for running through a container the line does not belong to.
 export const FOREIGN = 2.2;
 // An end segment shorter than MIN_END puts the arrowhead on the bend before it. The page's small

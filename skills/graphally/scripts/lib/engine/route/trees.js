@@ -3,6 +3,7 @@
 // other line may end (fan-in) or start (fan-out) on any cell of the lines already routed, and
 // takes that line's way from there. The lines meet on one trunk, drawn once, instead of running
 // side by side. Then every other line is ripped up and routed again with the rest in place.
+import { RIDE } from './costs.js';
 import { spanOf } from './geometry.js';
 import { astar, markUse } from './search.js';
 
@@ -12,6 +13,33 @@ function directionAt(cells, t) {
   return b === a + 1 ? 0 : b === a - 1 ? 2 : b > a ? 1 : 3;
 }
 
+// The length along a routed line from its first cell to each of its cells.
+function distancesAlong(grid, cells) {
+  const xOf = cell => grid.xs[cell % grid.nx], yOf = cell => grid.ys[(cell / grid.nx) | 0];
+  const distances = [0];
+  for (let t = 1; t < cells.length; t++) {
+    const a = cells[t - 1], b = cells[t];
+    distances.push(distances[t - 1] + Math.abs(xOf(b) - xOf(a)) + Math.abs(yOf(b) - yOf(a)));
+  }
+  return distances;
+}
+
+// A port on cell t of a bundle's routed line. A line that ends there (fan-in) takes the rest of
+// the trunk to the shared box, and one that starts there (fan-out) the trunk's beginning: that
+// stretch costs what riding it would, so a line joins the tree near the shared box rather than
+// far up it.
+function trunkPort(grid, connection, trunk, t, distances) {
+  const cell = trunk.cells[t], i = cell % grid.nx, j = (cell / grid.nx) | 0;
+  const direction = directionAt(trunk.cells, t), on = { path: trunk, at: t };
+  const at = { i, j, boundary: { x: grid.xs[i], y: grid.ys[j] } };
+  if (connection.fanIn) {
+    const penalty = RIDE * (distances.at(-1) - distances[t]);
+    return { ...at, dir: (direction + 2) % 4, side: trunk.goalSide, coord: trunk.goalCoord, trunk: on, penalty };
+  }
+  const penalty = RIDE * distances[t];
+  return { ...at, dir: direction, side: trunk.startSide, coord: trunk.startCoord, trunk: on, penalty };
+}
+
 // The inner cells of the bundle's routed lines, as ports: not a trunk's first or last cell,
 // which are its own ports.
 function addTrunkPorts(grid, connections, paths, index, starts, goals) {
@@ -19,16 +47,9 @@ function addTrunkPorts(grid, connections, paths, index, starts, goals) {
   paths.forEach((trunk, other) => {
     if (other === index || !trunk || !connection.bundle) return;
     if (connections[other].bundle !== connection.bundle) return;
+    const distances = distancesAlong(grid, trunk.cells);
     for (let t = 1; t < trunk.cells.length - 1; t++) {
-      const cell = trunk.cells[t], i = cell % grid.nx, j = (cell / grid.nx) | 0;
-      const direction = directionAt(trunk.cells, t), on = { path: trunk, at: t };
-      const at = { i, j, boundary: { x: grid.xs[i], y: grid.ys[j] } };
-      if (connection.fanIn) {
-        const inward = (direction + 2) % 4;
-        goals.push({ ...at, dir: inward, side: trunk.goalSide, coord: trunk.goalCoord, trunk: on });
-      } else {
-        starts.push({ ...at, dir: direction, side: trunk.startSide, coord: trunk.startCoord, trunk: on });
-      }
+      (connection.fanIn ? goals : starts).push(trunkPort(grid, connection, trunk, t, distances));
     }
   });
 }

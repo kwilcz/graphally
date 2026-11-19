@@ -127,16 +127,19 @@ channels between them. A path's cost counts:
 
 Routing runs in two passes. The first picks the side each line leaves from. The second
 fixes where lines meet their boxes: lines that share a side split it evenly, one at the
-middle, two at a third and two thirds, n at k/(n+1), ordered so they do not cross; a line
-alone on two facing sides runs straight when both ends fit in the middle 80% of their
-sides. A few rounds of rip-up and reroute follow, and then parallel segments are pulled
-apart.
+middle, two at a third and two thirds, n at k/(n+1), ordered so they do not cross. A line
+alone on its side runs straight to a facing side when the two meet inside the middle 80% of
+both: two lone ends meet nearest their middles, and a lone end moves to the other end's
+port when other lines share that one. A few rounds of rip-up and reroute follow, and then
+parallel segments are pulled apart.
 
 Lines that share an end and say the same thing bundle: a connection with a list of sources
 or targets, or lines with the same label in the same style. A bundle meets its shared box
 at one point and routes as a tree: its longest line first, then each other line joins the
-lines already drawn. The bundle draws one trunk and carries one label, and every arrowhead
-in it sits at least 36px past the trunk's last bend.
+lines already drawn. Joining costs what riding the rest of the tree to the shared box
+would, and a turn onto it costs a bend, so a line joins near the box rather than far up the
+tree. The bundle draws one trunk and carries one label, and every arrowhead in it sits at
+least 36px past the trunk's last bend.
 
 Labels are placed longest first, at candidate positions along their line. A candidate must
 avoid boxes, text, group borders, other labels and other lines.
