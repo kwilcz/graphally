@@ -235,7 +235,7 @@
 <g data-edge="pesql-&gt;sql" data-sides="bottom,top"><path d="M744,624 L744,745" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="pecos-&gt;cosmos" data-sides="bottom,top"><path d="M964,624 L964,745" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="agw-&gt;aks" data-sides="right,left"><path d="M668,413 L745,413" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
-<g data-edge="aks-&gt;pesql" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M791.5,458 L791.5,514 Q791.5,520 785.5,520 L750,520 Q744,520 744,526 L744,534" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
+<g data-edge="aks-&gt;pesql" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M791.5,458 L791.5,534" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="fd-&gt;appsvc" data-sides="top,bottom"><path d="M341,367 L341,217" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="gw-&gt;sap" data-sides="bottom,top"><path d="M1405.5,620 L1405.5,745" style="fill: none; stroke: var(--teal)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="fd-&gt;agw" data-sides="right,left"><path d="M411,412.5 L528,412.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
@@ -252,7 +252,7 @@
 <path d="M24,792.6 L54,792.6" style="fill: none; stroke: var(--teal)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <text class="g-edge" x="751" y="688.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
 <text class="g-edge" x="971" y="688.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="749.3" y="511" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">orders</text>
+<text class="g-edge" x="749.3" y="512" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">orders</text>
 <text class="g-edge" x="348" y="296" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">web app</text>
 <text class="g-edge" x="1412.5" y="686.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">ExpressRoute</text>
 <text class="g-edge" x="434.3" y="406.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API calls</text>
