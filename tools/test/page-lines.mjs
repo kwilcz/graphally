@@ -121,6 +121,19 @@ async function checkVia(dir, out) {
     `the via line's lowest point is ${lowest}, expected ${box[1] + box[3] + 80}`);
 }
 
+const CROSSING = '<style>.g { display: grid; grid-template-columns: 140px 140px; gap: 26px 110px }</style>' +
+  '<div class=g><div class=card id=y style="grid-column: 2; grid-row: 1">Y</div>' +
+  '<div class=card id=one style="grid-column: 1; grid-row: 2">One</div>' +
+  '<div class=card id=two style="grid-column: 2; grid-row: 2">Two</div>' +
+  '<div class=card id=x style="grid-column: 1; grid-row: 3">X</div></div>';
+
+// Two lines that cross: one of them jumps the other, with one arc.
+async function checkHop(dir, out) {
+  const svg = await renderedSvg(dir, out, pageDiagram(CROSSING, "connect('one', 'two'); connect('x', 'y')"));
+  const arcs = ['one->two', 'x->y'].map(key => (edgePath(svg, key).match(/ A/g) || []).length);
+  check(arcs[0] + arcs[1] === 1, `expected one hop at the crossing, got ${arcs.join(' and ')}`);
+}
+
 export async function pageRouting() {
   const dir = folder('page-routing');
   const out = path.join(dir, 'out');
@@ -128,6 +141,7 @@ export async function pageRouting() {
   await checkAcrossLanes();
   await checkSharedSide(dir, out);
   await checkVia(dir, out);
+  await checkHop(dir, out);
 }
 
 // The lines given end on one shared stretch, at least 30 px long, under one "copy" label: at one

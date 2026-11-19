@@ -31,14 +31,38 @@ export const escapeXml = text => String(text)
 
 const pathPoint = point => `${fmt(point.x)},${fmt(point.y)}`;
 
+// Hops along segment k of a polyline, as path data: each { segment, at, side } on it an arc of
+// the hop radius over the line it crosses (side 1: above a horizontal run, right of a vertical
+// one). Hops on one side closer than three radii apart merge into one longer arc.
+function hopsOn(points, k, hops, radius) {
+  const from = points[k], to = points[k + 1], flat = Math.abs(from.y - to.y) < 0.5, axis = flat ? 'x' : 'y';
+  const direction = Math.sign(to[axis] - from[axis]);
+  const groups = [];
+  for (const hop of hops.filter(each => each.segment === k).sort((a, b) => (a.at - b.at) * direction)) {
+    const last = groups.at(-1);
+    if (last && last.side === hop.side && Math.abs(hop.at - last.end) < 3 * radius) last.end = hop.at;
+    else groups.push({ start: hop.at, end: hop.at, side: hop.side });
+  }
+  const pointAt = along => (flat ? { x: along, y: from.y } : { x: from.x, y: along });
+  return groups.map(({ start, end, side }) => {
+    const half = fmt(Math.abs(end - start) / 2 + radius), sweep = (direction > 0) === (side > 0) ? 1 : 0;
+    const radii = flat ? `${half},${fmt(radius)}` : `${fmt(radius)},${half}`;
+    const begin = pointAt(start - direction * radius), finish = pointAt(end + direction * radius);
+    return ` L${pathPoint(begin)} A${radii} 0 0 ${sweep} ${pathPoint(finish)}`;
+  }).join('');
+}
+
 // The path data of a polyline whose corners are rounded with the given radius (smaller where
-// a segment is too short for it): the path of a line with bends.
-export function roundedPath(points, radius) {
+// a segment is too short for it): the path of a line with bends. Hops, { segment, at }, jump
+// the lines it crosses (page/hops.js).
+export function roundedPath(points, radius, hops = [], hopRadius = 0) {
+  const hopsAlong = k => (hops.length ? hopsOn(points, k, hops, hopRadius) : '');
   let path = `M${pathPoint(points[0])}`;
   for (let index = 1; index < points.length - 1; index++) {
     const before = points[index - 1], corner = points[index], after = points[index + 1];
     const lengthIn = Math.hypot(corner.x - before.x, corner.y - before.y);
     const lengthOut = Math.hypot(after.x - corner.x, after.y - corner.y);
+    path += hopsAlong(index - 1);
     if (lengthIn < 0.01 || lengthOut < 0.01) continue;
     const cut = Math.min(radius, lengthIn / 2, lengthOut / 2);
     const curveStart = {
@@ -51,5 +75,5 @@ export function roundedPath(points, radius) {
     };
     path += ` L${pathPoint(curveStart)} Q${pathPoint(corner)} ${pathPoint(curveEnd)}`;
   }
-  return `${path} L${pathPoint(points.at(-1))}`;
+  return `${path}${hopsAlong(points.length - 2)} L${pathPoint(points.at(-1))}`;
 }
