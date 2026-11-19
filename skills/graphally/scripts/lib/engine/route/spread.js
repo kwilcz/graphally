@@ -49,25 +49,39 @@ function spreadSide(router, { id, side, list }, connections, fixed) {
   });
 }
 
-// One exception: a line alone on two facing sides runs straight, at a height (or position)
-// inside the middle 80% of both sides, the one nearest their middles. Without such an overlap
-// it keeps the middles and takes a step.
+// The middle 80% of a side, where a straight line may meet it; a circle or diamond only at its
+// point.
+function straightStretch(router, id, side) {
+  const rect = router.rectOf(id), upright = side % 2 === 0;
+  const origin = upright ? rect.y : rect.x, length = upright ? rect.h : rect.w;
+  if (router.geometry.nodes.get(id)?.round) return [origin + length / 2, origin + length / 2];
+  return [origin + length * 0.1, origin + length * 0.9];
+}
+
+// Where a line between two facing sides can run straight, inside the middle 80% of both: for two
+// lone ends, the point nearest the middle of their ports; for one lone end, the port of the other
+// end, which other lines share (a bundle meets its box at one point) and so stays. Null for none.
+function straightAt(router, connection, ends, alone) {
+  const { source, target } = ends;
+  const [sourceLo, sourceHi] = straightStretch(router, connection.source.id, source.side);
+  const [targetLo, targetHi] = straightStretch(router, connection.target.id, target.side);
+  const lo = Math.max(sourceLo, targetLo), hi = Math.min(sourceHi, targetHi);
+  if (lo > hi) return null;
+  if (alone.source && alone.target) return Math.min(hi, Math.max(lo, (source.coord + target.coord) / 2));
+  const shared = alone.source ? target.coord : source.coord;
+  return shared >= lo && shared <= hi ? shared : null;
+}
+
+// One exception: a line alone on a side, facing its other end, runs straight where it can, so it
+// takes no step a pixel or two high. Without room for that it keeps its port and takes the step.
 function straighten(router, connection, ends, users) {
   const { source, target } = ends;
   if (!source || !target || (source.side + 2) % 4 !== target.side) return;
-  const alone = (id, side) => users.get(`${id}|${side}`).list.length === 1;
-  if (!alone(connection.source.id, source.side) || !alone(connection.target.id, target.side)) return;
-  const stretchOf = (id, side) => {
-    const rect = router.rectOf(id), upright = side % 2 === 0;
-    const origin = upright ? rect.y : rect.x, length = upright ? rect.h : rect.w;
-    if (router.geometry.nodes.get(id)?.round) return [origin + length / 2, origin + length / 2];
-    return [origin + length * 0.1, origin + length * 0.9];
-  };
-  const [sourceLo, sourceHi] = stretchOf(connection.source.id, source.side);
-  const [targetLo, targetHi] = stretchOf(connection.target.id, target.side);
-  const lo = Math.max(sourceLo, targetLo), hi = Math.min(sourceHi, targetHi);
-  if (lo > hi) return;
-  const coord = Math.min(hi, Math.max(lo, (source.coord + target.coord) / 2));
+  const isAlone = (end, which) => users.get(`${connection[which].id}|${end.side}`).list.length === 1;
+  const alone = { source: isAlone(source, 'source'), target: isAlone(target, 'target') };
+  if (!alone.source && !alone.target) return;
+  const coord = straightAt(router, connection, ends, alone);
+  if (coord === null) return;
   if (!router.sideFree(connection.source.id, source.side, coord)) return;
   if (!router.sideFree(connection.target.id, target.side, coord)) return;
   source.coord = coord;

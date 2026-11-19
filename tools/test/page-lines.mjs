@@ -130,12 +130,15 @@ export async function pageRouting() {
   await checkVia(dir, out);
 }
 
-// The lines given end on one shared stretch, at least 30 px long, under one "copy" label.
+// The lines given end on one shared stretch, at least 30 px long, under one "copy" label: at one
+// point, each arriving the same way, so the shortest last segment is the stretch they share.
 function checkMerged(svg, keys) {
-  const ends = keys.map(key => pointsOf(edgePath(svg, key)).slice(-2).map(point => `${point.x},${point.y}`).join(' '));
-  const [start, end] = pointsOf(edgePath(svg, keys[0])).slice(-2);
-  check(new Set(ends).size === 1, `the lines end apart: ${ends.join(' | ')}`);
-  const shared = Math.hypot(end.x - start.x, end.y - start.y);
+  const lasts = keys.map(key => pointsOf(edgePath(svg, key)).slice(-2));
+  const described = lasts.map(pair => pair.map(point => `${point.x},${point.y}`).join(' '));
+  const ends = new Set(lasts.map(([, end]) => `${end.x},${end.y}`));
+  const ways = new Set(lasts.map(([start, end]) => `${Math.sign(end.x - start.x)},${Math.sign(end.y - start.y)}`));
+  check(ends.size === 1 && ways.size === 1, `the lines end apart: ${described.join(' | ')}`);
+  const shared = Math.min(...lasts.map(([start, end]) => Math.hypot(end.x - start.x, end.y - start.y)));
   check(shared >= 30, `the shared end is ${shared} px long`);
   const pieces = svg.split('>copy</text>').length;
   check(pieces === 2, `${pieces - 1} copy labels`);
