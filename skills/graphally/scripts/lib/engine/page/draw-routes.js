@@ -7,6 +7,7 @@ import { toneOf } from '../shared/tokens.js';
 import { SIDES } from '../route/geometry.js';
 import { haloAt } from './colors.js';
 import { flowMarks } from './motion.js';
+import { hopsOf } from './hops.js';
 
 // The sides a line was routed by, and the sides the author fixed.
 const sidesOf = (route, fixed) => ({
@@ -15,11 +16,11 @@ const sidesOf = (route, fixed) => ({
   'data-in': fixed.in != null ? SIDES[fixed.in] : null,
 });
 
-function lineOf(figure, route, markers, steps) {
+function lineOf(figure, route, markers, steps, hops) {
   const { edge } = route;
   const plainTone = edge.accent ? 'var(--woad)' : 'var(--ink)';
   const tone = edge.off ? 'var(--muted)' : figure.paintOf(toneOf(edge.color)) || plainTone;
-  const path = roundedPath(route.points, S.edge.radius);
+  const path = roundedPath(route.points, S.edge.radius, hops, S.edge.hop);
   const line = svgElement('path', {
     d: path,
     style: `fill: none; stroke: ${tone}`,
@@ -48,8 +49,9 @@ function labelOf(figure, route) {
 }
 
 export function drawRoutes(figure, routes, markers, steps) {
+  const hops = hopsOf(routes);
   return {
-    lines: routes.map(route => lineOf(figure, route, markers, steps)),
+    lines: routes.map((route, index) => lineOf(figure, route, markers, steps, hops[index])),
     labels: routes.filter(route => route.label).map(route => labelOf(figure, route)),
   };
 }

@@ -12,7 +12,7 @@ export const S = {
   tile: { w: 112, icon: 40, padY: 10, gap: 6, line: 15, subLine: 14 },
   icon: { w: 104, icon: 48, gap: 6, line: 15, subLine: 14 },
   chip: { padX: 12, h: 26 },
-  edge: { width: 1.5, radius: 6, nodePad: 12, labelPad: 4, portGap: 12 },
+  edge: { width: 1.5, radius: 6, hop: 4, nodePad: 12, labelPad: 4, portGap: 12 },
 };
 
 // Text classes, shared by measurement and output.

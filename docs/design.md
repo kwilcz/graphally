@@ -131,7 +131,10 @@ middle, two at a third and two thirds, n at k/(n+1), ordered so they do not cros
 alone on its side runs straight to a facing side when the two meet inside the middle 80% of
 both: two lone ends meet nearest their middles, and a lone end moves to the other end's
 port when other lines share that one. A few rounds of rip-up and reroute follow, and then
-parallel segments are pulled apart.
+parallel segments are pulled apart. Where two lines still cross, one hops the other with a
+4px arc, so a crossing never reads as a junction: the horizontal line, upwards, unless a bend
+or its arrowhead is too close; then the vertical one, towards the longer stretch of the line it
+crosses. Lines of one bundle never hop each other.
 
 Lines that share an end and say the same thing bundle: a connection with a list of sources
 or targets, or lines with the same label in the same style. A bundle meets its shared box
