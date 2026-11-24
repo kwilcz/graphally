@@ -13,7 +13,7 @@ import {
 import { addition } from './adding.js';
 import { removeEdits, groupEdits } from './multi.js';
 import { editText } from './text-editor.js';
-import { entryOfDrawn, splitEdits, deleteEdits } from './lines.js';
+import { entryOfDrawn, splitEdits, deleteEdits, drawnKeysOf } from './lines.js';
 
 function applyMove(move, layer, selectAfter, version) {
   if (!move) return setStatus('It cannot go there.', true);
@@ -31,7 +31,10 @@ function connectTo(entry) {
 let iconNames = null;
 
 const ends = value => [].concat(value ?? []);
-const named = (lines, id) => lines.filter(entry => [...ends(entry.from), ...ends(entry.to)].includes(id));
+// The lines that name an id: as an end, an anchor on it ("fd.top"), or a point they pass by.
+const namesId = (value, id) => typeof value === 'string' && (value === id || value.startsWith(`${id}.`));
+const named = (lines, id) => lines.filter(entry => [...ends(entry.from), ...ends(entry.to), ...ends(entry.via)]
+  .some(value => namesId(value, id)));
 
 function idProblem(layer, next) {
   if (next === (layer.id ?? '')) return 'It has that id already.';
@@ -46,9 +49,20 @@ function idProblem(layer, next) {
 // The lines that name an old id, given the new one; the last first, as a line's key can count the
 // same lines before it.
 const renamedEnds = (old, next) => named(view.state.lines, old).reverse().map(entry => {
-  const one = end => (end === old ? next : end), swap = value => (Array.isArray(value) ? value.map(one) : one(value));
-  return { op: 'line', key: entry.key, set: { from: swap(entry.from), to: swap(entry.to) } };
+  const one = end => (namesId(end, old) ? next + end.slice(old.length) : end);
+  const swap = value => (Array.isArray(value) ? value.map(one) : one(value));
+  const set = { from: swap(entry.from), to: swap(entry.to), ...(entry.via ? { via: swap(entry.via) } : {}) };
+  return { op: 'line', key: entry.key, set };
 });
+
+// What else in the diagram names an id the canvas cannot rewrite: a drawing script, an attribute.
+function leftovers(old) {
+  const source = view.state.source, places = [];
+  const scripts = [...source.matchAll(/<script(?![^>]*application\/json)[^>]*>([\s\S]*?)<\/script>/g)];
+  if (scripts.some(([, body]) => new RegExp(`(['"\`])${old}[.'"\`]`).test(body))) places.push('a drawing script');
+  if (new RegExp(`\\s(?!id\\b)[\\w-]+\\s*=\\s*["']?${old}(?=["'\\s>])`).test(source)) places.push('an attribute');
+  return places;
+}
 
 function renamedRules(old, next) {
   const naming = () => new RegExp(`#${old}(?![\\w-])`, 'g');
@@ -85,8 +99,9 @@ export const actions = {
   say: (text, error = false) => setStatus(text, error),
   canUnwrap,
 
-  select(entry) {
-    if (view.connecting) return connectTo(entry);
+  // A click's target; while connecting, the line goes to the element with an id under the pointer.
+  select(entry, hit = entry) {
+    if (view.connecting) return connectTo(hit && view.model.withIdAround(hit, entry));
     return setSelection(entry ? elementSelection(entry.src, entry.id) : null);
   },
   pick: (layer, add = false) => {
@@ -131,17 +146,22 @@ export const actions = {
   removeLine: (found, version) => edit(deleteEdits(found), null, version),
   // A line's label, edited where it was double-clicked; a line a script draws has none to edit.
   editLabel(key, point) {
-    const found = entryOfDrawn(view.state.lines, key);
+    const found = entryOfDrawn(view.state.lines, key, drawnKeysOf(view.svg));
     if (!found) return setStatus('A drawing script draws this line: edit it in the source.', true);
     const box = { x: point.x - 70, y: point.y - 12, w: 140, h: 24 }, version = view.state.version;
     const setLabel = label => edit([{ op: 'line', key: found.entry.key, set: { label: label || null } }],
       { kind: 'line', id: key }, version);
     return editText(view.svg, box, found.entry.label ?? '', setLabel);
   },
+  removeElement(layer, version) {
+    const parent = parentPath(layer.path);
+    const selectAfter = parent ? elementSelection(parent, layerOf(parent)?.id) : null;
+    return edit([{ op: 'remove', path: layer.path }], selectAfter, version);
+  },
   remove() {
     if (view.also.length) return edit(removeEdits(actions.selectedPaths()), null);
     if (view.selection?.kind === 'line') {
-      const found = entryOfDrawn(view.state.lines, view.selection.id);
+      const found = entryOfDrawn(view.state.lines, view.selection.id, drawnKeysOf(view.svg));
       if (found) return actions.removeLine(found);
       return setStatus('A drawing script draws this line: edit it in the source.', true);
     }
@@ -168,9 +188,23 @@ export const actions = {
     version),
   // Adds a box, a group or a text and selects it, its text ready to type (when it is drawn).
   add(kind) {
-    const { edits, path, id } = addition(kind, selectedLayer()?.path ?? null);
-    view.pendingText = { path, id };
-    return edit(edits, elementSelection(path, id));
+    const { edits, path, id, textPath } = addition(kind, selectedLayer()?.path ?? null);
+    view.pendingText = { path: textPath, id: kind === 'group' ? null : id, written: false };
+    return edit(edits, elementSelection(path, id)).then(errors => {
+      if (errors.length) view.pendingText = null;
+      else view.pendingText.written = true;
+      actions.editPendingText();
+    });
+  },
+  // An element just added has its text ready to type, once its edit is written and it is drawn
+  // (whichever comes last); one whose edit was refused has none.
+  editPendingText() {
+    const pending = view.pendingText;
+    if (!pending?.written || !view.model) return;
+    const entry = (pending.id && view.model.withId(pending.id)) || view.model.entry(pending.path);
+    if (!entry || !layerOf(entry.src)?.text) return;
+    view.pendingText = null;
+    actions.editText(entry);
   },
   // Selects the sibling before or after the selection, its parent, or its first child.
   navigate(direction) {
@@ -191,7 +225,12 @@ export const actions = {
     if (problem) return setStatus(problem, true);
     const edits = [{ op: 'attr', path: layer.path, name: 'id', value: next || null }];
     if (layer.id && next) edits.push(...renamedEnds(layer.id, next), ...renamedRules(layer.id, next));
-    return edit(edits, elementSelection(layer.path, next || undefined), version);
+    const rest = layer.id && next ? leftovers(layer.id) : [];
+    return edit(edits, elementSelection(layer.path, next || undefined), version).then(errors => {
+      if (errors.length || !rest.length) return;
+      const verb = rest.length > 1 ? 'name' : 'names';
+      setStatus(`Renamed; ${rest.join(' and ')} still ${verb} "${layer.id}": change it there.`, true);
+    });
   },
   renameClass(old, next) {
     const layer = selectedLayer();

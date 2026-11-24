@@ -48,6 +48,12 @@ export function setSelection(selection, also = []) {
 // What to select afterwards is set first, as the file's new state can reach the page before the
 // answer does, and then told to the server, so the agent's selection follows the element too.
 export async function edit(edits, selectAfter, version = view.state?.version) {
+  if (view.mismatch) {
+    const where = `near ${view.mismatch}`;
+    setStatus(`Not edited: the browser reads this diagram's HTML differently (${where}); fix it in the source.`, true);
+    return [{ message: 'mismatch' }];
+  }
+  view.ownEdit = true;
   if (selectAfter !== undefined) Object.assign(view, { selection: selectAfter, also: [] });
   const { errors = [] } = await api.edit(edits, version);
   setStatus(errors.map(error => error.message).join('; '), errors.length > 0);

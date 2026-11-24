@@ -8,11 +8,13 @@ import { getAttribute } from './markup.mjs';
 const VOID = new Set([
   'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr',
 ]);
-const RAW = new Set(['script', 'style', 'textarea', 'title']);
+// Elements whose content is no children of theirs: raw text, or a template's own fragment.
+const RAW = new Set(['script', 'style', 'textarea', 'title', 'template']);
 // Elements whose start ends an open <p>, as the HTML parser does.
 const CLOSES_P = new Set([
   'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset', 'figcaption', 'figure', 'footer',
   'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul',
+  'li', 'dd', 'dt',
 ]);
 // An element whose start ends an open sibling of these kinds.
 const ENDS_SIBLING = { li: ['li'], dt: ['dt', 'dd'], dd: ['dt', 'dd'], tr: ['td', 'th', 'tr'], td: ['td', 'th'],
@@ -49,11 +51,15 @@ function endBefore(stack, tag, at) {
 
 // An element starts; returns where reading goes on (past the content of a raw-text element).
 function openElement(stack, text, match, next) {
-  const tag = match[2].toLowerCase(), start = match.index;
+  const name = match[2].toLowerCase(), start = match.index;
+  // Outside an <svg>, the browser reads <image> as <img>.
+  const tag = name === 'image' && !stack.some(open => open.tag === 'svg') ? 'img' : name;
   endBefore(stack, tag, start);
   const node = elementNode(tag, start, next);
   stack.at(-1).children.push(node);
-  if (VOID.has(tag)) {
+  // Inside an <svg> (or MathML), <rect … /> closes itself; in HTML the slash means nothing.
+  const foreign = tag === 'svg' || tag === 'math' || stack.some(open => open.tag === 'svg' || open.tag === 'math');
+  if (VOID.has(tag) || (foreign && /\/\s*$/.test(match[3]))) {
     Object.assign(node, { closeStart: next, end: next });
     return next;
   }
@@ -67,9 +73,15 @@ function openElement(stack, text, match, next) {
   return node.end;
 }
 
-// An end tag closes the nearest open element it names, and any left open inside it.
+// An end tag closes the nearest open element it names, and any left open inside it. One that
+// closes nothing is dropped, as the browser drops it, except </p> and </br>: the browser makes an
+// empty <p>, and a <br>, of them. Those count in the numbering, as the browser's elements, and
+// are not edited, as the source has no element there.
 function closeElement(stack, tag, start, end) {
   const depth = stack.findLastIndex((node, index) => index > 0 && node.tag === tag);
+  if (depth < 0 && (tag === 'p' || tag === 'br')) {
+    stack.at(-1).children.push({ ...elementNode(tag, start, start), closeStart: start, end: start, virtual: true });
+  }
   if (depth < 0) return;
   while (stack.length - 1 > depth) endImplicitly(stack, start);
   Object.assign(stack.pop(), { closeStart: start, end });

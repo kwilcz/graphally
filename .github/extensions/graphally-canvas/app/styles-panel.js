@@ -4,6 +4,7 @@
 // other elements too: the panel says how many), or, for a utility class, by changing the class.
 // graphally's defaults are shown, not edited: a rule of the diagram's own overrides them.
 import { element, button, textField } from './dom.js';
+import { propertyName } from './cascade.js';
 
 const PROPERTIES = [
   'display', 'flex-direction', 'flex-wrap', 'justify-content', 'align-items', 'align-self', 'gap', 'row-gap',
@@ -30,7 +31,7 @@ function swatch(value, colorOf) {
 function declarationRow(declaration, set, colorOf) {
   const { property, value } = declaration;
   const name = textField(property, next => {
-    if (next.toLowerCase() !== property) set({ [property]: null, ...(next ? { [next.toLowerCase()]: value } : {}) });
+    if (propertyName(next) !== property) set({ [property]: null, ...(next ? { [propertyName(next)]: value } : {}) });
   }, { className: 'property', list: 'css-properties' });
   const edit = textField(value, next => set({ [property]: next || null }), { className: 'value', list: 'css-values' });
   const classes = ['declaration', declaration.overridden && 'overridden', declaration.important && 'important'];
@@ -41,7 +42,7 @@ function declarationRow(declaration, set, colorOf) {
 }
 
 function newRow(set) {
-  const value = textField('', next => next && name.value.trim() && set({ [name.value.trim().toLowerCase()]: next }),
+  const value = textField('', next => next && name.value.trim() && set({ [propertyName(name.value.trim())]: next }),
     { className: 'value', list: 'css-values', placeholder: 'value' });
   const name = textField('', () => {}, { className: 'property', list: 'css-properties', placeholder: 'add property' });
   name.addEventListener('keydown', event => event.key === 'Enter' && value.focus());

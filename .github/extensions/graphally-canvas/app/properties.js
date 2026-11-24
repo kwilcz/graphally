@@ -41,7 +41,7 @@ function actionsOf(layer, act) {
     button('Group', () => act.wrap(layer), 'Put it in a new group (Ctrl+G)'),
     act.canUnwrap(layer) ? button('Ungroup', () => act.unwrap(layer), 'Put its children in its place (Ctrl+Shift+G)')
       : null,
-    button('Delete', () => act.edit([{ op: 'remove', path: layer.path }]), 'Delete, with its lines'),
+    button('Delete', () => act.removeElement(layer), 'Delete, with its lines'),
     layer.id ? button('Connect to…', () => act.startConnect(layer.id), 'Then click the box to connect') : null,
   ]);
 }

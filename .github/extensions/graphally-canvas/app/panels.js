@@ -10,7 +10,7 @@ import { showProperties } from './properties.js';
 import { cascadeOf } from './cascade.js';
 import { placementControls } from './placement-panel.js';
 import { actions } from './actions.js';
-import { entryOfDrawn } from './lines.js';
+import { entryOfDrawn, drawnKeysOf } from './lines.js';
 
 const ends = value => [].concat(value ?? []);
 
@@ -27,10 +27,10 @@ function linesOf(id) {
     });
 }
 
-function propertiesContext() {
+function propertiesContext(act) {
   const { selection, state } = view;
   if (selection?.kind === 'line') {
-    return { line: { key: selection.id, found: entryOfDrawn(state.lines, selection.id) } };
+    return { line: { key: selection.id, found: entryOfDrawn(state.lines, selection.id, drawnKeysOf(view.svg)) } };
   }
   if (view.also.length) return { several: actions.selectedPaths().length };
   const layer = selection?.kind === 'element' ? layerOf(selection.path) : null;
@@ -40,7 +40,7 @@ function propertiesContext() {
   return {
     layer, styles: state.styles, icon: icon && { path: icon.dataset.src, name: icon.getAttribute('name') },
     cascade: source ? cascadeOf(source, view.parsed, state.styles) : null,
-    placement: view.model ? placementControls(view.model, entry, layer, actions) : [],
+    placement: view.model ? placementControls(view.model, entry, layer, act) : [],
     lines: linesOf(layer.id).map(item => element('div', { className: 'line-item' }, [item])),
   };
 }
@@ -59,6 +59,7 @@ export function showPanels() {
     renameId: (layer, next) => actions.renameId(layer, next, version),
     splitLine: (found, key) => actions.splitLine(found, key, version),
     removeLine: found => actions.removeLine(found, version),
+    removeElement: layer => actions.removeElement(layer, version),
   };
   const shown = { selectedPath: path, selectedPaths: actions.selectedPaths(), folded: view.folded };
   showLayers(byId('layers'), state?.layers ?? [], shown, {
@@ -67,7 +68,7 @@ export function showPanels() {
   });
   showBreadcrumb(byId('crumbs'), path, layerOf, layer => actions.pick(layer));
   view.panelBehind = typingIn(byId('properties'));
-  if (!view.panelBehind) showProperties(byId('properties'), state ? propertiesContext() : {}, act);
+  if (!view.panelBehind) showProperties(byId('properties'), state ? propertiesContext(act) : {}, act);
   byId('undo').disabled = !state?.canUndo;
   byId('redo').disabled = !state?.canRedo;
 }

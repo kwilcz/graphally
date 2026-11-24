@@ -7,24 +7,43 @@
 const ends = value => [].concat(value ?? []);
 const one = list => (list.length === 1 ? list[0] : list);
 
+// An end as the drawing names it: "db.top" (an anchor on db) is db.
+const elementOf = end => (/^[\w-]+\.[a-z]+$/i.test(end) ? end.split('.')[0] : end);
+const baseOf = key => key.replace(/#\d+$/, '');
+
+// How many lines of each key a drawing script drew: the drawing draws them before the entries, so
+// the entries' repeats of a key are numbered after them.
+function scriptCounts(pairs, drawnKeys) {
+  const counts = new Map();
+  for (const key of drawnKeys) counts.set(baseOf(key), (counts.get(baseOf(key)) || 0) + 1);
+  for (const { base } of pairs) counts.set(base, (counts.get(base) || 0) - 1);
+  return counts;
+}
+
 // Every line the entries draw, keyed as the drawing keys them: one per pair of ends, from the
 // first end of a list on, its id or "from->to", with #2, #3 for a key drawn again.
-function drawnLines(lines) {
-  const repeats = new Map();
-  return lines.flatMap(entry => {
+function drawnLines(lines, drawnKeys) {
+  const pairs = lines.flatMap(entry => {
     const count = ends(entry.from).length * ends(entry.to).length;
-    return ends(entry.from).flatMap(from => ends(entry.to).map(to => {
-      const base = entry.id || `${from}->${to}`, repeat = (repeats.get(base) || 0) + 1;
-      repeats.set(base, repeat);
-      return { key: repeat > 1 ? `${base}#${repeat}` : base, entry, pair: count > 1 ? { from, to } : null, count };
-    }));
+    return ends(entry.from).flatMap(from => ends(entry.to).map(to => ({
+      entry, count, pair: count > 1 ? { from, to } : null, base: entry.id || `${elementOf(from)}->${elementOf(to)}`,
+    })));
+  });
+  const repeats = new Map([...scriptCounts(pairs, drawnKeys)].map(([base, count]) => [base, Math.max(0, count)]));
+  return pairs.map(line => {
+    const repeat = (repeats.get(line.base) || 0) + 1;
+    repeats.set(line.base, repeat);
+    return { ...line, key: repeat > 1 ? `${line.base}#${repeat}` : line.base };
   });
 }
 
+// The keys of the lines a drawing shows, in the order it drew them.
+export const drawnKeysOf = svg => [...(svg?.querySelectorAll('g[data-edge]') ?? [])].map(group => group.dataset.edge);
+
 // The entry a drawn line (its key, as the drawing names it) comes from, the ends that line joins
 // when it is one of a list, and how many lines the entry draws; a line a script draws has none.
-export function entryOfDrawn(lines, key) {
-  const found = drawnLines(lines).find(line => line.key === key);
+export function entryOfDrawn(lines, key, drawnKeys = []) {
+  const found = drawnLines(lines, drawnKeys).find(line => line.key === key);
   return found ? { entry: found.entry, pair: found.pair, count: found.count } : null;
 }
 

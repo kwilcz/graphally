@@ -20,11 +20,16 @@ const ownsLine = (text, start, end) => /^[ \t]*$/.test(text.slice(lineStart(text
   && /^[ \t]*(\n|$)/.test(text.slice(end));
 const normal = selector => String(selector).replace(/\s+/g, ' ').trim();
 
+// A value with its strings and bracketed runs taken out: what is left may not end it.
+function bare(value) {
+  let text = String(value).replace(/"[^"]*"|'[^']*'/g, '');
+  for (let before = ''; before !== text;) [before, text] = [text, text.replace(/\([^()]*\)/g, '')];
+  return text;
+}
+
 function checked(property, value) {
   if (!/^(--)?[a-zA-Z][\w-]*$/.test(property)) throw new Error(`"${property}" is not a CSS property`);
-  if (value !== null && /[{};]/.test(String(value).replace(/"[^"]*"|'[^']*'/g, ''))) {
-    throw new Error(`"${value}" is not one CSS value`);
-  }
+  if (value !== null && /[{};]/.test(bare(value))) throw new Error(`"${value}" is not one CSS value`);
 }
 
 function removed(text, { start, end }) {

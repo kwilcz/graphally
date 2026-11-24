@@ -38,6 +38,7 @@ function containerOf(tree, into) {
 
 function textEdit(text, edit) {
   const node = elementOf(text, sourceTree(text), edit), run = node.texts[edit.index || 0];
+  if (node.closeStart === node.openEnd && node.end === node.openEnd) throw new Error(`a <${node.tag}> holds no text`);
   if (run) return splice(text, run.start, run.end, escapeText(edit.text));
   if (node.children.length) throw new Error('the element has no text of its own');
   return splice(text, node.openEnd, node.closeStart, escapeText(edit.text));
@@ -68,6 +69,9 @@ function placeEdit(text, edit) {
   if (contains(node, into)) throw new Error('an element cannot move into itself');
   checkNesting(into.tag, node.tag);
   const before = edit.before != null ? containerOf(tree, edit.before) : null;
+  if (before && !into.children.includes(before)) {
+    throw new Error(`${edit.before} is not in ${edit.into || 'the diagram'}`);
+  }
   if (before === node) return text;
   const cut = cutOf(text, node), spot = spotOf(text, into, before);
   if (spot.at > cut.start && spot.at < cut.end) return text;
@@ -100,7 +104,7 @@ function duplicateEdit(text, edit) {
 
 function insertEdit(text, edit) {
   const tree = sourceTree(text), into = containerOf(tree, edit.into);
-  checkNesting(into.tag, /^\s*<([a-zA-Z][\w-]*)/.exec(String(edit.html))?.[1]?.toLowerCase());
+  for (const node of sourceTree(`<diagram>${edit.html}</diagram>`).children) checkNesting(into.tag, node.tag);
   const spot = spotOf(text, into, edit.before != null ? containerOf(tree, edit.before) : null);
   return splice(text, spot.at, spot.at, fitted(String(edit.html).trim(), '', spot));
 }

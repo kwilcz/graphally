@@ -7,6 +7,9 @@
 // element carries its path (data-src).
 import { specificity, partsOf, compareWeights } from './selectors.js';
 
+// A property's name as CSS compares it: custom properties (--myAccent) keep their case.
+export const propertyName = name => (name.startsWith('--') ? name : name.toLowerCase());
+
 const PSEUDO = /::?(before|after)\b/;
 // Rules rank by origin, then by their order within it: defaults, utilities, the diagram's own.
 const ORDER = { default: 0, utility: 1e4, rule: 2e4, inline: 3e4 };
@@ -17,7 +20,7 @@ export function declarationsOf(css) {
   return partsOf(css, ';').filter(part => part.includes(':')).map(part => {
     const colon = part.indexOf(':'), value = part.slice(colon + 1).trim();
     return {
-      property: part.slice(0, colon).trim().toLowerCase(),
+      property: propertyName(part.slice(0, colon).trim()),
       value: value.replace(/\s*!\s*important$/i, ''), important: /!\s*important$/i.test(value),
     };
   });

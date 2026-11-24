@@ -2,7 +2,8 @@
 // The canvas page: draws the diagram the canvas sends, again whenever the file changes (keeping
 // the zoom, the scroll and the selection), and wires the pointer, the keys and the panels to the
 // edits they make.
-import { view, byId, onRefresh, setStatus } from './view.js';
+import { view, byId, onRefresh, setStatus, layerOf } from './view.js';
+import { readDifferently, MISMATCH, kindOf } from './consistency.js';
 import { drawSource } from './stage.js';
 import { Overlay } from './overlay.js';
 import { enablePointer } from './pointer.js';
@@ -31,7 +32,7 @@ const zoom = {
 
 // Draws a state; it becomes the page's own (what edits are made against) once its drawing is.
 async function show(next) {
-  const first = !view.state, scroll = { left: stage.scrollLeft, top: stage.scrollTop };
+  const first = !view.state, scroll = { left: stage.scrollLeft, top: stage.scrollTop }, carried = carriedKind();
   Object.assign(byId('file'), { textContent: next.name, title: next.filePath });
   if (first) byId('lists').replaceChildren(...styleLists(next.styles.tokens));
   const drawn = await drawSource(stage, next.source);
@@ -45,21 +46,27 @@ async function show(next) {
     showScale(applyZoom(stage, drawn.svg, view.zoom));
     Object.assign(stage, { scrollLeft: scroll.left, scrollTop: scroll.top });
   }
-  view.selection = resolveSelection(view.selection ?? next.selection[0]);
-  view.also = view.selection ? view.also.map(resolveSelection).filter(item => item?.kind === 'element') : [];
+  settle(next, drawn, carried);
   drawSelection();
   showPanels();
-  editPendingText();
+  actions.editPendingText();
 }
 
-// A box just added has its text ready to type, once it is drawn.
-function editPendingText() {
-  const pending = view.pendingText;
-  view.pendingText = null;
-  const found = pending && view.model && pending.id && view.model.withId(pending.id);
-  const entry = found || (pending && view.model?.entry(pending.path));
-  if (entry) actions.editText(entry);
+// After a redraw: whether the page and the file number the elements alike, and the selection
+// found again (one without an id carried by path is dropped when another kind stands there now).
+function settle(next, drawn, carried) {
+  view.mismatch = drawn && readDifferently(next.layers, drawn.parsed);
+  if (view.mismatch) setStatus(MISMATCH.replace('WHERE', view.mismatch), true);
+  view.selection = resolveSelection(view.selection ?? next.selection[0]);
+  if (carried && kindOf(layerOf(view.selection?.path)) !== carried) view.selection = null;
+  view.also = view.selection ? view.also.map(resolveSelection).filter(item => item?.kind === 'element') : [];
+  view.ownEdit = false;
 }
+
+// The kind of the selected element when it has no id and the coming change is not the page's own.
+const carriedKind = () => (view.selection?.kind === 'element' && !view.selection.id && !view.ownEdit
+  ? kindOf(layerOf(view.selection.path)) : null);
+
 
 // The latest state the canvas sent, drawn once the drawing before it is done.
 let latest = null, drawing = false;
@@ -90,8 +97,11 @@ events.onmessage = message => {
 };
 events.onerror = () => setStatus('The canvas lost its server: reconnecting… (closing the canvas ends it)', true);
 events.onopen = () => byId('status').classList.contains('error') && setStatus('');
+// The agent's selection replaces the person's, every element of it.
 events.addEventListener('selection', message => {
-  view.selection = resolveSelection(JSON.parse(message.data)[0] ?? null);
+  const [first = null, ...rest] = JSON.parse(message.data);
+  view.selection = resolveSelection(first);
+  view.also = view.selection ? rest.map(resolveSelection).filter(item => item?.kind === 'element') : [];
   drawSelection();
   showPanels();
 });

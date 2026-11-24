@@ -100,6 +100,16 @@ export class Model {
     return children.some(child => area(child.box) > 0 && resembles(child, dragged));
   }
 
+  // The element with an id a line would join, for a hit inside a box: the nearest one around the
+  // hit, inside the box (a BPMN event inside its wrapper), else the box itself.
+  withIdAround(hit, box) {
+    for (let at = hit; at?.src; at = this.parentOf(at)) {
+      if (at.id) return at;
+      if (at === box) break;
+    }
+    return box;
+  }
+
   // The element after this one among its parent's children, or null for the last.
   nextOf(entry) {
     const siblings = this.childrenOf(entry.parent), index = siblings.indexOf(entry);

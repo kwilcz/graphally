@@ -53,11 +53,13 @@ function freeId(stem) {
   return `${stem}-${number}`;
 }
 
-// The insert edit for a kind of element, and the path and id the new element will have.
+// The insert edit for a kind of element, the path and id the new element will have, and the path
+// of the text to type in it.
 export function addition(kind, selectedPath) {
   const { into, before } = spotFor(selectedPath === null ? null : layerOf(selectedPath), kind === 'text' ? 'p' : 'div');
   const id = kind === 'text' ? null : freeId(kind);
   const path = before ?? childPath(into, childrenOf(into).length);
   const edit = { op: 'insert', into, ...(before ? { before } : {}), html: MARKUP[kind](id) };
-  return { edits: [edit], path, id };
+  // A group's text to type is its heading's.
+  return { edits: [edit], path, id, textPath: kind === 'group' ? `${path}.0` : path };
 }

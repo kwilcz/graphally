@@ -69,11 +69,15 @@ export class CanvasSession {
     return { source: result.source, errors: result.errors };
   }
 
+  // Undo and redo start from the file as it is: a change another program made since the last
+  // check is taken in first (it is then what undo takes back first), so it is not lost.
   undo() {
+    this.reload();
     if (this.done.length) this.restore(this.done, this.undone);
   }
 
   redo() {
+    this.reload();
     if (this.undone.length) this.restore(this.undone, this.done);
   }
 
@@ -94,11 +98,7 @@ export class CanvasSession {
     this.show(source);
   }
 
-  // Undo and redo start from the file as it is: a change another program made since the last
-  // check is taken in first, so it is not lost.
   restore(from, to) {
-    this.reload();
-    if (!from.length) return;
     writeFileSync(this.filePath, from.at(-1), 'utf8');
     to.push(this.source);
     this.show(from.pop());
@@ -111,18 +111,17 @@ export class CanvasSession {
   }
 
   // The file changed outside the canvas: a change like any other, which every page shows. It is
-  // read before each edit too, so an edit applies to the file as it is. A read in the middle of
-  // another program's write (the file cut short, its </diagram> gone) is skipped; the next check
-  // reads the whole file.
+  // read before each edit too, so an edit applies to the file as it is. A file another program
+  // is writing reads differently twice running; it is left for the next check.
   reload() {
     let source;
     try {
       source = readFileSync(this.filePath, 'utf8');
+      if (source !== readFileSync(this.filePath, 'utf8')) return;
     } catch {
       return;
     }
-    const whole = !this.source.includes('</diagram>') || source.includes('</diagram>');
-    if (source !== this.source && whole) this.change(source, { fromFile: true });
+    if (source !== this.source) this.change(source, { fromFile: true });
   }
 
   // A page joins, on a server-sent event stream: it gets the state now and every change after.

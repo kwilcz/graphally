@@ -4,7 +4,7 @@
 // and the edits, previews and selections the page sends back.
 import { createServer } from 'node:http';
 import { readFileSync, existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { dirname, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { randomBytes } from 'node:crypto';
 import { allIconNames } from './icons.mjs';
@@ -18,7 +18,7 @@ const TYPES = {
   svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp',
 };
 // What a diagram may take from its own folder: images, and the parts it includes.
-const BESIDE = /^\/(?:[\w.-]+\/)*[\w.-]+\.(svg|png|jpe?g|gif|webp)$|^\/parts\/(?:[\w.-]+\/)*[\w.-]+\.html$/;
+const BESIDE = /\.(svg|png|jpe?g|gif|webp)$|^\/parts\/.+\.html$/i;
 const LARGEST_BODY = 1 << 20;
 
 // Sent with every answer: no sniffing a type, and no address (with its secret) handed on to the
@@ -64,11 +64,17 @@ function appFile(pathname) {
   return /^\/[\w-]+\.(js|css)$/.test(pathname) ? new URL(pathname.slice(1), APP) : null;
 }
 
-// A file the diagram names beside it (<img src="logo.svg">, parts/…), never outside its folder.
+// A file the diagram names beside it (<img src="my logo.svg">, parts/…), never outside its folder.
 function besideFile(session, pathname) {
-  if (!BESIDE.test(pathname) || pathname.split('/').includes('..')) return null;
-  const file = pathToFileURL(resolve(dirname(session.filePath), `.${pathname}`));
-  return existsSync(file) ? file : null;
+  let path;
+  try {
+    path = decodeURIComponent(pathname);
+  } catch {
+    return null;
+  }
+  const folder = dirname(session.filePath), file = resolve(folder, `.${path}`);
+  if (!BESIDE.test(path) || path.includes('\0') || !file.startsWith(`${folder}${sep}`)) return null;
+  return existsSync(file) ? pathToFileURL(file) : null;
 }
 
 const ROUTES = {

@@ -53,7 +53,7 @@ async function pump() {
 export function preview(edits, drawn = onDrawn, version = view.state?.version) {
   onDrawn = drawn;
   basis = version;
-  wanted = edits?.length ? edits : null;
+  wanted = edits?.length && !view.mismatch ? edits : null;
   pump();
 }
 

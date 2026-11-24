@@ -35,10 +35,12 @@ export function linkEdits(from, to) {
   return { edits, key: `${ends.from}->${ends.to}` };
 }
 
-// The box a link would end at under the pointer: the one its layout moves as a whole, not the
-// box it starts from nor one around it.
+// The box a link would end at under the pointer: the element with an id around the hit within
+// the box its layout moves as a whole (a BPMN event, not its wrapper), else that box; not the box
+// the link starts from, nor one around it or in it.
 export function linkTarget(model, from, point) {
-  const hit = model.at(point), target = hit && model.movableOf(hit);
-  if (!target?.src || target === from || model.isWithin(from.src, target.src)) return null;
+  const hit = model.at(point), box = hit && model.movableOf(hit), target = box && model.withIdAround(hit, box);
+  const related = target && (model.isWithin(from.src, target.src) || model.isWithin(target.src, from.src));
+  if (!target?.src || related) return null;
   return target;
 }
