@@ -24,12 +24,21 @@ export function tagOf(text, id) {
 
 const attributePattern = name => new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`);
 
+// An attribute's value written as the one before it was: bare or in single quotes when it was
+// and the value allows it, else in double quotes.
+function quoted(value, before) {
+  const text = String(value);
+  if (before?.[3] !== undefined && /^[^\s"'=<>`]+$/.test(text)) return text;
+  if (before?.[2] !== undefined && !text.includes("'")) return `'${text}'`;
+  return `"${text.replace(/"/g, '&quot;')}"`;
+}
+
 // Sets (or, with null, removes) one attribute in a start tag.
 export function setAttribute(tag, name, value) {
-  const pattern = attributePattern(name);
+  const pattern = attributePattern(name), before = tag.match(pattern);
   if (value == null) return tag.replace(pattern, '');
-  const attribute = ` ${name}="${value}"`;
-  return pattern.test(tag) ? tag.replace(pattern, attribute) : tag.replace(/\s*\/?>$/, end => attribute + end);
+  const attribute = ` ${name}=${quoted(value, before)}`;
+  return before ? tag.replace(pattern, () => attribute) : tag.replace(/\s*\/?>$/, end => attribute + end);
 }
 
 export function getAttribute(tag, name) {

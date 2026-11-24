@@ -14,6 +14,7 @@ export const frame = (box, pad = 3) => make('rect', {
   x: box.x - pad, y: box.y - pad, width: box.w + 2 * pad, height: box.h + 2 * pad, rx: 5,
 });
 export const segment = ({ x1, y1, x2, y2 }) => make('line', { x1, y1, x2, y2 });
+export const dot = (x, y, r) => make('circle', { cx: x, cy: y, r });
 export const trace = d => make('path', { d });
 export function label(x, y, text) {
   const made = make('text', { x, y });

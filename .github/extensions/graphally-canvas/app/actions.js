@@ -8,8 +8,9 @@ import {
   view, edit, setSelection, setStatus, selectedEntry, selectedLayer, layerOf, elementSelection,
 } from './view.js';
 import {
-  parentPath, moveAmong, indent, outdent, layerDrop, wrapMove, unwrapMove, canUnwrap,
+  parentPath, moveAmong, indent, outdent, layerDrop, wrapMove, unwrapMove, canUnwrap, visibleChildrenOf,
 } from './moves.js';
+import { addition } from './adding.js';
 import { editText } from './text-editor.js';
 import { entryOfDrawn, splitEdits, deleteEdits } from './lines.js';
 
@@ -24,6 +25,15 @@ function connectTo(entry) {
   if (!entry?.id) return setStatus('Connect to a box with an id: give it one in its properties.', true);
   setStatus('');
   return edit([{ op: 'connect', from, to: entry.id }]);
+}
+
+let iconNames = null;
+
+function stepFrom(layer, direction) {
+  if (direction === 'in') return visibleChildrenOf(layer.path)[0];
+  const siblings = visibleChildrenOf(parentPath(layer.path));
+  const at = siblings.findIndex(found => found.path === layer.path);
+  return siblings[at + (direction === 'next' ? 1 : -1)];
 }
 
 const withSelected = run => () => {
@@ -66,6 +76,14 @@ export const actions = {
   },
   splitLine: (found, key) => edit(splitEdits(found), { kind: 'line', id: key }),
   removeLine: found => edit(deleteEdits(found), null),
+  // A line's label, edited where it was double-clicked; a line a script draws has none to edit.
+  editLabel(key, point) {
+    const found = entryOfDrawn(view.state.lines, key);
+    if (!found) return setStatus('A drawing script draws this line: edit it in the source.', true);
+    const box = { x: point.x - 70, y: point.y - 12, w: 140, h: 24 };
+    return editText(view.svg, box, found.entry.label ?? '',
+      label => edit([{ op: 'line', key: found.entry.key, set: { label: label || null } }], { kind: 'line', id: key }));
+  },
   remove() {
     if (view.selection?.kind === 'line') {
       const found = entryOfDrawn(view.state.lines, view.selection.id);
@@ -88,6 +106,21 @@ export const actions = {
   unwrap: (layer = selectedLayer()) => layer && canUnwrap(layer)
     && applyMove(unwrapMove(layer.path), layer, elementSelection(layer.path)),
   dropOnLayer: (path, target, zone) => applyMove(layerDrop(path, target, zone), layerOf(path)),
+  // Adds a box, a group or a text and selects it, its text ready to type (when it is drawn).
+  add(kind) {
+    const { edits, path, id } = addition(kind, selectedLayer()?.path ?? null);
+    view.pendingText = { path, id };
+    return edit(edits, elementSelection(path, id));
+  },
+  // Selects the sibling before or after the selection, its parent, or its first child.
+  navigate(direction) {
+    const layer = selectedLayer();
+    if (direction === 'out') return actions.selectParent();
+    const target = layer ? stepFrom(layer, direction) : visibleChildrenOf('')[0];
+    return target ? setSelection(elementSelection(target.path, target.id)) : undefined;
+  },
+  // The icon names to suggest, asked of the server once.
+  iconNames: () => (iconNames ??= api.icons().then(answer => answer.names ?? [])),
   fold(path) {
     if (!view.folded.delete(path)) view.folded.add(path);
     setSelection(view.selection);

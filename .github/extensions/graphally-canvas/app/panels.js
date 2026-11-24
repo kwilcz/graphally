@@ -35,8 +35,9 @@ function propertiesContext() {
   const layer = selection?.kind === 'element' ? layerOf(selection.path) : null;
   if (!layer) return {};
   const source = sourceElement(layer.path), entry = selectedEntry();
+  const icon = source?.localName === 'icon' ? source : source?.querySelector(':scope > icon');
   return {
-    layer, styles: state.styles,
+    layer, styles: state.styles, icon: icon && { path: icon.dataset.src, name: icon.getAttribute('name') },
     cascade: source ? cascadeOf(source, view.parsed, state.styles) : null,
     placement: view.model ? placementControls(view.model, entry, layer, actions) : [],
     lines: linesOf(layer.id).map(item => element('div', { className: 'line-item' }, [item])),

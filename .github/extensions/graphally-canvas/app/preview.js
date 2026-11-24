@@ -16,7 +16,7 @@ function hide() {
 }
 
 async function drawWanted(edits, current) {
-  const { source, errors = [] } = await api.preview(edits);
+  const { source, errors = [] } = await api.preview(edits, view.state?.version);
   if (current !== generation || errors.length) return null;
   const drawn = await drawPreview(byId('stage'), source, view.svg);
   if (current !== generation || !drawn) {

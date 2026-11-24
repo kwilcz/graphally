@@ -12,8 +12,9 @@ const BLOCKS = /\b(node|figure|card|tile|group|box|pill|tag|banner|band|key)\b/;
 const SIDES = ['', 'top', 'right', 'bottom', 'left'];
 const SCRIPT_LINE = 'A drawing script in the diagram draws this line: edit it in the source.';
 const HINT = 'Click a box or a line to select it; click again to go into it. Drag it to move it within its '
-  + 'layout: another cell, another place in its row or column, another group. Alt-drag nudges it. Double-click '
-  + 'text to edit it. Esc selects the parent; Alt+arrows move the selection among its siblings and in or out.';
+  + 'layout: another cell, another place in its row or column, another group. Alt-drag nudges it. Drag the dot '
+  + 'off its corner to another box to draw a line. Double-click text to edit it. Arrows walk the tree; '
+  + 'Alt+arrows move the selection among its siblings and in or out.';
 
 function choice(label, value, options, onChange) {
   const select = element('select', {}, options.map(option => new Option(option || 'auto', option)));
@@ -45,12 +46,28 @@ function actionsOf(layer, act) {
   ]);
 }
 
-function elementFields(layer, act) {
+// The box's icon, by name, with the names graphally knows to choose from.
+function iconField(icon, act) {
+  const setIcon = name => name && act.edit([{ op: 'attr', path: icon.path, name: 'name', value: name }]);
+  const label = field('Icon', icon.name, setIcon);
+  const input = label.querySelector('input');
+  input.setAttribute('list', 'icon-names');
+  input.addEventListener('focus', () => act.iconNames().then(names => fillIconList(names)), { once: true });
+  return label;
+}
+
+function fillIconList(names) {
+  const list = document.getElementById('icon-names');
+  if (list && !list.childElementCount) list.append(...names.map(value => element('option', { value })));
+}
+
+function elementFields({ layer, icon }, act) {
   const set = (name, value) => act.edit([{ op: 'attr', path: layer.path, name, value: value || null }]);
   return [
     field('Id', layer.id, value => set('id', value)),
     field('Classes', layer.classes, value => set('class', value)),
     layer.text ? field('Text', layer.text, text => act.edit([{ op: 'text', path: layer.path, text }])) : null,
+    icon ? iconField(icon, act) : null,
     BLOCKS.test(layer.classes) ? variants(layer, classes => set('class', classes.join(' '))) : null,
   ];
 }
@@ -60,7 +77,7 @@ function elementControls(context, act) {
   return [
     element('h3', { textContent: `<${layer.tag}>${layer.id ? ` #${layer.id}` : ''}` }),
     actionsOf(layer, act),
-    section('Element', elementFields(layer, act)),
+    section('Element', elementFields(context, act)),
     placement?.length ? section('Placement', placement) : null,
     cascade ? section('Styles', stylesOf(cascade, layer, styles, act)) : null,
     lines?.length ? section('Lines', lines) : null,

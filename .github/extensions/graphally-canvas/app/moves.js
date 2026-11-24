@@ -19,6 +19,11 @@ const childrenOf = parent => (view.state?.layers ?? []).filter(layer => layer.pa
   && parentPath(layer.path) === parent);
 const seen = layer => !layer.virtual && !UNSEEN.has(layer.tag);
 
+// The children a person sees: without style and script, and through the tbody a table gets from
+// the parser, not written in the source.
+export const visibleChildrenOf = parent => childrenOf(parent)
+  .flatMap(child => (child.virtual ? visibleChildrenOf(child.path) : seen(child) ? [child] : []));
+
 export const canHoldChildren = layer => Boolean(layer) && !LEAVES.has(layer.tag) && !UNSEEN.has(layer.tag);
 
 // A path once the element at `removed` is gone: a later sibling of it, or anything inside one,

@@ -6,7 +6,7 @@ import { api } from './api.js';
 
 export const view = {
   state: null, svg: null, model: null, parsed: null, colorOf: null, overlay: null,
-  selection: null, connecting: null, zoom: 'fit', folded: new Set(),
+  selection: null, connecting: null, zoom: 'fit', folded: new Set(), pendingText: null,
 };
 
 export const byId = id => document.getElementById(id);
@@ -44,7 +44,7 @@ export function setSelection(selection) {
 // reach the page before the answer does.
 export async function edit(edits, selectAfter) {
   if (selectAfter !== undefined) view.selection = selectAfter;
-  const { errors = [] } = await api.edit(edits);
+  const { errors = [] } = await api.edit(edits, view.state?.version);
   setStatus(errors.map(error => error.message).join('; '), errors.length > 0);
   return errors;
 }

@@ -4,7 +4,7 @@
 // the grid it would land in and a preview of the diagram after the drop; and the edits a drop, a
 // nudge or a resize makes.
 import { view, selectedEntry, edit, elementSelection } from './view.js';
-import { frame, segment, trace, label } from './overlay.js';
+import { frame, segment, trace, label, dot } from './overlay.js';
 import { dropEdits } from './drop.js';
 import { handlesOf } from './grid-drop.js';
 import { cellsOf, areasOf } from './grid.js';
@@ -12,6 +12,7 @@ import { placementEdits, lineValue } from './placement.js';
 import { actions } from './actions.js';
 import { pathAfterPlace } from './moves.js';
 import { preview, endPreview, previewReplaced } from './preview.js';
+import { linkHandleOf, linkEdits } from './linking.js';
 
 const HANDLE = 4;
 
@@ -33,7 +34,17 @@ export function drawSelection() {
   overlay.show('grid', gridShapes(gridAround(entry)));
   overlay.show('selection', entry ? frame(entry.box) : line ? trace(line.getAttribute('d')) : null);
   const square = ({ x, y }) => frame({ x: x - HANDLE, y: y - HANDLE, w: 2 * HANDLE, h: 2 * HANDLE }, 0);
-  overlay.show('handle', handlesOf(view.model, entry).map(square));
+  const link = linkHandleOf(entry);
+  overlay.show('handle', [...handlesOf(view.model, entry).map(square), ...(link ? [dot(link.x, link.y, HANDLE)] : [])]);
+}
+
+// The selection's handle within reach of a point: a span handle, its link handle, or none.
+function handleAt(point, reach) {
+  const entry = selectedEntry(), near = ({ x, y }) => Math.abs(x - point.x) <= reach && Math.abs(y - point.y) <= reach;
+  const link = linkHandleOf(entry);
+  if (link && near(link)) return { kind: 'link' };
+  const span = handlesOf(view.model, entry).find(near);
+  return span ? { kind: 'span', ...span } : null;
 }
 
 function clearDrag() {
@@ -75,6 +86,7 @@ export const pointerActions = {
   select: actions.select,
   selectLine: actions.selectLine,
   editText: actions.editText,
+  editLabel: actions.editLabel,
   hover: entry => view.overlay?.show('hover', entry && entry !== selectedEntry() ? frame(entry.box, 1) : null),
   drag(entry, delta, drop, alt) {
     clearDrag();
@@ -98,6 +110,22 @@ export const pointerActions = {
   resized(entry, resize) {
     clearDrag();
     return commit(resizeEdits(entry, resize), elementSelection(entry.src, entry.id));
+  },
+  handleAt,
+  // A line drawn from the selection: a straight rubber band to the pointer, the box it would join,
+  // and a preview of the line routed there.
+  linking(from, point, target) {
+    clearDrag();
+    const { x, y, w, h } = from.box;
+    view.overlay.show('ghost', segment({ x1: x + w / 2, y1: y + h / 2, x2: point.x, y2: point.y }));
+    view.overlay.show('drop', target ? frame(target.box, 3) : null);
+    preview(target ? linkEdits(from, target).edits : null, () => {});
+  },
+  linked(from, target) {
+    clearDrag();
+    if (!target) return commit([], null);
+    const { edits, key } = linkEdits(from, target);
+    return commit(edits, { kind: 'line', id: key });
   },
 };
 

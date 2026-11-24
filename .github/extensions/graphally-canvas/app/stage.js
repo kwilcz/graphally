@@ -17,7 +17,8 @@ const CANVAS_CSS = `
   .canvas-ghost rect { fill: var(--woad); fill-opacity: 0.12; stroke: var(--woad); stroke-opacity: 0.6; }
   .canvas-grid rect { fill: none; stroke: var(--woad); stroke-opacity: 0.45; stroke-dasharray: 2 3; }
   .canvas-grid text { fill: var(--woad); fill-opacity: 0.8; font: 600 10px sans-serif; }
-  .canvas-handle rect { fill: var(--card); stroke: var(--woad); stroke-width: 1.5; }
+  .canvas-handle rect, .canvas-handle circle { fill: var(--card); stroke: var(--woad); stroke-width: 1.5; }
+  .canvas-ghost line { stroke: var(--woad); stroke-width: 1.5; stroke-dasharray: 4 3; }
   .canvas-landed rect { fill: none; stroke: var(--woad); stroke-width: 2; stroke-dasharray: 6 3; }
   svg.canvas-previewing > :not(.canvas-overlay) { visibility: hidden; }
 `;

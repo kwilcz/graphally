@@ -4,7 +4,7 @@
 // them and their lines, and the agent reads and edits the same diagram. Every edit is a text patch
 // of the diagram's source (the skill's edits), so the file stays as written.
 import { existsSync } from 'node:fs';
-import { basename, resolve } from 'node:path';
+import { basename, isAbsolute, relative, resolve } from 'node:path';
 import { joinSession, createCanvas, CanvasError } from '@microsoft/copilot-sdk/extension';
 import { openCanvas, canvasOf, closeCanvas } from './instances.mjs';
 import { NOTHING, OPEN, EDITS, SELECTION } from './schemas.mjs';
@@ -22,7 +22,7 @@ const ACTIONS = [
       + 'elements as layers (each with its path), its CSS (styles.rules, each with its index) and what the '
       + 'person selected.',
     inputSchema: NOTHING,
-    handler: async ctx => sessionOf(ctx).state(),
+    handler: async ctx => forAgent(sessionOf(ctx).state()),
   },
   {
     name: 'apply_edits',
@@ -49,9 +49,23 @@ const ACTIONS = [
   },
 ];
 
-async function open(ctx) {
-  const filePath = resolve(process.cwd(), ctx.input?.filePath || 'diagram.html');
+// What the agent reads: the state without what only the panels use (graphally's defaults, each
+// utility's CSS, the theme's tokens), which would fill its context.
+const forAgent = ({ styles, ...state }) => ({ ...state, styles: { rules: styles.rules } });
+
+// A diagram file in the workspace: an .html file at or under the folder the app runs in.
+function diagramPath(input) {
+  const filePath = resolve(process.cwd(), input || 'diagram.html'), inside = relative(process.cwd(), filePath);
+  if (inside.startsWith('..') || isAbsolute(inside)) {
+    throw new CanvasError('outside_workspace', `${filePath} is outside the workspace.`);
+  }
+  if (!/\.html?$/i.test(filePath)) throw new CanvasError('not_a_diagram', `${filePath} is not an .html file.`);
   if (!existsSync(filePath)) throw new CanvasError('file_not_found', `No diagram at ${filePath}.`);
+  return filePath;
+}
+
+async function open(ctx) {
+  const filePath = diagramPath(ctx.input?.filePath);
   const { server } = await openCanvas(ctx.instanceId, filePath);
   return { title: `graphally: ${basename(filePath)}`, status: filePath, url: server.url };
 }

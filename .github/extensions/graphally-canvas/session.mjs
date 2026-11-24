@@ -27,11 +27,13 @@ function nameOf(filePath) {
   return inside.startsWith('..') || isAbsolute(inside) ? filePath : inside;
 }
 
+const STALE = { message: 'The diagram changed as you worked; it is drawn again now. Try once more.' };
+
 const event = (name, value) => `${name ? `event: ${name}\n` : ''}data: ${JSON.stringify(value)}\n\n`;
 
 export class CanvasSession {
   constructor(filePath) {
-    Object.assign(this, { filePath, pages: new Set(), selection: [], undone: [], done: [] });
+    Object.assign(this, { filePath, pages: new Set(), selection: [], undone: [], done: [], version: 0 });
     this.source = readFileSync(filePath, 'utf8');
     this.onFileChange = () => this.reload();
     watchFile(filePath, { interval: WATCH_INTERVAL }, this.onFileChange);
@@ -44,11 +46,14 @@ export class CanvasSession {
     return {
       filePath, name: nameOf(filePath), source, lines: linesOf(source), layers: outlineOf(source),
       styles: stylesOf(source), selection, canUndo: this.done.length > 0, canRedo: this.undone.length > 0,
+      version: this.version,
     };
   }
 
-  // Applies edits, in the skill's edit format, and writes the file when any applied.
-  edit(edits) {
+  // Applies edits, in the skill's edit format, and writes the file when any applied. Edits made
+  // against an older version of the source (their paths may name other elements now) are refused.
+  edit(edits, version) {
+    if (version !== undefined && version !== this.version) return { applied: [], errors: [STALE], stale: true };
     const result = applyEdits(this.source, edits);
     if (result.applied.length) this.change(result.source);
     return { applied: result.applied, errors: result.errors };
@@ -56,7 +61,8 @@ export class CanvasSession {
 
   // The source as these edits would leave it, for a page to draw while a drag goes on; the file
   // stays as it is.
-  preview(edits) {
+  preview(edits, version) {
+    if (version !== undefined && version !== this.version) return { source: this.source, errors: [STALE], stale: true };
     const result = applyEdits(this.source, edits);
     return { source: result.source, errors: result.errors };
   }
@@ -76,21 +82,25 @@ export class CanvasSession {
     for (const page of this.pages) page.write(event('selection', items));
   }
 
-  // A new source, after this one: what undo goes back to, with redo cleared.
-  change(source) {
+  // A new source, after this one: what undo goes back to, with redo cleared. The file is written
+  // first, so a source that cannot be written changes nothing; one read from the file is not
+  // written back.
+  change(source, { fromFile = false } = {}) {
+    if (!fromFile) writeFileSync(this.filePath, source, 'utf8');
     this.done = [...this.done, this.source].slice(-HISTORY);
     this.undone = [];
-    this.write(source);
+    this.show(source);
   }
 
   restore(from, to) {
+    writeFileSync(this.filePath, from.at(-1), 'utf8');
     to.push(this.source);
-    this.write(from.pop());
+    this.show(from.pop());
   }
 
-  write(source) {
+  show(source) {
     this.source = source;
-    writeFileSync(this.filePath, source, 'utf8');
+    this.version += 1;
     this.broadcast();
   }
 
@@ -103,7 +113,7 @@ export class CanvasSession {
     } catch {
       return;
     }
-    if (source !== this.source) this.change(source);
+    if (source !== this.source) this.change(source, { fromFile: true });
   }
 
   // A page joins, on a server-sent event stream: it gets the state now and every change after.

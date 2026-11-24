@@ -8,10 +8,12 @@ const post = (path, body = {}) => fetch(path, {
 }).then(response => response.json());
 
 export const api = {
-  // Edits in the skill's format; the answer lists those applied and those that failed.
-  edit: edits => post('api/edits', { edits }),
+  // Edits in the skill's format, made against a version of the source (an older one is refused);
+  // the answer lists those applied and those that failed.
+  edit: (edits, version) => post('api/edits', { edits, version }),
   // The source as these edits would leave it, the file untouched: a drag's preview.
-  preview: edits => post('api/preview', { edits }),
+  preview: (edits, version) => post('api/preview', { edits, version }),
+  icons: () => fetch('api/icons').then(response => response.json()),
   undo: () => post('api/undo'),
   redo: () => post('api/redo'),
   select: items => post('api/selection', { items }),

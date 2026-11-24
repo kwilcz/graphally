@@ -2,6 +2,7 @@
 // The canvas's keys, outside text fields. Mod is Ctrl, or Cmd on a Mac.
 //
 //   Esc              stop connecting, else select the parent
+//   ↑ / ↓            select the sibling before / after     ← / →   the parent / the first child
 //   Delete           delete the selection (a box with its lines)
 //   Enter            edit the selection's text
 //   Alt+↑ / Alt+↓    move it before the sibling before it / after the one after it
@@ -24,6 +25,8 @@ export function enableKeys(zoom) {
     Escape: () => (view.connecting ? actions.cancelConnect() : actions.selectParent()),
     Delete: actions.remove, Backspace: actions.remove,
     Enter: () => actions.editText(selectedEntry()),
+    ArrowUp: () => actions.navigate('previous'), ArrowDown: () => actions.navigate('next'),
+    ArrowLeft: () => actions.navigate('out'), ArrowRight: () => actions.navigate('in'),
     'Alt+ArrowUp': () => actions.step(-1), 'Alt+ArrowDown': () => actions.step(1),
     'Alt+ArrowRight': actions.indent, 'Alt+ArrowLeft': actions.outdent,
     'Mod+d': actions.duplicate, 'Mod+g': () => actions.wrap(), 'Mod+Shift+g': () => actions.unwrap(),
@@ -32,7 +35,9 @@ export function enableKeys(zoom) {
     'Shift+1': () => zoom.set('fit'), 'Shift+0': () => zoom.set(1),
   };
   document.addEventListener('keydown', event => {
-    if (event.target.matches('input, select, textarea')) return;
+    // Typing in a field is the field's; Enter and Space on a button press it.
+    const typing = event.target.matches('input, select, textarea');
+    if (typing || (event.target.matches('button, summary') && ['Enter', ' '].includes(event.key))) return;
     const run = chords[chordOf(event)];
     if (!run) return;
     event.preventDefault();

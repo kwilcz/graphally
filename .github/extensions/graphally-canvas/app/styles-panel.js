@@ -31,7 +31,7 @@ function declarationRow(declaration, set, colorOf) {
   const { property, value } = declaration;
   const name = textField(property, next => {
     if (next.toLowerCase() !== property) set({ [property]: null, ...(next ? { [next.toLowerCase()]: value } : {}) });
-  }, { className: 'property', list: 'css-properties', style: `width: ${Math.max(4, property.length) + 1.5}ch` });
+  }, { className: 'property', list: 'css-properties' });
   const edit = textField(value, next => set({ [property]: next || null }), { className: 'value', list: 'css-values' });
   const classes = ['declaration', declaration.overridden && 'overridden', declaration.important && 'important'];
   return element('div', { className: classes.filter(Boolean).join(' ') }, [
@@ -43,8 +43,7 @@ function declarationRow(declaration, set, colorOf) {
 function newRow(set) {
   const value = textField('', next => next && name.value.trim() && set({ [name.value.trim().toLowerCase()]: next }),
     { className: 'value', list: 'css-values', placeholder: 'value' });
-  const name = textField('', () => {}, { className: 'property', list: 'css-properties', placeholder: 'add property',
-    style: 'width: 14ch' });
+  const name = textField('', () => {}, { className: 'property', list: 'css-properties', placeholder: 'add property' });
   name.addEventListener('keydown', event => event.key === 'Enter' && value.focus());
   return element('div', { className: 'declaration new' }, [name, element('span', { textContent: ':' }), value]);
 }
@@ -59,8 +58,6 @@ function metaOf(entry) {
     entry.count > 1 && `${entry.count} elements`, ORIGINS[entry.origin]];
   return element('span', { className: 'meta', textContent: notes.filter(Boolean).join(' · ') });
 }
-
-const widthFor = text => `width: ${Math.min(40, Math.max(4, text.length) + 2)}ch`;
 
 // Whether the browser can read a selector.
 function readable(selector) {
@@ -81,12 +78,11 @@ function renameRule(entry, next, act) {
 // A rule's selector or a utility class, to rename it where it is written; else a label.
 function labelOf(entry, act) {
   if (entry.origin === 'utility') {
-    return textField(entry.cls, next => act.renameClass(entry.cls, next),
-      { className: 'selector', style: widthFor(entry.cls) });
+    return textField(entry.cls, next => act.renameClass(entry.cls, next), { className: 'selector' });
   }
   if (entry.origin === 'rule' && !entry.rule.nested) {
     return textField(entry.selector, next => renameRule(entry, next, act),
-      { className: 'selector', style: widthFor(entry.selector), title: 'The rule\'s selector: Enter renames it' });
+      { className: 'selector', title: 'The rule\'s selector: Enter renames it' });
   }
   const text = entry.origin === 'inline' ? 'this element' : entry.selector;
   return element('code', { className: 'selector', textContent: text });
