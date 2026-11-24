@@ -19,15 +19,16 @@ const ACTIONS = [
   {
     name: 'get_diagram',
     description: 'The diagram file: its path, its HTML source, its connections (each with its key), its '
-      + 'elements as layers (each with its path) and what the person selected.',
+      + 'elements as layers (each with its path), its CSS (styles.rules, each with its index) and what the '
+      + 'person selected.',
     inputSchema: NOTHING,
     handler: async ctx => sessionOf(ctx).state(),
   },
   {
     name: 'apply_edits',
-    description: 'Edit the diagram file, as graphally edit does: change an element\'s text or attributes, '
-      + 'move it in the layout, add, copy or remove elements, add, change or remove lines. Returns the edits '
-      + 'applied and those that failed, with why.',
+    description: 'Edit the diagram file, as graphally edit does: change an element\'s text, attributes or '
+      + 'CSS, move it in the layout, add, copy, group or remove elements, add, change or remove lines. Returns '
+      + 'the edits applied and those that failed, with why.',
     inputSchema: EDITS,
     handler: async ctx => sessionOf(ctx).edit(ctx.input.edits),
   },

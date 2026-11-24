@@ -10,15 +10,27 @@
 <body>
 <header class="bar">
   <code class="file" id="file"></code>
-  <button type="button" id="undo" disabled title="Undo (Ctrl+Z)">Undo</button>
-  <button type="button" id="redo" disabled title="Redo (Ctrl+Shift+Z)">Redo</button>
+  <div class="group-buttons" role="group" aria-label="Zoom">
+    <button type="button" id="zoom-out" title="Zoom out (Ctrl+-)">−</button>
+    <button type="button" id="zoom-level" title="Actual size (Shift+0)">100%</button>
+    <button type="button" id="zoom-in" title="Zoom in (Ctrl+=)">+</button>
+    <button type="button" id="zoom-fit" title="Fit to width (Shift+1)">Fit</button>
+  </div>
+  <div class="group-buttons" role="group" aria-label="History">
+    <button type="button" id="undo" disabled title="Undo (Ctrl+Z)">Undo</button>
+    <button type="button" id="redo" disabled title="Redo (Ctrl+Shift+Z)">Redo</button>
+  </div>
   <span class="status" id="status" role="status"></span>
 </header>
 <div class="workspace">
   <nav class="panel" aria-label="Layers"><h2>Layers</h2><ul class="layers" id="layers"></ul></nav>
-  <main id="stage" aria-label="The diagram"></main>
+  <div class="center">
+    <nav class="crumbs" id="crumbs" aria-label="Selection path"></nav>
+    <main id="stage" aria-label="The diagram"></main>
+  </div>
   <aside class="panel" aria-label="Properties"><h2>Properties</h2><div id="properties"></div></aside>
 </div>
+<div id="lists" hidden></div>
 <script type="module" src="app.js"></script>
 </body>
 </html>

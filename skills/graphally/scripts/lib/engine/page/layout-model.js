@@ -14,15 +14,28 @@ function boxOf(element, page) {
   };
 }
 
-// A grid's tracks and gaps, from the corner of its content box, where its first track starts.
+// A grid's named areas, row by row ("." for a cell no area takes), or null.
+const areasOf = value => (value === 'none' ? null
+  : [...value.matchAll(/"([^"]*)"/g)].map(([, row]) => row.trim().split(/\s+/)));
+
+const edges = (style, side) => parseFloat(style[`border${side}Width`]) + parseFloat(style[`padding${side}`]);
+
+// A grid's tracks and gaps, with its content box (where the first track starts) and how it spreads
+// the room its tracks leave (justify-content, align-content); on an axis it takes from its parent
+// grid (subgrid), it has no tracks of its own.
 function gridOf(style, box) {
-  const left = box.x + parseFloat(style.borderLeftWidth) + parseFloat(style.paddingLeft);
-  const top = box.y + parseFloat(style.borderTopWidth) + parseFloat(style.paddingTop);
+  const left = box.x + edges(style, 'Left'), top = box.y + edges(style, 'Top');
+  const size = { w: round(box.w - edges(style, 'Left') - edges(style, 'Right')),
+    h: round(box.h - edges(style, 'Top') - edges(style, 'Bottom')) };
+  const subgrid = {
+    cols: style.gridTemplateColumns.startsWith('subgrid'), rows: style.gridTemplateRows.startsWith('subgrid'),
+  };
   return {
-    kind: 'grid', cols: pixelsIn(style.gridTemplateColumns), rows: pixelsIn(style.gridTemplateRows),
+    kind: 'grid', cols: subgrid.cols ? [] : pixelsIn(style.gridTemplateColumns),
+    rows: subgrid.rows ? [] : pixelsIn(style.gridTemplateRows),
     colGap: parseFloat(style.columnGap) || 0, rowGap: parseFloat(style.rowGap) || 0,
-    areas: style.gridTemplateAreas !== 'none', subgrid: style.gridTemplateColumns.startsWith('subgrid'),
-    origin: { x: round(left), y: round(top) },
+    areas: areasOf(style.gridTemplateAreas), subgrid, origin: { x: round(left), y: round(top) }, size,
+    spread: { col: style.justifyContent, row: style.alignContent },
   };
 }
 

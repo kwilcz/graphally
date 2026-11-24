@@ -19,7 +19,7 @@ const splice = (text, start, end, insert) => text.slice(0, start) + insert + tex
 const contains = (outer, inner) => outer === inner || outer.children.some(child => contains(child, inner));
 const idsIn = markup => [...markup.matchAll(/\sid\s*=\s*["']?([\w-]+)/g)].map(match => match[1]);
 
-function elementOf(text, tree, edit) {
+export function elementOf(text, tree, edit) {
   const node = edit.path !== undefined ? nodeAtPath(tree, edit.path) : nodeWithId(tree, text, edit.id);
   if (!node || node === tree || node.virtual) {
     throw new Error(edit.path !== undefined ? `no element at ${edit.path}` : `no element with id "${edit.id}"`);

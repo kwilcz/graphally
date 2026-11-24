@@ -1,55 +1,11 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Where a dragged element lands, from what places the elements under the pointer: a column of a
-// grid it is placed in by line (a lane of a process, a step of a plan), or a place among the
-// children of a flex, flowing or auto-placed container, before the child the pointer is ahead of.
-// Grids of named areas (the regions of an architecture map) take no drop of their own: their
-// groups do.
+// Where a dragged element lands, from what places the elements under the pointer: a cell or an
+// area of a grid (grid-drop.js), or a place among the children of a flex, flowing or auto-placed
+// container, before the child the pointer is ahead of; and the edits that move it there.
+import { gridAxes, cellDrop, areaDrop } from './grid-drop.js';
+import { placementEdits, lineValue } from './placement.js';
 
 const center = (box, axis) => box[axis] + (axis === 'x' ? box.w : box.h) / 2;
-const isExplicit = line => line !== undefined && line !== 'auto';
-
-// Each track's [start, end], from where the first one starts.
-function spansOf(tracks, gap, start) {
-  let at = start;
-  return tracks.map(size => {
-    const span = [at, at + size];
-    at += size + gap;
-    return span;
-  });
-}
-
-// A grid's columns, its own or, for a subgrid (a lane), those of the grid it takes them from.
-function columnsOf(model, grid) {
-  for (let at = grid; at; at = model.parentOf(at)) {
-    const { kind, cols, colGap, origin } = at.layout;
-    if (kind === 'grid' && cols.length) return spansOf(cols, colGap, origin.x);
-  }
-  return [];
-}
-
-// How many columns an element spans, from its grid lines (3 / span 2, or 3 / 5).
-function spanOf([start, end]) {
-  if (/^span \d+$/.test(end)) return Number(end.split(' ')[1]);
-  return /^\d+$/.test(start) && /^\d+$/.test(end) ? Number(end) - Number(start) : 1;
-}
-
-// The column a point is over or, in the gap between two, the nearer one.
-const columnAt = (columns, x) => columns.findIndex(([, end], index) => {
-  const next = columns[index + 1];
-  return !next || x < (end + next[0]) / 2;
-});
-
-function cellDrop(model, grid, dragged, point) {
-  const columns = columnsOf(model, grid);
-  if (!columns.length) return null;
-  const nearest = columnAt(columns, point.x);
-  const span = Math.min(spanOf(dragged.place.col), columns.length - nearest);
-  const [left] = columns[nearest], right = columns[nearest + span - 1][1];
-  const into = grid.src !== dragged.parent ? grid.src : null;
-  const rect = { x: left, y: grid.box.y, w: right - left, h: grid.box.h };
-  const noop = !into && String(nearest + 1) === dragged.place.col[0];
-  return { kind: 'cell', col: nearest + 1, colSpan: span, into, rect, noop };
-}
 
 // The line that shows where in a container the element goes: before a child, or after the last.
 function markerOf(holder, siblings, before, axis) {
@@ -81,19 +37,33 @@ function placeDrop(model, holder, dragged, point) {
   return { kind: 'place', into: holder.src, before: before?.src ?? null, line, noop };
 }
 
-export function dropFor(model, dragged, point) {
-  const holder = model.holderAt(point, dragged);
-  if (!holder || (holder.layout.kind === 'grid' && holder.layout.areas)) return null;
-  const byLine = holder.layout.kind === 'grid' && isExplicit(dragged.place?.col?.[0]);
-  if (byLine) return cellDrop(model, holder, dragged, point);
+// The drop for a point; with `anywhere`, any container under it takes the element.
+export function dropFor(model, dragged, point, anywhere = false) {
+  const holder = model.holderAt(point, dragged, anywhere);
+  if (!holder) return null;
+  if (holder.layout.kind === 'grid' && holder.layout.areas) return areaDrop(model, holder, dragged, point);
+  const axes = holder.layout.kind === 'grid' ? gridAxes(model, holder, dragged) : {};
+  if (axes.col || axes.row) return cellDrop(model, holder, dragged, point, axes);
   return placeDrop(model, holder, dragged, point);
 }
 
-// The edits a drop makes: the grid line first (paths stay as they are), then the move.
-export function dropEdits(dragged, drop) {
-  if (drop.kind === 'cell') {
-    const cell = { op: 'cell', path: dragged.src, col: drop.col, colSpan: drop.colSpan };
-    return drop.into ? [cell, { op: 'place', path: dragged.src, into: drop.into }] : [cell];
+function placingEdits(dragged, drop) {
+  if (drop.kind === 'area') {
+    const swap = drop.swap ? placementEdits(drop.swap.path, { 'grid-area': drop.swap.area }) : [];
+    return [...placementEdits(dragged.src, { 'grid-area': drop.area }), ...swap];
   }
-  return [{ op: 'place', path: dragged.src, into: drop.into, ...(drop.before ? { before: drop.before } : {}) }];
+  const lines = cells => Object.fromEntries([['grid-column', cells.col], ['grid-row', cells.row]]
+    .filter(([, cell]) => cell).map(([property, cell]) => [property, lineValue(cell.start, cell.span)]));
+  const swap = drop.swap ? placementEdits(drop.swap.path, lines(drop.swap)) : [];
+  return [...placementEdits(dragged.src, lines(drop)), ...swap];
+}
+
+// The edits a drop makes: where the element sits in its grid first (paths stay as they are),
+// then the move into its new container.
+export function dropEdits(dragged, drop) {
+  if (drop.kind === 'place') {
+    return [{ op: 'place', path: dragged.src, into: drop.into, ...(drop.before ? { before: drop.before } : {}) }];
+  }
+  const move = drop.into !== null ? [{ op: 'place', path: dragged.src, into: drop.into }] : [];
+  return [...placingEdits(dragged, drop), ...move];
 }

@@ -1,38 +1,24 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// The properties panel: what the selection is and what can be changed on it. An element: its id,
-// classes and own text, a building block's variants, and moving out to its parent, duplicating,
-// deleting or connecting it. A line: its label and sides, and deleting it. Each change is one
-// edit of the source.
+// The properties panel: what the selection is and what can be changed on it. An element: moving
+// out to its parent, duplicating, grouping, deleting or connecting it; its id, classes and own
+// text; where its layout places it; the CSS that styles it; and its lines. A line: its label and
+// sides, and deleting it. Each change is one edit of the source.
+import { element, button, field, section } from './dom.js';
+import { stylesOf } from './styles-panel.js';
+
 const VARIANTS = ['external', 'accent', 'disabled'];
 const BLOCKS = /\b(node|figure|card|tile|group|box|pill|tag|banner|band|key)\b/;
 const SIDES = ['', 'top', 'right', 'bottom', 'left'];
 const NOT_EDITABLE = 'This line comes from a list of ends or a drawing script: edit it in the source.';
-const HINT = 'Click a box or a line to select it; click again to go into it. Drag to move it within its layout '
-  + '(Alt-drag nudges it). Double-click text to edit it. Esc selects the parent.';
-
-function element(name, properties = {}, children = []) {
-  const made = Object.assign(document.createElement(name), properties);
-  made.append(...children);
-  return made;
-}
-
-function field(label, value, onChange) {
-  const input = element('input', { value: value ?? '' });
-  input.addEventListener('change', () => onChange(input.value.trim()));
-  return element('label', {}, [label, input]);
-}
+const HINT = 'Click a box or a line to select it; click again to go into it. Drag it to move it within its '
+  + 'layout: another cell, another place in its row or column, another group. Alt-drag nudges it. Double-click '
+  + 'text to edit it. Esc selects the parent; Alt+arrows move the selection among its siblings and in or out.';
 
 function choice(label, value, options, onChange) {
   const select = element('select', {}, options.map(option => new Option(option || 'auto', option)));
   select.value = value ?? '';
   select.addEventListener('change', () => onChange(select.value || null));
   return element('label', {}, [label, select]);
-}
-
-function button(text, onClick, title = '') {
-  const made = element('button', { type: 'button', textContent: text, title });
-  made.addEventListener('click', onClick);
-  return made;
 }
 
 // A building block's variants as switches, each one a class on or off.
@@ -46,20 +32,38 @@ function variants(layer, setClasses) {
   }));
 }
 
-function elementControls(layer, act) {
-  const set = (name, value) => act.edit([{ op: 'attr', path: layer.path, name, value: value || null }]);
-  const controls = [element('h3', { textContent: `<${layer.tag}>${layer.id ? ` #${layer.id}` : ''}` })];
-  controls.push(field('Id', layer.id, value => set('id', value)));
-  controls.push(field('Classes', layer.classes, value => set('class', value)));
-  if (layer.text) controls.push(field('Text', layer.text, text => act.edit([{ op: 'text', path: layer.path, text }])));
-  if (BLOCKS.test(layer.classes)) controls.push(variants(layer, classes => set('class', classes.join(' '))));
-  controls.push(element('div', { className: 'actions' }, [
+function actionsOf(layer, act) {
+  return element('div', { className: 'actions' }, [
     button('Parent', act.selectParent, 'Select the element around it (Esc)'),
     button('Duplicate', () => act.edit([{ op: 'duplicate', path: layer.path }]), 'Ctrl+D'),
+    button('Group', () => act.wrap(layer), 'Put it in a new group (Ctrl+G)'),
+    act.canUnwrap(layer) ? button('Ungroup', () => act.unwrap(layer), 'Put its children in its place (Ctrl+Shift+G)')
+      : null,
     button('Delete', () => act.edit([{ op: 'remove', path: layer.path }]), 'Delete, with its lines'),
-    ...(layer.id ? [button('Connect to…', () => act.startConnect(layer.id), 'Then click the box to connect')] : []),
-  ]));
-  return controls;
+    layer.id ? button('Connect to…', () => act.startConnect(layer.id), 'Then click the box to connect') : null,
+  ]);
+}
+
+function elementFields(layer, act) {
+  const set = (name, value) => act.edit([{ op: 'attr', path: layer.path, name, value: value || null }]);
+  return [
+    field('Id', layer.id, value => set('id', value)),
+    field('Classes', layer.classes, value => set('class', value)),
+    layer.text ? field('Text', layer.text, text => act.edit([{ op: 'text', path: layer.path, text }])) : null,
+    BLOCKS.test(layer.classes) ? variants(layer, classes => set('class', classes.join(' '))) : null,
+  ];
+}
+
+function elementControls(context, act) {
+  const { layer, cascade, styles, placement, lines } = context;
+  return [
+    element('h3', { textContent: `<${layer.tag}>${layer.id ? ` #${layer.id}` : ''}` }),
+    actionsOf(layer, act),
+    section('Element', elementFields(layer, act)),
+    placement?.length ? section('Placement', placement) : null,
+    cascade ? section('Styles', stylesOf(cascade, layer, styles, act)) : null,
+    lines?.length ? section('Lines', lines) : null,
+  ];
 }
 
 function lineControls({ key, entry }, act) {
@@ -71,8 +75,8 @@ function lineControls({ key, entry }, act) {
     element('div', { className: 'actions' }, [button('Delete line', () => act.edit([{ op: 'unline', key }]))])];
 }
 
-export function showProperties(panel, { layer, line }, act) {
-  if (layer) panel.replaceChildren(...elementControls(layer, act));
-  else if (line) panel.replaceChildren(...lineControls(line, act));
-  else panel.replaceChildren(element('p', { className: 'hint', textContent: HINT }));
+export function showProperties(panel, context, act) {
+  const controls = context.layer ? elementControls(context, act)
+    : context.line ? lineControls(context.line, act) : [element('p', { className: 'hint', textContent: HINT })];
+  panel.replaceChildren(...controls.filter(Boolean));
 }

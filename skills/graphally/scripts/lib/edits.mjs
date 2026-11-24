@@ -9,13 +9,17 @@
 //   { op: 'unline', key }               removes a connection
 //
 // and the edits of content and structure, on an element named by its path in the source or by
-// its id (edits/structure.mjs): text, attr, cell, place, remove, duplicate, insert.
+// its id (edits/structure.mjs): text, attr, cell, place, remove, duplicate, insert; wrap and
+// unwrap (edits/grouping.mjs); and the edits of its CSS (edits/styling.mjs): rule, a
+// declaration of a <style> rule, and style, of the element's style attribute.
 //
 // A connection's key is its "id", else "from->to", with "#2", "#3" for repeats: the key the SVG
 // carries on <g data-edge>.
 import { diagramSpan, tagOf, getAttribute, setAttribute, splice } from './edits/markup.mjs';
 import { connectionsBlock, withEmptyBlock, keyOf, asObject, CONNECTION_EDITS } from './edits/connections.mjs';
 import { STRUCTURE_EDITS } from './edits/structure.mjs';
+import { STYLE_EDITS } from './edits/styling.mjs';
+import { GROUPING_EDITS } from './edits/grouping.mjs';
 
 // move adds to the nudge, nudge sets it; a nudge of 0,0 is none.
 function nudgeEdit(text, edit) {
@@ -46,6 +50,8 @@ const EDITS = {
   move: nudgeEdit, nudge: nudgeEdit,
   connect: connectionEdit, line: connectionEdit, unline: connectionEdit,
   ...STRUCTURE_EDITS,
+  ...STYLE_EDITS,
+  ...GROUPING_EDITS,
 };
 
 function applyEdit(source, edit, diagram) {

@@ -2,6 +2,10 @@
 // The laid-out diagram as the canvas knows it: the engine's layout model (each element's box and
 // what places it, by its path in the source) and the questions the canvas asks of it.
 const UNSEEN = new Set(['script', 'style', 'template']);
+// Elements that hold no boxes, and headings, which title a container rather than fill it.
+const LEAVES = new Set(['icon', 'img', 'br', 'hr', 'input', 'i', 'b', 'small', 'code', 'svg', 'h1', 'h2', 'h3', 'h4',
+  'h5', 'h6', 'p']);
+const HEADINGS = /^h[1-6]$/;
 // Utility classes say how an element looks or where it sits, not what it is.
 const UTILITY_NAMES = ['p[xytrbl]?', 'm[xytrbl]?', 'gap', 'w', 'h', 'min', 'max', 'size', 'basis', 'flex', 'grid',
   'col', 'row', 'justify', 'items', 'self', 'content', 'place', 'text', 'font', 'leading', 'tracking', 'rounded',
@@ -51,7 +55,8 @@ export class Model {
 
   // What a press grabs: the nearest element, out from where it landed, that its layout moves as a
   // whole (one with an id, or a child of a flex or grid container); a wrapper that carries the
-  // grid column instead of it (a BPMN event with its caption) is grabbed in its place.
+  // grid column for it (a BPMN event with its caption) is grabbed in its place, unless the element
+  // has a column of its own.
   movableOf(entry) {
     let grabbed = entry;
     for (let at = entry; at?.src; at = this.parentOf(at)) {
@@ -61,6 +66,7 @@ export class Model {
         break;
       }
     }
+    if (isExplicit(grabbed.place?.col?.[0])) return grabbed;
     const wrapper = this.parentOf(grabbed);
     const carriesCell = wrapper?.src && !wrapper.id && this.parentOf(wrapper)?.layout.kind === 'grid';
     return carriesCell && isExplicit(wrapper.place.col[0]) ? wrapper : grabbed;
@@ -73,19 +79,22 @@ export class Model {
   }
 
   // The deepest element under a point that can take the dragged one in: not it or inside it.
-  holderAt(point, dragged) {
+  holderAt(point, dragged, anywhere = false) {
     const fits = entry => !this.isWithin(entry.src, dragged.src) && contains(entry.box, point)
-      && this.canHold(entry, dragged);
+      && (anywhere ? !LEAVES.has(entry.tag) && entry.layout.kind !== 'contents' : this.canHold(entry, dragged));
     return smallest(this.entries.filter(fits));
   }
 
   // A container takes an element it already holds one like: its own parent, or one with a child
   // of the same tag and kind (a group of nodes takes a node, a list of chips a chip; a node, whose
-  // children are an icon and its text, takes none).
+  // children are an icon and its text, takes none). An empty one, or one with only a heading (a
+  // new group), takes anything.
   canHold(entry, dragged) {
-    if (entry.layout.kind === 'contents') return false;
+    if (entry.layout.kind === 'contents' || LEAVES.has(entry.tag)) return false;
     if (entry.src === dragged.parent) return true;
-    return this.childrenOf(entry.src).some(child => resembles(child, dragged));
+    const children = this.entries.filter(child => child.parent === entry.src);
+    if (entry.src && children.every(child => HEADINGS.test(child.tag))) return true;
+    return children.some(child => area(child.box) > 0 && resembles(child, dragged));
   }
 
   // The element after this one among its parent's children, or null for the last.

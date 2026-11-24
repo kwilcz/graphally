@@ -21,6 +21,7 @@ import { pageData, pageProblems } from './test/page-problems.mjs';
 import { pageBeforeAndDates, pageDepend, pageMotion, pageSequence } from './test/page-time.mjs';
 import { viewer } from './test/viewer.mjs';
 import { batch, docExamples, iconPacks, packageAndApi, versionNumbers } from './test/package.mjs';
+import { sourceEdits } from './test/source-edits.mjs';
 
 await test('samples', samples);
 await test('layout', layout);
@@ -37,6 +38,7 @@ later('bundles', bundles);
 later('page-motion', pageMotion);
 later('page-problems', pageProblems);
 later('page-data', pageData);
+later('source-edits', sourceEdits);
 later('page-css-paint', pageCssPaint);
 later('page-images', pageImages);
 later('viewer', viewer);

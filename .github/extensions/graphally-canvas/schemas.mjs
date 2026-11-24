@@ -22,14 +22,19 @@ const EDIT = {
     + 'layers). text {text} sets an element\'s own text; attr {name, value} sets an attribute (null removes '
     + 'it); cell {col?, row?, colSpan?, rowSpan?} puts it in a grid cell; place {into, before?} moves it into '
     + 'an element, before one of its children; remove, duplicate; insert {into, before?, html} writes new '
-    + 'markup. move {id, dx, dy} adds to a nudge and nudge {id, x, y} sets it. connect {from, to, label?} adds '
-    + 'a line; line {key, set} changes its options; unline {key} removes it. A line\'s key is its id, else '
-    + '"from->to", with "#2", "#3" for repeats.',
+    + 'markup; wrap {html?} puts it in a new element (an opening tag, <div> by default); unwrap puts its '
+    + 'children in its place. style {set} sets declarations of its style attribute, and rule {rule | selector, '
+    + 'set, remove?} those of a rule of the diagram\'s <style> (rule is its index, as get_diagram lists '
+    + 'styles.rules; a new selector adds a rule); in set, null removes a declaration. move {id, dx, dy} adds '
+    + 'to a nudge and nudge {id, x, y} sets it. connect {from, to, label?} adds a line; line {key, set} '
+    + 'changes its options; unline {key} removes it. A line\'s key is its id, else "from->to", with "#2", '
+    + '"#3" for repeats.',
   properties: {
     op: {
       type: 'string',
       enum: [
-        'text', 'attr', 'cell', 'place', 'remove', 'duplicate', 'insert', 'move', 'nudge', 'connect', 'line', 'unline',
+        'text', 'attr', 'cell', 'place', 'remove', 'duplicate', 'insert', 'wrap', 'unwrap', 'style', 'rule',
+        'move', 'nudge', 'connect', 'line', 'unline',
       ],
     },
     id: { type: 'string' }, path: { type: 'string' }, into: { type: 'string' }, before: { type: 'string' },
@@ -40,6 +45,7 @@ const EDIT = {
     out: { type: 'string', enum: ['top', 'right', 'bottom', 'left'] },
     in: { type: 'string', enum: ['top', 'right', 'bottom', 'left'] },
     key: { type: 'string' }, set: { type: 'object' },
+    rule: { type: 'integer' }, selector: { type: 'string' }, remove: { type: 'boolean' },
   },
   required: ['op'],
 };

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// What the canvas draws over the diagram, in the drawing's own units: the selection, the element
-// under the pointer, where a dragged element would land, and the dragged element's ghost.
+// What the canvas draws over the diagram, in the drawing's own units: the selection and its
+// handles, the element under the pointer, the grid it sits in, where a dragged element would
+// land, and the dragged element's ghost.
 const SVG = 'http://www.w3.org/2000/svg';
 
 function make(name, attributes) {
@@ -14,6 +15,11 @@ export const frame = (box, pad = 3) => make('rect', {
 });
 export const segment = ({ x1, y1, x2, y2 }) => make('line', { x1, y1, x2, y2 });
 export const trace = d => make('path', { d });
+export function label(x, y, text) {
+  const made = make('text', { x, y });
+  made.textContent = text;
+  return made;
+}
 
 export class Overlay {
   constructor(svg) {

@@ -109,7 +109,7 @@ export const CONNECTION_EDITS = { connect, line: changeLine, unline: removeLine 
 // list of ends, kept without them.
 function lineToAny(block, ids) {
   const seen = new Map();
-  for (const entry of block.value) {
+  for (const entry of Array.isArray(block.value) ? block.value : []) {
     const key = keyOf(entry, seen), line = asObject(entry);
     const ends = ['from', 'to'].filter(end => [line[end]].flat().some(name => ids.has(name)));
     if (!ends.length) continue;

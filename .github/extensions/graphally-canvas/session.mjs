@@ -6,6 +6,7 @@ import { readFileSync, writeFileSync, watchFile, unwatchFile } from 'node:fs';
 import { isAbsolute, relative } from 'node:path';
 import { applyEdits, readLines } from '../../../skills/graphally/scripts/lib/edits.mjs';
 import { outlineOf } from './outline.mjs';
+import { stylesOf } from './styles.mjs';
 
 // How often the file is checked for edits made outside the canvas, in milliseconds.
 const WATCH_INTERVAL = 250;
@@ -37,12 +38,12 @@ export class CanvasSession {
   }
 
   // What a page or the agent reads: the file (and its path in the workspace), its source, its
-  // connections, its elements as layers, the selection, and whether undo and redo can go on.
+  // connections, its elements as layers, its CSS, the selection, and whether undo and redo can go on.
   state() {
     const { filePath, source, selection } = this;
     return {
       filePath, name: nameOf(filePath), source, lines: linesOf(source), layers: outlineOf(source),
-      selection, canUndo: this.done.length > 0, canRedo: this.undone.length > 0,
+      styles: stylesOf(source), selection, canUndo: this.done.length > 0, canRedo: this.undone.length > 0,
     };
   }
 
