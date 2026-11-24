@@ -150,10 +150,10 @@
 </g>
 <g data-edge="raw-&gt;clean" data-sides="right,left"><path d="M602,272 L646,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="clean-&gt;ready" data-sides="right,left"><path d="M892,272 L936,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="ready-&gt;pbi" data-sides="right,left"><path d="M1183,224 L1254,224 Q1260,224 1260,230 L1260,257 Q1260,263 1266,263 L1274,263" style="fill: none; stroke: var(--woad)" stroke-width="3.5" marker-end="url(#pg-m1)"></path></g>
+<g data-edge="ready-&gt;pbi" data-sides="right,left"><path d="M1183,224 L1222.5,224 Q1228.5,224 1228.5,230 L1228.5,257 Q1228.5,263 1234.5,263 L1274,263" style="fill: none; stroke: var(--woad)" stroke-width="3.5" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="web-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="bill-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,332 L272,332 Q278,332 278,326 L278,278 Q278,272 284,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="ready-&gt;churn" data-sides="right,left"><path d="M1183,320 L1254,320 Q1260,320 1260,326 L1260,349 Q1260,355 1266,355 L1274,355" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="ready-&gt;churn" data-sides="right,left"><path d="M1183,320 L1222.5,320 Q1228.5,320 1228.5,326 L1228.5,349 Q1228.5,355 1234.5,355 L1274,355" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="crm-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,178 L272,178 Q278,178 278,184 L278,266 Q278,272 284,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="sup-&gt;raw" data-sides="right,left" data-out="right" data-in="left"><path d="M264,410 L272,410 Q278,410 278,404 L278,278 Q278,272 284,272 L355,272" style="fill: none; stroke: var(--ink)" stroke-width="2" marker-end="url(#pg-m0)"></path></g>
 <path d="M372.5,242.2 A4.4,4.4 0 1 1 381.3,242.2 A4.4,4.4 0 1 1 372.5,242.2 Z" style="fill: var(--teal); stroke: var(--card)" stroke-width="1.2"></path>
