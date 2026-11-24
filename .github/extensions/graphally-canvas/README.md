@@ -55,7 +55,7 @@ graphally's defaults are shown, not edited: a rule of the diagram's own override
 
 ## Selecting, and the rest
 
-- **Select:** a click selects the box that moves as a whole; a second click goes one level in. The arrow keys walk the tree: ↑ and ↓ the siblings, ← the parent, → the first child. The path above the drawing selects any element on the way to the selection, and the layers panel lists every element, including chips and rows that have no id.
+- **Select:** a click selects the box that moves as a whole; a second click goes one level in; Shift+click adds an element to the selection or takes it away, and several selected elements are deleted together, or grouped when they stand side by side in one parent. The arrow keys walk the tree: ↑ and ↓ the siblings, ← the parent, → the first child. The path above the drawing selects any element on the way to the selection, and the layers panel lists every element, including chips and rows that have no id.
 - **Text:** double-click it, or press Enter.
 - **Properties:** id, classes, text, icon (with the names graphally knows) and variants; the element's column, row and span, area or nudge as fields; its lines, each a button that selects it.
 - **Duplicate (Ctrl+D), Delete:** a copy gets ids with `-2`; deleting takes the lines to the ids inside.
@@ -92,4 +92,4 @@ The canvas's server listens on `127.0.0.1` only, under a secret path that only i
 - Rules that nest rules are shown, not edited.
 - A line a drawing script draws can be selected but not edited from the panel. The canvas says so; edit it in the script.
 - A line split out of a list is written last in the connections.
-- One element is selected at a time.
+- Several selected elements are deleted or grouped together; they are moved and styled one at a time.

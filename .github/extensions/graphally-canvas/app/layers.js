@@ -53,7 +53,7 @@ function toggleOf(layer, folded, actions) {
   return toggle;
 }
 
-function itemOf(layer, { selectedPath, folded, parents }, actions) {
+function itemOf(layer, { selectedPaths, folded, parents }, actions) {
   const item = document.createElement('li'), unseen = UNSEEN.has(layer.tag);
   const name = Object.assign(document.createElement('code'), { textContent: nameOf(layer) });
   const text = Object.assign(document.createElement('span'), { textContent: layer.text?.slice(0, 40) ?? '' });
@@ -62,10 +62,10 @@ function itemOf(layer, { selectedPath, folded, parents }, actions) {
   item.append(toggle, name, text);
   item.style.paddingLeft = `${2 + layer.depth * 12}px`;
   item.dataset.path = layer.path;
-  item.classList.toggle('selected', layer.path === selectedPath);
+  item.classList.toggle('selected', selectedPaths.includes(layer.path));
   item.classList.toggle('unseen', unseen);
   if (unseen) return item;
-  item.addEventListener('click', () => actions.pick(layer));
+  item.addEventListener('click', event => actions.pick(layer, event.shiftKey));
   enableDrag(item, layer, actions);
   return item;
 }
@@ -73,11 +73,11 @@ function itemOf(layer, { selectedPath, folded, parents }, actions) {
 const hiddenBy = (path, folded) => [...folded].some(fold => path.startsWith(`${fold}.`));
 
 // Shows the layers; folded paths hide what they hold, except the way to the selection.
-export function showLayers(list, layers, { selectedPath, folded }, actions) {
+export function showLayers(list, layers, { selectedPath, selectedPaths = [selectedPath], folded }, actions) {
   const shown = layers.filter(layer => !layer.virtual);
   const parents = new Set(shown.map(layer => layer.path.split('.').slice(0, -1).join('.')).filter(Boolean));
   const open = new Set([...folded].filter(fold => !selectedPath?.startsWith(`${fold}.`)));
   const visible = shown.filter(layer => !hiddenBy(layer.path, open));
-  list.replaceChildren(...visible.map(layer => itemOf(layer, { selectedPath, folded: open, parents }, actions)));
+  list.replaceChildren(...visible.map(layer => itemOf(layer, { selectedPaths, folded: open, parents }, actions)));
   list.querySelector('.selected')?.scrollIntoView({ block: 'nearest' });
 }

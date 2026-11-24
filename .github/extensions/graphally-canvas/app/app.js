@@ -91,6 +91,7 @@ events.addEventListener('selection', message => {
 
 enableKeys(zoom);
 byId('undo').addEventListener('click', actions.undo);
+byId('open-help').addEventListener('click', () => byId('help').showModal());
 for (const kind of ['box', 'group', 'text']) byId(`add-${kind}`).addEventListener('click', () => actions.add(kind));
 byId('toggle-layers').addEventListener('click', event => {
   const open = document.body.classList.toggle('layers-open');

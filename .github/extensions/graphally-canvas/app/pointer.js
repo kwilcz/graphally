@@ -52,6 +52,7 @@ function followDrag(svg, model, actions, press) {
     },
     up(point, event) {
       if (dragging) actions.drop(press.grabbed, event.altKey ? null : drop, delta, event.altKey);
+      else if (event.shiftKey) actions.toggle(press.grabbed);
       else actions.select(clickTarget(model, press));
     },
   });

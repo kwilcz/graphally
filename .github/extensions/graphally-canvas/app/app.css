@@ -161,3 +161,14 @@ button:disabled { opacity: .5; cursor: default; }
   .bar { gap: 6px 8px; padding: 6px 8px; }
 }
 @media (prefers-reduced-motion: reduce) { #layers-panel { transition: none; } }
+
+#help {
+  max-width: min(560px, 92vw); border: 1px solid var(--canvas-border); border-radius: 8px;
+  background: var(--canvas-bg); color: var(--canvas-fg); padding: 16px 18px;
+}
+#help::backdrop { background: rgb(0 0 0 / .35); }
+#help table { border-collapse: collapse; margin: 8px 0 14px; }
+#help th {
+  text-align: left; white-space: nowrap; padding: 3px 14px 3px 0; font-family: var(--canvas-mono); font-weight: 600;
+}
+#help td { padding: 3px 0; color: var(--canvas-muted); }

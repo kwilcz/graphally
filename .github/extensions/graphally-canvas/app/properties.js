@@ -106,8 +106,20 @@ function lineControls({ key, found }, act) {
     ])];
 }
 
+// Several elements selected (Shift+click): what can be done to them together.
+const severalControls = (count, act) => [
+  element('h3', { textContent: `${count} elements` }),
+  element('div', { className: 'actions' }, [
+    button('Group', () => act.wrap(), 'Put them, side by side in one parent, into a new group (Ctrl+G)'),
+    button('Delete', () => act.remove(), 'Delete them all, with their lines'),
+    button('Select one', act.selectParent, 'Keep only the first selected (Esc)'),
+  ]),
+  element('p', { className: 'hint', textContent: 'Shift+click adds an element to the selection, or takes it away.' }),
+];
+
 export function showProperties(panel, context, act) {
-  const controls = context.layer ? elementControls(context, act)
-    : context.line ? lineControls(context.line, act) : [element('p', { className: 'hint', textContent: HINT })];
+  const controls = context.several ? severalControls(context.several, act)
+    : context.layer ? elementControls(context, act)
+      : context.line ? lineControls(context.line, act) : [element('p', { className: 'hint', textContent: HINT })];
   panel.replaceChildren(...controls.filter(Boolean));
 }

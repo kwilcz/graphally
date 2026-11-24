@@ -32,7 +32,9 @@ export function drawSelection() {
   const entry = selectedEntry(), key = selection?.kind === 'line' ? selection.id : null;
   const line = key && svg.querySelector(`g[data-edge="${CSS.escape(key)}"] path`);
   overlay.show('grid', gridShapes(gridAround(entry)));
-  overlay.show('selection', entry ? frame(entry.box) : line ? trace(line.getAttribute('d')) : null);
+  const also = view.also.map(item => view.model.entry(item.path)).filter(Boolean).map(found => frame(found.box));
+  const main = entry ? frame(entry.box) : line ? trace(line.getAttribute('d')) : null;
+  overlay.show('selection', [main, ...also].filter(Boolean));
   const square = ({ x, y }) => frame({ x: x - HANDLE, y: y - HANDLE, w: 2 * HANDLE, h: 2 * HANDLE }, 0);
   const link = linkHandleOf(entry);
   overlay.show('handle', [...handlesOf(view.model, entry).map(square), ...(link ? [dot(link.x, link.y, HANDLE)] : [])]);
@@ -84,6 +86,7 @@ function commit(edits, selectAfter) {
 export const pointerActions = {
   selectedEntry,
   select: actions.select,
+  toggle: actions.toggle,
   selectLine: actions.selectLine,
   editText: actions.editText,
   editLabel: actions.editLabel,

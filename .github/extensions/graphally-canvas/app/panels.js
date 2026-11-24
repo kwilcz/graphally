@@ -32,6 +32,7 @@ function propertiesContext() {
   if (selection?.kind === 'line') {
     return { line: { key: selection.id, found: entryOfDrawn(state.lines, selection.id) } };
   }
+  if (view.also.length) return { several: actions.selectedPaths().length };
   const layer = selection?.kind === 'element' ? layerOf(selection.path) : null;
   if (!layer) return {};
   const source = sourceElement(layer.path), entry = selectedEntry();
@@ -46,7 +47,8 @@ function propertiesContext() {
 
 export function showPanels() {
   const { state, selection } = view, path = selection?.kind === 'element' ? selection.path : null;
-  showLayers(byId('layers'), state?.layers ?? [], { selectedPath: path, folded: view.folded }, {
+  const shown = { selectedPath: path, selectedPaths: actions.selectedPaths(), folded: view.folded };
+  showLayers(byId('layers'), state?.layers ?? [], shown, {
     pick: actions.pick, fold: actions.fold, move: actions.dropOnLayer,
   });
   showBreadcrumb(byId('crumbs'), path, layerOf, layer => actions.pick(layer));

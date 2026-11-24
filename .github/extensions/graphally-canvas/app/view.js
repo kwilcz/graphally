@@ -6,7 +6,7 @@ import { api } from './api.js';
 
 export const view = {
   state: null, svg: null, model: null, parsed: null, colorOf: null, overlay: null,
-  selection: null, connecting: null, zoom: 'fit', folded: new Set(), pendingText: null,
+  selection: null, also: [], connecting: null, zoom: 'fit', folded: new Set(), pendingText: null,
 };
 
 export const byId = id => document.getElementById(id);
@@ -34,16 +34,19 @@ const refreshers = [];
 export const onRefresh = refresher => refreshers.push(refresher);
 export const refresh = () => refreshers.forEach(refresher => refresher());
 
-export function setSelection(selection) {
+// Selects one thing (any others selected with it are let go), or, with also, keeps them: the
+// elements Shift+click added.
+export function setSelection(selection, also = []) {
   view.selection = selection;
-  api.select(selection ? [selection] : []);
+  view.also = selection ? also : [];
+  api.select(selection ? [selection, ...view.also] : []);
   refresh();
 }
 
 // Sends edits to the file. What to select afterwards is set first: the file's new state can
 // reach the page before the answer does.
 export async function edit(edits, selectAfter) {
-  if (selectAfter !== undefined) view.selection = selectAfter;
+  if (selectAfter !== undefined) Object.assign(view, { selection: selectAfter, also: [] });
   const { errors = [] } = await api.edit(edits, view.state?.version);
   setStatus(errors.map(error => error.message).join('; '), errors.length > 0);
   return errors;
