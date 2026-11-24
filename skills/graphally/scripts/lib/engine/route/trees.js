@@ -6,6 +6,7 @@
 import { RIDE } from './costs.js';
 import { spanOf } from './geometry.js';
 import { astar, markUse } from './search.js';
+import { bendLineOf } from './bend-lines.js';
 
 // The direction of a path's step from cell t to the next: 0 east, 1 south, 2 west, 3 north.
 function directionAt(cells, t) {
@@ -76,25 +77,6 @@ function joinTrunk(path) {
   return { ...joined, points, cells };
 }
 
-// The line a bundle gathers on: across the way to the shared box, through the unshared end
-// nearest that box. Lines from boxes side by side meet right beside them, and a line from
-// further away runs on to meet the one whose box is nearest. Null for a bundle of one, or one
-// whose lines meet the shared box at different ports and so cannot share a trunk.
-function gatherLine(grid, connections, members, portsFor) {
-  const fanIn = connections[members[0]].fanIn;
-  const ends = members.map(member => {
-    const [starts, goals] = portsFor(member);
-    return fanIn ? { own: starts[0], shared: goals[0] } : { own: goals[0], shared: starts[0] };
-  }).filter(end => end.own && end.shared);
-  const atShared = end => end.shared.i === ends[0].shared.i && end.shared.j === ends[0].shared.j;
-  if (ends.length < 2 || !ends.every(atShared)) return null;
-  const across = ends[0].shared.side % 2 === 0 ? 'x' : 'y';
-  const at = port => (across === 'x' ? grid.xs[port.i] : grid.ys[port.j]);
-  const shared = at(ends[0].shared);
-  const nearest = ends.map(end => at(end.own)).reduce((a, b) => (Math.abs(b - shared) < Math.abs(a - shared) ? b : a));
-  return { across, at: nearest };
-}
-
 // A connection and the rest of its bundle, longest first: the order a tree is routed in.
 function membersOf(connections, index) {
   const { bundle } = connections[index];
@@ -109,11 +91,11 @@ export function routeTrees(grid, connections, portsFor) {
   connections.forEach((connection, index) => {
     if (routed.has(index)) return;
     const members = membersOf(connections, index);
-    const gather = connection.bundle ? gatherLine(grid, connections, members, portsFor) : null;
+    const bendLine = bendLineOf(grid, connections, members, portsFor);
     for (const member of members) {
       const line = connections[member], [starts, goals] = portsFor(member);
       addTrunkPorts(grid, connections, paths, member, starts, goals);
-      const path = joinTrunk(astar(grid, starts, goals, { ...line, gather }));
+      const path = joinTrunk(astar(grid, starts, goals, { ...line, bendLine }));
       if (path) {
         // A line that reached the shared end's port on its own still meets the others there.
         const sharedEnd = other => (line.fanIn ? other.cells.at(-1) : other.cells[0]);
@@ -136,8 +118,8 @@ export function ripUpAndReroute(grid, connections, paths, portsFor) {
     connections.forEach((connection, index) => {
       if (!paths[index] || connection.bundle) return;
       markUse(grid, paths[index].cells, -1, connection.bundle);
-      const [starts, goals] = portsFor(index);
-      const again = astar(grid, starts, goals, connection);
+      const [starts, goals] = portsFor(index), bendLine = bendLineOf(grid, connections, [index], portsFor);
+      const again = astar(grid, starts, goals, { ...connection, bendLine });
       if (again) {
         changed ||= again.cells.join() !== paths[index].cells.join();
         paths[index] = again;

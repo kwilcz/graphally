@@ -14,6 +14,7 @@ import { astar, markUse } from './search.js';
 import { bundlesOf, alignBundleSides } from './bundles.js';
 import { spreadPorts } from './spread.js';
 import { routeTrees, ripUpAndReroute } from './trees.js';
+import { middleLine } from './bend-lines.js';
 import { separateParallels } from './separate.js';
 import { placeLabels } from './labels.js';
 
@@ -136,6 +137,17 @@ function addFixedPortLines(fixed, lines) {
   for (const port of ports) (port.side % 2 === 0 ? lines.y : lines.x).add(port.coord);
 }
 
+// The lines midway between boxes that a line joins on facing sides: where it bends (bend-lines.js).
+function addMiddleLines(connections, fixed, lines) {
+  connections.forEach((connection, index) => {
+    const { source, target } = fixed[index];
+    if (connection.bundle || !source || !target) return;
+    const step = Math.abs(source.coord - target.coord);
+    const middle = middleLine(connection.source.rect, source.side, connection.target.rect, target.side, step);
+    if (middle) lines[middle.across].add(middle.at);
+  });
+}
+
 // A connection's ports in the second pass: at its fixed places, else as free as before.
 function fixedPortsOf(router, grid, connection, fixed) {
   const portsAt = which => {
@@ -151,6 +163,7 @@ function fixedPortsOf(router, grid, connection, fixed) {
 function secondPass(router, connections, fixed, lines) {
   addFixedPortLines(fixed, lines);
   addTrunkLines(connections, fixed, lines);
+  addMiddleLines(connections, fixed, lines);
   const grid = buildGrid(router, lines.x, lines.y);
   const portsFor = index => fixedPortsOf(router, grid, connections[index], fixed[index]);
   const paths = routeTrees(grid, connections, portsFor);

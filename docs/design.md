@@ -130,8 +130,11 @@ fixes where lines meet their boxes: lines that share a side split it evenly, one
 middle, two at a third and two thirds, n at k/(n+1), ordered so they do not cross. A line
 alone on its side runs straight to a facing side when the two meet inside the middle 80% of
 both: two lone ends meet nearest their middles, and a lone end moves to the other end's
-port when other lines share that one. A few rounds of rip-up and reroute follow, and then
-parallel segments are pulled apart. Where two lines still cross, one hops the other with a
+port when other lines share that one. Of routes that cost the same, a line from one box to
+the facing side of another bends midway between them, so a Z-shaped line turns in the middle
+of the gap rather than against either box; a step shorter than four corner radii stays where
+it falls, as a kink in the middle of a long line would draw the eye. A few rounds of rip-up
+and reroute follow, and then parallel segments are pulled apart. Where two lines still cross, one hops the other with a
 4px arc, so a crossing never reads as a junction: the horizontal line, upwards, unless a bend
 or its arrowhead is too close; then the vertical one, towards the longer stretch of the line it
 crosses. A solid line hops a dashed one, whose dashes would break up a small arc, and lines of

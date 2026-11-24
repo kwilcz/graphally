@@ -3,7 +3,7 @@
 // state is a grid point and the direction it was reached in (point * 4 + direction), so a bend
 // can be priced. A route's cost is its length, weighted inside foreign containers and along
 // container borders, plus bends, crossings and overlap with earlier routes.
-import { BEND, CROSS, OVERLAP, RIDE, GATHER, FOREIGN, MIN_END, STUB } from './costs.js';
+import { BEND, CROSS, OVERLAP, RIDE, BEND_PULL, FOREIGN, MIN_END, STUB } from './costs.js';
 import { Heap } from './heap.js';
 
 const DX = [1, 0, -1, 0], DY = [0, 1, 0, -1];   // east, south, west, north
@@ -21,8 +21,8 @@ function memoryOf(grid) {
 }
 
 class Search {
-  constructor(grid, starts, goals, { allowed, bundle, gather, marks }) {
-    Object.assign(this, { grid, starts, goals, allowed, bundle, gather, marks });
+  constructor(grid, starts, goals, { allowed, bundle, bendLine, marks }) {
+    Object.assign(this, { grid, starts, goals, allowed, bundle, bendLine, marks });
     const memory = memoryOf(grid);
     Object.assign(this, { cost: memory.cost, previous: memory.previous, stamp: memory.stamp, heap: memory.heap });
     this.generation = ++memory.generation;
@@ -80,7 +80,7 @@ class Search {
   // Arriving means moving into the box: any other direction takes a bend there.
   arrive(state, direction, goal) {
     const shortEnd = this.grid.endLength && goal.standoff < MIN_END && this.marks.head ? STUB : 0;
-    const turn = BEND + shortEnd + this.gatherOf((state / 4) | 0);
+    const turn = BEND + shortEnd + this.pullOf((state / 4) | 0);
     const total = this.cost[state] + (direction === opposite(goal.dir) ? 0 : turn) + (goal.penalty || 0);
     if (total < this.best.cost) this.best = { cost: total, state, goal };
   }
@@ -102,7 +102,7 @@ class Search {
     const horizontal = next % 2 === 0;
     let cost = length * this.weightOf(segment, horizontal);
     if (next !== direction) cost = this.withTurn(cost, state, next, nextPoint, length);
-    const turn = next !== direction ? BEND + this.gatherOf((state / 4) | 0) : 0;
+    const turn = next !== direction ? BEND + this.pullOf((state / 4) | 0) : 0;
     if (this.ridesTrunk(segment, horizontal)) return length * RIDE + turn;
     return cost + this.usedOf(segment, horizontal) * OVERLAP + (this.crosses(nextPoint, horizontal) ? CROSS : 0);
   }
@@ -118,7 +118,7 @@ class Search {
   // right at the start. Added one by one, as the costs have always been summed.
   withTurn(cost, state, next, nextPoint, length) {
     const { grid, marks } = this;
-    cost += BEND + this.gatherOf((state / 4) | 0);
+    cost += BEND + this.pullOf((state / 4) | 0);
     if (!grid.endLength) return cost;
     const goal = this.goalAt.get(nextPoint);
     if (goal && marks.head && next === opposite(goal.dir) && length + goal.standoff < MIN_END) cost += STUB;
@@ -127,13 +127,13 @@ class Search {
     return cost;
   }
 
-  // A bundle line's bend at a point costs a little more the further it is from the line its
-  // bundle gathers on.
-  gatherOf(point) {
-    if (!this.gather) return 0;
-    const { grid, gather } = this;
-    const at = gather.across === 'x' ? grid.xs[point % grid.nx] : grid.ys[(point / grid.nx) | 0];
-    return GATHER * Math.abs(at - gather.at);
+  // A bend at a point costs a little more the further it is from the line the route would rather
+  // bend on (bend-lines.js).
+  pullOf(point) {
+    if (!this.bendLine) return 0;
+    const { grid, bendLine } = this;
+    const at = bendLine.across === 'x' ? grid.xs[point % grid.nx] : grid.ys[(point / grid.nx) | 0];
+    return BEND_PULL * Math.abs(at - bendLine.at);
   }
 
   ridesTrunk(segment, horizontal) {
