@@ -4,6 +4,7 @@
 // an element without an id stays selected. Paths are the source's: "0.2" is the third child of
 // the diagram's first element.
 import { view, layerOf } from './view.js';
+import { canNest } from './nesting.js';
 
 const UNSEEN = new Set(['script', 'style', 'template']);
 // Elements that hold no boxes: nothing is moved into them.
@@ -24,7 +25,12 @@ const seen = layer => !layer.virtual && !UNSEEN.has(layer.tag);
 export const visibleChildrenOf = parent => childrenOf(parent)
   .flatMap(child => (child.virtual ? visibleChildrenOf(child.path) : seen(child) ? [child] : []));
 
-export const canHoldChildren = layer => Boolean(layer) && !LEAVES.has(layer.tag) && !UNSEEN.has(layer.tag);
+// Whether an element takes children, and, given one's tag, that one (no <div> in a <p>).
+export const canHoldChildren = (layer, tag) => Boolean(layer) && !LEAVES.has(layer.tag) && !UNSEEN.has(layer.tag)
+  && (!tag || canNest(layer.tag, tag));
+
+// Whether the element at a path may stand in a parent (the diagram, at '', takes anything).
+const fitsIn = (parent, path) => !parent || canNest(layerOf(parent)?.tag, layerOf(path)?.tag);
 
 // A path once the element at `removed` is gone: a later sibling of it, or anything inside one,
 // moves up by one.
@@ -63,7 +69,7 @@ export function moveAmong(path, step) {
 export function indent(path) {
   const siblings = childrenOf(parentPath(path)).filter(seen);
   const target = siblings[siblings.findIndex(layer => layer.path === path) - 1];
-  return canHoldChildren(target) ? placeMove(path, target.path, null) : null;
+  return canHoldChildren(target, layerOf(path)?.tag) ? placeMove(path, target.path, null) : null;
 }
 
 // Out of its parent, to stand right after it.
@@ -71,18 +77,23 @@ export function outdent(path) {
   const parent = parentPath(path);
   if (!parent) return null;
   const all = childrenOf(parentPath(parent)), next = all[all.findIndex(layer => layer.path === parent) + 1];
-  return placeMove(path, parentPath(parent), next?.path ?? null);
+  return fitsIn(parentPath(parent), path) ? placeMove(path, parentPath(parent), next?.path ?? null) : null;
 }
 
 // A drop on a layer: before it, after it, or last inside it.
 export function layerDrop(path, target, zone) {
-  if (zone === 'inside') return canHoldChildren(layerOf(target)) ? placeMove(path, target, null) : null;
+  if (zone === 'inside') {
+    return canHoldChildren(layerOf(target), layerOf(path)?.tag) ? placeMove(path, target, null) : null;
+  }
+  if (!fitsIn(parentPath(target), path)) return null;
   if (zone === 'before') return placeMove(path, parentPath(target), target);
   const all = childrenOf(parentPath(target)), next = all[all.findIndex(layer => layer.path === target) + 1];
   return placeMove(path, parentPath(target), next?.path ?? null);
 }
 
-export const wrapMove = path => ({ edits: [{ op: 'wrap', path, html: '<div class="group">' }], path });
+// Into a new group, a <div>: not where a <div> cannot stand.
+export const wrapMove = path => (canNest(layerOf(parentPath(path))?.tag, 'div')
+  ? { edits: [{ op: 'wrap', path, html: '<div class="group">' }], path } : null);
 
 export const canUnwrap = layer => Boolean(layer?.path) && childrenOf(layer.path).some(seen);
 

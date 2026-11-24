@@ -7,18 +7,32 @@ import { sourceTree, nodesOf } from './tree.mjs';
 
 const CONDITIONS = /^@(media|supports|layer|container)\b/;
 
+// Past the ) that closes the ( at `open`: url(data:…;…) holds a ; that ends nothing.
+function pastParens(text, open, to) {
+  let depth = 0;
+  for (let at = open; at < to; at = pastToken(text, at, to, false)) {
+    depth += text[at] === '(' ? 1 : text[at] === ')' ? -1 : 0;
+    if (depth === 0) return at + 1;
+  }
+  return to;
+}
+
 // Past one comment, string or bracketed run starting at `at`, or one character.
-function pastToken(text, at, to) {
+function pastToken(text, at, to, parens = true) {
   const char = text[at];
   if (char === '/' && text[at + 1] === '*') {
     const end = text.indexOf('*/', at + 2);
     return end < 0 || end + 2 > to ? to : end + 2;
   }
+  if (char === '(' && parens) return pastParens(text, at, to);
   if (char !== '"' && char !== "'") return at + 1;
   let next = at + 1;
   while (next < to && text[next] !== char) next += text[next] === '\\' ? 2 : 1;
   return Math.min(next + 1, to);
 }
+
+// A property's name as CSS compares it: custom properties (--myAccent) keep their case.
+export const propertyName = name => (name.startsWith('--') ? name : name.toLowerCase());
 
 // The next of these characters outside comments and strings, or `to`.
 function nextOf(text, at, to, chars) {
@@ -57,7 +71,7 @@ function declarationOf(text, from, to) {
   if (important) valueEnd = trimEnd(text, valueStart, text.lastIndexOf('!', valueEnd));
   const end = text[to] === ';' ? to + 1 : trimEnd(text, start, to);
   return {
-    property: text.slice(start, colon).trim().toLowerCase(), value: text.slice(valueStart, valueEnd),
+    property: propertyName(text.slice(start, colon).trim()), value: text.slice(valueStart, valueEnd),
     important, start, end, valueStart, valueEnd,
   };
 }

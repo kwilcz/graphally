@@ -57,11 +57,12 @@ graphally's defaults are shown, not edited: a rule of the diagram's own override
 
 - **Select:** a click selects the box that moves as a whole; a second click goes one level in; Shift+click adds an element to the selection or takes it away, and several selected elements are deleted together, or grouped when they stand side by side in one parent. The arrow keys walk the tree: ↑ and ↓ the siblings, ← the parent, → the first child. The path above the drawing selects any element on the way to the selection, and the layers panel lists every element, including chips and rows that have no id.
 - **Text:** double-click it, or press Enter.
-- **Properties:** id, classes, text, icon (with the names graphally knows) and variants; the element's column, row and span, area or nudge as fields; its lines, each a button that selects it.
+- **Properties:** id (a new one carries the box's lines and `#id` rules with it), classes, text, icon (with the names graphally knows) and variants; the element's column, row and span, area or nudge as fields; its lines, each a button that selects it.
 - **Duplicate (Ctrl+D), Delete:** a copy gets ids with `-2`; deleting takes the lines to the ids inside.
 - **Zoom:** −, +, 100% and Fit, Ctrl+wheel, Shift+1 (fit) and Shift+0 (100%).
 - **Undo and Redo:** step through every change to the file while the canvas is open: yours, the agent's, and those from other programs.
 - **A narrow panel:** below 1100px the layers slide in from the Layers button; below 760px the properties sit under the drawing.
+- **Images and parts:** an `<img>` or an included part beside the diagram file loads as in a render.
 
 ## What the agent can do
 
@@ -74,7 +75,7 @@ graphally's defaults are shown, not edited: a rule of the diagram's own override
 
 ## Safety
 
-The canvas's server listens on `127.0.0.1` only, under a secret path that only its page is given. It answers only requests that name it as the page does (a site that points its name at 127.0.0.1 is refused) and takes changes only as JSON from its own origin, so another site open in the same browser cannot read or edit the diagram. Every edit says which version of the source it was made against; one made against an older version (its paths may name other elements now) is refused, and the page draws the file afresh.
+The canvas's server listens on `127.0.0.1` only, under a secret path that only its page is given. It answers only requests that name it as the page does (a site that points its name at 127.0.0.1 is refused) and takes changes only as JSON from its own origin, so another site open in the same browser cannot read or edit the diagram. Every edit says which version of the source it was made against: the one shown when the drag began, the text editor opened or the panel was drawn. One made against an older version (its paths may name other elements now) is refused, and the page draws the file afresh; a field with typing not yet written is left as it is meanwhile. The file is read again before each edit, preview and undo, so a change another program made is never overwritten. Edits refuse to put a block (a `<div>`, a `<p>`) in a paragraph, a heading or a span, where the browser would end that element early.
 
 ## How it is built
 

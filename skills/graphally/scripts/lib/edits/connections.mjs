@@ -59,12 +59,13 @@ export function keyOf(entry, seen) {
 const arrayAsObject = entry => ({ from: entry[0], to: entry[1], ...(entry[2] ? { label: entry[2] } : {}) });
 export const asObject = entry => (Array.isArray(entry) ? arrayAsObject(entry) : { ...entry });
 
-// A value as JSON, with a space after each comma between its items.
-const formatValue = value => JSON.stringify(value).replace(/,(?=["[\d-])/g, ', ');
+// A value as JSON, with a space after each comma between its items; a comma in a string stays.
+const formatValue = value => JSON.stringify(value)
+  .replace(/"(?:[^"\\]|\\.)*"|,/g, token => (token === ',' ? ', ' : token));
 
 // One entry in the house style: { "from": "a", "to": "b", "label": "x" }.
 function formatEntry(entry) {
-  if (Array.isArray(entry)) return JSON.stringify(entry).replace(/,/g, ', ');
+  if (Array.isArray(entry)) return formatValue(entry);
   const fields = Object.entries(entry).map(([key, value]) => `${JSON.stringify(key)}: ${formatValue(value)}`);
   return `{ ${fields.join(', ')} }`;
 }

@@ -52,7 +52,14 @@ const EDIT = {
 
 export const EDITS = {
   type: 'object',
-  properties: { edits: { type: 'array', minItems: 1, items: EDIT } },
+  properties: {
+    edits: { type: 'array', minItems: 1, items: EDIT },
+    version: {
+      type: 'integer',
+      description: 'The version get_diagram returned. Edits that name elements by path should give it: if the '
+        + 'file changed since, the paths may name other elements, and the edits are refused.',
+    },
+  },
   required: ['edits'],
   additionalProperties: false,
 };

@@ -25,7 +25,7 @@ function edited(edits) {
 
 const lineOf = (source, needle) => source.split('\n').find(line => line.includes(needle))?.trim();
 
-export function sourceEdits() {
+function checkStyleEdits() {
   const rule = edited([{ op: 'rule', selector: '.lane', set: { gap: '12px', 'align-items': 'center' } }]);
   check(lineOf(rule, '.lane {') === '.lane { display: flex; gap: 12px; align-items: center; }', 'rule: set and add');
   const fresh = edited([{ op: 'rule', selector: '#a', set: { color: 'var(--woad)' } }]);
@@ -36,6 +36,9 @@ export function sourceEdits() {
   check(!gone.includes('.card {') && gone.includes('.lane {'), 'rule: remove');
   const inline = edited([{ op: 'style', id: 'a', set: { opacity: '0.5' } }]);
   check(lineOf(inline, 'id=a') === '<div class=card id=a style="opacity: 0.5">A</div>', 'style: set');
+}
+
+function checkStructureEdits() {
   const wrapped = edited([{ op: 'wrap', id: 'lane', html: '<div class="group">' }]);
   const wrapper = /<div class="group col-\[2\]">\n {4}<div class="lane" id=lane>/;
   check(wrapper.test(wrapped), 'wrap: placing classes go to the wrapper');
@@ -46,6 +49,14 @@ export function sourceEdits() {
   const children = /\n {2}<div class=card id=a>A<\/div>\n {2}<div class=card id=b>B<\/div>\n/;
   check(children.test(out), 'unwrap: children one level out');
   check(out.includes('"from": "a"') && !out.includes('"from": "lane"'), 'unwrap: the container\'s lines go');
+  const withParagraph = SOURCE.replace('<div class=card id=b>B</div>', '<p id=b>B</p>');
+  const nested = applyEdits(withParagraph, [{ op: 'place', id: 'a', into: '1.1' }]);
+  check(nested.errors.length === 1, 'place: a <div> is refused inside a <p>');
   const moved = edited([{ op: 'place', id: 'b', into: '1', before: '1.0' }]);
   check(moved.indexOf('id=b') < moved.indexOf('id=a'), 'place: before a sibling');
+}
+
+export function sourceEdits() {
+  checkStyleEdits();
+  checkStructureEdits();
 }

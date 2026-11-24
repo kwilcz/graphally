@@ -6,9 +6,10 @@ import { view, byId, onRefresh, setStatus } from './view.js';
 import { drawSource } from './stage.js';
 import { Overlay } from './overlay.js';
 import { enablePointer } from './pointer.js';
-import { drawSelection, pointerActions } from './canvas.js';
+import { drawSelection, pointerActionsFor } from './canvas.js';
 import { showPanels, resolveSelection } from './panels.js';
 import { styleLists } from './styles-panel.js';
+import { decodedText } from './dom.js';
 import { enableKeys } from './keys.js';
 import { actions } from './actions.js';
 import { applyZoom, zoomAround, stepped, scaleOf } from './zoom.js';
@@ -35,15 +36,17 @@ async function show(next) {
   if (first) byId('lists').replaceChildren(...styleLists(next.styles.tokens));
   const drawn = await drawSource(stage, next.source);
   previewReplaced();
+  for (const layer of next.layers) layer.text = decodedText(layer.text);
   view.state = next;
   Object.assign(view, drawn ?? { svg: null, model: null, parsed: null, colorOf: null });
   view.overlay = drawn ? new Overlay(drawn.svg) : null;
   if (drawn) {
-    enablePointer(drawn.svg, drawn.model, pointerActions);
+    enablePointer(drawn.svg, drawn.model, pointerActionsFor(next.version));
     showScale(applyZoom(stage, drawn.svg, view.zoom));
     Object.assign(stage, { scrollLeft: scroll.left, scrollTop: scroll.top });
   }
   view.selection = resolveSelection(view.selection ?? next.selection[0]);
+  view.also = view.selection ? view.also.map(resolveSelection).filter(item => item?.kind === 'element') : [];
   drawSelection();
   showPanels();
   editPendingText();
@@ -75,6 +78,10 @@ onRefresh(() => {
   drawSelection();
   showPanels();
 });
+// The properties panel left behind while a field was typed in is drawn once the field is left.
+byId('properties').addEventListener('input', event => { event.target.dataset.dirty = 'yes'; });
+byId('properties').addEventListener('change', event => { delete event.target.dataset.dirty; });
+byId('properties').addEventListener('focusout', () => setTimeout(() => view.panelBehind && showPanels()));
 
 const events = new EventSource('events');
 events.onmessage = message => {

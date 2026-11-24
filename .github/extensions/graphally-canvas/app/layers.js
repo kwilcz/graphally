@@ -23,13 +23,13 @@ const clearZones = item => item.classList.remove(...ZONES.map(zone => `drop-${zo
 function enableDrag(item, layer, actions) {
   item.draggable = true;
   item.addEventListener('dragstart', event => {
-    dragged = layer.path;
+    dragged = { path: layer.path, version: actions.version };
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', layer.path);
   });
   item.addEventListener('dragend', () => { dragged = null; });
   item.addEventListener('dragover', event => {
-    if (dragged === null || layer.path === dragged || layer.path.startsWith(`${dragged}.`)) return;
+    if (dragged === null || layer.path === dragged.path || layer.path.startsWith(`${dragged.path}.`)) return;
     event.preventDefault();
     clearZones(item);
     item.classList.add(`drop-${zoneOf(item, event)}`);
@@ -38,7 +38,9 @@ function enableDrag(item, layer, actions) {
   item.addEventListener('drop', event => {
     event.preventDefault();
     clearZones(item);
-    if (dragged !== null) actions.move(dragged, layer.path, zoneOf(item, event));
+    // A drag begun on an older list (the file changed under it) names elements by old paths.
+    if (dragged?.version !== actions.version) return;
+    actions.move(dragged.path, layer.path, zoneOf(item, event), dragged.version);
   });
 }
 

@@ -30,7 +30,7 @@ const ACTIONS = [
       + 'CSS, move it in the layout, add, copy, group or remove elements, add, change or remove lines. Returns '
       + 'the edits applied and those that failed, with why.',
     inputSchema: EDITS,
-    handler: async ctx => sessionOf(ctx).edit(ctx.input.edits),
+    handler: async ctx => sessionOf(ctx).edit(ctx.input.edits, ctx.input.version),
   },
   {
     name: 'get_selection',

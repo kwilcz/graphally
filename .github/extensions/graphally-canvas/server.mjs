@@ -3,15 +3,22 @@
 // the graphally engine from the skill, the diagram's state as it changes (server-sent events),
 // and the edits, previews and selections the page sends back.
 import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { randomBytes } from 'node:crypto';
 import { allIconNames } from './icons.mjs';
 
 const APP = new URL('./app/', import.meta.url);
 const ENGINE = new URL('../../../skills/graphally/viewer/graphally.min.js', import.meta.url);
+// The skill's rule of what an element may hold, which the page follows too.
+const NESTING = new URL('../../../skills/graphally/scripts/lib/edits/nesting.mjs', import.meta.url);
 const TYPES = {
   html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8',
+  svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp',
 };
+// What a diagram may take from its own folder: images, and the parts it includes.
+const BESIDE = /^\/(?:[\w.-]+\/)*[\w.-]+\.(svg|png|jpe?g|gif|webp)$|^\/parts\/(?:[\w.-]+\/)*[\w.-]+\.html$/;
 const LARGEST_BODY = 1 << 20;
 
 // Sent with every answer: no sniffing a type, and no address (with its secret) handed on to the
@@ -19,7 +26,7 @@ const LARGEST_BODY = 1 << 20;
 const GUARDS = { 'x-content-type-options': 'nosniff', 'referrer-policy': 'no-referrer' };
 
 function sendFile(response, url) {
-  const type = TYPES[url.pathname.split('.').pop()];
+  const type = TYPES[url.pathname.split('.').pop().toLowerCase().replace(/^mjs$/, 'js')];
   response.writeHead(200, { ...GUARDS, 'content-type': type, 'cache-control': 'no-cache' });
   response.end(readFileSync(url));
 }
@@ -29,14 +36,24 @@ function sendJson(response, status, value) {
   response.end(JSON.stringify(value));
 }
 
+// A request's body as JSON: its bytes joined before they are read as text (a character can fall
+// across two chunks), and a body that is not JSON an error, not a crash.
 function readJson(request) {
   return new Promise((resolve, reject) => {
-    let body = '';
+    const chunks = [];
+    let size = 0;
     request.on('data', chunk => {
-      body += chunk;
-      if (body.length > LARGEST_BODY) reject(new Error('request too large'));
+      size += chunk.length;
+      if (size > LARGEST_BODY) reject(new Error('request too large'));
+      else chunks.push(chunk);
     });
-    request.on('end', () => resolve(JSON.parse(body || '{}')));
+    request.on('end', () => {
+      try {
+        resolve(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'));
+      } catch (error) {
+        reject(error);
+      }
+    });
     request.on('error', reject);
   });
 }
@@ -47,10 +64,18 @@ function appFile(pathname) {
   return /^\/[\w-]+\.(js|css)$/.test(pathname) ? new URL(pathname.slice(1), APP) : null;
 }
 
+// A file the diagram names beside it (<img src="logo.svg">, parts/…), never outside its folder.
+function besideFile(session, pathname) {
+  if (!BESIDE.test(pathname) || pathname.split('/').includes('..')) return null;
+  const file = pathToFileURL(resolve(dirname(session.filePath), `.${pathname}`));
+  return existsSync(file) ? file : null;
+}
+
 const ROUTES = {
   'GET /events': (session, request, response) => session.addPage(response),
   'GET /api/state': (session, request, response) => sendJson(response, 200, session.state()),
   'GET /graphally.min.js': (session, request, response) => sendFile(response, ENGINE),
+  'GET /nesting.js': (session, request, response) => sendFile(response, NESTING),
   'GET /api/icons': (session, request, response) => sendJson(response, 200, { names: allIconNames() }),
   'POST /api/edits': async (session, request, response) => {
     const { edits = [], version } = await readJson(request);
@@ -84,7 +109,8 @@ async function handle(session, request, response, { own, secret }) {
   if (!allowed(request, own)) return sendJson(response, 403, { error: 'not from the canvas page' });
   if (!url.pathname.startsWith(`${prefix}/`)) return sendJson(response, 404, { error: 'no such page' });
   const pathname = url.pathname.slice(prefix.length);
-  const route = ROUTES[`${request.method} ${pathname}`], file = request.method === 'GET' && appFile(pathname);
+  const route = ROUTES[`${request.method} ${pathname}`];
+  const file = request.method === 'GET' && (appFile(pathname) || besideFile(session, pathname));
   try {
     if (route) await route(session, request, response);
     else if (file) sendFile(response, file);

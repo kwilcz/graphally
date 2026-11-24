@@ -7,14 +7,25 @@
 const ends = value => [].concat(value ?? []);
 const one = list => (list.length === 1 ? list[0] : list);
 
+// Every line the entries draw, keyed as the drawing keys them: one per pair of ends, from the
+// first end of a list on, its id or "from->to", with #2, #3 for a key drawn again.
+function drawnLines(lines) {
+  const repeats = new Map();
+  return lines.flatMap(entry => {
+    const count = ends(entry.from).length * ends(entry.to).length;
+    return ends(entry.from).flatMap(from => ends(entry.to).map(to => {
+      const base = entry.id || `${from}->${to}`, repeat = (repeats.get(base) || 0) + 1;
+      repeats.set(base, repeat);
+      return { key: repeat > 1 ? `${base}#${repeat}` : base, entry, pair: count > 1 ? { from, to } : null, count };
+    }));
+  });
+}
+
 // The entry a drawn line (its key, as the drawing names it) comes from, the ends that line joins
-// when it is one of a list, and how many lines the entry draws.
+// when it is one of a list, and how many lines the entry draws; a line a script draws has none.
 export function entryOfDrawn(lines, key) {
-  const direct = lines.find(line => line.key === key);
-  if (direct) return { entry: direct, pair: null, count: ends(direct.from).length * ends(direct.to).length };
-  const [from, to] = key.replace(/#\d+$/, '').split('->');
-  const entry = lines.find(line => ends(line.from).includes(from) && ends(line.to).includes(to));
-  return entry ? { entry, pair: { from, to }, count: ends(entry.from).length * ends(entry.to).length } : null;
+  const found = drawnLines(lines).find(line => line.key === key);
+  return found ? { entry: found.entry, pair: found.pair, count: found.count } : null;
 }
 
 // The entry without the line's own end: the list it is in loses it. Ends listed on both sides

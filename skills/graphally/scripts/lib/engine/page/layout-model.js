@@ -52,12 +52,15 @@ const placeOf = style => ({
   col: [style.gridColumnStart, style.gridColumnEnd], row: [style.gridRowStart, style.gridRowEnd],
 });
 
+// Whether an element has text of its own (a box named "Send reminder"), not only elements.
+const hasText = element => [...element.childNodes].some(node => node.nodeType === 3 && node.textContent.trim());
+
 function entryOf(element, page) {
   const style = getComputedStyle(element), box = boxOf(element, page);
   return {
     src: element.dataset.src, parent: element.parentElement.closest('[data-src]')?.dataset.src ?? '',
     id: element.id || null, tag: element.localName, classes: element.getAttribute('class') || '',
-    box, layout: layoutOf(style, box), place: placeOf(style),
+    text: hasText(element), box, layout: layoutOf(style, box), place: placeOf(style),
   };
 }
 

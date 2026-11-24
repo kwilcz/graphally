@@ -72,13 +72,23 @@ function parsedDiagram(source) {
   return parsed;
 }
 
+// One drawing at a time: a preview and a redraw share the viewer's icons, so the second waits.
+let drawing = Promise.resolve();
+function oneAtATime(task) {
+  const run = drawing.then(task, task);
+  drawing = run.catch(() => {});
+  return run;
+}
+
 // Draws a diagram in a holder, alone: no other diagram on the page is drawn again.
-async function drawIn(holder, parsed) {
-  const diagram = document.importNode(parsed, true);
-  placeDiagram(holder, diagram);
-  await globalThis.graphally.render(diagram);
-  const view = diagram.nextElementSibling, svg = view?.shadowRoot?.querySelector('svg');
-  return svg && view.graphallyModel ? { view, svg, model: new Model(view.graphallyModel) } : null;
+function drawIn(holder, parsed) {
+  return oneAtATime(async () => {
+    const diagram = document.importNode(parsed, true);
+    placeDiagram(holder, diagram);
+    await globalThis.graphally.render(diagram);
+    const view = diagram.nextElementSibling, svg = view?.shadowRoot?.querySelector('svg');
+    return svg && view.graphallyModel ? { view, svg, model: new Model(view.graphallyModel) } : null;
+  });
 }
 
 // Draws the source's diagram; returns its SVG, its layout model, the source as parsed (for the

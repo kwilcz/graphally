@@ -9,7 +9,7 @@
 //       the element's style attribute.
 import { getAttribute, setAttribute } from './markup.mjs';
 import { sourceTree, nodesOf } from './tree.mjs';
-import { styleRules, inlineDeclarations } from './css-rules.mjs';
+import { styleRules, inlineDeclarations, propertyName } from './css-rules.mjs';
 import { cutOf, spotOf, fitted } from './placing.mjs';
 import { elementOf } from './structure.mjs';
 
@@ -87,7 +87,7 @@ function ruleEdit(text, edit) {
   const address = { rule: found ? found.index : styleRules(edited).length - 1 };
   for (const [property, value] of Object.entries(edit.set ?? {})) {
     checked(property, value);
-    edited = setInRule(edited, ruleFor(edited, address), property.toLowerCase(), value);
+    edited = setInRule(edited, ruleFor(edited, address), propertyName(property), value);
   }
   return edit.rename ? renamed(edited, ruleFor(edited, address), edit.rename) : edited;
 }
@@ -117,7 +117,7 @@ function styleEdit(text, edit) {
   let declarations = inlineDeclarations(getAttribute(tag, 'style') || '');
   for (const [property, value] of Object.entries(edit.set ?? {})) {
     checked(property, value);
-    declarations = withProperty(declarations, property.toLowerCase(), value);
+    declarations = withProperty(declarations, propertyName(property), value);
   }
   return splice(text, node.start, node.openEnd, setAttribute(tag, 'style', serialized(declarations) || null));
 }

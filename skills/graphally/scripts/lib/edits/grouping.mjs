@@ -7,7 +7,8 @@
 //   { op: 'unwrap', path | id }        puts its content in its place (its placing classes go to
 //                                      its child, when it has one) and removes its lines
 import { getAttribute, setAttribute } from './markup.mjs';
-import { sourceTree } from './tree.mjs';
+import { sourceTree, nodeAtPath } from './tree.mjs';
+import { checkNesting } from './nesting.mjs';
 import { cutOf, indentOfNode } from './placing.mjs';
 import { withoutLinesTo } from './connections.mjs';
 import { elementOf } from './structure.mjs';
@@ -33,8 +34,13 @@ function withoutPlacing(text, node) {
   return { markup: setAttribute(tag, 'class', kept) + text.slice(node.openEnd, node.end), placing };
 }
 
+// The element holding a node in the tree: the diagram for one at its top.
+const parentOf = (tree, node) => nodeAtPath(tree, node.path.split('.').slice(0, -1).join('.'));
+
 function wrapEdit(text, edit) {
-  const node = elementOf(text, sourceTree(text), edit), { open, name } = openingTag(edit.html);
+  const tree = sourceTree(text), node = elementOf(text, tree, edit), { open, name } = openingTag(edit.html);
+  checkNesting(parentOf(tree, node)?.tag, name.toLowerCase());
+  checkNesting(name.toLowerCase(), node.tag);
   const { markup, placing } = withoutPlacing(text, node);
   const own = getAttribute(open, 'class');
   const wrapper = placing.length ? setAttribute(open, 'class', [own, ...placing].filter(Boolean).join(' ')) : open;
@@ -65,7 +71,10 @@ function handedDown(text, node) {
 }
 
 function unwrapEdit(text, edit) {
-  const handed = handedDown(text, elementOf(text, sourceTree(text), edit));
+  const tree = sourceTree(text), wrapper = elementOf(text, tree, edit);
+  const holder = parentOf(tree, wrapper)?.tag;
+  for (const child of wrapper.children.filter(found => !found.virtual)) checkNesting(holder, child.tag);
+  const handed = handedDown(text, wrapper);
   const node = elementOf(handed, sourceTree(handed), edit);
   const id = getAttribute(handed.slice(node.start, node.openEnd), 'id');
   const content = handed.slice(node.openEnd, node.closeStart);

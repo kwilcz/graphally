@@ -2,7 +2,7 @@
 // The panels around the drawing, shown for the current state and selection: the layers, the way
 // from the diagram to the selection, and the properties (with the selection's placement, styles
 // and lines), and whether undo and redo can go on.
-import { view, byId, layerOf, selectedEntry, sourceElement, setSelection } from './view.js';
+import { view, byId, layerOf, selectedEntry, sourceElement, setSelection, edit } from './view.js';
 import { element, button } from './dom.js';
 import { showLayers } from './layers.js';
 import { showBreadcrumb } from './breadcrumb.js';
@@ -45,14 +45,29 @@ function propertiesContext() {
   };
 }
 
+// A field with typing not yet written stays as it is when the file changes under it: the panel
+// is drawn again once the field is left, and the field's edit, made against the version it was
+// drawn for, is refused when it no longer fits. A field is dirty from a keystroke until its
+// change is written (Enter, or leaving it).
+const typingIn = panel => panel.contains(document.activeElement) && document.activeElement.dataset.dirty === 'yes';
+
 export function showPanels() {
   const { state, selection } = view, path = selection?.kind === 'element' ? selection.path : null;
+  const version = state?.version, act = {
+    ...actions, edit: (edits, selectAfter) => edit(edits, selectAfter, version),
+    wrap: layer => actions.wrap(layer, version), unwrap: layer => actions.unwrap(layer, version),
+    renameId: (layer, next) => actions.renameId(layer, next, version),
+    splitLine: (found, key) => actions.splitLine(found, key, version),
+    removeLine: found => actions.removeLine(found, version),
+  };
   const shown = { selectedPath: path, selectedPaths: actions.selectedPaths(), folded: view.folded };
   showLayers(byId('layers'), state?.layers ?? [], shown, {
-    pick: actions.pick, fold: actions.fold, move: actions.dropOnLayer,
+    pick: actions.pick, fold: actions.fold, version,
+    move: (from, target, zone, drawnFor) => actions.dropOnLayer(from, target, zone, drawnFor),
   });
   showBreadcrumb(byId('crumbs'), path, layerOf, layer => actions.pick(layer));
-  showProperties(byId('properties'), state ? propertiesContext() : {}, actions);
+  view.panelBehind = typingIn(byId('properties'));
+  if (!view.panelBehind) showProperties(byId('properties'), state ? propertiesContext() : {}, act);
   byId('undo').disabled = !state?.canUndo;
   byId('redo').disabled = !state?.canRedo;
 }

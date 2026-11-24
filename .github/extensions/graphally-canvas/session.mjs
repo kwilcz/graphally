@@ -53,6 +53,7 @@ export class CanvasSession {
   // Applies edits, in the skill's edit format, and writes the file when any applied. Edits made
   // against an older version of the source (their paths may name other elements now) are refused.
   edit(edits, version) {
+    this.reload();
     if (version !== undefined && version !== this.version) return { applied: [], errors: [STALE], stale: true };
     const result = applyEdits(this.source, edits);
     if (result.applied.length) this.change(result.source);
@@ -62,6 +63,7 @@ export class CanvasSession {
   // The source as these edits would leave it, for a page to draw while a drag goes on; the file
   // stays as it is.
   preview(edits, version) {
+    this.reload();
     if (version !== undefined && version !== this.version) return { source: this.source, errors: [STALE], stale: true };
     const result = applyEdits(this.source, edits);
     return { source: result.source, errors: result.errors };
@@ -92,7 +94,11 @@ export class CanvasSession {
     this.show(source);
   }
 
+  // Undo and redo start from the file as it is: a change another program made since the last
+  // check is taken in first, so it is not lost.
   restore(from, to) {
+    this.reload();
+    if (!from.length) return;
     writeFileSync(this.filePath, from.at(-1), 'utf8');
     to.push(this.source);
     this.show(from.pop());
@@ -104,8 +110,10 @@ export class CanvasSession {
     this.broadcast();
   }
 
-  // The file changed outside the canvas: a change like any other, which every page shows. A read
-  // in the middle of another program's write is skipped; the next check reads the whole file.
+  // The file changed outside the canvas: a change like any other, which every page shows. It is
+  // read before each edit too, so an edit applies to the file as it is. A read in the middle of
+  // another program's write (the file cut short, its </diagram> gone) is skipped; the next check
+  // reads the whole file.
   reload() {
     let source;
     try {
@@ -113,7 +121,8 @@ export class CanvasSession {
     } catch {
       return;
     }
-    if (source !== this.source) this.change(source, { fromFile: true });
+    const whole = !this.source.includes('</diagram>') || source.includes('</diagram>');
+    if (source !== this.source && whole) this.change(source, { fromFile: true });
   }
 
   // A page joins, on a server-sent event stream: it gets the state now and every change after.

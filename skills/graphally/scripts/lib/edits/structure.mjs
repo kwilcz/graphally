@@ -13,8 +13,11 @@ import { getAttribute, setAttribute } from './markup.mjs';
 import { sourceTree, nodeAtPath, nodeWithId } from './tree.mjs';
 import { cutOf, spotOf, spotAfter, fitted, indentOfNode } from './placing.mjs';
 import { withoutLinesTo } from './connections.mjs';
+import { checkNesting } from './nesting.mjs';
 
-const escapeText = text => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// Text as markup: & < > escaped, and a no-break space written as &nbsp;, as authors write it.
+const escapeText = text => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  .replace(/\u00a0/g, '&nbsp;');
 const splice = (text, start, end, insert) => text.slice(0, start) + insert + text.slice(end);
 const contains = (outer, inner) => outer === inner || outer.children.some(child => contains(child, inner));
 const idsIn = markup => [...markup.matchAll(/\sid\s*=\s*["']?([\w-]+)/g)].map(match => match[1]);
@@ -63,6 +66,7 @@ function cellEdit(text, edit) {
 function placeEdit(text, edit) {
   const tree = sourceTree(text), node = elementOf(text, tree, edit), into = containerOf(tree, edit.into);
   if (contains(node, into)) throw new Error('an element cannot move into itself');
+  checkNesting(into.tag, node.tag);
   const before = edit.before != null ? containerOf(tree, edit.before) : null;
   if (before === node) return text;
   const cut = cutOf(text, node), spot = spotOf(text, into, before);
@@ -96,6 +100,7 @@ function duplicateEdit(text, edit) {
 
 function insertEdit(text, edit) {
   const tree = sourceTree(text), into = containerOf(tree, edit.into);
+  checkNesting(into.tag, /^\s*<([a-zA-Z][\w-]*)/.exec(String(edit.html))?.[1]?.toLowerCase());
   const spot = spotOf(text, into, edit.before != null ? containerOf(tree, edit.before) : null);
   return splice(text, spot.at, spot.at, fitted(String(edit.html).trim(), '', spot));
 }

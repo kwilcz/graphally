@@ -3,6 +3,7 @@
 // putting siblings into one new group, in their order. Paths are the source's; edits that remove
 // or move elements go in an order that keeps the paths of those still to come.
 import { parentPath } from './moves.js';
+import { canNest } from './nesting.js';
 
 const steps = path => path.split('.').map(Number);
 const isWithin = (inner, outer) => inner === outer || inner.startsWith(`${outer}.`);
@@ -23,9 +24,9 @@ export const removeEdits = paths => outermost(paths).sort(bySourceOrder).reverse
 
 // Puts siblings into one new group where the first of them stood: the first is wrapped, then
 // each other moves in after it, its path one less for every sibling moved before it.
-export function groupEdits(paths) {
+export function groupEdits(paths, parentTag) {
   const sorted = [...new Set(paths)].sort(bySourceOrder), parent = parentPath(sorted[0]);
-  if (sorted.some(path => parentPath(path) !== parent)) return null;
+  if (sorted.some(path => parentPath(path) !== parent) || !canNest(parentTag, 'div')) return null;
   const [first, ...rest] = sorted, last = path => Number(path.split('.').at(-1));
   const moved = rest.map((path, index) => {
     const now = last(path) - index;

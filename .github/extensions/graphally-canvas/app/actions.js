@@ -15,9 +15,9 @@ import { removeEdits, groupEdits } from './multi.js';
 import { editText } from './text-editor.js';
 import { entryOfDrawn, splitEdits, deleteEdits } from './lines.js';
 
-function applyMove(move, layer, selectAfter) {
+function applyMove(move, layer, selectAfter, version) {
   if (!move) return setStatus('It cannot go there.', true);
-  return edit(move.edits, selectAfter ?? (move.path === null ? null : elementSelection(move.path, layer?.id)));
+  return edit(move.edits, selectAfter ?? (move.path === null ? null : elementSelection(move.path, layer?.id)), version);
 }
 
 function connectTo(entry) {
@@ -30,11 +30,39 @@ function connectTo(entry) {
 
 let iconNames = null;
 
+const ends = value => [].concat(value ?? []);
+const named = (lines, id) => lines.filter(entry => [...ends(entry.from), ...ends(entry.to)].includes(id));
+
+function idProblem(layer, next) {
+  if (next === (layer.id ?? '')) return 'It has that id already.';
+  if (next && !/^[A-Za-z][\w-]*$/.test(next)) return `"${next}" is not an id: a letter, then letters, digits, - or _.`;
+  if (next && view.state.layers.some(other => other.id === next)) return `Another element has the id "${next}".`;
+  if (!next && named(view.state.lines, layer.id).length) {
+    return 'Lines join this box by its id: delete them, or give it another.';
+  }
+  return null;
+}
+
+// The lines that name an old id, given the new one; the last first, as a line's key can count the
+// same lines before it.
+const renamedEnds = (old, next) => named(view.state.lines, old).reverse().map(entry => {
+  const one = end => (end === old ? next : end), swap = value => (Array.isArray(value) ? value.map(one) : one(value));
+  return { op: 'line', key: entry.key, set: { from: swap(entry.from), to: swap(entry.to) } };
+});
+
+function renamedRules(old, next) {
+  const naming = () => new RegExp(`#${old}(?![\\w-])`, 'g');
+  return view.state.styles.rules.filter(rule => !rule.nested && naming().test(rule.selector))
+    .map(rule => ({ op: 'rule', rule: rule.index, rename: rule.selector.replace(naming(), `#${next}`) }));
+}
+
 // Several siblings into one new group, selected afterwards where the first of them stood.
-function groupSelected(paths) {
-  const edits = groupEdits(paths);
-  if (!edits) return setStatus('Only elements side by side in one parent go into one group.', true);
-  return edit(edits, elementSelection(edits[0].path));
+const UNGROUPABLE = 'Only elements side by side in one parent, not a paragraph or a heading, go into one group.';
+
+function groupSelected(paths, version) {
+  const edits = groupEdits(paths, layerOf(parentPath(paths[0]))?.tag);
+  if (!edits) return setStatus(UNGROUPABLE, true);
+  return edit(edits, elementSelection(edits[0].path), version);
 }
 
 function stepFrom(layer, direction) {
@@ -93,17 +121,22 @@ export const actions = {
     const layer = entry && layerOf(entry.src);
     if (!layer) return;
     if (!layer.text && view.model.childrenOf(entry.src).length) setStatus('Double-click the text itself to edit it.');
-    else editText(view.svg, entry.box, layer.text, text => edit([{ op: 'text', path: entry.src, text }]));
+    else {
+      const version = view.state.version;
+      const setText = text => edit([{ op: 'text', path: entry.src, text }], undefined, version);
+      editText(view.svg, entry.box, layer.text, setText);
+    }
   },
-  splitLine: (found, key) => edit(splitEdits(found), { kind: 'line', id: key }),
-  removeLine: found => edit(deleteEdits(found), null),
+  splitLine: (found, key, version) => edit(splitEdits(found), { kind: 'line', id: key }, version),
+  removeLine: (found, version) => edit(deleteEdits(found), null, version),
   // A line's label, edited where it was double-clicked; a line a script draws has none to edit.
   editLabel(key, point) {
     const found = entryOfDrawn(view.state.lines, key);
     if (!found) return setStatus('A drawing script draws this line: edit it in the source.', true);
-    const box = { x: point.x - 70, y: point.y - 12, w: 140, h: 24 };
-    return editText(view.svg, box, found.entry.label ?? '',
-      label => edit([{ op: 'line', key: found.entry.key, set: { label: label || null } }], { kind: 'line', id: key }));
+    const box = { x: point.x - 70, y: point.y - 12, w: 140, h: 24 }, version = view.state.version;
+    const setLabel = label => edit([{ op: 'line', key: found.entry.key, set: { label: label || null } }],
+      { kind: 'line', id: key }, version);
+    return editText(view.svg, box, found.entry.label ?? '', setLabel);
   },
   remove() {
     if (view.also.length) return edit(removeEdits(actions.selectedPaths()), null);
@@ -124,13 +157,15 @@ export const actions = {
   step: direction => withSelected(layer => applyMove(moveAmong(layer.path, direction), layer))(),
   indent: withSelected(layer => applyMove(indent(layer.path), layer)),
   outdent: withSelected(layer => applyMove(outdent(layer.path), layer)),
-  wrap(layer = selectedLayer()) {
-    if (view.also.length) return groupSelected(actions.selectedPaths());
-    return layer && applyMove(wrapMove(layer.path), layer, elementSelection(layer.path));
+  // A version, when given, is the one the caller's paths are from (a panel drawn earlier).
+  wrap(layer = selectedLayer(), version = undefined) {
+    if (view.also.length) return groupSelected(actions.selectedPaths(), version);
+    return layer && applyMove(wrapMove(layer.path), layer, elementSelection(layer.path), version);
   },
-  unwrap: (layer = selectedLayer()) => layer && canUnwrap(layer)
-    && applyMove(unwrapMove(layer.path), layer, elementSelection(layer.path)),
-  dropOnLayer: (path, target, zone) => applyMove(layerDrop(path, target, zone), layerOf(path)),
+  unwrap: (layer = selectedLayer(), version = undefined) => layer && canUnwrap(layer)
+    && applyMove(unwrapMove(layer.path), layer, elementSelection(layer.path), version),
+  dropOnLayer: (path, target, zone, version) => applyMove(layerDrop(path, target, zone), layerOf(path), undefined,
+    version),
   // Adds a box, a group or a text and selects it, its text ready to type (when it is drawn).
   add(kind) {
     const { edits, path, id } = addition(kind, selectedLayer()?.path ?? null);
@@ -149,6 +184,14 @@ export const actions = {
   fold(path) {
     if (!view.folded.delete(path)) view.folded.add(path);
     setSelection(view.selection);
+  },
+  // A new id for an element; its lines and the rules that name it (#old) follow it.
+  renameId(layer, next, version) {
+    const problem = idProblem(layer, next);
+    if (problem) return setStatus(problem, true);
+    const edits = [{ op: 'attr', path: layer.path, name: 'id', value: next || null }];
+    if (layer.id && next) edits.push(...renamedEnds(layer.id, next), ...renamedRules(layer.id, next));
+    return edit(edits, elementSelection(layer.path, next || undefined), version);
   },
   renameClass(old, next) {
     const layer = selectedLayer();

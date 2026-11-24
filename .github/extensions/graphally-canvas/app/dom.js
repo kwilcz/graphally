@@ -33,3 +33,10 @@ export const field = (label, value, onChange) => element('label', {}, [label, te
 export function section(title, children, open = true) {
   return element('details', { className: 'section', open }, [element('summary', { textContent: title }), ...children]);
 }
+
+// Text as written in markup, read as the browser reads it: every character reference decoded.
+const reader = document.createElement('textarea');
+export function decodedText(markup) {
+  reader.innerHTML = markup;
+  return reader.value;
+}

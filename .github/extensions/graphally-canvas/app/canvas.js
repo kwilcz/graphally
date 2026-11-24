@@ -73,64 +73,75 @@ const landing = (entry, path) => drawn => {
   view.overlay.show('landed', landed ? frame(landed.box, 2) : null);
 };
 
-// Makes a gesture's edits, the preview staying until the drawing they bring replaces it.
-function commit(edits, selectAfter) {
+// Makes a gesture's edits, against the version its drawing shows; the preview stays until the
+// drawing they bring replaces it.
+function commit(edits, selectAfter, version) {
+  clearDrag();
   if (!edits.length) {
     endPreview();
     return drawSelection();
   }
   endPreview({ untilRedraw: true });
-  return edit(edits, selectAfter).then(errors => errors.length && previewReplaced());
+  return edit(edits, selectAfter, version).then(errors => errors.length && previewReplaced());
 }
 
-export const pointerActions = {
-  selectedEntry,
-  select: actions.select,
-  toggle: actions.toggle,
-  selectLine: actions.selectLine,
-  editText: actions.editText,
-  editLabel: actions.editLabel,
+function showDrag(entry, delta, drop) {
+  clearDrag();
+  view.overlay.show('ghost', frame({ ...entry.box, x: entry.box.x + delta.x, y: entry.box.y + delta.y }, 0));
+  const marker = drop && (drop.kind === 'place' ? segment(drop.line) : frame(drop.rect, 0));
+  view.overlay.show('drop', drop && !drop.noop ? marker : null);
+  view.overlay.show('grid', drop?.grid ? gridShapes(view.model.entry(drop.grid)) : null);
+}
+
+// A line drawn from the selection: a straight rubber band to the pointer and the box it would join.
+function showLink(from, point, target) {
+  clearDrag();
+  const { x, y, w, h } = from.box;
+  view.overlay.show('ghost', segment({ x1: x + w / 2, y1: y + h / 2, x2: point.x, y2: point.y }));
+  view.overlay.show('drop', target ? frame(target.box, 3) : null);
+}
+
+// What the pointer does on any drawing.
+const POINTER = {
+  selectedEntry, handleAt,
+  select: actions.select, toggle: actions.toggle, selectLine: actions.selectLine,
+  editText: actions.editText, editLabel: actions.editLabel,
   hover: entry => view.overlay?.show('hover', entry && entry !== selectedEntry() ? frame(entry.box, 1) : null),
+};
+
+const dragGestures = version => ({
   drag(entry, delta, drop, alt) {
-    clearDrag();
-    view.overlay.show('ghost', frame({ ...entry.box, x: entry.box.x + delta.x, y: entry.box.y + delta.y }, 0));
-    const marker = drop && (drop.kind === 'place' ? segment(drop.line) : frame(drop.rect, 0));
-    view.overlay.show('drop', drop && !drop.noop ? marker : null);
-    view.overlay.show('grid', drop?.grid ? gridShapes(view.model.entry(drop.grid)) : null);
+    showDrag(entry, delta, drop);
     const gesture = gestureOf(entry, drop, delta, alt);
-    preview(gesture.edits, landing(entry, gesture.path));
+    preview(gesture.edits, landing(entry, gesture.path), version);
   },
   drop(entry, drop, delta, alt) {
     clearDrag();
     const gesture = gestureOf(entry, drop, delta, alt);
-    return commit(gesture.edits, elementSelection(gesture.path, entry.id));
+    return commit(gesture.edits, elementSelection(gesture.path, entry.id), version);
   },
+});
+
+const handleGestures = version => ({
   resizing(entry, resize) {
     clearDrag();
     view.overlay.show('drop', resize && !resize.noop ? frame(resize.rect, 0) : null);
-    preview(resizeEdits(entry, resize), landing(entry, entry.src));
+    preview(resizeEdits(entry, resize), landing(entry, entry.src), version);
   },
-  resized(entry, resize) {
-    clearDrag();
-    return commit(resizeEdits(entry, resize), elementSelection(entry.src, entry.id));
-  },
-  handleAt,
-  // A line drawn from the selection: a straight rubber band to the pointer, the box it would join,
-  // and a preview of the line routed there.
+  resized: (entry, resize) => commit(resizeEdits(entry, resize), elementSelection(entry.src, entry.id), version),
   linking(from, point, target) {
-    clearDrag();
-    const { x, y, w, h } = from.box;
-    view.overlay.show('ghost', segment({ x1: x + w / 2, y1: y + h / 2, x2: point.x, y2: point.y }));
-    view.overlay.show('drop', target ? frame(target.box, 3) : null);
-    preview(target ? linkEdits(from, target).edits : null, () => {});
+    showLink(from, point, target);
+    preview(target ? linkEdits(from, target).edits : null, () => {}, version);
   },
   linked(from, target) {
-    clearDrag();
-    if (!target) return commit([], null);
-    const { edits, key } = linkEdits(from, target);
-    return commit(edits, { kind: 'line', id: key });
+    const link = target && linkEdits(from, target);
+    return commit(link?.edits ?? [], link ? { kind: 'line', id: link.key } : null, version);
   },
-};
+});
+
+// What the pointer does on one drawing: its gestures are previewed and made against the version
+// of the source that drawing shows, so one that outlives it (the file changed mid-drag) is refused.
+export const pointerActionsFor = version => ({ ...POINTER, ...dragGestures(version), ...handleGestures(version) });
 
 function nudgeEdits(entry, delta) {
   const layer = view.state.layers.find(found => found.path === entry.src);

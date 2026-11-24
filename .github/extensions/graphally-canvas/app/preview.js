@@ -8,7 +8,7 @@ import { api } from './api.js';
 import { view, byId } from './view.js';
 import { drawPreview, hidePreview } from './stage.js';
 
-let wanted = null, shown = null, busy = false, generation = 0, onDrawn = () => {};
+let wanted = null, shown = null, busy = false, generation = 0, onDrawn = () => {}, basis;
 
 function hide() {
   view.svg?.classList.remove('canvas-previewing');
@@ -16,7 +16,7 @@ function hide() {
 }
 
 async function drawWanted(edits, current) {
-  const { source, errors = [] } = await api.preview(edits, view.state?.version);
+  const { source, errors = [] } = await api.preview(edits, basis);
   if (current !== generation || errors.length) return null;
   const drawn = await drawPreview(byId('stage'), source, view.svg);
   if (current !== generation || !drawn) {
@@ -47,10 +47,12 @@ async function pump() {
   }
 }
 
-// Shows what these edits would draw (none: the drawing as it is); onDrawn hears of each preview
-// drawn, with its layout model, to mark where the dragged element lands in it.
-export function preview(edits, drawn = onDrawn) {
+// Shows what these edits, made against a version of the source, would draw (none: the drawing as
+// it is); onDrawn hears of each preview drawn, with its layout model, to mark where the dragged
+// element lands in it.
+export function preview(edits, drawn = onDrawn, version = view.state?.version) {
   onDrawn = drawn;
+  basis = version;
   wanted = edits?.length ? edits : null;
   pump();
 }

@@ -64,7 +64,7 @@ function fillIconList(names) {
 function elementFields({ layer, icon }, act) {
   const set = (name, value) => act.edit([{ op: 'attr', path: layer.path, name, value: value || null }]);
   return [
-    field('Id', layer.id, value => set('id', value)),
+    field('Id', layer.id, value => act.renameId(layer, value)),
     field('Classes', layer.classes, value => set('class', value)),
     layer.text ? field('Text', layer.text, text => act.edit([{ op: 'text', path: layer.path, text }])) : null,
     icon ? iconField(icon, act) : null,

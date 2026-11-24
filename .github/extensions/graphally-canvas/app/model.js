@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // The laid-out diagram as the canvas knows it: the engine's layout model (each element's box and
 // what places it, by its path in the source) and the questions the canvas asks of it.
+import { canNest } from './nesting.js';
+
 const UNSEEN = new Set(['script', 'style', 'template']);
 // Elements that hold no boxes, and headings, which title a container rather than fill it.
 const LEAVES = new Set(['icon', 'img', 'br', 'hr', 'input', 'i', 'b', 'small', 'code', 'svg', 'h1', 'h2', 'h3', 'h4',
@@ -81,6 +83,7 @@ export class Model {
   // The deepest element under a point that can take the dragged one in: not it or inside it.
   holderAt(point, dragged, anywhere = false) {
     const fits = entry => !this.isWithin(entry.src, dragged.src) && contains(entry.box, point)
+      && canNest(entry.tag, dragged.tag)
       && (anywhere ? !LEAVES.has(entry.tag) && entry.layout.kind !== 'contents' : this.canHold(entry, dragged));
     return smallest(this.entries.filter(fits));
   }
@@ -88,12 +91,12 @@ export class Model {
   // A container takes an element it already holds one like: its own parent, or one with a child
   // of the same tag and kind (a group of nodes takes a node, a list of chips a chip; a node, whose
   // children are an icon and its text, takes none). An empty one, or one with only a heading (a
-  // new group), takes anything.
+  // new group), takes anything; a box with only text of its own is no container.
   canHold(entry, dragged) {
     if (entry.layout.kind === 'contents' || LEAVES.has(entry.tag)) return false;
     if (entry.src === dragged.parent) return true;
     const children = this.entries.filter(child => child.parent === entry.src);
-    if (entry.src && children.every(child => HEADINGS.test(child.tag))) return true;
+    if (entry.src && !entry.text && children.every(child => HEADINGS.test(child.tag))) return true;
     return children.some(child => area(child.box) > 0 && resembles(child, dragged));
   }
 

@@ -43,11 +43,14 @@ export function setSelection(selection, also = []) {
   refresh();
 }
 
-// Sends edits to the file. What to select afterwards is set first: the file's new state can
-// reach the page before the answer does.
-export async function edit(edits, selectAfter) {
+// Sends edits to the file, made against a version of its source: the one the page shows now, or
+// the one a gesture, a field or a text editor began on (paths in the edits are that version's).
+// What to select afterwards is set first, as the file's new state can reach the page before the
+// answer does, and then told to the server, so the agent's selection follows the element too.
+export async function edit(edits, selectAfter, version = view.state?.version) {
   if (selectAfter !== undefined) Object.assign(view, { selection: selectAfter, also: [] });
-  const { errors = [] } = await api.edit(edits, view.state?.version);
+  const { errors = [] } = await api.edit(edits, version);
   setStatus(errors.map(error => error.message).join('; '), errors.length > 0);
+  if (selectAfter !== undefined && !errors.length) api.select(selectAfter ? [selectAfter] : []);
   return errors;
 }
