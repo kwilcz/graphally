@@ -243,7 +243,7 @@
 <g data-edge="func-&gt;sendgrid" data-sides="top,bottom"><path d="M1089,368 L1089,211" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="aks-&gt;sb" data-sides="top,bottom"><path d="M815,368 L815,172" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="mobile-&gt;fd" data-sides="right,left"><path d="M181,474 L202,474 Q208,474 208,468 L208,418 Q208,412 214,412 L271,412" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
-<g data-edge="aks-&gt;pecos" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M838.5,458 L838.5,514 Q838.5,520 844.5,520 L958,520 Q964,520 964,526 L964,534" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
+<g data-edge="aks-&gt;pecos" data-sides="bottom,top" data-out="bottom" data-in="top"><path d="M838.5,458 L838.5,496 Q838.5,502 844.5,502 L958,502 Q964,502 964,508 L964,534" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)"></path></g>
 <g data-edge="func-&gt;fw" data-sides="right,left"><path d="M1142,411 L1352,411" style="fill: none; stroke: var(--teal)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="spoke-&gt;hub" data-sides="right,left"><path d="M1224,469 L1280,469" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m1)" marker-start="url(#pg-m1)"></path></g>
 <g data-edge="sb-&gt;func" data-sides="right,left" data-out="right" data-in="left"><path d="M885,127 L918,127 Q924,127 924,133 L924,407 Q924,413 930,413 L1002,413" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m1)"></path></g>
@@ -252,13 +252,13 @@
 <path d="M24,792.6 L54,792.6" style="fill: none; stroke: var(--teal)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <text class="g-edge" x="751" y="688.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
 <text class="g-edge" x="971" y="688.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="749.3" y="512" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">orders</text>
+<text class="g-edge" x="798.5" y="524" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">orders</text>
 <text class="g-edge" x="348" y="296" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">web app</text>
 <text class="g-edge" x="1412.5" y="686.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">ExpressRoute</text>
 <text class="g-edge" x="434.3" y="406.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">API calls</text>
 <text class="g-edge" x="215" y="393" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
 <text class="g-edge" x="822" y="274" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">order placed</text>
-<text class="g-edge" x="877.1" y="514" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">products</text>
+<text class="g-edge" x="877.1" y="517" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">products</text>
 <text class="g-edge" x="1149.1" y="405" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">SAP sync</text>
 <text class="g-edge" x="1231.2" y="463" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
 <text class="g-edge" x="931" y="274" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">consume</text>

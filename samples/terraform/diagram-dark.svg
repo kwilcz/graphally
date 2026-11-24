@@ -173,27 +173,27 @@
 <text x="1482" y="601.1" style="font-family: Inter, &quot;Segoe UI&quot;, system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 400; fill: var(--muted)">tracking topic</text>
 </g>
 </g>
-<g data-edge="id_aks-&gt;kv_kv" data-sides="right,left"><path d="M1337,466.5 L1381,466.5 A4,4 0 0 1 1389,466.5 L1433,466.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;kv_kv" data-sides="right,left"><path d="M1337,466.5 L1433,466.5" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="agw_ingress-&gt;aks_main" data-sides="right,left"><path d="M671,529 L769,529" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;log_law" data-sides="right,left"><path d="M1019,541.5 L1067,541.5 Q1073,541.5 1073,547.5 L1073,576 Q1073,582 1079,582 L1087,582" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;id_aks" data-sides="right,left"><path d="M1019,516.5 L1067,516.5 Q1073,516.5 1073,510.5 L1073,481 Q1073,475 1079,475 L1087,475" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;log_law" data-sides="right,left"><path d="M1019,541.5 L1041,541.5 Q1047,541.5 1047,547.5 L1047,576 Q1047,582 1053,582 L1087,582" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;id_aks" data-sides="right,left"><path d="M1019,516.5 L1041,516.5 Q1047,516.5 1047,510.5 L1047,481 Q1047,475 1053,475 L1087,475" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="ho-&gt;vgw_vpn" data-sides="right,left"><path d="M274,208 L421,208" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
-<g data-edge="id_aks-&gt;sb_events" data-sides="right,left"><path d="M1337,483.5 L1381,483.5 A4,4 0 0 1 1389,483.5 L1413,483.5 Q1419,483.5 1419,489.5 L1419,565 Q1419,571 1425,571 L1433,571" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="id_aks-&gt;sb_events" data-sides="right,left"><path d="M1337,483.5 L1379,483.5 Q1385,483.5 1385,489.5 L1385,565 Q1385,571 1391,571 L1433,571" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <g data-edge="vnet_hub-&gt;vnet_spoke" data-sides="bottom,top"><path d="M637.5,288 L637.5,402" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)" marker-start="url(#pg-m0)"></path></g>
-<g data-edge="dispatch-&gt;agw_ingress" data-sides="right,left"><path d="M274,279 L354,279 Q360,279 360,285 L360,523 Q360,529 366,529 L421,529" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="pe_sb-&gt;sb_events" data-sides="right,left"><path d="M1019,676 L1413,676 Q1419,676 1419,670 L1419,599 Q1419,593 1425,593 L1433,593" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
-<g data-edge="aks_main-&gt;acr_acr" data-sides="right,left"><path d="M1019,529 L1379,529 Q1385,529 1385,523 L1385,211 Q1385,205 1391,205 L1433,205" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="dispatch-&gt;agw_ingress" data-sides="right,left"><path d="M274,279 L341.5,279 Q347.5,279 347.5,285 L347.5,523 Q347.5,529 353.5,529 L421,529" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="pe_sb-&gt;sb_events" data-sides="right,left"><path d="M1019,676 L1337,676 Q1343,676 1343,670 L1343,599 Q1343,593 1349,593 L1433,593" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
+<g data-edge="aks_main-&gt;acr_acr" data-sides="right,left"><path d="M1019,529 L1337,529 Q1343,529 1343,523 L1343,487.5 A4,4 0 0 0 1343,479.5 L1343,470.5 A4,4 0 0 0 1343,462.5 L1343,211 Q1343,205 1349,205 L1433,205" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path></g>
 <path d="M24,692.2 L54,692.2" style="fill: none; stroke: var(--ink)" stroke-width="1.5" marker-end="url(#pg-m0)"></path>
 <path d="M24,717.7 L54,717.7" style="fill: none; stroke: var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#pg-m0)"></path>
 <text class="g-edge" x="1349.6" y="460.5" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Secrets User</text>
 <text class="g-edge" x="692.8" y="523" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">logistics API</text>
-<text class="g-edge" x="1003.7" y="577.8" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
-<text class="g-edge" x="1080" y="517.8" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">identity</text>
+<text class="g-edge" x="977.7" y="577.8" style="fill: var(--ink); paint-order: stroke; stroke: var(--vnet); stroke-width: 4px; stroke-linejoin: round">diagnostics</text>
+<text class="g-edge" x="999.1" y="493.8" style="fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round">identity</text>
 <text class="g-edge" x="280.1" y="202" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">site-to-site VPN</text>
-<text class="g-edge" x="1426" y="531.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
+<text class="g-edge" x="1392" y="531.3" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">Data Owner</text>
 <text class="g-edge" x="644.5" y="349" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">peering</text>
-<text class="g-edge" x="367" y="354" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
-<text class="g-edge" x="1189" y="670" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
-<text class="g-edge" x="1182.6" y="523" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">AcrPull</text>
+<text class="g-edge" x="354.5" y="354" style="fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round">HTTPS</text>
+<text class="g-edge" x="1151" y="670" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">private link</text>
+<text class="g-edge" x="1161.6" y="523" style="fill: var(--ink); paint-order: stroke; stroke: var(--wash); stroke-width: 4px; stroke-linejoin: round">AcrPull</text>
 </g>
 </svg>
