@@ -82,10 +82,11 @@ async function renderDiagram(diagram, icons, alone) {
   }
 }
 
-async function renderAll(icons) {
+// Every diagram on the page, or only the one given (an editor redrawing one of its own).
+async function renderAll(icons, only) {
   await fontsLoaded();
   muteDiagramStyles();
-  const diagrams = [...document.querySelectorAll('diagram')];
+  const diagrams = only ? [only] : [...document.querySelectorAll('diagram')];
   await imagesDecoded(diagrams);
   const alone = isDiagramFile();
   if (alone) document.documentElement.dataset.graphallyPage = '';
@@ -100,10 +101,10 @@ export function start(index) {
   };
   addPageStyle(sources.font);
   keepDiagramStylesMuted();
-  const icons = registerLazyPacks(index, sources), render = () => renderAll(icons);
+  const icons = registerLazyPacks(index, sources), render = only => renderAll(icons, only);
   globalThis.graphally = { render };
   // Switching the system theme redraws the diagrams in the other one.
   globalThis.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', () => render());
-  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', render, { once: true });
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', () => render(), { once: true });
   else render();
 }

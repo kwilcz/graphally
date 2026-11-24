@@ -1,10 +1,10 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Edits of a diagram's CSS, one declaration at a time, where the CSS is written:
 //
-//   { op: 'rule', rule | selector, set: { property: value | null }, remove? }
+//   { op: 'rule', rule | selector, set: { property: value | null }, rename?, remove? }
 //       a rule of the diagram's <style>, by its index (as styleRules numbers them) or its
-//       selector; a selector no rule has gets a new rule. null removes a declaration, and
-//       remove: true the whole rule.
+//       selector; a selector no rule has gets a new rule. null removes a declaration, rename
+//       gives the rule another selector, and remove: true removes the whole rule.
 //   { op: 'style', path | id, set: { property: value | null } }
 //       the element's style attribute.
 import { getAttribute, setAttribute } from './markup.mjs';
@@ -89,7 +89,15 @@ function ruleEdit(text, edit) {
     checked(property, value);
     edited = setInRule(edited, ruleFor(edited, address), property.toLowerCase(), value);
   }
-  return edited;
+  return edit.rename ? renamed(edited, ruleFor(edited, address), edit.rename) : edited;
+}
+
+// The rule with another selector, the spaces before its { kept.
+function renamed(text, rule, selector) {
+  const next = normal(selector);
+  if (!next || /[{};]/.test(next.replace(/"[^"]*"|'[^']*'/g, ''))) throw new Error(`"${selector}" is not a selector`);
+  const end = rule.start + text.slice(rule.start, rule.open).trimEnd().length;
+  return splice(text, rule.start, end, next);
 }
 
 const serialized = declarations => declarations

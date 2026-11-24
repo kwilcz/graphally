@@ -30,6 +30,8 @@ export function sourceEdits() {
   check(lineOf(rule, '.lane {') === '.lane { display: flex; gap: 12px; align-items: center; }', 'rule: set and add');
   const fresh = edited([{ op: 'rule', selector: '#a', set: { color: 'var(--woad)' } }]);
   check(lineOf(fresh, '#a {') === '#a { color: var(--woad); }', 'rule: a new rule for a new selector');
+  const renamed = edited([{ op: 'rule', rule: 1, rename: '.lane > .card' }]);
+  check(lineOf(renamed, '.card {') === '.lane > .card { padding: 4px; }', 'rule: rename');
   const gone = edited([{ op: 'rule', rule: 1, remove: true }]);
   check(!gone.includes('.card {') && gone.includes('.lane {'), 'rule: remove');
   const inline = edited([{ op: 'style', id: 'a', set: { opacity: '0.5' } }]);

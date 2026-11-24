@@ -12,6 +12,7 @@ import { styleLists } from './styles-panel.js';
 import { enableKeys } from './keys.js';
 import { actions } from './actions.js';
 import { applyZoom, zoomAround, stepped, scaleOf } from './zoom.js';
+import { previewReplaced } from './preview.js';
 
 const stage = byId('stage');
 const showScale = scale => { byId('zoom-level').textContent = `${Math.round(scale * 100)}%`; };
@@ -33,6 +34,7 @@ async function show(next) {
   byId('file').textContent = next.name;
   if (first) byId('lists').replaceChildren(...styleLists(next.styles.tokens));
   const drawn = await drawSource(stage, next.source);
+  previewReplaced();
   Object.assign(view, drawn ?? { svg: null, model: null, parsed: null, colorOf: null });
   view.overlay = drawn ? new Overlay(drawn.svg) : null;
   if (drawn) {

@@ -5,11 +5,12 @@
 // sides, and deleting it. Each change is one edit of the source.
 import { element, button, field, section } from './dom.js';
 import { stylesOf } from './styles-panel.js';
+import { canSplit } from './lines.js';
 
 const VARIANTS = ['external', 'accent', 'disabled'];
 const BLOCKS = /\b(node|figure|card|tile|group|box|pill|tag|banner|band|key)\b/;
 const SIDES = ['', 'top', 'right', 'bottom', 'left'];
-const NOT_EDITABLE = 'This line comes from a list of ends or a drawing script: edit it in the source.';
+const SCRIPT_LINE = 'A drawing script in the diagram draws this line: edit it in the source.';
 const HINT = 'Click a box or a line to select it; click again to go into it. Drag it to move it within its '
   + 'layout: another cell, another place in its row or column, another group. Alt-drag nudges it. Double-click '
   + 'text to edit it. Esc selects the parent; Alt+arrows move the selection among its siblings and in or out.';
@@ -66,13 +67,26 @@ function elementControls(context, act) {
   ];
 }
 
-function lineControls({ key, entry }, act) {
+// A line written with others ("from": ["a", "b"]) shares their options: the panel says so, and
+// offers to split it out to change it alone.
+function sharedNote({ entry, count }) {
+  if (count < 2) return null;
+  const others = `${count - 1} other line${count > 2 ? 's' : ''}`;
+  const text = `Written with ${others} (${entry.key}): a change here changes them all.`;
+  return element('p', { className: 'hint', textContent: text });
+}
+
+function lineControls({ key, found }, act) {
   const heading = element('h3', { textContent: `line ${key}` });
-  if (!entry) return [heading, element('p', { textContent: NOT_EDITABLE })];
-  const set = change => act.edit([{ op: 'line', key, set: change }]);
-  return [heading, field('Label', entry.label, label => set({ label: label || null })),
+  if (!found) return [heading, element('p', { className: 'hint', textContent: SCRIPT_LINE })];
+  const { entry } = found, set = change => act.edit([{ op: 'line', key: entry.key, set: change }]);
+  return [heading, sharedNote(found), field('Label', entry.label, label => set({ label: label || null })),
     choice('Out', entry.out, SIDES, out => set({ out })), choice('In', entry.in, SIDES, side => set({ in: side })),
-    element('div', { className: 'actions' }, [button('Delete line', () => act.edit([{ op: 'unline', key }]))])];
+    element('div', { className: 'actions' }, [
+      canSplit(found) ? button('Split out', () => act.splitLine(found, key), 'Give this line an entry of its own')
+        : null,
+      button('Delete line', () => act.removeLine(found)),
+    ])];
 }
 
 export function showProperties(panel, context, act) {

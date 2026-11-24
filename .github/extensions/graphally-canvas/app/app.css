@@ -46,7 +46,9 @@ body {
 .panel:first-child { border-right: 1px solid var(--canvas-border); }
 .panel:last-child { border-left: 1px solid var(--canvas-border); }
 .center { display: grid; grid-template-rows: auto 1fr; min-width: 0; min-height: 0; }
-#stage { overflow: auto; padding: 16px; user-select: none; -webkit-user-select: none; }
+#stage { position: relative; overflow: auto; padding: 16px; user-select: none; -webkit-user-select: none; }
+#stage > .graphally-view { position: relative; z-index: 1; }
+.canvas-preview { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
 h2 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--canvas-muted); }
 h3 { margin: 4px 0 8px; font-size: 13px; font-family: var(--canvas-mono); }
 
@@ -104,6 +106,10 @@ input.number { width: 64px; }
 .rule-head { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
 .rule-head .selector { font-weight: 600; color: var(--canvas-fg); }
 .rule-head input.selector { max-width: 100%; padding: 1px 4px; font-family: var(--canvas-mono); font-size: 12px; }
+.rule-head > button {
+  margin-left: auto; border: 0; background: none; padding: 0 4px; color: var(--canvas-muted); visibility: hidden;
+}
+.rule:hover .rule-head > button { visibility: visible; }
 .rule-head .meta { color: var(--canvas-muted); font-family: var(--font-sans, sans-serif); font-size: 11px; }
 .declaration { display: flex; align-items: center; gap: 2px; padding-left: 12px; min-height: 22px; }
 .declaration input { flex: 1 1 0; min-width: 0; border-color: transparent; background: transparent; padding: 1px 3px;

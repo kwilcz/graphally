@@ -24,7 +24,7 @@ const EDIT = {
     + 'an element, before one of its children; remove, duplicate; insert {into, before?, html} writes new '
     + 'markup; wrap {html?} puts it in a new element (an opening tag, <div> by default); unwrap puts its '
     + 'children in its place. style {set} sets declarations of its style attribute, and rule {rule | selector, '
-    + 'set, remove?} those of a rule of the diagram\'s <style> (rule is its index, as get_diagram lists '
+    + 'set, rename?, remove?} those of a rule of the diagram\'s <style> (rule is its index, as get_diagram lists '
     + 'styles.rules; a new selector adds a rule); in set, null removes a declaration. move {id, dx, dy} adds '
     + 'to a nudge and nudge {id, x, y} sets it. connect {from, to, label?} adds a line; line {key, set} '
     + 'changes its options; unline {key} removes it. A line\'s key is its id, else "from->to", with "#2", '
@@ -45,7 +45,7 @@ const EDIT = {
     out: { type: 'string', enum: ['top', 'right', 'bottom', 'left'] },
     in: { type: 'string', enum: ['top', 'right', 'bottom', 'left'] },
     key: { type: 'string' }, set: { type: 'object' },
-    rule: { type: 'integer' }, selector: { type: 'string' }, remove: { type: 'boolean' },
+    rule: { type: 'integer' }, selector: { type: 'string' }, rename: { type: 'string' }, remove: { type: 'boolean' },
   },
   required: ['op'],
 };

@@ -28,6 +28,8 @@ Edits go to the file, so try it on a copy. In a Copilot app session in this repo
 | Alt+↑ / Alt+↓, Alt+→ / Alt+← | It moves before or after its sibling; into the sibling before it, or out of its parent. |
 | Group (Ctrl+G), Ungroup (Ctrl+Shift+G) | It goes into a new `<div class="group">`, taking the classes that place it; ungrouping puts the group's children in its place. |
 
+While you drag, the canvas shows the diagram as the drop would leave it: the edits are applied without writing the file and the result is drawn under the pointer, so neighbours make room and lines take their new routes before you let go. A redraw of a sample takes 12 to 62 ms, so the preview keeps up with the pointer. Targets are still found on the drawing as it was, so a target does not slide away as the preview reflows. Alt-drags and span handles preview the same way.
+
 Each grid placement is written where the source places the element. The styles panel's cascade says which declaration wins: a utility class is swapped, the style attribute or a rule that styles this element alone is changed in place, and a rule several elements share is left alone while the element gets a class of its own (or, against a stronger rule, a style attribute).
 
 ## Styling things
@@ -38,6 +40,7 @@ The Styles section lists what styles the selection, as the browser's cascade ord
 - **Add a declaration:** type into the empty row at the end of the style attribute or of a rule.
 - **Remove one:** empty it, or press × beside it.
 - **Change a utility class:** edit its name.
+- **Change a rule's selector:** edit it in the rule's heading; a selector the browser cannot read is refused. × deletes the rule.
 - **New rule:** adds a rule for the element's id or kind to the diagram's `<style>`.
 
 graphally's defaults are shown, not edited: a rule of the diagram's own overrides them.
@@ -47,7 +50,7 @@ graphally's defaults are shown, not edited: a rule of the diagram's own override
 - **Select:** a click selects the box that moves as a whole; a second click goes one level in; Esc goes back out. The path above the drawing selects any element on the way to the selection, and the layers panel lists every element, including chips and rows that have no id.
 - **Text:** double-click it, or press Enter.
 - **Properties:** id, classes, text and variants; the element's column, row and span, area or nudge as fields; its lines, each a button that selects it.
-- **Lines:** Connect to…, then click a box; select a line to set its label or sides.
+- **Lines:** Connect to…, then click a box; select a line to set its label or sides. A line written with others (`"from": ["a", "b"]`) changes with them, as the panel says; **Split out** gives it an entry of its own, and Delete removes it alone.
 - **Duplicate (Ctrl+D), Delete:** a copy gets ids with `-2`; deleting takes the lines to the ids inside.
 - **Zoom:** −, +, 100% and Fit, Ctrl+wheel, Shift+1 (fit) and Shift+0 (100%).
 - **Undo and Redo:** step through every change to the file while the canvas is open: yours, the agent's, and those from other programs.
@@ -67,12 +70,13 @@ graphally's defaults are shown, not edited: a rule of the diagram's own override
 - **The layout model:** when a diagram carries `data-edit`, the viewer also returns each element's box and what places it: grid tracks, gaps and named areas, flex direction, flow (`engine/page/layout-model.js`). Without `data-edit`, a render is unchanged.
 - **CSS:** the edit module reads the diagram's `<style>` rules with where each declaration sits (`edits/css-rules.mjs`) and changes one at a time (`edits/styling.mjs`). The page matches rules to the selection on the source as parsed, and orders them by specificity and source order (`app/cascade.js`, `app/selectors.js`).
 - **The drop:** `app/drop.js` asks the model what holds the pointer: a cell or an area of a grid (`app/grid-drop.js`), or a place between two siblings; `app/placement.js` writes the new place where the source keeps it.
+- **The preview:** `app/preview.js` sends a drag's edits to the server's preview endpoint, which applies them without writing, and draws the result under the overlay (`drawPreview` in `app/stage.js`). It renders that one diagram alone (`graphally.render(diagram)`).
 - **`extension.mjs`:** registers the canvas and its actions with the app (`@microsoft/copilot-sdk/extension`, which the app provides).
 - **`instances.mjs`, `session.mjs`, `server.mjs` and `styles.mjs`:** know nothing of the app. Each open canvas is a session on one file, served on `127.0.0.1` with the page, the viewer and a stream of the file's state.
 - **`app/`:** the page. It draws with the skill's viewer bundle (`skills/graphally/viewer/graphally.min.js`), so it lays out and routes exactly as a render does.
 
 ## Limits of the proof of concept
 
-- Lines move when you let go, once the canvas redraws from the edited file; they do not follow the drag.
-- A rule's selector, and rules that nest rules, are not edited from the panel.
-- A line written as part of a list (`"from": ["a", "b"]`) or drawn by a script can be selected but not edited from the panel. The canvas says so; edit those in the source.
+- Rules that nest rules are shown, not edited.
+- A line a drawing script draws can be selected but not edited from the panel. The canvas says so; edit it in the script.
+- A line split out of a list is written last in the connections.

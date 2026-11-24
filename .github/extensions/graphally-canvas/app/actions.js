@@ -11,6 +11,7 @@ import {
   parentPath, moveAmong, indent, outdent, layerDrop, wrapMove, unwrapMove, canUnwrap,
 } from './moves.js';
 import { editText } from './text-editor.js';
+import { entryOfDrawn, splitEdits, deleteEdits } from './lines.js';
 
 function applyMove(move, layer, selectAfter) {
   if (!move) return setStatus('It cannot go there.', true);
@@ -35,6 +36,7 @@ export const actions = {
   undo: () => api.undo(),
   redo: () => api.redo(),
   colorOf: value => view.colorOf?.(value) ?? value,
+  say: (text, error = false) => setStatus(text, error),
   canUnwrap,
 
   select(entry) {
@@ -62,8 +64,14 @@ export const actions = {
     if (!layer.text && view.model.childrenOf(entry.src).length) setStatus('Double-click the text itself to edit it.');
     else editText(view.svg, entry.box, layer.text, text => edit([{ op: 'text', path: entry.src, text }]));
   },
+  splitLine: (found, key) => edit(splitEdits(found), { kind: 'line', id: key }),
+  removeLine: found => edit(deleteEdits(found), null),
   remove() {
-    if (view.selection?.kind === 'line') return edit([{ op: 'unline', key: view.selection.id }], null);
+    if (view.selection?.kind === 'line') {
+      const found = entryOfDrawn(view.state.lines, view.selection.id);
+      if (found) return actions.removeLine(found);
+      return setStatus('A drawing script draws this line: edit it in the source.', true);
+    }
     const layer = selectedLayer(), parent = layer && parentPath(layer.path);
     const selectAfter = parent ? elementSelection(parent, layerOf(parent)?.id) : null;
     return layer && edit([{ op: 'remove', path: layer.path }], selectAfter);

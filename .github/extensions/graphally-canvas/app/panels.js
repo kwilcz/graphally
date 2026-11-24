@@ -10,6 +10,7 @@ import { showProperties } from './properties.js';
 import { cascadeOf } from './cascade.js';
 import { placementControls } from './placement-panel.js';
 import { actions } from './actions.js';
+import { entryOfDrawn } from './lines.js';
 
 const ends = value => [].concat(value ?? []);
 
@@ -29,7 +30,7 @@ function linesOf(id) {
 function propertiesContext() {
   const { selection, state } = view;
   if (selection?.kind === 'line') {
-    return { line: { key: selection.id, entry: state.lines.find(line => line.key === selection.id) } };
+    return { line: { key: selection.id, found: entryOfDrawn(state.lines, selection.id) } };
   }
   const layer = selection?.kind === 'element' ? layerOf(selection.path) : null;
   if (!layer) return {};

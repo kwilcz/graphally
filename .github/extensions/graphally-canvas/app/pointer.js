@@ -49,7 +49,7 @@ function followDrag(svg, model, actions, press) {
       delta = { x: point.x - press.point.x, y: point.y - press.point.y };
       dragging ||= Math.hypot(delta.x, delta.y) * scaleOf(svg) >= DRAG_SLOP;
       drop = dragging && !event.altKey ? dropFor(model, press.grabbed, point, event.ctrlKey || event.metaKey) : null;
-      if (dragging) actions.drag(press.grabbed, delta, drop);
+      if (dragging) actions.drag(press.grabbed, delta, drop, event.altKey);
     },
     up(point, event) {
       if (dragging) actions.drop(press.grabbed, event.altKey ? null : drop, delta, event.altKey);
@@ -63,7 +63,7 @@ function followResize(svg, model, actions, press, handle) {
   track(svg, press, {
     move(point) {
       resize = spanResize(model, press.current, handle.axis, point);
-      actions.resizing(resize);
+      actions.resizing(press.current, resize);
     },
     up: () => actions.resized(press.current, resize),
   });

@@ -54,6 +54,13 @@ export class CanvasSession {
     return { applied: result.applied, errors: result.errors };
   }
 
+  // The source as these edits would leave it, for a page to draw while a drag goes on; the file
+  // stays as it is.
+  preview(edits) {
+    const result = applyEdits(this.source, edits);
+    return { source: result.source, errors: result.errors };
+  }
+
   undo() {
     if (this.done.length) this.restore(this.done, this.undone);
   }

@@ -60,13 +60,42 @@ function metaOf(entry) {
   return element('span', { className: 'meta', textContent: notes.filter(Boolean).join(' · ') });
 }
 
+const widthFor = text => `width: ${Math.min(40, Math.max(4, text.length) + 2)}ch`;
+
+// Whether the browser can read a selector.
+function readable(selector) {
+  try {
+    document.createDocumentFragment().querySelector(selector);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function renameRule(entry, next, act) {
+  if (!next || next === entry.selector) return;
+  if (!readable(next)) act.say(`"${next}" is not a selector the browser can read.`, true);
+  else act.edit([{ op: 'rule', rule: entry.rule.index, rename: next }]);
+}
+
+// A rule's selector or a utility class, to rename it where it is written; else a label.
+function labelOf(entry, act) {
+  if (entry.origin === 'utility') {
+    return textField(entry.cls, next => act.renameClass(entry.cls, next),
+      { className: 'selector', style: widthFor(entry.cls) });
+  }
+  if (entry.origin === 'rule' && !entry.rule.nested) {
+    return textField(entry.selector, next => renameRule(entry, next, act),
+      { className: 'selector', style: widthFor(entry.selector), title: 'The rule\'s selector: Enter renames it' });
+  }
+  const text = entry.origin === 'inline' ? 'this element' : entry.selector;
+  return element('code', { className: 'selector', textContent: text });
+}
+
 function headerOf(entry, act) {
-  const label = entry.origin === 'utility'
-    ? textField(entry.cls, next => act.renameClass(entry.cls, next),
-      { className: 'selector', style: `width: ${Math.max(4, entry.cls.length) + 2}ch` })
-    : element('code', { className: 'selector', textContent: entry.origin === 'inline' ? 'this element'
-      : entry.selector });
-  return element('div', { className: 'rule-head' }, [label, metaOf(entry)]);
+  const remove = entry.origin === 'rule' && !entry.rule.nested
+    && button('×', () => act.edit([{ op: 'rule', rule: entry.rule.index, remove: true }]), 'Delete this rule');
+  return element('div', { className: 'rule-head' }, [labelOf(entry, act), metaOf(entry), remove]);
 }
 
 function block(entry, set, act) {
@@ -98,7 +127,8 @@ export function stylesOf(cascade, layer, styles, act) {
       element('summary', { textContent: `graphally defaults (${defaults.length})` }),
       ...defaults.map(entry => block(entry, null, act)),
     ]) : null,
-    element('div', { className: 'actions' }, [button(`New rule ${selector}`,
-      () => act.edit([{ op: 'rule', selector, set: {} }]), 'Add a rule to the diagram\'s <style>')]),
+    styles.rules.some(rule => rule.selector === selector && !rule.media) ? null
+      : element('div', { className: 'actions' }, [button(`New rule ${selector}`,
+        () => act.edit([{ op: 'rule', selector, set: {} }]), 'Add a rule to the diagram\'s <style>')]),
   ].filter(Boolean);
 }

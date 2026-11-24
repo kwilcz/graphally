@@ -10,6 +10,8 @@ const post = (path, body = {}) => fetch(path, {
 export const api = {
   // Edits in the skill's format; the answer lists those applied and those that failed.
   edit: edits => post('api/edits', { edits }),
+  // The source as these edits would leave it, the file untouched: a drag's preview.
+  preview: edits => post('api/preview', { edits }),
   undo: () => post('api/undo'),
   redo: () => post('api/redo'),
   select: items => post('api/selection', { items }),

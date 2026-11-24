@@ -1,7 +1,8 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // What the canvas shows over the drawing, and what the pointer does with it: the selection, its
-// span handles and the grid it sits in; while dragging, the element's ghost, where it would land
-// and the grid it would land in; and the edits a drop or a resize makes.
+// span handles and the grid it sits in; while dragging, the element's ghost, where it would land,
+// the grid it would land in and a preview of the diagram after the drop; and the edits a drop, a
+// nudge or a resize makes.
 import { view, selectedEntry, edit, elementSelection } from './view.js';
 import { frame, segment, trace, label } from './overlay.js';
 import { dropEdits } from './drop.js';
@@ -10,6 +11,7 @@ import { cellsOf, areasOf } from './grid.js';
 import { placementEdits, lineValue } from './placement.js';
 import { actions } from './actions.js';
 import { pathAfterPlace } from './moves.js';
+import { preview, endPreview, previewReplaced } from './preview.js';
 
 const HANDLE = 4;
 
@@ -35,7 +37,37 @@ export function drawSelection() {
 }
 
 function clearDrag() {
-  for (const part of ['ghost', 'drop', 'grid']) view.overlay.show(part, null);
+  for (const part of ['ghost', 'drop', 'grid', 'landed', 'selection', 'handle', 'hover']) view.overlay.show(part, null);
+}
+
+// What a drag would do: its edits, and where the element will stand (its path) once they are made.
+function gestureOf(entry, drop, delta, alt) {
+  if (alt) return { edits: nudgeEdits(entry, delta), path: entry.src };
+  if (!drop || drop.noop) return { edits: [], path: entry.src };
+  const path = drop.into === null ? entry.src : pathAfterPlace(entry.src, drop.into, drop.before ?? null);
+  return { edits: dropEdits(entry, drop), path };
+}
+
+const resizeEdits = (entry, resize) => (!resize || resize.noop ? [] : placementEdits(entry.src, {
+  [resize.axis === 'col' ? 'grid-column' : 'grid-row']: lineValue(resize.start, resize.span),
+}));
+
+// Marks where the element lands in a preview: its box there, found by its id or its new path.
+const landing = (entry, path) => drawn => {
+  const landed = drawn && ((entry.id && drawn.model.withId(entry.id)) || drawn.model.entry(path));
+  if (!drawn) return;
+  view.overlay.show('drop', null);
+  view.overlay.show('landed', landed ? frame(landed.box, 2) : null);
+};
+
+// Makes a gesture's edits, the preview staying until the drawing they bring replaces it.
+function commit(edits, selectAfter) {
+  if (!edits.length) {
+    endPreview();
+    return drawSelection();
+  }
+  endPreview({ untilRedraw: true });
+  return edit(edits, selectAfter).then(errors => errors.length && previewReplaced());
 }
 
 export const pointerActions = {
@@ -44,34 +76,35 @@ export const pointerActions = {
   selectLine: actions.selectLine,
   editText: actions.editText,
   hover: entry => view.overlay?.show('hover', entry && entry !== selectedEntry() ? frame(entry.box, 1) : null),
-  drag(entry, delta, drop) {
-    view.overlay.show('handle', null);
+  drag(entry, delta, drop, alt) {
+    clearDrag();
     view.overlay.show('ghost', frame({ ...entry.box, x: entry.box.x + delta.x, y: entry.box.y + delta.y }, 0));
     const marker = drop && (drop.kind === 'place' ? segment(drop.line) : frame(drop.rect, 0));
     view.overlay.show('drop', drop && !drop.noop ? marker : null);
     view.overlay.show('grid', drop?.grid ? gridShapes(view.model.entry(drop.grid)) : null);
+    const gesture = gestureOf(entry, drop, delta, alt);
+    preview(gesture.edits, landing(entry, gesture.path));
   },
   drop(entry, drop, delta, alt) {
     clearDrag();
-    if (alt) return nudge(entry, delta, elementSelection(entry.src, entry.id));
-    if (!drop || drop.noop) return drawSelection();
-    const path = drop.into === null ? entry.src : pathAfterPlace(entry.src, drop.into, drop.before ?? null);
-    return edit(dropEdits(entry, drop), elementSelection(path, entry.id));
+    const gesture = gestureOf(entry, drop, delta, alt);
+    return commit(gesture.edits, elementSelection(gesture.path, entry.id));
   },
-  resizing(resize) {
+  resizing(entry, resize) {
+    clearDrag();
     view.overlay.show('drop', resize && !resize.noop ? frame(resize.rect, 0) : null);
+    preview(resizeEdits(entry, resize), landing(entry, entry.src));
   },
   resized(entry, resize) {
-    view.overlay.show('drop', null);
-    if (!resize || resize.noop) return drawSelection();
-    const property = resize.axis === 'col' ? 'grid-column' : 'grid-row';
-    return edit(placementEdits(entry.src, { [property]: lineValue(resize.start, resize.span) }));
+    clearDrag();
+    return commit(resizeEdits(entry, resize), elementSelection(entry.src, entry.id));
   },
 };
 
-function nudge(entry, delta, selectAfter) {
+function nudgeEdits(entry, delta) {
   const layer = view.state.layers.find(found => found.path === entry.src);
   const [x0, y0] = (layer?.nudge || '0,0').split(',').map(Number);
   const x = Math.round(x0 + delta.x), y = Math.round(y0 + delta.y);
-  return edit([{ op: 'attr', path: entry.src, name: 'nudge', value: x || y ? `${x},${y}` : null }], selectAfter);
+  if (x === x0 && y === y0) return [];
+  return [{ op: 'attr', path: entry.src, name: 'nudge', value: x || y ? `${x},${y}` : null }];
 }
