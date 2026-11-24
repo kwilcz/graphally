@@ -1,15 +1,31 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// The diagram on the stage: the source's <diagram>, drawn by the graphally viewer into a view
-// beside it. In the drawn SVG, boxes carry data-id and lines data-edge.
+// The diagram on the stage: the source's <diagram>, each element stamped with its path in the
+// source (data-src, the numbering the skill's edits use), drawn by the graphally viewer, which
+// hands back the drawing and the layout model (each element's box and what places it).
+import { Model } from './model.js';
 
-// What the canvas adds to the drawing: a wide, unseen stroke along each line to click it by, and
-// the selection's outline, in the diagram's accent colour.
+// What the canvas adds to the drawing: the fit to the stage's width, a wide, unseen stroke along
+// each line to click it by, and the overlay's parts, in the diagram's accent colour.
 const CANVAS_CSS = `
-  g[data-id] { cursor: grab; }
+  svg { max-width: 100%; height: auto; }
   .canvas-hit { fill: none; stroke: transparent; stroke-width: 12; pointer-events: stroke; cursor: pointer; }
-  .canvas-outline { fill: none; stroke: var(--woad); stroke-width: 2; stroke-dasharray: 5 3; pointer-events: none; }
-  .canvas-line { fill: none; stroke: var(--woad); stroke-width: 6; stroke-opacity: 0.35; pointer-events: none; }
+  .canvas-overlay * { pointer-events: none; }
+  .canvas-selection rect { fill: none; stroke: var(--woad); stroke-width: 2; }
+  .canvas-selection path { fill: none; stroke: var(--woad); stroke-width: 6; stroke-opacity: 0.35; }
+  .canvas-hover rect { fill: none; stroke: var(--woad); stroke-width: 1; stroke-dasharray: 3 3; stroke-opacity: 0.7; }
+  .canvas-drop line { stroke: var(--woad); stroke-width: 3; stroke-linecap: round; }
+  .canvas-drop rect { fill: var(--woad); fill-opacity: 0.1; stroke: var(--woad); stroke-dasharray: 5 3; }
+  .canvas-ghost rect { fill: var(--woad); fill-opacity: 0.12; stroke: var(--woad); stroke-opacity: 0.6; }
 `;
+
+// Each element's path among its parent's elements, from the diagram down: "0", "0.2", "0.2.1".
+function stamp(element, path) {
+  [...element.children].forEach((child, index) => {
+    const at = path === null ? String(index) : `${path}.${index}`;
+    child.setAttribute('data-src', at);
+    stamp(child, at);
+  });
+}
 
 function addLineHits(svg) {
   for (const line of svg.querySelectorAll('g[data-edge]')) {
@@ -22,18 +38,20 @@ function addLineHits(svg) {
   }
 }
 
-// Draws the source's diagram, and returns its SVG, ready to click and drag; null with none.
+// Draws the source's diagram; returns its SVG and layout model, or null when there is none.
 export async function drawSource(stage, source) {
-  const diagram = new DOMParser().parseFromString(source, 'text/html').querySelector('diagram');
-  if (!diagram) {
+  const parsed = new DOMParser().parseFromString(source, 'text/html').querySelector('diagram');
+  if (!parsed) {
     stage.textContent = 'This file holds no <diagram>.';
     return null;
   }
-  stage.replaceChildren(document.importNode(diagram, true));
+  stamp(parsed, null);
+  parsed.setAttribute('data-edit', '');
+  stage.replaceChildren(document.importNode(parsed, true));
   await globalThis.graphally.render();
-  const svg = stage.querySelector('.graphally-view')?.shadowRoot?.querySelector('svg');
-  if (!svg) return null;
+  const view = stage.querySelector('.graphally-view'), svg = view?.shadowRoot?.querySelector('svg');
+  if (!svg || !view.graphallyModel) return null;
   svg.getRootNode().append(Object.assign(document.createElement('style'), { textContent: CANVAS_CSS }));
   addLineHits(svg);
-  return svg;
+  return { svg, model: new Model(view.graphallyModel) };
 }

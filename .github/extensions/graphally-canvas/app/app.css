@@ -2,6 +2,7 @@
    as the system is, like the diagram. */
 :root {
   --canvas-bg: var(--background-color-default, #ffffff);
+  --canvas-raised: var(--background-color-muted, #f6f8fa);
   --canvas-fg: var(--text-color-default, #1f2328);
   --canvas-muted: var(--text-color-muted, #59636e);
   --canvas-border: var(--border-color-default, #d0d7de);
@@ -10,6 +11,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --canvas-bg: var(--background-color-default, #0d1117);
+    --canvas-raised: var(--background-color-muted, #151b23);
     --canvas-fg: var(--text-color-default, #e6edf3);
     --canvas-muted: var(--text-color-muted, #9198a1);
     --canvas-border: var(--border-color-default, #3d444d);
@@ -17,31 +19,50 @@
   }
 }
 * { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-  margin: 0;
-  background: var(--canvas-bg);
-  color: var(--canvas-fg);
+  margin: 0; display: grid; grid-template-rows: auto 1fr;
+  background: var(--canvas-bg); color: var(--canvas-fg);
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
   font-size: var(--text-body-small, 13px);
 }
 .bar {
-  position: sticky; top: 0; z-index: 1;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
-  padding: 8px 12px;
-  background: var(--canvas-bg);
-  border-bottom: 1px solid var(--canvas-border);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 6px 12px; border-bottom: 1px solid var(--canvas-border);
 }
-.file { color: var(--canvas-muted); font-family: var(--font-mono, ui-monospace, monospace); }
-.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.status { color: var(--canvas-muted); }
+.file { color: var(--canvas-muted); font-family: var(--font-mono, ui-monospace, monospace); margin-right: auto; }
+.status { color: var(--canvas-muted); flex-basis: 100%; min-height: 1em; }
+.workspace { display: grid; grid-template-columns: minmax(180px, 240px) 1fr minmax(200px, 260px); min-height: 0; }
+.panel { overflow: auto; padding: 8px 10px; background: var(--canvas-raised); }
+.panel:first-child { border-right: 1px solid var(--canvas-border); }
+.panel:last-child { border-left: 1px solid var(--canvas-border); }
+h2 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--canvas-muted); }
+h3 { margin: 4px 0 10px; font-size: 13px; font-family: var(--font-mono, ui-monospace, monospace); }
+#stage { overflow: auto; padding: 16px; user-select: none; -webkit-user-select: none; }
+.layers { list-style: none; margin: 0; padding: 0; }
+.layers li {
+  padding: 2px 6px; border-radius: 4px; cursor: pointer;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.layers li:hover { background: var(--canvas-bg); }
+.layers li.selected { background: var(--canvas-focus); color: #ffffff; }
+.layers li.unseen { opacity: .45; cursor: default; }
+.layers code { font-size: 12px; }
+.layers span { color: var(--canvas-muted); }
+.layers li.selected span { color: inherit; }
+#properties label { display: grid; gap: 3px; margin-bottom: 8px; color: var(--canvas-muted); }
+.variants { display: flex; gap: 10px; margin-bottom: 10px; }
+.variants label { display: flex !important; align-items: center; gap: 4px; }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.hint { color: var(--canvas-muted); line-height: 1.5; }
 input, select, button {
-  font: inherit; color: inherit;
-  padding: 4px 8px;
-  border: 1px solid var(--canvas-border);
-  border-radius: 6px;
-  background: var(--canvas-bg);
+  font: inherit; color: inherit; padding: 4px 8px;
+  border: 1px solid var(--canvas-border); border-radius: 6px; background: var(--canvas-bg);
 }
+input[type=checkbox] { padding: 0; }
 button { font-weight: 600; cursor: pointer; }
-button:disabled, select:disabled { opacity: 0.5; cursor: default; }
-button.active { outline: 2px solid var(--canvas-focus); }
-#stage { padding: 16px; overflow: auto; }
+button:disabled { opacity: .5; cursor: default; }
+.text-field {
+  position: fixed; z-index: 10; padding: 2px 6px;
+  border: 2px solid var(--canvas-focus); border-radius: 4px; background: var(--canvas-bg);
+}

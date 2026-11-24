@@ -57,12 +57,15 @@ async function compileWithIcons(diagram, options, icons) {
 // reader of the page is not shown them.
 async function diagramNodes(diagram, view, icons, alone) {
   const theme = diagram.getAttribute('theme') || (prefersDark() ? 'dark' : 'light');
-  const options = { standalone: false, css: THEME, theme, source: location.pathname.split('/').pop() };
+  const source = location.pathname.split('/').pop(), model = diagram.hasAttribute('data-edit');
+  const options = { standalone: false, css: THEME, theme, source, model };
   view.dataset.theme = theme;
   if (alone && diagram.getAttribute('theme')) {
     document.documentElement.dataset.graphallyTheme = diagram.getAttribute('theme');
   }
   const result = await compileWithIcons(diagram, options, icons);
+  // An editor (data-edit on the diagram) reads each element's box and layout from the view.
+  if (model) view.graphallyModel = result.model;
   const problems = result.problems.filter(problem => !problem.warn);
   if (diagram.querySelector('include')) problems.unshift(INCLUDE_PROBLEM);
   const template = document.createElement('template');

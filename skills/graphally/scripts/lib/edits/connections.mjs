@@ -104,3 +104,29 @@ function removeLine(block, { key }) {
 }
 
 export const CONNECTION_EDITS = { connect, line: changeLine, unline: removeLine };
+
+// The first connection with an end among the ids, and what becomes of it: removed, or, from a
+// list of ends, kept without them.
+function lineToAny(block, ids) {
+  const seen = new Map();
+  for (const entry of block.value) {
+    const key = keyOf(entry, seen), line = asObject(entry);
+    const ends = ['from', 'to'].filter(end => [line[end]].flat().some(name => ids.has(name)));
+    if (!ends.length) continue;
+    const kept = Object.fromEntries(ends.map(end => [end, [line[end]].flat().filter(name => !ids.has(name))]));
+    const keepsList = ends.every(end => Array.isArray(line[end]) && kept[end].length);
+    return keepsList ? changeLine(block, { key, set: kept }) : removeLine(block, { key });
+  }
+  return null;
+}
+
+// The text without the connections to any of the ids (an element removed with its boxes).
+export function withoutLinesTo(text, ids) {
+  for (let block = connectionsBlock(text); block && ids.size;) {
+    const body = lineToAny(block, ids);
+    if (body === null) return text;
+    text = text.slice(0, block.start) + body + text.slice(block.end);
+    block = connectionsBlock(text);
+  }
+  return text;
+}

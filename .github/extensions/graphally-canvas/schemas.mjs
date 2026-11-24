@@ -18,13 +18,23 @@ export const OPEN = {
 // both, arrow) pass through to connect and line.
 const EDIT = {
   type: 'object',
-  description: 'move {id, dx, dy} adds to a box\'s nudge; nudge {id, x, y} sets it (0,0 removes it); '
-    + 'connect {from, to, label?, out?, in?} adds a line; line {key, set} changes a line\'s options '
-    + '(a null value removes one); unline {key} removes a line. A line\'s key is its id, else "from->to", '
-    + 'with "#2", "#3" for repeats.',
+  description: 'Elements are named by id or by path (their place in the source, as get_diagram lists its '
+    + 'layers). text {text} sets an element\'s own text; attr {name, value} sets an attribute (null removes '
+    + 'it); cell {col?, row?, colSpan?, rowSpan?} puts it in a grid cell; place {into, before?} moves it into '
+    + 'an element, before one of its children; remove, duplicate; insert {into, before?, html} writes new '
+    + 'markup. move {id, dx, dy} adds to a nudge and nudge {id, x, y} sets it. connect {from, to, label?} adds '
+    + 'a line; line {key, set} changes its options; unline {key} removes it. A line\'s key is its id, else '
+    + '"from->to", with "#2", "#3" for repeats.',
   properties: {
-    op: { type: 'string', enum: ['move', 'nudge', 'connect', 'line', 'unline'] },
-    id: { type: 'string' },
+    op: {
+      type: 'string',
+      enum: [
+        'text', 'attr', 'cell', 'place', 'remove', 'duplicate', 'insert', 'move', 'nudge', 'connect', 'line', 'unline',
+      ],
+    },
+    id: { type: 'string' }, path: { type: 'string' }, into: { type: 'string' }, before: { type: 'string' },
+    text: { type: 'string' }, name: { type: 'string' }, value: { type: ['string', 'null'] }, html: { type: 'string' },
+    col: { type: 'integer' }, row: { type: 'integer' }, colSpan: { type: 'integer' }, rowSpan: { type: 'integer' },
     dx: { type: 'number' }, dy: { type: 'number' }, x: { type: 'number' }, y: { type: 'number' },
     from: { type: 'string' }, to: { type: 'string' }, label: { type: 'string' },
     out: { type: 'string', enum: ['top', 'right', 'bottom', 'left'] },
@@ -46,11 +56,14 @@ export const SELECTION = {
   properties: {
     items: {
       type: 'array',
-      description: 'What to select: boxes by their id, lines by their key. An empty list clears it.',
+      description: 'What to select: an element by its id or its path in the source (as get_diagram lists '
+        + 'its layers), or a line by its key. An empty list clears it.',
       items: {
         type: 'object',
-        properties: { kind: { type: 'string', enum: ['box', 'line'] }, id: { type: 'string' } },
-        required: ['kind', 'id'],
+        properties: {
+          kind: { type: 'string', enum: ['element', 'line'] }, id: { type: 'string' }, path: { type: 'string' },
+        },
+        required: ['kind'],
         additionalProperties: false,
       },
     },

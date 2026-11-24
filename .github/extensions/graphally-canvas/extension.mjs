@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // The graphally canvas for the GitHub Copilot app: a diagram file in the app's side panel, where
-// a person moves boxes and draws, relabels or removes lines, and the agent reads and edits the
-// same diagram. Every edit is a text patch of the diagram's source (the skill's edits), so the
-// file stays as written and every render after it keeps the change.
+// a person moves elements within their layout, edits their text and attributes, adds and removes
+// them and their lines, and the agent reads and edits the same diagram. Every edit is a text patch
+// of the diagram's source (the skill's edits), so the file stays as written.
 import { existsSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 import { joinSession, createCanvas, CanvasError } from '@microsoft/copilot-sdk/extension';
@@ -18,27 +18,28 @@ function sessionOf(ctx) {
 const ACTIONS = [
   {
     name: 'get_diagram',
-    description: 'The diagram file: its path, its HTML source, its connections (each with its key) '
-      + 'and what the person selected.',
+    description: 'The diagram file: its path, its HTML source, its connections (each with its key), its '
+      + 'elements as layers (each with its path) and what the person selected.',
     inputSchema: NOTHING,
     handler: async ctx => sessionOf(ctx).state(),
   },
   {
     name: 'apply_edits',
-    description: 'Edit the diagram file, as graphally edit does: move or nudge boxes, add, change or remove lines. '
-      + 'Returns the edits applied and those that failed, with why.',
+    description: 'Edit the diagram file, as graphally edit does: change an element\'s text or attributes, '
+      + 'move it in the layout, add, copy or remove elements, add, change or remove lines. Returns the edits '
+      + 'applied and those that failed, with why.',
     inputSchema: EDITS,
     handler: async ctx => sessionOf(ctx).edit(ctx.input.edits),
   },
   {
     name: 'get_selection',
-    description: 'The boxes and lines the person selected on the canvas.',
+    description: 'The elements and lines the person selected on the canvas.',
     inputSchema: NOTHING,
     handler: async ctx => ({ selection: sessionOf(ctx).selection }),
   },
   {
     name: 'select',
-    description: 'Select boxes and lines on the canvas, to point the person at them.',
+    description: 'Select elements and lines on the canvas, to point the person at them.',
     inputSchema: SELECTION,
     handler: async ctx => {
       sessionOf(ctx).select(ctx.input.items);
@@ -60,7 +61,8 @@ await joinSession({
       createCanvas({
         id: 'graphally',
         displayName: 'graphally diagram',
-        description: 'Show a graphally diagram (.html) to move its boxes and draw, relabel or remove its lines.',
+        description: 'Show a graphally diagram (.html) to edit it by hand: move, retext, add or remove its '
+          + 'elements and lines.',
         inputSchema: OPEN,
         actions: ACTIONS,
         open,

@@ -10,6 +10,7 @@ import { SHAPE_CSS } from '../shapes/shape-css.js';
 import { runBeforeScripts } from '../script/before-script.js';
 import { PAGE_CSS } from './page-css.js';
 import { buildFigure } from './build-figure.js';
+import { layoutModelOf } from './layout-model.js';
 
 const TITLE_FONT = "600 15px Inter, 'Segoe UI', system-ui, sans-serif";
 const SUBTITLE_STYLE = 'font-size: 12.5px; color: var(--muted); margin-bottom: 4px';
@@ -74,6 +75,13 @@ function applyNudges(root, problems) {
   }
 }
 
+// The figure, built while the page is laid out, with the layout model when an editor asks for it.
+function builtFigure(setup, scripts) {
+  const result = buildFigure({ ...setup, scripts: scripts.drawing, connections: scripts.connections });
+  if (setup.options.model) result.model = layoutModelOf(setup.root);
+  return result;
+}
+
 export function compilePage(diagram, options, measurer) {
   const problems = [];
   const root = createPage(diagram, problems);
@@ -92,8 +100,7 @@ export function compilePage(diagram, options, measurer) {
   root.prepend(utilities);
   materializePseudo(root);
   try {
-    const setup = { root, diagram, options, measurer, problems };
-    return buildFigure({ ...setup, scripts: scripts.drawing, connections: scripts.connections });
+    return builtFigure({ root, diagram, options, measurer, problems }, scripts);
   } finally {
     box.host.remove();
   }

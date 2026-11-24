@@ -1,15 +1,17 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// One open canvas: the diagram file it edits, the pages showing it, and what is selected. Every
-// change, from the page, the agent or an edit made to the file outside the canvas, reaches every
-// page showing the file.
+// One open canvas: the diagram file it edits, the pages showing it, what is selected, and the
+// sources before and after each change, to undo and redo. Every change, from the page, the agent
+// or an edit made to the file outside the canvas, reaches every page showing the file.
 import { readFileSync, writeFileSync, watchFile, unwatchFile } from 'node:fs';
-import { relative } from 'node:path';
+import { isAbsolute, relative } from 'node:path';
 import { applyEdits, readLines } from '../../../skills/graphally/scripts/lib/edits.mjs';
+import { outlineOf } from './outline.mjs';
 
 // How often the file is checked for edits made outside the canvas, in milliseconds.
 const WATCH_INTERVAL = 250;
+// How many changes undo reaches back.
+const HISTORY = 100;
 
-// The connections of a source as data, or none when it holds no diagram (yet).
 function linesOf(source) {
   try {
     return readLines(source);
@@ -18,33 +20,64 @@ function linesOf(source) {
   }
 }
 
+// The file's path in the workspace, or its whole path when it lies outside it.
+function nameOf(filePath) {
+  const inside = relative(process.cwd(), filePath);
+  return inside.startsWith('..') || isAbsolute(inside) ? filePath : inside;
+}
+
+const event = (name, value) => `${name ? `event: ${name}\n` : ''}data: ${JSON.stringify(value)}\n\n`;
+
 export class CanvasSession {
   constructor(filePath) {
-    Object.assign(this, { filePath, pages: new Set(), selection: [], source: readFileSync(filePath, 'utf8') });
+    Object.assign(this, { filePath, pages: new Set(), selection: [], undone: [], done: [] });
+    this.source = readFileSync(filePath, 'utf8');
     this.onFileChange = () => this.reload();
     watchFile(filePath, { interval: WATCH_INTERVAL }, this.onFileChange);
   }
 
   // What a page or the agent reads: the file (and its path in the workspace), its source, its
-  // connections and the selection.
+  // connections, its elements as layers, the selection, and whether undo and redo can go on.
   state() {
     const { filePath, source, selection } = this;
-    return { filePath, name: relative(process.cwd(), filePath), source, lines: linesOf(source), selection };
+    return {
+      filePath, name: nameOf(filePath), source, lines: linesOf(source), layers: outlineOf(source),
+      selection, canUndo: this.done.length > 0, canRedo: this.undone.length > 0,
+    };
   }
 
   // Applies edits, in the skill's edit format, and writes the file when any applied.
   edit(edits) {
     const result = applyEdits(this.source, edits);
-    if (result.applied.length) this.write(result.source);
+    if (result.applied.length) this.change(result.source);
     return { applied: result.applied, errors: result.errors };
   }
 
-  // Boxes and lines picked on the page or by the agent: [{ kind: 'box' | 'line', id }]. Pages get
-  // it as an event of its own, so they redraw the outline and not the diagram.
+  undo() {
+    if (this.done.length) this.restore(this.done, this.undone);
+  }
+
+  redo() {
+    if (this.undone.length) this.restore(this.undone, this.done);
+  }
+
+  // Boxes, elements and lines picked on the page or by the agent. Pages get it as an event of its
+  // own, so they redraw the outline and not the diagram.
   select(items) {
     this.selection = items;
-    const message = `event: selection\ndata: ${JSON.stringify(items)}\n\n`;
-    for (const page of this.pages) page.write(message);
+    for (const page of this.pages) page.write(event('selection', items));
+  }
+
+  // A new source, after this one: what undo goes back to, with redo cleared.
+  change(source) {
+    this.done = [...this.done, this.source].slice(-HISTORY);
+    this.undone = [];
+    this.write(source);
+  }
+
+  restore(from, to) {
+    to.push(this.source);
+    this.write(from.pop());
   }
 
   write(source) {
@@ -53,8 +86,8 @@ export class CanvasSession {
     this.broadcast();
   }
 
-  // The file changed outside the canvas: every page shows it. A read in the middle of another
-  // program's write is skipped; the next check reads the whole file.
+  // The file changed outside the canvas: a change like any other, which every page shows. A read
+  // in the middle of another program's write is skipped; the next check reads the whole file.
   reload() {
     let source;
     try {
@@ -62,22 +95,20 @@ export class CanvasSession {
     } catch {
       return;
     }
-    if (source === this.source) return;
-    this.source = source;
-    this.broadcast();
+    if (source !== this.source) this.change(source);
   }
 
   // A page joins, on a server-sent event stream: it gets the state now and every change after.
   addPage(response) {
     const headers = { 'content-type': 'text/event-stream', 'cache-control': 'no-cache', connection: 'keep-alive' };
     response.writeHead(200, headers);
-    response.write(`data: ${JSON.stringify(this.state())}\n\n`);
+    response.write(event(null, this.state()));
     this.pages.add(response);
     response.on('close', () => this.pages.delete(response));
   }
 
   broadcast() {
-    const message = `data: ${JSON.stringify(this.state())}\n\n`;
+    const message = event(null, this.state());
     for (const page of this.pages) page.write(message);
   }
 

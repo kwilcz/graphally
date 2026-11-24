@@ -48,6 +48,8 @@ const ROUTES = {
   'POST /api/edits': async (session, request, response) => {
     sendJson(response, 200, session.edit((await readJson(request)).edits || []));
   },
+  'POST /api/undo': (session, request, response) => sendJson(response, 200, session.undo() ?? {}),
+  'POST /api/redo': (session, request, response) => sendJson(response, 200, session.redo() ?? {}),
   'POST /api/selection': async (session, request, response) => {
     session.select((await readJson(request)).items || []);
     sendJson(response, 200, { selection: session.selection });
