@@ -27,6 +27,7 @@ function nameOf(filePath) {
   return inside.startsWith('..') || isAbsolute(inside) ? filePath : inside;
 }
 
+const WRITING = { message: 'Another program is writing the file; try again in a moment.' };
 const STALE = { message: 'The diagram changed as you worked; it is drawn again now. Try once more.' };
 
 const event = (name, value) => `${name ? `event: ${name}\n` : ''}data: ${JSON.stringify(value)}\n\n`;
@@ -53,7 +54,7 @@ export class CanvasSession {
   // Applies edits, in the skill's edit format, and writes the file when any applied. Edits made
   // against an older version of the source (their paths may name other elements now) are refused.
   edit(edits, version) {
-    this.reload();
+    if (!this.reload()) return { applied: [], errors: [WRITING], stale: true };
     if (version !== undefined && version !== this.version) return { applied: [], errors: [STALE], stale: true };
     const result = applyEdits(this.source, edits);
     if (result.applied.length) this.change(result.source);
@@ -63,7 +64,7 @@ export class CanvasSession {
   // The source as these edits would leave it, for a page to draw while a drag goes on; the file
   // stays as it is.
   preview(edits, version) {
-    this.reload();
+    if (!this.reload()) return { source: this.source, errors: [WRITING], stale: true };
     if (version !== undefined && version !== this.version) return { source: this.source, errors: [STALE], stale: true };
     const result = applyEdits(this.source, edits);
     return { source: result.source, errors: result.errors };
@@ -72,13 +73,11 @@ export class CanvasSession {
   // Undo and redo start from the file as it is: a change another program made since the last
   // check is taken in first (it is then what undo takes back first), so it is not lost.
   undo() {
-    this.reload();
-    if (this.done.length) this.restore(this.done, this.undone);
+    if (this.reload() && this.done.length) this.restore(this.done, this.undone);
   }
 
   redo() {
-    this.reload();
-    if (this.undone.length) this.restore(this.undone, this.done);
+    if (this.reload() && this.undone.length) this.restore(this.undone, this.done);
   }
 
   // Boxes, elements and lines picked on the page or by the agent. Pages get it as an event of its
@@ -111,17 +110,20 @@ export class CanvasSession {
   }
 
   // The file changed outside the canvas: a change like any other, which every page shows. It is
-  // read before each edit too, so an edit applies to the file as it is. A file another program
-  // is writing reads differently twice running; it is left for the next check.
+  // read before each edit too, so an edit applies to the file as it is. A file another program is
+  // writing (it reads differently twice running, or its diagram is gone) is left for the next
+  // check, and an edit waits for it; returns whether the file could be read settled.
   reload() {
     let source;
     try {
       source = readFileSync(this.filePath, 'utf8');
-      if (source !== readFileSync(this.filePath, 'utf8')) return;
+      if (source !== readFileSync(this.filePath, 'utf8')) return false;
     } catch {
-      return;
+      return false;
     }
+    if (this.source.includes('<diagram') && !source.includes('<diagram')) return false;
     if (source !== this.source) this.change(source, { fromFile: true });
+    return true;
   }
 
   // A page joins, on a server-sent event stream: it gets the state now and every change after.

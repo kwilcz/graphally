@@ -57,6 +57,7 @@ export async function edit(edits, selectAfter, version = view.state?.version) {
   if (selectAfter !== undefined) Object.assign(view, { selection: selectAfter, also: [] });
   const { errors = [] } = await api.edit(edits, version);
   setStatus(errors.map(error => error.message).join('; '), errors.length > 0);
+  if (errors.length) view.ownEdit = false;
   if (selectAfter !== undefined && !errors.length) api.select(selectAfter ? [selectAfter] : []);
   return errors;
 }

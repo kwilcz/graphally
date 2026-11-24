@@ -101,13 +101,16 @@ export class Model {
   }
 
   // The element with an id a line would join, for a hit inside a box: the nearest one around the
-  // hit, inside the box (a BPMN event inside its wrapper), else the box itself.
+  // hit, inside the box (a BPMN event inside its wrapper), else the one element with an id the box
+  // holds, else the box itself.
   withIdAround(hit, box) {
     for (let at = hit; at?.src; at = this.parentOf(at)) {
       if (at.id) return at;
       if (at === box) break;
     }
-    return box;
+    // A box without an id that holds one element with an id (an event and its caption): that one.
+    const inner = box.id ? [] : this.entries.filter(entry => entry.id && entry.src.startsWith(`${box.src}.`));
+    return inner.length === 1 ? inner[0] : box;
   }
 
   // The element after this one among its parent's children, or null for the last.

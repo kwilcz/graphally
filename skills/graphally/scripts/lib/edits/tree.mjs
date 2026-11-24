@@ -49,17 +49,28 @@ function endBefore(stack, tag, at) {
   }
 }
 
+// Whether markup here is SVG or MathML: inside an <svg> or <math>, but not in a <foreignObject>,
+// where HTML starts again.
+function inForeign(stack, tag) {
+  for (let at = stack.length - 1; at > 0; at--) {
+    if (stack[at].tag === 'foreignobject') return false;
+    if (stack[at].tag === 'svg' || stack[at].tag === 'math') return true;
+  }
+  return tag === 'svg' || tag === 'math';
+}
+
 // An element starts; returns where reading goes on (past the content of a raw-text element).
 function openElement(stack, text, match, next) {
   const name = match[2].toLowerCase(), start = match.index;
-  // Outside an <svg>, the browser reads <image> as <img>.
-  const tag = name === 'image' && !stack.some(open => open.tag === 'svg') ? 'img' : name;
+  // Outside an <svg> or MathML, the browser reads <image> as <img>.
+  const foreign = inForeign(stack, name);
+  const tag = name === 'image' && !foreign ? 'img' : name;
   endBefore(stack, tag, start);
   const node = elementNode(tag, start, next);
   stack.at(-1).children.push(node);
-  // Inside an <svg> (or MathML), <rect … /> closes itself; in HTML the slash means nothing.
-  const foreign = tag === 'svg' || tag === 'math' || stack.some(open => open.tag === 'svg' || open.tag === 'math');
-  if (VOID.has(tag) || (foreign && /\/\s*$/.test(match[3]))) {
+  // Inside an <svg> (or MathML), <rect … /> closes itself; in HTML the slash means nothing, and
+  // in an unquoted value (width=10/) it is part of the value.
+  if (VOID.has(tag) || (foreign && /(^|[\s"'])\/\s*$/.test(match[3]))) {
     Object.assign(node, { closeStart: next, end: next });
     return next;
   }

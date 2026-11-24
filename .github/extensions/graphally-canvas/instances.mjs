@@ -25,11 +25,11 @@ async function close(instanceId) {
 // Opens an instance on a file, or keeps it when it already shows that file.
 export const openCanvas = (instanceId, filePath) => inTurn(instanceId, async () => {
   const open = canvases.get(instanceId);
-  if (open?.session.filePath === filePath) return open;
+  if (open && open.session.filePath === filePath) return open;
   await close(instanceId);
-  const session = new CanvasSession(filePath), server = await startCanvasServer(session);
-  canvases.set(instanceId, { session, server });
-  return { session, server };
+  const session = new CanvasSession(filePath), opened = { session, server: await startCanvasServer(session) };
+  canvases.set(instanceId, opened);
+  return opened;
 });
 
 export const canvasOf = instanceId => canvases.get(instanceId);

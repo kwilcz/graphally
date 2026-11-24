@@ -60,7 +60,10 @@ function leftovers(old) {
   const source = view.state.source, places = [];
   const scripts = [...source.matchAll(/<script(?![^>]*application\/json)[^>]*>([\s\S]*?)<\/script>/g)];
   if (scripts.some(([, body]) => new RegExp(`(['"\`])${old}[.'"\`]`).test(body))) places.push('a drawing script');
-  if (new RegExp(`\\s(?!id\\b)[\\w-]+\\s*=\\s*["']?${old}(?=["'\\s>])`).test(source)) places.push('an attribute');
+  // Attributes that name an element by its id: data-*, for, aria-*, and links to #id.
+  const value = `\\s*=\\s*["']?`, ends = `(?=["'\\s>])`;
+  const naming = `\\s(data-[\\w-]+|for|aria-[\\w-]+)${value}${old}${ends}|\\shref${value}#${old}${ends}`;
+  if (new RegExp(naming).test(source)) places.push('an attribute');
   return places;
 }
 
@@ -93,8 +96,8 @@ const withSelected = run => () => {
 
 export const actions = {
   edit,
-  undo: () => api.undo(),
-  redo: () => api.redo(),
+  undo: () => { view.ownEdit = true; return api.undo(); },
+  redo: () => { view.ownEdit = true; return api.redo(); },
   colorOf: value => view.colorOf?.(value) ?? value,
   say: (text, error = false) => setStatus(text, error),
   canUnwrap,
@@ -189,7 +192,7 @@ export const actions = {
   // Adds a box, a group or a text and selects it, its text ready to type (when it is drawn).
   add(kind) {
     const { edits, path, id, textPath } = addition(kind, selectedLayer()?.path ?? null);
-    view.pendingText = { path: textPath, id: kind === 'group' ? null : id, written: false };
+    view.pendingText = { path: textPath, id: kind === 'group' ? null : id, written: false, after: view.state.version };
     return edit(edits, elementSelection(path, id)).then(errors => {
       if (errors.length) view.pendingText = null;
       else view.pendingText.written = true;
@@ -200,7 +203,7 @@ export const actions = {
   // (whichever comes last); one whose edit was refused has none.
   editPendingText() {
     const pending = view.pendingText;
-    if (!pending?.written || !view.model) return;
+    if (!pending?.written || !view.model || view.state.version <= pending.after) return;
     const entry = (pending.id && view.model.withId(pending.id)) || view.model.entry(pending.path);
     if (!entry || !layerOf(entry.src)?.text) return;
     view.pendingText = null;

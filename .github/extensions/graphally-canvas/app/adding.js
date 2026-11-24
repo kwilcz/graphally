@@ -4,7 +4,7 @@
 // else right after the selection; with nothing selected, last in the diagram, before its scripts.
 // The new element is selected with its text ready to type.
 import { view, layerOf } from './view.js';
-import { parentPath, canHoldChildren } from './moves.js';
+import { parentPath, canHoldChildren, endIndexOf } from './moves.js';
 import { canNest } from './nesting.js';
 
 const UNSEEN = new Set(['script', 'style', 'template']);
@@ -58,7 +58,7 @@ function freeId(stem) {
 export function addition(kind, selectedPath) {
   const { into, before } = spotFor(selectedPath === null ? null : layerOf(selectedPath), kind === 'text' ? 'p' : 'div');
   const id = kind === 'text' ? null : freeId(kind);
-  const path = before ?? childPath(into, childrenOf(into).length);
+  const path = before ?? childPath(into, endIndexOf(into));
   const edit = { op: 'insert', into, ...(before ? { before } : {}), html: MARKUP[kind](id) };
   // A group's text to type is its heading's.
   return { edits: [edit], path, id, textPath: kind === 'group' ? `${path}.0` : path };

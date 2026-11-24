@@ -42,12 +42,15 @@ function shifted(path, removed) {
   return prefix + rest.join('.');
 }
 
+// Where an element written last in a parent stands: after its last written child, before what the
+// browser adds after it (the empty <p> of a stray </p>).
+export const endIndexOf = parent => childrenOf(parent).findLastIndex(layer => !layer.virtual) + 1;
+
 // Where an element moved into `into`, before `before` (or last), stands afterwards.
 export function pathAfterPlace(moved, into, before) {
   const parent = shifted(into, moved);
   if (before) return childPath(parent, indexOf(shifted(before, moved)));
-  const count = childrenOf(into).length - (parentPath(moved) === into ? 1 : 0);
-  return childPath(parent, count);
+  return childPath(parent, endIndexOf(into) - (parentPath(moved) === into ? 1 : 0));
 }
 
 export function placeMove(path, into, before) {

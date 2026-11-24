@@ -73,7 +73,9 @@ function besideFile(session, pathname) {
     return null;
   }
   const folder = dirname(session.filePath), file = resolve(folder, `.${path}`);
-  if (!BESIDE.test(path) || path.includes('\0') || !file.startsWith(`${folder}${sep}`)) return null;
+  const part = file.startsWith(`${folder}${sep}parts${sep}`);
+  const within = file.startsWith(`${folder}${sep}`) && (!/\.html$/i.test(file) || part);
+  if (!BESIDE.test(path) || path.includes('\0') || !within) return null;
   return existsSync(file) ? pathToFileURL(file) : null;
 }
 

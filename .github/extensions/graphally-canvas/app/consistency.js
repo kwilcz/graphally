@@ -9,7 +9,8 @@
 // Where the browser's elements first differ from the file's, or null when they agree.
 export function readDifferently(layers, parsed) {
   const stamped = [...parsed.querySelectorAll('[data-src]')];
-  const page = new Map(stamped.map(element => [element.dataset.src, element.localName]));
+  // SVG keeps the case of its names (linearGradient); the file's tags are compared lowercased.
+  const page = new Map(stamped.map(element => [element.dataset.src, element.localName.toLowerCase()]));
   const differ = layers.find(layer => page.get(layer.path) !== layer.tag);
   if (differ) return `the <${differ.tag}> at ${differ.path}`;
   return page.size === layers.length ? null : 'the number of elements';
@@ -19,4 +20,6 @@ export const MISMATCH = 'The browser reads this diagram\'s HTML differently from
   + 'so the canvas would edit the wrong elements. Fix the HTML in the source (a <div> in a <p>, a stray end tag) '
   + 'to edit here.';
 
-export const kindOf = layer => (layer ? `${layer.tag}.${layer.classes}` : null);
+// An element's kind, to tell whether the one at a path is still it: its tag and its own text (its
+// classes change as it moves in a grid).
+export const kindOf = layer => (layer ? `${layer.tag}|${layer.text}` : null);
