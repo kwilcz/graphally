@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>graphally canvas</title>
+<link rel="stylesheet" href="app.css">
+<script src="graphally.min.js"></script>
+</head>
+<body>
+<header class="bar">
+  <code class="file" id="file"></code>
+  <div class="tools">
+    <input id="label" placeholder="Label" aria-label="Label of a new or selected line">
+    <button type="button" id="connect" disabled title="Connect the selected box to the next box you click">Connect to…</button>
+    <button type="button" id="relabel" disabled title="Give the selected line the label">Set label</button>
+    <label>Out <select id="out" disabled></select></label>
+    <label>In <select id="in" disabled></select></label>
+    <button type="button" id="remove" disabled title="Delete the selected line (Delete)">Delete line</button>
+  </div>
+  <span class="status" id="status" role="status"></span>
+</header>
+<main id="stage" aria-label="The diagram: drag a box to move it, click a box or a line to select it"></main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
