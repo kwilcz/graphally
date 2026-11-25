@@ -73,11 +73,12 @@ function elementFields({ layer, icon }, act) {
 }
 
 function elementControls(context, act) {
-  const { layer, cascade, styles, placement, lines } = context;
+  const { layer, cascade, styles, placement, layout, lines } = context;
   return [
     element('h3', { textContent: `<${layer.tag}>${layer.id ? ` #${layer.id}` : ''}` }),
     actionsOf(layer, act),
     section('Element', elementFields(context, act)),
+    layout?.length ? section('Layout', layout) : null,
     placement?.length ? section('Placement', placement) : null,
     cascade ? section('Styles', stylesOf(cascade, layer, styles, act)) : null,
     lines?.length ? section('Lines', lines) : null,

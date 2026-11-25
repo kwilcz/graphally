@@ -22,6 +22,10 @@ export function label(x, y, text) {
   return made;
 }
 
+// The parts from the bottom up: the grids lie under everything, the pointer's marks on top.
+const ORDER = ['grids', 'targets', 'grid', 'holder', 'add', 'hover', 'selection', 'handle', 'landed', 'drop', 'ghost',
+  'guides'];
+
 export class Overlay {
   constructor(svg) {
     this.layer = make('g', { class: 'canvas-overlay' });
@@ -29,14 +33,15 @@ export class Overlay {
     this.parts = {};
   }
 
-  // Shows one part (selection, hover, drop, ghost) as these shapes, or clears it with none.
+  // Shows one part (selection, hover, drop, ghost…) as these shapes, or clears it with none.
   show(part, shapes) {
     this.parts[part]?.remove();
     delete this.parts[part];
     if (!shapes || (Array.isArray(shapes) && !shapes.length)) return;
     const group = make('g', { class: `canvas-${part}` });
     group.append(...[shapes].flat());
-    this.layer.append(group);
+    const above = ORDER.slice(ORDER.indexOf(part) + 1).map(name => this.parts[name]).find(Boolean);
+    this.layer.insertBefore(group, above ?? null);
     this.parts[part] = group;
   }
 }

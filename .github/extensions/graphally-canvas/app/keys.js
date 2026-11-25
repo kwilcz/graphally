@@ -10,7 +10,7 @@
 //   Mod+D            duplicate          Mod+G / Mod+Shift+G   group / ungroup
 //   Mod+Z            undo               Mod+Shift+Z, Mod+Y    redo
 //   Mod+= / Mod+-    zoom in / out      Shift+1 / Shift+0     fit / 100%
-//   ?                the keys and gestures
+//   ?                fold or unfold the keys and gestures, below the layers
 import { view, selectedEntry, byId } from './view.js';
 import { actions } from './actions.js';
 
@@ -33,8 +33,15 @@ const chordsFor = zoom => ({
   'Mod+z': actions.undo, 'Mod+Shift+z': actions.redo, 'Mod+y': actions.redo,
   'Mod+=': () => zoom.step(1), 'Mod+Shift++': () => zoom.step(1), 'Mod+-': () => zoom.step(-1),
   'Shift+1': () => zoom.set('fit'), 'Shift+0': () => zoom.set(1),
-  'Shift+?': () => byId('help').showModal(), '?': () => byId('help').showModal(),
+  'Shift+?': foldHelp, '?': foldHelp,
 });
+
+// The help at the foot of the layers, folded or unfolded.
+function foldHelp() {
+  const help = byId('help');
+  help.open = !help.open;
+  if (help.open) help.scrollIntoView({ block: 'nearest' });
+}
 
 // Whether a key belongs to what has the focus: typing in a field, Enter and Space on a button,
 // any key while a dialog is open (Esc closes it).

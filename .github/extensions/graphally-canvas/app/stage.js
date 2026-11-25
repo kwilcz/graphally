@@ -8,7 +8,8 @@ import { Model } from './model.js';
 // the overlay's parts, in the diagram's accent colour.
 const CANVAS_CSS = `
   .canvas-hit { fill: none; stroke: transparent; stroke-width: 12; pointer-events: stroke; cursor: pointer; }
-  .canvas-overlay * { pointer-events: none; }
+  .canvas-overlay * { pointer-events: none; vector-effect: non-scaling-stroke; }
+  .canvas-overlay text { font-size: calc(11px / var(--canvas-scale, 1)) !important; }
   .canvas-selection rect { fill: none; stroke: var(--woad); stroke-width: 2; }
   .canvas-selection path { fill: none; stroke: var(--woad); stroke-width: 6; stroke-opacity: 0.35; }
   .canvas-hover rect { fill: none; stroke: var(--woad); stroke-width: 1; stroke-dasharray: 3 3; stroke-opacity: 0.7; }
@@ -21,6 +22,17 @@ const CANVAS_CSS = `
   .canvas-ghost line { stroke: var(--woad); stroke-width: 1.5; stroke-dasharray: 4 3; }
   .canvas-landed rect { fill: none; stroke: var(--woad); stroke-width: 2; stroke-dasharray: 6 3; }
   svg.canvas-previewing > :not(.canvas-overlay) { visibility: hidden; }
+  .canvas-grids rect { fill: none; stroke: var(--muted); stroke-opacity: 0.35; stroke-dasharray: 2 3; }
+  .canvas-grids text { fill: var(--muted); fill-opacity: 0.7; font: 600 9px sans-serif; }
+  .canvas-targets rect { fill: var(--woad); fill-opacity: 0.03; stroke: var(--woad); stroke-opacity: 0.45;
+    stroke-dasharray: 4 3; }
+  .canvas-holder rect { fill: var(--woad); fill-opacity: 0.06; stroke: var(--woad); stroke-width: 2; }
+  .canvas-holder text { fill: var(--woad); font: 600 11px sans-serif; paint-order: stroke; stroke: var(--card);
+    stroke-width: 3px; }
+  .canvas-add rect { fill: var(--woad); fill-opacity: 0.08; stroke: var(--woad); stroke-opacity: 0.6;
+    stroke-dasharray: 3 3; }
+  .canvas-add text { fill: var(--woad); font: 700 12px sans-serif; }
+  .canvas-guides line { stroke: var(--rust); stroke-width: 1; }
 `;
 
 // Each element's path among its parent's elements, from the diagram down: "0", "0.2", "0.2.1".
@@ -73,7 +85,8 @@ function parsedDiagram(source) {
 }
 
 // One drawing at a time: a preview and a redraw share the viewer's icons, so the second waits.
-let drawing = Promise.resolve();
+// While one is drawn, a change to a drawing is the canvas's own (see followViewerRedraws).
+let drawing = Promise.resolve(), drawingOwn = 0;
 function oneAtATime(task) {
   const run = drawing.then(task, task);
   drawing = run.catch(() => {});
@@ -85,7 +98,8 @@ function drawIn(holder, parsed) {
   return oneAtATime(async () => {
     const diagram = document.importNode(parsed, true);
     placeDiagram(holder, diagram);
-    await globalThis.graphally.render(diagram);
+    drawingOwn += 1;
+    await globalThis.graphally.render(diagram).finally(() => { drawingOwn -= 1; });
     const view = diagram.nextElementSibling, svg = view?.shadowRoot?.querySelector('svg');
     return svg && view.graphallyModel ? { view, svg, model: new Model(view.graphallyModel) } : null;
   });
@@ -100,11 +114,32 @@ export async function drawSource(stage, source) {
     return null;
   }
   const drawn = await drawIn(stage, parsed);
-  if (!drawn) return null;
-  const root = drawn.svg.getRootNode();
+  return drawn && { ...prepared(drawn.svg, drawn.model), parsed };
+}
+
+// A drawing made ready to edit: the canvas's styles and the lines' hit strokes added. The latest
+// is the canvas's own drawing.
+let own = null;
+function prepared(svg, model) {
+  own = svg;
+  const root = svg.getRootNode();
   root.append(Object.assign(document.createElement('style'), { textContent: CANVAS_CSS }));
-  addLineHits(drawn.svg);
-  return { svg: drawn.svg, model: drawn.model, parsed, colorOf: colorResolver(root) };
+  addLineHits(svg);
+  return { svg, model, colorOf: colorResolver(root) };
+}
+
+// The viewer draws every diagram again, on its own, when the system theme changes; the canvas
+// is handed the new drawing of its diagram, made ready as its own drawings are.
+let watching = null;
+export function followViewerRedraws(svg, redrawn) {
+  const host = svg.getRootNode().host;
+  watching?.disconnect();
+  watching = new MutationObserver(() => {
+    const next = host.shadowRoot.querySelector('svg');
+    if (drawingOwn || !next || next === own || !host.graphallyModel) return;
+    redrawn(prepared(next, new Model(host.graphallyModel)));
+  });
+  watching.observe(host.shadowRoot, { childList: true });
 }
 
 function previewHolder(stage) {

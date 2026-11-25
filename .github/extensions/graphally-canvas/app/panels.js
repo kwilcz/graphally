@@ -9,6 +9,7 @@ import { showBreadcrumb } from './breadcrumb.js';
 import { showProperties } from './properties.js';
 import { cascadeOf } from './cascade.js';
 import { placementControls } from './placement-panel.js';
+import { layoutControls } from './layout-panel.js';
 import { actions } from './actions.js';
 import { entryOfDrawn, drawnKeysOf } from './lines.js';
 
@@ -41,6 +42,7 @@ function propertiesContext(act) {
     layer, styles: state.styles, icon: icon && { path: icon.dataset.src, name: icon.getAttribute('name') },
     cascade: source ? cascadeOf(source, view.parsed, state.styles) : null,
     placement: view.model ? placementControls(view.model, entry, layer, act) : [],
+    layout: view.model ? layoutControls(view.model, entry, layer, act) : [],
     lines: linesOf(layer.id).map(item => element('div', { className: 'line-item' }, [item])),
   };
 }

@@ -14,6 +14,8 @@ export const api = {
   // The source as these edits would leave it, the file untouched: a drag's preview.
   preview: (edits, version) => post('api/preview', { edits, version }),
   icons: () => fetch('api/icons').then(response => response.json()),
+  // Renders the file to an SVG (and a PNG) beside it; the answer names the files written.
+  exportDiagram: png => post('api/export', { png }),
   undo: () => post('api/undo'),
   redo: () => post('api/redo'),
   select: items => post('api/selection', { items }),

@@ -15,6 +15,8 @@ export function scaleOf(stage, svg, zoom) {
 export function applyZoom(stage, svg, zoom) {
   const scale = scaleOf(stage, svg, zoom);
   Object.assign(svg.style, { width: `${Math.round(naturalWidth(svg) * scale)}px`, height: 'auto', maxWidth: 'none' });
+  // The overlay's marks keep their size on screen whatever the zoom.
+  svg.style.setProperty('--canvas-scale', String(scale));
   return scale;
 }
 

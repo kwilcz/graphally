@@ -82,10 +82,20 @@ export class Model {
 
   // The deepest element under a point that can take the dragged one in: not it or inside it.
   holderAt(point, dragged, anywhere = false) {
-    const fits = entry => !this.isWithin(entry.src, dragged.src) && contains(entry.box, point)
-      && canNest(entry.tag, dragged.tag)
-      && (anywhere ? !LEAVES.has(entry.tag) && entry.layout.kind !== 'contents' : this.canHold(entry, dragged));
-    return smallest(this.entries.filter(fits));
+    return smallest(this.entries.filter(entry => contains(entry.box, point) && this.takes(entry, dragged, anywhere)));
+  }
+
+  // Whether a container can take the dragged element: one like it holds (canHold), or with Ctrl
+  // (anywhere) any container HTML lets it stand in; never itself or one inside it.
+  takes(entry, dragged, anywhere = false) {
+    if (this.isWithin(entry.src, dragged.src) || !canNest(entry.tag, dragged.tag)) return false;
+    if (area(entry.box) === 0) return false;
+    return anywhere ? !LEAVES.has(entry.tag) && entry.layout.kind !== 'contents' : this.canHold(entry, dragged);
+  }
+
+  // Every container that can take the dragged element, to show where it may go.
+  holdersFor(dragged, anywhere = false) {
+    return this.entries.filter(entry => this.takes(entry, dragged, anywhere));
   }
 
   // A container takes an element it already holds one like: its own parent, or one with a child

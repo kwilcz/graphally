@@ -4,24 +4,19 @@
 // the grid it would land in and a preview of the diagram after the drop; and the edits a drop, a
 // nudge or a resize makes.
 import { view, selectedEntry, edit, elementSelection } from './view.js';
-import { frame, segment, trace, label, dot } from './overlay.js';
+import { frame, segment, trace, dot } from './overlay.js';
 import { dropEdits } from './drop.js';
 import { handlesOf } from './grid-drop.js';
-import { cellsOf, areasOf } from './grid.js';
+import { gridShapes, allGridShapes, showTargets, showStrips } from './outlines.js';
+import { settings } from './settings.js';
 import { placementEdits, lineValue } from './placement.js';
 import { actions } from './actions.js';
 import { pathAfterPlace } from './moves.js';
 import { preview, endPreview, previewReplaced } from './preview.js';
 import { linkHandleOf, linkEdits } from './linking.js';
+import { snapped } from './snapping.js';
 
 const HANDLE = 4;
-
-// A grid's cells, or its named areas with their names, as dashed outlines.
-function gridShapes(grid) {
-  if (!grid || grid.layout.kind !== 'grid') return null;
-  if (!grid.layout.areas) return cellsOf(view.model, grid).map(cell => frame(cell, 0));
-  return areasOf(view.model, grid).flatMap(({ name, rect }) => [frame(rect, 0), label(rect.x + 4, rect.y + 12, name)]);
-}
 
 // The grid to show for an element: its own, else the one it sits in.
 const gridAround = entry => (entry?.layout.kind === 'grid' ? entry : entry && view.model.parentOf(entry));
@@ -31,6 +26,7 @@ export function drawSelection() {
   if (!overlay) return;
   const entry = selectedEntry(), key = selection?.kind === 'line' ? selection.id : null;
   const line = key && svg.querySelector(`g[data-edge="${CSS.escape(key)}"] path`);
+  overlay.show('grids', settings.grids ? allGridShapes() : null);
   overlay.show('grid', gridShapes(gridAround(entry)));
   const also = view.also.map(item => view.model.entry(item.path)).filter(Boolean).map(found => frame(found.box));
   const main = entry ? frame(entry.box) : line ? trace(line.getAttribute('d')) : null;
@@ -50,7 +46,9 @@ function handleAt(point, reach) {
 }
 
 function clearDrag() {
-  for (const part of ['ghost', 'drop', 'grid', 'landed', 'selection', 'handle', 'hover']) view.overlay.show(part, null);
+  const parts = ['ghost', 'drop', 'grid', 'landed', 'selection', 'handle', 'hover', 'targets', 'holder', 'add',
+    'guides'];
+  for (const part of parts) view.overlay.show(part, null);
 }
 
 // What a drag would do: its edits, and where the element will stand (its path) once they are made.
@@ -58,7 +56,7 @@ function gestureOf(entry, drop, delta, alt) {
   if (alt) return { edits: nudgeEdits(entry, delta), path: entry.src };
   if (!drop || drop.noop) return { edits: [], path: entry.src };
   const path = drop.into === null ? entry.src : pathAfterPlace(entry.src, drop.into, drop.before ?? null);
-  return { edits: dropEdits(entry, drop), path };
+  return { edits: dropEdits(entry, drop, view.model), path };
 }
 
 const resizeEdits = (entry, resize) => (!resize || resize.noop ? [] : placementEdits(entry.src, {
@@ -85,8 +83,12 @@ function commit(edits, selectAfter, version) {
   return edit(edits, selectAfter, version).then(errors => errors.length && previewReplaced());
 }
 
-function showDrag(entry, delta, drop) {
+// A drag in progress: the containers that can take the element (none for a nudge), its ghost,
+// where it would land and the grid it would land in.
+function showDrag(entry, delta, drop, { anywhere, nudging }) {
   clearDrag();
+  if (!nudging) showTargets(entry, anywhere, drop?.into ?? drop?.grid ?? null);
+  if (!nudging) showStrips(entry, drop);
   view.overlay.show('ghost', frame({ ...entry.box, x: entry.box.x + delta.x, y: entry.box.y + delta.y }, 0));
   const marker = drop && (drop.kind === 'place' ? segment(drop.line) : frame(drop.rect, 0));
   view.overlay.show('drop', drop && !drop.noop ? marker : null);
@@ -109,15 +111,23 @@ const POINTER = {
   hover: entry => view.overlay?.show('hover', entry && entry !== selectedEntry() ? frame(entry.box, 1) : null),
 };
 
+// A nudge's delta, snapped to the boxes around when snapping is on (Ctrl+Alt skips it).
+function nudged(entry, delta, alt, anywhere) {
+  if (!alt || !settings.snap || anywhere) return { delta, guides: [] };
+  return snapped(view.model, entry, delta, view.svg.getScreenCTM().a);
+}
+
 const dragGestures = version => ({
-  drag(entry, delta, drop, alt) {
-    showDrag(entry, delta, drop);
-    const gesture = gestureOf(entry, drop, delta, alt);
+  drag(entry, delta, drop, alt, anywhere) {
+    const nudge = nudged(entry, delta, alt, anywhere);
+    showDrag(entry, nudge.delta, alt ? null : drop, { anywhere, nudging: alt });
+    view.overlay.show('guides', nudge.guides.map(segment));
+    const gesture = gestureOf(entry, drop, nudge.delta, alt);
     preview(gesture.edits, landing(entry, gesture.path), version);
   },
-  drop(entry, drop, delta, alt) {
+  drop(entry, drop, delta, alt, anywhere) {
     clearDrag();
-    const gesture = gestureOf(entry, drop, delta, alt);
+    const gesture = gestureOf(entry, drop, nudged(entry, delta, alt, anywhere).delta, alt);
     return commit(gesture.edits, elementSelection(gesture.path, entry.id), version);
   },
 });

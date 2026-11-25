@@ -1,17 +1,19 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // What can be done to the selection, from a key, a button, the layers panel or the pointer: select
-// and step out, connect, edit text, delete, duplicate, move among siblings and in or out of them,
-// group and ungroup, rename a class. Each change is an edit of the file; the selection follows
+// (selecting.js), edit text, delete, duplicate, move among siblings and in or out of them, group and
+// ungroup, add, rename an id or a class. Each change is an edit of the file; the selection follows
 // the element, by its id or by where its path will be.
 import { api } from './api.js';
 import {
-  view, edit, setSelection, setStatus, selectedEntry, selectedLayer, layerOf, elementSelection,
+  view, edit, setSelection, setStatus, selectedLayer, layerOf, elementSelection,
 } from './view.js';
 import {
   parentPath, moveAmong, indent, outdent, layerDrop, wrapMove, unwrapMove, canUnwrap, visibleChildrenOf,
 } from './moves.js';
 import { addition } from './adding.js';
 import { removeEdits, groupEdits } from './multi.js';
+import { renaming } from './renaming.js';
+import { selecting } from './selecting.js';
 import { editText } from './text-editor.js';
 import { entryOfDrawn, splitEdits, deleteEdits, drawnKeysOf } from './lines.js';
 
@@ -20,57 +22,28 @@ function applyMove(move, layer, selectAfter, version) {
   return edit(move.edits, selectAfter ?? (move.path === null ? null : elementSelection(move.path, layer?.id)), version);
 }
 
-function connectTo(entry) {
-  const from = view.connecting;
-  view.connecting = null;
-  if (!entry?.id) return setStatus('Connect to a box with an id: give it one in its properties.', true);
-  setStatus('');
-  return edit([{ op: 'connect', from, to: entry.id }]);
-}
-
 let iconNames = null;
 
-const ends = value => [].concat(value ?? []);
-// The lines that name an id: as an end, an anchor on it ("fd.top"), or a point they pass by.
-const namesId = (value, id) => typeof value === 'string' && (value === id || value.startsWith(`${id}.`));
-const named = (lines, id) => lines.filter(entry => [...ends(entry.from), ...ends(entry.to), ...ends(entry.via)]
-  .some(value => namesId(value, id)));
-
-function idProblem(layer, next) {
-  if (next === (layer.id ?? '')) return 'It has that id already.';
-  if (next && !/^[A-Za-z][\w-]*$/.test(next)) return `"${next}" is not an id: a letter, then letters, digits, - or _.`;
-  if (next && view.state.layers.some(other => other.id === next)) return `Another element has the id "${next}".`;
-  if (!next && named(view.state.lines, layer.id).length) {
-    return 'Lines join this box by its id: delete them, or give it another.';
-  }
-  return null;
+// What is selected once an element is gone: its parent.
+function parentSelection(path) {
+  const parent = parentPath(path);
+  return parent ? elementSelection(parent, layerOf(parent)?.id) : null;
 }
 
-// The lines that name an old id, given the new one; the last first, as a line's key can count the
-// same lines before it.
-const renamedEnds = (old, next) => named(view.state.lines, old).reverse().map(entry => {
-  const one = end => (namesId(end, old) ? next + end.slice(old.length) : end);
-  const swap = value => (Array.isArray(value) ? value.map(one) : one(value));
-  const set = { from: swap(entry.from), to: swap(entry.to), ...(entry.via ? { via: swap(entry.via) } : {}) };
-  return { op: 'line', key: entry.key, set };
-});
-
-// What else in the diagram names an id the canvas cannot rewrite: a drawing script, an attribute.
-function leftovers(old) {
-  const source = view.state.source, places = [];
-  const scripts = [...source.matchAll(/<script(?![^>]*application\/json)[^>]*>([\s\S]*?)<\/script>/g)];
-  if (scripts.some(([, body]) => new RegExp(`(['"\`])${old}[.'"\`]`).test(body))) places.push('a drawing script');
-  // Attributes that name an element by its id: data-*, for, aria-*, and links to #id.
-  const value = `\\s*=\\s*["']?`, ends = `(?=["'\\s>])`;
-  const naming = `\\s(data-[\\w-]+|for|aria-[\\w-]+)${value}${old}${ends}|\\shref${value}#${old}${ends}`;
-  if (new RegExp(naming).test(source)) places.push('an attribute');
-  return places;
+// Where a copy of an element lands: right after it.
+function copyPath(path) {
+  const index = Number(path.split('.').at(-1)), parent = parentPath(path);
+  return parent ? `${parent}.${index + 1}` : `${index + 1}`;
 }
 
-function renamedRules(old, next) {
-  const naming = () => new RegExp(`#${old}(?![\\w-])`, 'g');
-  return view.state.styles.rules.filter(rule => !rule.nested && naming().test(rule.selector))
-    .map(rule => ({ op: 'rule', rule: rule.index, rename: rule.selector.replace(naming(), `#${next}`) }));
+// Writes an element just added and readies its text to type (editPendingText), unless refused.
+function addThenType(edits, selection, pending) {
+  view.pendingText = { ...pending, written: false, after: view.state.version };
+  return edit(edits, selection).then(errors => {
+    if (errors.length) view.pendingText = null;
+    else view.pendingText.written = true;
+    actions.editPendingText();
+  });
 }
 
 // Several siblings into one new group, selected afterwards where the first of them stood.
@@ -82,19 +55,13 @@ function groupSelected(paths, version) {
   return edit(edits, elementSelection(edits[0].path), version);
 }
 
-function stepFrom(layer, direction) {
-  if (direction === 'in') return visibleChildrenOf(layer.path)[0];
-  const siblings = visibleChildrenOf(parentPath(layer.path));
-  const at = siblings.findIndex(found => found.path === layer.path);
-  return siblings[at + (direction === 'next' ? 1 : -1)];
-}
-
 const withSelected = run => () => {
   const layer = selectedLayer();
   return layer ? run(layer) : undefined;
 };
 
 export const actions = {
+  ...selecting,
   edit,
   undo: () => { view.ownEdit = true; return api.undo(); },
   redo: () => { view.ownEdit = true; return api.redo(); },
@@ -102,38 +69,6 @@ export const actions = {
   say: (text, error = false) => setStatus(text, error),
   canUnwrap,
 
-  // A click's target; while connecting, the line goes to the element with an id under the pointer.
-  select(entry, hit = entry) {
-    if (view.connecting) return connectTo(hit && view.model.withIdAround(hit, entry));
-    return setSelection(entry ? elementSelection(entry.src, entry.id) : null);
-  },
-  pick: (layer, add = false) => {
-    const entry = layer ? view.model?.entry(layer.path) ?? { src: layer.path, id: layer.id } : null;
-    return add ? actions.toggle(entry) : actions.select(entry);
-  },
-  // Adds an element to the selection, or takes it away: Shift+click.
-  toggle(entry) {
-    if (!entry?.src || view.connecting) return actions.select(entry);
-    const all = [view.selection, ...view.also].filter(item => item?.kind === 'element');
-    const kept = all.filter(item => item.path !== entry.src);
-    const next = kept.length < all.length ? kept : [...all, elementSelection(entry.src, entry.id)];
-    return setSelection(next[0] ?? null, next.slice(1));
-  },
-  selectedPaths: () => [view.selection, ...view.also].filter(item => item?.kind === 'element').map(item => item.path),
-  selectLine: key => setSelection({ kind: 'line', id: key }),
-  selectParent() {
-    if (view.also.length) return setSelection(view.selection);
-    const entry = selectedEntry(), parent = entry && view.model.parentOf(entry);
-    setSelection(parent?.src ? elementSelection(parent.src, parent.id) : null);
-  },
-  startConnect(id) {
-    view.connecting = id;
-    setStatus(`Click the box to connect ${id} to (Esc cancels).`);
-  },
-  cancelConnect() {
-    view.connecting = null;
-    setStatus('');
-  },
 
   editText(entry) {
     const layer = entry && layerOf(entry.src);
@@ -156,11 +91,7 @@ export const actions = {
       { kind: 'line', id: key }, version);
     return editText(view.svg, box, found.entry.label ?? '', setLabel);
   },
-  removeElement(layer, version) {
-    const parent = parentPath(layer.path);
-    const selectAfter = parent ? elementSelection(parent, layerOf(parent)?.id) : null;
-    return edit([{ op: 'remove', path: layer.path }], selectAfter, version);
-  },
+  removeElement: (layer, version) => edit([{ op: 'remove', path: layer.path }], parentSelection(layer.path), version),
   remove() {
     if (view.also.length) return edit(removeEdits(actions.selectedPaths()), null);
     if (view.selection?.kind === 'line') {
@@ -168,15 +99,11 @@ export const actions = {
       if (found) return actions.removeLine(found);
       return setStatus('A drawing script draws this line: edit it in the source.', true);
     }
-    const layer = selectedLayer(), parent = layer && parentPath(layer.path);
-    const selectAfter = parent ? elementSelection(parent, layerOf(parent)?.id) : null;
-    return layer && edit([{ op: 'remove', path: layer.path }], selectAfter);
+    const layer = selectedLayer();
+    return layer && actions.removeElement(layer);
   },
-  duplicate: withSelected(layer => {
-    const index = Number(layer.path.split('.').at(-1)), parent = parentPath(layer.path);
-    const copy = parent ? `${parent}.${index + 1}` : `${index + 1}`;
-    return edit([{ op: 'duplicate', path: layer.path }], elementSelection(copy));
-  }),
+  duplicate: withSelected(layer => edit([{ op: 'duplicate', path: layer.path }],
+    elementSelection(copyPath(layer.path)))),
   step: direction => withSelected(layer => applyMove(moveAmong(layer.path, direction), layer))(),
   indent: withSelected(layer => applyMove(indent(layer.path), layer)),
   outdent: withSelected(layer => applyMove(outdent(layer.path), layer)),
@@ -192,12 +119,7 @@ export const actions = {
   // Adds a box, a group or a text and selects it, its text ready to type (when it is drawn).
   add(kind) {
     const { edits, path, id, textPath } = addition(kind, selectedLayer()?.path ?? null);
-    view.pendingText = { path: textPath, id: kind === 'group' ? null : id, written: false, after: view.state.version };
-    return edit(edits, elementSelection(path, id)).then(errors => {
-      if (errors.length) view.pendingText = null;
-      else view.pendingText.written = true;
-      actions.editPendingText();
-    });
+    return addThenType(edits, elementSelection(path, id), { path: textPath, id: kind === 'group' ? null : id });
   },
   // An element just added has its text ready to type, once its edit is written and it is drawn
   // (whichever comes last); one whose edit was refused has none.
@@ -209,13 +131,6 @@ export const actions = {
     view.pendingText = null;
     actions.editText(entry);
   },
-  // Selects the sibling before or after the selection, its parent, or its first child.
-  navigate(direction) {
-    const layer = selectedLayer();
-    if (direction === 'out') return actions.selectParent();
-    const target = layer ? stepFrom(layer, direction) : visibleChildrenOf('')[0];
-    return target ? setSelection(elementSelection(target.path, target.id)) : undefined;
-  },
   // The icon names to suggest, asked of the server once.
   iconNames: () => (iconNames ??= api.icons().then(answer => answer.names ?? [])),
   fold(path) {
@@ -224,16 +139,20 @@ export const actions = {
   },
   // A new id for an element; its lines and the rules that name it (#old) follow it.
   renameId(layer, next, version) {
-    const problem = idProblem(layer, next);
+    const { problem, edits, rest } = renaming(layer, next);
     if (problem) return setStatus(problem, true);
-    const edits = [{ op: 'attr', path: layer.path, name: 'id', value: next || null }];
-    if (layer.id && next) edits.push(...renamedEnds(layer.id, next), ...renamedRules(layer.id, next));
-    const rest = layer.id && next ? leftovers(layer.id) : [];
     return edit(edits, elementSelection(layer.path, next || undefined), version).then(errors => {
       if (errors.length || !rest.length) return;
       const verb = rest.length > 1 ? 'name' : 'names';
       setStatus(`Renamed; ${rest.join(' and ')} still ${verb} "${layer.id}": change it there.`, true);
     });
+  },
+  // Adds an item to a list: a copy of its last one, its text ready to type.
+  addItem(layer) {
+    const last = visibleChildrenOf(layer.path).at(-1);
+    if (!last) return actions.add('box');
+    const copy = copyPath(last.path);
+    return addThenType([{ op: 'duplicate', path: last.path }], elementSelection(copy), { path: copy, id: null });
   },
   renameClass(old, next) {
     const layer = selectedLayer();

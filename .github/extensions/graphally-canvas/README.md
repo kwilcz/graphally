@@ -23,14 +23,17 @@ Edits go to the file, so try it on a copy.
 | Drag a box to another cell of its grid, or a lane's grid | Its column and row change (`col-[3]` becomes `col-[5]`); in another lane it moves there too. A box already in that cell trades places with it. |
 | Drag a region of a map to another area | Its area changes (`[grid-area:edge]` becomes `[grid-area:msg]`); the region there takes its old area. |
 | Drag a span handle (the squares on a grid box's right and bottom edges) | Its span changes (`col-[3/span_2]`). |
+| Drag a box just past a grid's right or bottom edge, onto the strip marked + | The grid gets one more column or row where its template is written, and the box goes into it. |
 | Drag a box along a column or row of boxes, or into a group like it | The element moves in the source, before the sibling the marker shows. |
 | Ctrl-drag | Any container under the pointer takes the box. |
-| Alt-drag | Its `nudge` changes. |
+| Alt-drag | Its `nudge` changes. With Snap on, its edges and centre snap to its siblings' and its container's when they come within 6 screen pixels, and a guide marks the line; Ctrl+Alt nudges without snapping. |
 | Drag a layer onto another in the layers panel | It moves before it (top quarter), after it (bottom quarter), or into it. |
 | Alt+↑ / Alt+↓, Alt+→ / Alt+← | It moves before or after its sibling; into the sibling before it, or out of its parent. |
 | Group (Ctrl+G), Ungroup (Ctrl+Shift+G) | It goes into a new `<div class="group">`, taking the classes that place it; ungrouping puts the group's children in its place. |
 
 While you drag, the canvas shows the diagram as the drop would leave it: the edits are applied without writing the file, and the result is drawn under the pointer, so neighbours make room and lines take their new routes before you let go. A redraw of a sample takes 12 to 62 ms, so the preview keeps up with the pointer. Targets are still found on the drawing as it was, so a target does not slide away as the preview reflows. Alt-drags, span handles and new lines preview the same way.
+
+A container with no border or fill is invisible on the drawing, so while you drag, every container that can take the box is outlined, and the one under the pointer is named (`div#msg`). Ctrl widens the outlines to every container, as it widens the drop.
 
 Each grid placement is written where the source places the element. The cascade says which declaration wins: a utility class is swapped, the style attribute or a rule that styles this element alone is changed in place, and a rule several elements share is left alone while the element gets a class of its own (or, against a stronger rule, a style attribute).
 
@@ -39,6 +42,15 @@ Each grid placement is written where the source places the element. The cascade 
 - **+ Box, + Group, + Text:** a new element goes into the selection when it holds boxes (a group, a lane, an empty container), else right after the selection. It is selected with its text ready to type.
 - **Drawing a line:** drag the dot off the selected box's top-right corner to another box. Lines join ids, so a box without one gets one from its text (Front Door becomes `front-door`). Connect to… in the properties does the same with a click.
 - **A line's label:** double-click the line. Select it to set its sides, or delete it. A line written with others (`"from": ["a", "b"]`) changes with them, as the panel says; **Split out** gives it an entry of its own, and Delete removes it alone.
+
+## Grids and lists
+
+Every grid's columns and rows are drawn as faint cells (**Grids** in the toolbar hides them). A selected grid or list shows its layout in the properties:
+
+- **A grid:** its columns and its rows, each with **+** and **−**. **+** copies the last track (`340px 1fr 210px` becomes `340px 1fr 210px 210px`; a trailing `repeat(11, auto)` becomes `repeat(12, auto)`); **−** takes the last one away while no box stands in it. The template changes where it is written: a utility class (`grid-cols-3` becomes `grid-cols-4`), an arbitrary one, a rule or the style attribute. Named areas get a column or a row of `.` cells. A subgrid's columns are its parent grid's, so its parent's template changes. A grid whose rows come from its content has no row template to change: drop a box past its last row and the row is made.
+- **A list** (a flex container): it grows only along its direction, so it has no tracks, only items. **+ Item** adds a copy of its last item, its text ready to type.
+
+A button that cannot change the template is disabled, and its tooltip says why (a template that repeats to fill the space, a box in the last track, an area that would be lost).
 
 ## Styling things
 
@@ -60,6 +72,9 @@ graphally's defaults are shown, not edited: a rule of the diagram's own override
 - **Properties:** id (a new one carries the box's lines, the points they pass by and its `#id` rules with it; a drawing script or attribute that still names the old id is pointed out), classes, text, icon (with the names graphally knows) and variants; the element's column, row and span, area or nudge as fields; its lines, each a button that selects it.
 - **Duplicate (Ctrl+D), Delete:** a copy gets ids with `-2`; deleting takes the lines to the ids inside.
 - **Zoom:** −, +, 100% and Fit, Ctrl+wheel, Shift+1 (fit) and Shift+0 (100%).
+- **SVG, PNG:** render the diagram with the skill's own renderer, as `graphally render` does, to an `.svg` (and with PNG a sharp `.png`, as `--png2x` gives) beside the file. The status line links to them; the source is not touched.
+- **Grids, Snap:** show the grids' cells, and snap Alt-drags. Both start on, and the browser remembers your choice.
+- **Keys and gestures:** listed under the layers, open until you fold it (or press ?).
 - **Undo and Redo:** step through every change to the file while the canvas is open: yours, the agent's, and those from other programs.
 - **A narrow panel:** below 1100px the layers slide in from the Layers button; below 760px the properties sit under the drawing.
 - **Images and parts:** an `<img>` or an included part beside the diagram file loads as in a render.
@@ -83,8 +98,11 @@ The canvas's server listens on `127.0.0.1` only, under a secret path that only i
 - **The layout model:** when a diagram carries `data-edit`, the viewer also returns each element's box and what places it: grid tracks, gaps and named areas, flex direction, flow (`engine/page/layout-model.js`). Without `data-edit`, a render is unchanged.
 - **CSS:** the edit module reads the diagram's `<style>` rules with where each declaration sits (`edits/css-rules.mjs`) and changes one at a time (`edits/styling.mjs`). The page matches rules to the selection on the source as parsed, and orders them by specificity and source order (`app/cascade.js`, `app/selectors.js`).
 - **The drop:** `app/drop.js` asks the model what holds the pointer: a cell or an area of a grid (`app/grid-drop.js`), or a place between two siblings; `app/placement.js` writes the new place where the source keeps it.
+- **Grids and snapping:** `app/tracks.js` steps a grid's template where the cascade says it is written; `app/grid-grow.js` gives the strips past a grid's edge; `app/outlines.js` draws the grids, the containers a box can go into and the strips; `app/snapping.js` snaps a nudge to its neighbours.
 - **The preview:** `app/preview.js` sends a drag's edits to the server's preview endpoint, which applies them without writing, and draws the result under the overlay (`drawPreview` in `app/stage.js`). It renders that one diagram alone (`graphally.render(diagram)`).
 - **`extension.mjs`:** registers the canvas and its actions with the app (`@microsoft/copilot-sdk/extension`, which the app provides).
+- **The theme:** the viewer draws its diagrams again when the system theme changes; the canvas takes the new drawing as its own, overlay, selection and all (`followViewerRedraws` in `app/stage.js`).
+- **`exporting.mjs`:** renders the file with the skill's render API (`scripts/lib/api.mjs`), one export at a time.
 - **`instances.mjs`, `session.mjs`, `server.mjs`, `styles.mjs` and `icons.mjs`:** know nothing of the app, and `tools/test/canvas.mjs` tests them on their own. Each open canvas is a session on one file, served with the page, the viewer and a stream of the file's state.
 - **`app/`:** the page. It draws with the skill's viewer bundle (`skills/graphally/viewer/graphally.min.js`), so it lays out and routes exactly as a render does.
 

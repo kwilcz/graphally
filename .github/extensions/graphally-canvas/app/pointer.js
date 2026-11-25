@@ -41,17 +41,28 @@ function track(svg, press, { move, up }) {
   svg.addEventListener('pointerup', onUp);
 }
 
+const anywhereOf = event => event.ctrlKey || event.metaKey;
+
 function followDrag(svg, model, actions, press) {
-  let dragging = false, drop = null, delta = { x: 0, y: 0 };
+  let dragging = false, drop = null, delta = { x: 0, y: 0 }, last = null;
+  const move = (point, event) => {
+    last = point;
+    delta = { x: point.x - press.point.x, y: point.y - press.point.y };
+    dragging ||= Math.hypot(delta.x, delta.y) * scaleOf(svg) >= DRAG_SLOP;
+    const anywhere = anywhereOf(event);
+    drop = dragging && !event.altKey ? dropFor(model, press.grabbed, point, anywhere, scaleOf(svg)) : null;
+    if (dragging) actions.drag(press.grabbed, delta, drop, event.altKey, anywhere);
+  };
+  // Ctrl or Alt pressed or let go without a move changes the drag where it stands.
+  const modifiers = event => last && ['Control', 'Meta', 'Alt'].includes(event.key) && move(last, event);
+  addEventListener('keydown', modifiers);
+  addEventListener('keyup', modifiers);
   track(svg, press, {
-    move(point, event) {
-      delta = { x: point.x - press.point.x, y: point.y - press.point.y };
-      dragging ||= Math.hypot(delta.x, delta.y) * scaleOf(svg) >= DRAG_SLOP;
-      drop = dragging && !event.altKey ? dropFor(model, press.grabbed, point, event.ctrlKey || event.metaKey) : null;
-      if (dragging) actions.drag(press.grabbed, delta, drop, event.altKey);
-    },
+    move,
     up(point, event) {
-      if (dragging) actions.drop(press.grabbed, event.altKey ? null : drop, delta, event.altKey);
+      removeEventListener('keydown', modifiers);
+      removeEventListener('keyup', modifiers);
+      if (dragging) actions.drop(press.grabbed, event.altKey ? null : drop, delta, event.altKey, anywhereOf(event));
       else if (event.shiftKey) actions.toggle(press.grabbed);
       else actions.select(clickTarget(model, press), press.hit);
     },

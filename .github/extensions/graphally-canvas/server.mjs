@@ -8,6 +8,7 @@ import { dirname, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { randomBytes } from 'node:crypto';
 import { allIconNames } from './icons.mjs';
+import { exportDiagram } from './exporting.mjs';
 
 const APP = new URL('./app/', import.meta.url);
 const ENGINE = new URL('../../../skills/graphally/viewer/graphally.min.js', import.meta.url);
@@ -92,6 +93,10 @@ const ROUTES = {
   'POST /api/preview': async (session, request, response) => {
     const { edits = [], version } = await readJson(request);
     sendJson(response, 200, session.preview(edits, version));
+  },
+  'POST /api/export': async (session, request, response) => {
+    const { png = false } = await readJson(request);
+    sendJson(response, 200, await exportDiagram(session.filePath, Boolean(png)));
   },
   'POST /api/undo': (session, request, response) => sendJson(response, 200, session.undo() ?? {}),
   'POST /api/redo': (session, request, response) => sendJson(response, 200, session.redo() ?? {}),

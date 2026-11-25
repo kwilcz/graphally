@@ -4,7 +4,7 @@
 // edits they make.
 import { view, byId, onRefresh, setStatus, layerOf } from './view.js';
 import { readDifferently, MISMATCH, kindOf } from './consistency.js';
-import { drawSource } from './stage.js';
+import { drawSource, followViewerRedraws } from './stage.js';
 import { Overlay } from './overlay.js';
 import { enablePointer } from './pointer.js';
 import { drawSelection, pointerActionsFor } from './canvas.js';
@@ -12,6 +12,7 @@ import { showPanels, resolveSelection } from './panels.js';
 import { styleLists } from './styles-panel.js';
 import { decodedText } from './dom.js';
 import { enableKeys } from './keys.js';
+import { enableToolbar } from './toolbar.js';
 import { actions } from './actions.js';
 import { applyZoom, zoomAround, stepped, scaleOf } from './zoom.js';
 import { previewReplaced } from './preview.js';
@@ -40,16 +41,27 @@ async function show(next) {
   for (const layer of next.layers) layer.text = decodedText(layer.text);
   view.state = next;
   Object.assign(view, drawn ?? { svg: null, model: null, parsed: null, colorOf: null });
-  view.overlay = drawn ? new Overlay(drawn.svg) : null;
-  if (drawn) {
-    enablePointer(drawn.svg, drawn.model, pointerActionsFor(next.version));
-    showScale(applyZoom(stage, drawn.svg, view.zoom));
-    Object.assign(stage, { scrollLeft: scroll.left, scrollTop: scroll.top });
-  }
+  takeDrawing(drawn, scroll);
   settle(next, drawn, carried);
   drawSelection();
   showPanels();
   actions.editPendingText();
+}
+
+// A drawing becomes the one the overlay, the pointer and the zoom work on. One the viewer draws
+// again itself (the system theme changed) takes its place, the same diagram in the other theme.
+function takeDrawing(drawn, scroll) {
+  view.overlay = drawn ? new Overlay(drawn.svg) : null;
+  if (!drawn) return;
+  enablePointer(drawn.svg, drawn.model, pointerActionsFor(view.state.version));
+  showScale(applyZoom(stage, drawn.svg, view.zoom));
+  Object.assign(stage, { scrollLeft: scroll.left, scrollTop: scroll.top });
+  followViewerRedraws(drawn.svg, redrawn => {
+    Object.assign(view, redrawn);
+    takeDrawing(redrawn, { left: stage.scrollLeft, top: stage.scrollTop });
+    drawSelection();
+    showPanels();
+  });
 }
 
 // After a redraw: whether the page and the file number the elements alike, and the selection
@@ -107,18 +119,7 @@ events.addEventListener('selection', message => {
 });
 
 enableKeys(zoom);
-byId('undo').addEventListener('click', actions.undo);
-byId('open-help').addEventListener('click', () => byId('help').showModal());
-for (const kind of ['box', 'group', 'text']) byId(`add-${kind}`).addEventListener('click', () => actions.add(kind));
-byId('toggle-layers').addEventListener('click', event => {
-  const open = document.body.classList.toggle('layers-open');
-  event.currentTarget.setAttribute('aria-expanded', String(open));
-});
-byId('redo').addEventListener('click', actions.redo);
-byId('zoom-in').addEventListener('click', () => zoom.step(1));
-byId('zoom-out').addEventListener('click', () => zoom.step(-1));
-byId('zoom-level').addEventListener('click', () => zoom.set(1));
-byId('zoom-fit').addEventListener('click', () => zoom.set('fit'));
+enableToolbar(zoom);
 stage.addEventListener('wheel', event => {
   if (!event.ctrlKey && !event.metaKey) return;
   event.preventDefault();

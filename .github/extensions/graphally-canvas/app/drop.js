@@ -4,6 +4,8 @@
 // container, before the child the pointer is ahead of; and the edits that move it there.
 import { gridAxes, cellDrop, areaDrop } from './grid-drop.js';
 import { placementEdits, lineValue } from './placement.js';
+import { growDrop } from './grid-grow.js';
+import { trackEdits } from './tracks.js';
 
 const center = (box, axis) => box[axis] + (axis === 'x' ? box.w : box.h) / 2;
 
@@ -38,7 +40,9 @@ function placeDrop(model, holder, dragged, point) {
 }
 
 // The drop for a point; with `anywhere`, any container under it takes the element.
-export function dropFor(model, dragged, point, anywhere = false) {
+export function dropFor(model, dragged, point, anywhere = false, scale = 1) {
+  const grown = growDrop(model, dragged, point, anywhere, scale);
+  if (grown) return grown;
   const holder = model.holderAt(point, dragged, anywhere);
   if (!holder) return null;
   if (holder.layout.kind === 'grid' && holder.layout.areas) return areaDrop(model, holder, dragged, point);
@@ -60,10 +64,17 @@ function placingEdits(dragged, drop) {
 
 // The edits a drop makes: where the element sits in its grid first (paths stay as they are),
 // then the move into its new container.
-export function dropEdits(dragged, drop) {
+export function dropEdits(dragged, drop, model) {
   if (drop.kind === 'place') {
     return [{ op: 'place', path: dragged.src, into: drop.into, ...(drop.before ? { before: drop.before } : {}) }];
   }
   const move = drop.into !== null ? [{ op: 'place', path: dragged.src, into: drop.into }] : [];
-  return [...placingEdits(dragged, drop), ...move];
+  return [...grownEdits(drop, model), ...placingEdits(dragged, drop), ...move];
+}
+
+// A drop past a grid's edge first adds the track it goes into (a grid whose rows come from its
+// content makes the row itself).
+function grownEdits(drop, model) {
+  if (!drop.grow) return [];
+  return trackEdits(model, model.entry(drop.grid), drop.grow, 1).edits ?? [];
 }
