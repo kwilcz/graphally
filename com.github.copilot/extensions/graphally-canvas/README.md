@@ -6,12 +6,19 @@ The canvas edits the diagram the way its author wrote it. A box laid out in a gr
 
 ## Opening it
 
-In a Copilot app session in this repository, ask for the graphally canvas on a diagram file: "Open the graphally canvas on `samples/flowchart/diagram.html`". The canvas opens `.html` files in the workspace.
+The canvas comes with the graphally plugin. Install the plugin in the Copilot app from its plugin marketplace, or with the Copilot CLI:
+
+```sh
+copilot plugin marketplace add kwilcz/graphally
+copilot plugin install graphally@graphally
+```
+
+Then, in a session, ask for the graphally canvas on a diagram file: "Open the graphally canvas on `docs/architecture.html`". The canvas opens `.html` files in the workspace. It needs Copilot 1.0.79 or later, the first to load extensions from an [Agent Plugins](https://agent-plugins.org/specification) plugin; such a plugin keeps them in `com.github.copilot/extensions/`, where this folder sits. Installing only the skill (`gh skill install`, the skills CLI, the zip) brings the skill without the canvas.
 
 Outside the app, serve the canvas for one file and open the address it prints:
 
 ```sh
-node .github/extensions/graphally-canvas/preview.mjs samples/architecture/diagram.html
+node com.github.copilot/extensions/graphally-canvas/preview.mjs samples/architecture/diagram.html
 ```
 
 Edits go to the file, so try it on a copy.

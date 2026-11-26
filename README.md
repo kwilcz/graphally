@@ -71,6 +71,10 @@ copilot plugin marketplace add kwilcz/graphally
 copilot plugin install graphally@graphally
 ```
 
+The plugin also brings the [graphally canvas](com.github.copilot/extensions/graphally-canvas) to the
+GitHub Copilot app: a diagram in the side panel that you and the agent edit together, by dragging
+boxes where its layout allows rather than by coordinates.
+
 **skills CLI**
 
 ```sh
@@ -229,6 +233,7 @@ version, through trusted publishing (no token is kept) while the repository vari
 | [`skills/graphally/`](skills/graphally) | the skill, which is also the npm package: `SKILL.md`, `references/`, `scripts/` (the engine, the CLI and its Node API), `viewer/`, `assets/` (theme, icons), `package.json` |
 | [`plugin.json`](plugin.json) | the [Agent Plugins](https://agent-plugins.org/specification) 1.0.0 manifest, for clients that read the open format; they find the skill in `skills/` |
 | [`.claude-plugin/`](.claude-plugin) | the Claude Code plugin and marketplace manifests |
+| [`com.github.copilot/extensions/graphally-canvas/`](com.github.copilot/extensions/graphally-canvas) | the canvas for the GitHub Copilot app, which Copilot loads from the plugin |
 | [`samples/`](samples) | briefs and the diagrams drawn from them; [the showcase](samples/README.md) |
 | [`docs/design.md`](docs/design.md) | how graphally works, illustrated with diagrams it drew ([sources](docs/diagrams)) |
 | [`tools/`](tools) | maintenance scripts, such as rebuilding the icon pack |

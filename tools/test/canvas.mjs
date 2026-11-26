@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { check, root, work } from './helpers.mjs';
-import { openCanvas, closeCanvas } from '../../.github/extensions/graphally-canvas/instances.mjs';
+import { openCanvas, closeCanvas } from '../../com.github.copilot/extensions/graphally-canvas/instances.mjs';
 
 const json = body => ({ method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
 const RENAME = [{ op: 'text', id: 'sql', text: 'Orders DB' }];
