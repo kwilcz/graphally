@@ -240,8 +240,8 @@ many as it needs.
   `--png` adds a half-size preview, `--png1x` a full-size one, `--png2x` a sharp PNG to
   publish, `--themes` a dark copy, `--recompute` ignores the previous layout. Several
   files render in one call, in parallel; render them together rather than one by one.
-- `scripts/edit.mjs <file.html> --move id dx,dy | --connect from to [label] | --line 'a->b' json | --unline 'a->b' | --lines`:
-  patches moves and connections and keeps the rest of the file as written.
+- `scripts/edit.mjs <file.html> --move id dx,dy | --connect from to [label] | --line 'a->b' json | --unline 'a->b' | --edits json | --lines`:
+  patches moves, connections, text, structure and CSS and keeps the rest of the file as written.
 - `scripts/tf2graphally.mjs <terraform dir> [--out file.html] [--title "…"]`: drafts a
   diagram of a Terraform configuration.
 - `scripts/fetch-icons.mjs [azure] [aws] [--force]`: downloads the icon packs; the first

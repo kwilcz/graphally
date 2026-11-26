@@ -59,12 +59,13 @@ export function keyOf(entry, seen) {
 const arrayAsObject = entry => ({ from: entry[0], to: entry[1], ...(entry[2] ? { label: entry[2] } : {}) });
 export const asObject = entry => (Array.isArray(entry) ? arrayAsObject(entry) : { ...entry });
 
-// A value as JSON, with a space after each comma between its items.
-const formatValue = value => JSON.stringify(value).replace(/,(?=["[\d-])/g, ', ');
+// A value as JSON, with a space after each comma between its items; a comma in a string stays.
+const formatValue = value => JSON.stringify(value)
+  .replace(/"(?:[^"\\]|\\.)*"|,/g, token => (token === ',' ? ', ' : token));
 
 // One entry in the house style: { "from": "a", "to": "b", "label": "x" }.
 function formatEntry(entry) {
-  if (Array.isArray(entry)) return JSON.stringify(entry).replace(/,/g, ', ');
+  if (Array.isArray(entry)) return formatValue(entry);
   const fields = Object.entries(entry).map(([key, value]) => `${JSON.stringify(key)}: ${formatValue(value)}`);
   return `{ ${fields.join(', ')} }`;
 }
@@ -104,3 +105,29 @@ function removeLine(block, { key }) {
 }
 
 export const CONNECTION_EDITS = { connect, line: changeLine, unline: removeLine };
+
+// The first connection with an end among the ids, and what becomes of it: removed, or, from a
+// list of ends, kept without them.
+function lineToAny(block, ids) {
+  const seen = new Map();
+  for (const entry of Array.isArray(block.value) ? block.value : []) {
+    const key = keyOf(entry, seen), line = asObject(entry);
+    const ends = ['from', 'to'].filter(end => [line[end]].flat().some(name => ids.has(name)));
+    if (!ends.length) continue;
+    const kept = Object.fromEntries(ends.map(end => [end, [line[end]].flat().filter(name => !ids.has(name))]));
+    const keepsList = ends.every(end => Array.isArray(line[end]) && kept[end].length);
+    return keepsList ? changeLine(block, { key, set: kept }) : removeLine(block, { key });
+  }
+  return null;
+}
+
+// The text without the connections to any of the ids (an element removed with its boxes).
+export function withoutLinesTo(text, ids) {
+  for (let block = connectionsBlock(text); block && ids.size;) {
+    const body = lineToAny(block, ids);
+    if (body === null) return text;
+    text = text.slice(0, block.start) + body + text.slice(block.end);
+    block = connectionsBlock(text);
+  }
+  return text;
+}

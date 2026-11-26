@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>graphally canvas</title>
+<link rel="stylesheet" href="app.css">
+<script src="graphally.min.js"></script>
+</head>
+<body>
+<header class="bar">
+  <button type="button" id="toggle-layers" class="toggle-layers" aria-controls="layers-panel"
+    aria-expanded="false">Layers</button>
+  <code class="file" id="file"></code>
+  <div class="group-buttons" role="group" aria-label="Add">
+    <button type="button" id="add-box" title="Add a box: into the selected group, or after the selected box">
+      + Box</button>
+    <button type="button" id="add-group" title="Add a group">+ Group</button>
+    <button type="button" id="add-text" title="Add a line of text">+ Text</button>
+  </div>
+  <div class="group-buttons" role="group" aria-label="Zoom">
+    <button type="button" id="zoom-out" title="Zoom out (Ctrl+-)">−</button>
+    <button type="button" id="zoom-level" title="Actual size (Shift+0)">100%</button>
+    <button type="button" id="zoom-in" title="Zoom in (Ctrl+=)">+</button>
+    <button type="button" id="zoom-fit" title="Fit to width (Shift+1)">Fit</button>
+  </div>
+  <div class="group-buttons" role="group" aria-label="History">
+    <button type="button" id="undo" disabled title="Undo (Ctrl+Z)">Undo</button>
+    <button type="button" id="redo" disabled title="Redo (Ctrl+Shift+Z)">Redo</button>
+  </div>
+  <div class="group-buttons" role="group" aria-label="View">
+    <button type="button" id="toggle-grids" aria-pressed="true"
+      title="Show every grid's columns and rows">Grids</button>
+    <button type="button" id="toggle-snap" aria-pressed="true"
+      title="Snap Alt-drag nudges to other boxes (Ctrl+Alt skips it once)">Snap</button>
+  </div>
+  <div class="group-buttons" role="group" aria-label="Export">
+    <button type="button" id="export-svg" title="Render the diagram to an SVG beside its file">SVG</button>
+    <button type="button" id="export-png"
+      title="Render the diagram to an SVG and a sharp PNG beside its file">PNG</button>
+  </div>
+  <span class="status" id="status" role="status"></span>
+</header>
+<div class="workspace">
+  <nav class="panel side" id="layers-panel" aria-label="Layers">
+    <h2>Layers</h2>
+    <ul class="layers" id="layers"></ul>
+    <details class="help" id="help" open>
+      <summary>Keys and gestures</summary>
+      <dl>
+        <dt>Click</dt><dd>select what moves as a whole; again, one level in</dd>
+        <dt>Shift+click</dt><dd>add to the selection, or take away; then Delete or Ctrl+G</dd>
+        <dt>Drag</dt>
+        <dd>move it within its layout: another cell, place or group; past a grid's edge, a new column or row</dd>
+        <dt>Ctrl-drag</dt><dd>into any container: each one is outlined</dd>
+        <dt>Alt-drag</dt><dd>nudge it, snapping to other boxes (Ctrl+Alt: no snapping)</dd>
+        <dt>Corner dot</dt><dd>drag it to another box to draw a line</dd>
+        <dt>Edge squares</dt><dd>drag them to change a grid span</dd>
+        <dt>Double-click</dt><dd>edit the text, or a line's label</dd>
+        <dt>↑ ↓ ← →</dt><dd>sibling before, after; parent; first child</dd>
+        <dt>Alt + arrows</dt><dd>move before, after; out of the parent, into the sibling before</dd>
+        <dt>Enter, Delete</dt><dd>edit the text; delete (a box with its lines)</dd>
+        <dt>Ctrl+D, Ctrl+G</dt><dd>duplicate; group (Ctrl+Shift+G ungroups)</dd>
+        <dt>Ctrl+Z, Ctrl+Y</dt><dd>undo, redo</dd>
+        <dt>Ctrl+= / −</dt><dd>zoom in, out; Shift+1 fits, Shift+0 is 100%; Ctrl+wheel zooms</dd>
+        <dt>Esc, ?</dt><dd>select the parent, or stop connecting; fold this help</dd>
+      </dl>
+    </details>
+  </nav>
+  <div class="center">
+    <nav class="crumbs" id="crumbs" aria-label="Selection path"></nav>
+    <main id="stage" aria-label="The diagram"><p class="hint">Opening the diagram…</p></main>
+  </div>
+  <aside class="panel" aria-label="Properties"><h2>Properties</h2><div id="properties"></div></aside>
+</div>
+<div id="lists" hidden></div>
+<datalist id="icon-names"></datalist>
+<script type="module" src="app.js"></script>
+</body>
+</html>

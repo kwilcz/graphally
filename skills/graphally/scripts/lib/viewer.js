@@ -57,12 +57,15 @@ async function compileWithIcons(diagram, options, icons) {
 // reader of the page is not shown them.
 async function diagramNodes(diagram, view, icons, alone) {
   const theme = diagram.getAttribute('theme') || (prefersDark() ? 'dark' : 'light');
-  const options = { standalone: false, css: THEME, theme, source: location.pathname.split('/').pop() };
+  const source = location.pathname.split('/').pop(), model = diagram.hasAttribute('data-edit');
+  const options = { standalone: false, css: THEME, theme, source, model };
   view.dataset.theme = theme;
   if (alone && diagram.getAttribute('theme')) {
     document.documentElement.dataset.graphallyTheme = diagram.getAttribute('theme');
   }
   const result = await compileWithIcons(diagram, options, icons);
+  // An editor (data-edit on the diagram) reads each element's box and layout from the view.
+  if (model) view.graphallyModel = result.model;
   const problems = result.problems.filter(problem => !problem.warn);
   if (diagram.querySelector('include')) problems.unshift(INCLUDE_PROBLEM);
   const template = document.createElement('template');
@@ -79,10 +82,11 @@ async function renderDiagram(diagram, icons, alone) {
   }
 }
 
-async function renderAll(icons) {
+// Every diagram on the page, or only the one given (an editor redrawing one of its own).
+async function renderAll(icons, only) {
   await fontsLoaded();
   muteDiagramStyles();
-  const diagrams = [...document.querySelectorAll('diagram')];
+  const diagrams = only ? [only] : [...document.querySelectorAll('diagram')];
   await imagesDecoded(diagrams);
   const alone = isDiagramFile();
   if (alone) document.documentElement.dataset.graphallyPage = '';
@@ -97,10 +101,10 @@ export function start(index) {
   };
   addPageStyle(sources.font);
   keepDiagramStylesMuted();
-  const icons = registerLazyPacks(index, sources), render = () => renderAll(icons);
+  const icons = registerLazyPacks(index, sources), render = only => renderAll(icons, only);
   globalThis.graphally = { render };
   // Switching the system theme redraws the diagrams in the other one.
   globalThis.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', () => render());
-  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', render, { once: true });
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', () => render(), { once: true });
   else render();
 }

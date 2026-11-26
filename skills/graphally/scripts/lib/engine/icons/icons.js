@@ -99,6 +99,12 @@ const GENERIC = {
 const GENERIC_ALIASES = { person: 'user', people: 'users', phone: 'mobile', app: 'mobile', web: 'browser', external: 'api', partner: 'building', onprem: 'building', 'on-premises': 'building', datacenter: 'building', internet: 'globe', saas: 'cloud', terraform: 'code' };
 
 export function registerPack(prefix, pack) { packs.set(prefix, pack); }
+
+// The names an author can write besides a pack's own keys: the generic icons and the everyday
+// names of Azure and AWS services, for an editor to suggest.
+export const iconNames = () => [
+  ...Object.keys(GENERIC), ...Object.keys(GENERIC_ALIASES), ...Object.keys(AZURE_ALIASES), ...Object.keys(AWS_ALIASES),
+];
 export const loadedPacks = () => [...packs.keys()];
 
 const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();

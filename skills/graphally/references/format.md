@@ -264,7 +264,18 @@ node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs diagram.html --move db 0,20 --connect 
 
 `--connect a b "label" '{"dashed": true}'` adds a connection with options;
 `--line 'a->b' '{"label": "reads", "via": [[420, 160]]}'` merges options into one (`null`
-removes an option); `--lines` prints the connections with their keys. Render again afterwards, without
+removes an option); `--lines` prints the connections with their keys. `--edits '[{…}]'` applies
+several edits written as JSON, among them edits of an element named by its `id` (or its path in
+the source, `"0.2"`): `text`, `attr`, `cell` (its grid cell), `place` (into another element),
+`remove`, `duplicate`, `insert`, `wrap` and `unwrap`, `style` (its style attribute) and `rule` (a
+rule of the diagram's `<style>`, by its selector). `scripts/lib/edits.mjs` and the files it names
+list each one's fields:
+
+```sh
+node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs diagram.html --edits '[{"op": "text", "id": "db", "text": "Orders DB"}, {"op": "rule", "selector": ".card", "set": {"padding": "10px"}}]'
+```
+
+Render again afterwards, without
 `--recompute`: the render reads the previous SVG, and every line keeps the sides it used
 there, whether you set them or the router chose them, so only what changed moves.
 `--recompute` routes everything afresh.

@@ -1,0 +1,182 @@
+/* The canvas page around the diagram, in the app's own tokens where it sets them; light or dark
+   as the system is, like the diagram. */
+:root {
+  --canvas-bg: var(--background-color-default, #ffffff);
+  --canvas-raised: var(--background-color-muted, #f6f8fa);
+  --canvas-fg: var(--text-color-default, #1f2328);
+  --canvas-muted: var(--text-color-muted, #59636e);
+  --canvas-border: var(--border-color-default, #d0d7de);
+  --canvas-focus: var(--color-focus-outline, #0969da);
+  --canvas-danger: var(--text-color-danger, #d1242f);
+  --canvas-mono: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas-bg: var(--background-color-default, #0d1117);
+    --canvas-raised: var(--background-color-muted, #151b23);
+    --canvas-fg: var(--text-color-default, #e6edf3);
+    --canvas-muted: var(--text-color-muted, #9198a1);
+    --canvas-border: var(--border-color-default, #3d444d);
+    --canvas-focus: var(--color-focus-outline, #4493f8);
+    --canvas-danger: var(--text-color-danger, #f85149);
+  }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; display: grid; grid-template-rows: auto 1fr;
+  background: var(--canvas-bg); color: var(--canvas-fg);
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  font-size: var(--text-body-small, 13px);
+}
+.bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 6px 12px; border-bottom: 1px solid var(--canvas-border);
+}
+.file {
+  flex: 1 1 8ch; min-width: 0; margin-right: auto; color: var(--canvas-muted); font-family: var(--canvas-mono);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.group-buttons { display: flex; }
+.group-buttons button { border-radius: 0; margin-left: -1px; min-width: 32px; }
+.group-buttons button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.group-buttons button:last-child { border-radius: 0 6px 6px 0; }
+.status { color: var(--canvas-muted); flex-basis: 100%; min-height: 1em; }
+.status.error { color: var(--canvas-danger); }
+
+.workspace { display: grid; grid-template-columns: minmax(180px, 250px) 1fr minmax(260px, 340px); min-height: 0; }
+.panel { overflow: auto; padding: 8px 10px; background: var(--canvas-raised); }
+.panel:first-child { border-right: 1px solid var(--canvas-border); }
+.panel:last-child { border-left: 1px solid var(--canvas-border); }
+.center { display: grid; grid-template-rows: auto 1fr; min-width: 0; min-height: 0; }
+#stage { position: relative; overflow: auto; padding: 16px; user-select: none; -webkit-user-select: none; }
+#stage > .graphally-view { position: relative; z-index: 1; }
+.canvas-preview { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
+h2 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--canvas-muted); }
+h3 { margin: 4px 0 8px; font-size: 13px; font-family: var(--canvas-mono); }
+
+.crumbs {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 4px 12px;
+  border-bottom: 1px solid var(--canvas-border); color: var(--canvas-muted);
+  font-family: var(--canvas-mono); font-size: 12px;
+}
+.crumbs button { border: 0; background: none; padding: 2px 4px; font-weight: 400; color: inherit; }
+.crumbs button:hover { color: var(--canvas-fg); text-decoration: underline; }
+.crumbs button.current { color: var(--canvas-fg); font-weight: 600; }
+
+.layers { list-style: none; margin: 0; padding: 0; }
+.layers li {
+  display: flex; align-items: center; padding: 1px 6px 1px 2px; border-radius: 4px; cursor: pointer;
+  white-space: nowrap; overflow: hidden; border-block: 2px solid transparent;
+}
+.layers li > span:last-child { overflow: hidden; text-overflow: ellipsis; margin-left: .5em; }
+.layers li:hover { background: var(--canvas-bg); }
+.layers li.selected { background: var(--canvas-focus); color: #ffffff; }
+.layers li.unseen { opacity: .45; cursor: default; }
+.layers li.drop-before { border-top-color: var(--canvas-focus); }
+.layers li.drop-after { border-bottom-color: var(--canvas-focus); }
+.layers li.drop-inside { outline: 2px solid var(--canvas-focus); outline-offset: -2px; }
+.layers code { font-size: 12px; }
+.layers span { color: var(--canvas-muted); }
+.layers li.selected span { color: inherit; }
+.layers .fold {
+  flex: none; width: 16px; padding: 0; border: 0; background: none; color: var(--canvas-muted); font-size: 10px;
+}
+
+#properties label { display: grid; gap: 3px; margin-bottom: 8px; color: var(--canvas-muted); }
+.section { border-top: 1px solid var(--canvas-border); padding: 6px 0 8px; }
+.section > summary {
+  cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--canvas-muted); margin-bottom: 6px;
+}
+.variants { display: flex; gap: 10px; margin-bottom: 10px; }
+.variants label { display: flex !important; align-items: center; gap: 4px; }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+.hint { color: var(--canvas-muted); line-height: 1.5; }
+.inline-fields {
+  display: flex !important; align-items: center; gap: 6px; margin-bottom: 6px; color: var(--canvas-muted);
+}
+.inline-fields > span:first-child { width: 52px; }
+input.number { width: 64px; }
+.line-item button {
+  width: 100%; text-align: left; font-weight: 400; margin-bottom: 4px; font-family: var(--canvas-mono); font-size: 12px;
+}
+
+.rule {
+  font-family: var(--canvas-mono); font-size: 12px; padding: 4px 0 6px; border-bottom: 1px dashed var(--canvas-border);
+}
+.rule.inactive { opacity: .5; }
+.rule-head { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+.rule-head .selector { font-weight: 600; color: var(--canvas-fg); }
+.rule-head input.selector { max-width: 100%; padding: 1px 4px; font-family: var(--canvas-mono); font-size: 12px; }
+.rule-head > button {
+  margin-left: auto; border: 0; background: none; padding: 0 4px; color: var(--canvas-muted); visibility: hidden;
+}
+.rule:hover .rule-head > button { visibility: visible; }
+.rule-head .meta { color: var(--canvas-muted); font-family: var(--font-sans, sans-serif); font-size: 11px; }
+.declaration { display: flex; align-items: center; gap: 2px; padding-left: 12px; min-height: 22px; }
+.declaration input { flex: 1 1 0; min-width: 0; border-color: transparent; background: transparent; padding: 1px 3px;
+  font-family: var(--canvas-mono); font-size: 12px; }
+/* Property names and selectors are as wide as their text. */
+.declaration input.property, .rule-head input.selector {
+  flex: none; field-sizing: content; min-width: 4ch; max-width: 60%;
+}
+.declaration input.property { color: var(--canvas-focus); }
+.declaration input:hover, .declaration input:focus { border-color: var(--canvas-border); background: var(--canvas-bg); }
+.declaration button { border: 0; background: none; padding: 0 4px; color: var(--canvas-muted); visibility: hidden; }
+.declaration:hover button { visibility: visible; }
+.declaration.overridden input, .declaration.overridden:not(:has(input)) { text-decoration: line-through; opacity: .6; }
+.declaration.new input { opacity: .7; }
+.swatch { flex: none; width: 10px; height: 10px; border-radius: 2px; border: 1px solid var(--canvas-border); }
+.defaults > summary { cursor: pointer; color: var(--canvas-muted); padding: 6px 0; }
+
+input, select, button {
+  font: inherit; color: inherit; padding: 4px 8px;
+  border: 1px solid var(--canvas-border); border-radius: 6px; background: var(--canvas-bg);
+}
+input[type=checkbox] { padding: 0; }
+button { font-weight: 600; cursor: pointer; }
+button:disabled { opacity: .5; cursor: default; }
+:focus-visible { outline: 2px solid var(--canvas-focus); outline-offset: 1px; }
+.text-field {
+  position: fixed; z-index: 10; padding: 2px 6px;
+  border: 2px solid var(--canvas-focus); border-radius: 4px; background: var(--canvas-bg);
+}
+
+/* A narrow canvas (the app's side panel): the layers slide in over the drawing from a button, and
+   below 760px the properties sit under the drawing. */
+.toggle-layers { display: none; }
+@media (max-width: 1100px) {
+  .workspace { position: relative; grid-template-columns: minmax(0, 1fr) minmax(240px, 300px); }
+  .toggle-layers { display: inline-block; }
+  #layers-panel {
+    position: absolute; z-index: 20; top: 0; bottom: 0; left: 0; width: min(280px, 85vw);
+    box-shadow: 4px 0 16px rgb(0 0 0 / .18); transform: translateX(-105%); transition: transform .15s ease-out;
+  }
+  body.layers-open #layers-panel { transform: none; }
+}
+@media (max-width: 760px) {
+  .workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 42%); }
+  .panel:last-child { border-left: 0; border-top: 1px solid var(--canvas-border); }
+  .bar { gap: 6px 8px; padding: 6px 8px; }
+}
+@media (prefers-reduced-motion: reduce) { #layers-panel { transition: none; } }
+
+
+/* The left sidebar: the layers fill it, the help folds away at its foot. */
+.side { display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
+.side .layers { flex: 1 1 auto; min-height: 80px; overflow: auto; }
+.help { flex: none; max-height: 45%; overflow: auto; border-top: 1px solid var(--canvas-border); padding: 6px 0 10px; }
+.help summary {
+  cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--canvas-muted);
+}
+.help dl { margin: 6px 0 0; font-size: 12px; }
+.help dt { font-family: var(--canvas-mono); font-weight: 600; margin-top: 6px; }
+.help dd { margin: 1px 0 0; color: var(--canvas-muted); line-height: 1.35; }
+.group-buttons button[aria-pressed="true"] {
+  background: var(--canvas-focus); border-color: var(--canvas-focus); color: #ffffff;
+}
+.status a { color: var(--canvas-focus); }
+.inline-fields .count { min-width: 3ch; color: var(--canvas-fg); }
+.inline-fields button { padding: 2px 9px; }
