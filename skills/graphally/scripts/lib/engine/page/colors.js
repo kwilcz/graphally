@@ -23,10 +23,16 @@ const TRANSPARENT = /rgba\(.*,\s*0\)$/;
 // A colour as written in the drawing script or a connection (a theme token, any CSS colour, or a
 // custom property of the diagram: var(--brand)), as the figure paints it: read in the diagram, so
 // the SVG holds the colour and not a property it does not define.
+const propertiesIn = value => [...value.matchAll(/var\(\s*(--[\w-]+)/g)].map(match => match[1]);
+// A value that names a custom property of the author's own; the theme's tokens stay as written,
+// so the dark theme follows them.
+const THEME = new Set(TOKENS.map(token => `--${token}`));
+const namesOwn = value => propertiesIn(value).some(name => !THEME.has(name));
+
 // Where a value is read: inside the first element that has the custom properties it names (an
 // author sets --brand on :root, the slide or a section), else the page.
 function holderOf(root, value) {
-  const names = [...value.matchAll(/var\(\s*(--[\w-]+)/g)].map(match => match[1]);
+  const names = propertiesIn(value);
   const has = element => names.every(name => getComputedStyle(element).getPropertyValue(name).trim());
   if (!names.length || has(root)) return root;
   return [...root.querySelectorAll('*')].find(element => element instanceof HTMLElement && has(element)) || root;
@@ -35,6 +41,7 @@ function holderOf(root, value) {
 export function writtenColors(root, paintOf) {
   const known = new Map();
   const read = value => {
+    if (!namesOwn(value)) return paintOf(value);
     const probe = document.createElement('div');
     probe.style.cssText = 'display: none';
     probe.style.color = value;
