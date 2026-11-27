@@ -21,6 +21,8 @@ function inlineSvgOf(figure, element, style, placement) {
     copy.setAttribute('viewBox', `0 0 ${width} ${height}`);
   }
   copy.setAttribute('style', `color: ${inkOf(figure, style)}`);
+  // An inline SVG clips to its box unless its CSS says overflow: visible, as in a page.
+  if (style.overflow === 'visible') copy.setAttribute('overflow', 'visible');
   return new XMLSerializer().serializeToString(copy).replace(/^<svg /, `<svg${attributesOf(placement)} `);
 }
 

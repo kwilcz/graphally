@@ -72,7 +72,9 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
   13px. A page that will be printed is sized from the paper: 1600px across A4 or Letter
   landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
   20 to 24px and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for
-  body text in print).
+  body text in print). A post in a social feed (1200 × 1200, 1200 × 627) is shown at a third to
+  half its size, so its smallest text is about 24px, its sentences 28px or more, and its words
+  few (Apple's Human Interface Guidelines put the smallest legible text at 11pt).
 - **Two or three colours on a neutral ground**: the client's brand colours when it has them.
   Without them, take the palette from the subject or the reader's world (a bank's ink and
   paper, a safety colour for operations, a sector's own convention), with one main colour and
@@ -96,8 +98,9 @@ clip-art scenes, text in boxes where a drawn number would do.
 ## Techniques
 
 **The canvas.** The SVG adds a 24px margin around the page, so a page of W × H pixels is
-`<diagram width=W-48>` holding one container `H-48` tall with `position: relative`; regions
-inside are placed with grid, flex or `position: absolute`. A 16:9 slide of 1600 × 900 is
+`<diagram width=W-48>` holding one container `H-48` tall with `position: relative` (and
+`box-sizing: border-box` when it has padding); regions inside are placed with grid, flex or
+`position: absolute`. A 16:9 slide of 1600 × 900 is
 `width=1552` and a container of 852px; 1920 × 1080 is 1872 and 1032; A4 landscape at 1600 ×
 1131 is 1552 and 1083; A4 portrait at 1200 × 1697 is 1152 and 1649. A one-pager of free length
 lets its height follow the content. Set the ground with `background` on `<diagram>`, so the
@@ -105,8 +108,10 @@ margin takes it too.
 
 **Shapes the page sits on.** The drawing script paints above the page, so a route, a band or a
 field that page elements sit on is drawn in the page instead: an inline `<svg>` placed first in
-its region, its shapes made by a before-script (`<script type="graphally" before>`). The same
-function that makes a shape can place the elements on it (`left`, `top`), so they follow it.
+its region, its shapes made by a before-script (`<script type="graphally" before>`), which fills
+it with `innerHTML` or `document.createElementNS`. The same function that makes a shape can place
+the elements on it (`left`, `top`), so they follow it. An inline SVG clips to its box; give it
+`overflow: visible` for a mark that reaches past its edge.
 
 **Marks made from a value.** A before-script makes a count of marks from a number written in the
 markup (`data-of=100 data-on=70`), so the drawing and the numeral cannot disagree.

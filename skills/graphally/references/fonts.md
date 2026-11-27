@@ -26,7 +26,8 @@ same on every machine.
   normal-width text face of the same build, a serif title over a sans text, a heavy weight over
   a regular one. Two faces that differ only a little conflict, and read as a mistake (Williams,
   *The Non-Designer's Design Book*: concord, conflict, contrast).
-- **Choose the voice from the subject**, not from habit, and vary it from figure to figure:
+- **Choose the voice from the subject**, not from habit, then shortlist two or three families in
+  it and compare them on this figure's own title, numbers and words:
   - condensed grotesques (Barlow Condensed, Oswald, Saira Condensed, Archivo Narrow, Antonio)
     fit many big numbers and long titles in little width: industry, operations, logistics;
   - geometric sans (Montserrat, Poppins, Outfit, Urbanist, Lexend) read as modern and plain:
@@ -41,6 +42,9 @@ same on every machine.
     engineering and code.
 - **Small text needs a text face**: condensed, decorative and hairline faces are drawn for
   display sizes; set sentences and footnotes in the text face.
+- **Characters the face lacks** fall back to another font without a warning: subscripts and
+  superscripts (CO₂), arrows, symbols. Write `CO<sub>2</sub>`, draw an arrow as an icon or a
+  line, and look for them in the PNG.
 
 ## A Google font
 
