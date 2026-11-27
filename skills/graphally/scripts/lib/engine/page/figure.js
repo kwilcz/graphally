@@ -2,6 +2,7 @@
 // The figure as it is built: the laid-out page, and what each stage adds to it. The stages
 // (build-figure.js) take it in turn; each reads what the ones before it left.
 import { tokenColors, painter, writtenColors } from './colors.js';
+import { T } from '../style.js';
 
 export function createFigure({ root, diagram, options, measurer, problems }) {
   const figure = {
@@ -17,7 +18,7 @@ export function createFigure({ root, diagram, options, measurer, problems }) {
     // is drawn grey.
     out: [], boxes: [], texts: [], paints: [], turnedOutlines: [], steps: new Set(), greyed: false,
     // Set when the page is measured.
-    pageRect: null, paintOf: null, colorOf: null,
+    pageRect: null, paintOf: null, colorOf: null, lineLabel: { font: '', color: null },
     // An element's box on the page.
     boxOf: element => {
       const rect = element.getBoundingClientRect(), page = figure.pageRect;
@@ -32,4 +33,14 @@ export function measurePage(figure) {
   figure.pageRect = figure.root.getBoundingClientRect();
   figure.paintOf = painter(tokenColors(figure.root));
   figure.colorOf = writtenColors(figure.root, figure.paintOf);
+  readLineLabel(figure);
+}
+
+// The lines' labels in a style of the author's own, set on :root: --line-label-font (a CSS font,
+// 600 14px 'IBM Plex Sans') and --line-label-color. Measured in it, so the router leaves them room.
+function readLineLabel(figure) {
+  const style = getComputedStyle(figure.root), own = name => style.getPropertyValue(name).trim();
+  const font = own('--line-label-font'), color = own('--line-label-color');
+  figure.lineLabel = { font: font ? `font: ${font}; ` : '', color: color ? figure.colorOf(color) : null };
+  if (font) figure.measurer.restyle(T.edge, `font: ${font}`);
 }

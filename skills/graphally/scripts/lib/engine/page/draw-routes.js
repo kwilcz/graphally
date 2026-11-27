@@ -39,12 +39,13 @@ function labelOf(figure, route) {
   const { edge, label } = route;
   const baseline = figure.measurer.baseline(label.y, label.h, T.edge);
   const halo = haloAt(figure.boxes, label.x + label.w / 2, label.y + label.h / 2);
+  const tone = edge.off ? 'var(--muted)' : figure.lineLabel.color || 'var(--ink)';
   return svgElement('text', {
     'data-step': edge.step || null,
     class: T.edge,
     x: fmt(label.x),
     y: fmt(baseline),
-    style: `fill: ${edge.off ? 'var(--muted)' : 'var(--ink)'}; ${halo}`,
+    style: `${figure.lineLabel.font}fill: ${tone}; ${halo}`,
   }, escapeXml(label.text));
 }
 

@@ -24,14 +24,19 @@ and stretch; none of them lists the figures allowed.
 
 ## Design the figure first
 
-Design each figure for its reader before writing any HTML. Write the design in three lines:
+Design each figure for its reader before writing any HTML. Read
+[references/design.md](references/design.md) first, for every figure: how to invent the form,
+and the look every figure shares (shapes chosen by role, lines that follow the content, colour
+that carries detail, type with a hierarchy). Then write the design in four lines:
 
 1. **The point**: who reads the figure, and the one thing it must make obvious to them.
 2. **The visual metaphor**: a form, invented for this content, that shows the point before
    a word is read. A conveyor whose two slow stations are red; the floors of a building for
    the layers of a platform; walls in rings around what must be protected; a split screen
    with what changes lit up.
-3. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
+3. **The look**: what each colour, shape and line weight means, the typefaces, and the size
+   for where the figure is read.
+4. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
    drawing script.
 
 A topology (icons joined by labelled lines) is the visual metaphor for one point: the
@@ -41,21 +46,16 @@ different one, and so is the form.
 A request to make a figure better, clearer or more advanced asks for a new visual metaphor,
 built for this content with whatever techniques it needs.
 
-Idea starters by point, and the design moves that make a figure read at a glance:
-[references/design.md](references/design.md).
-
 **An infographic or a slide** (a pitch or proposal slide, a one-pager, a fact sheet, a poster:
-a few facts for business readers) keeps a stricter standard: one hero, two typefaces, two or
-three colours, one icon style, every number drawn to scale. Read
-[references/infographics.md](references/infographics.md) before designing it: its method for
-inventing the hero takes the place of the idea starters.
+a few facts for business readers) adds a hero, numbers drawn to scale, exact page sizes and
+print: read [references/infographics.md](references/infographics.md) as well.
 
 ## Workflow
 
 Copy this checklist and work through it; render as often as the figure needs.
 
 ```
-- [ ] 1. Design: write the point, the visual metaphor and the build
+- [ ] 1. Design: read references/design.md; write the point, the metaphor, the look and the build
 - [ ] 2. Read the references for the techniques the build uses (table below)
 - [ ] 3. Write diagram.html
 - [ ] 4. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
@@ -96,6 +96,9 @@ to rethink a diagram (clearer, simpler, self-explanatory, more than boxes and ar
 new design: start again at step 1, and render with `--recompute`.
 
 ## Examples
+
+The examples teach the format and its techniques. Their look is plain on purpose: give each
+figure its own, as references/design.md describes.
 
 A topology: the system's parts, where they run, and how they communicate. Items are icons
 over their names (`figure`), with no frame; groups carry the structure, labelled lines the
@@ -239,8 +242,8 @@ A figure takes what it needs from as many as it needs.
 
 | Techniques | Reference |
 |---|---|
-| Designing a figure: idea starters by point, the moves that make it read at a glance | [references/design.md](references/design.md) |
-| Infographics and slides: the professional standard, inventing the hero, numbers drawn to scale | [references/infographics.md](references/infographics.md) |
+| Designing any figure: the point, inventing the form, the look (shapes, lines, colour, type), sizes for where it is read | [references/design.md](references/design.md) |
+| Infographics and slides: the hero, numbers drawn to scale, page sizes, print | [references/infographics.md](references/infographics.md) |
 | Fonts: choosing type, Google fonts, a company's licensed font files, licences and embedding | [references/fonts.md](references/fonts.md) |
 | Icons: choosing a set, cloud services, line icons, a company's own icon set | [references/icons.md](references/icons.md) |
 | Containers in containers (VNets, subnets), a map of named areas, peering and private links | [references/network.md](references/network.md) |

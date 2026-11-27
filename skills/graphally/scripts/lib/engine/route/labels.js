@@ -46,25 +46,25 @@ function fractionsAlong(length) {
 
 // The places for a label at a fraction along a run: above or below a horizontal run, beside an
 // upright one, or on the line itself, its halo interrupting it, in a narrow channel.
-function spotsAt(run, t, width) {
+function spotsAt(run, t, { w: width, h: height }) {
   const { a, b, length, middle, horizontal } = run;
   const cx = a.x + (b.x - a.x) * t, cy = a.y + (b.y - a.y) * t, score = middle + Math.abs(t - 0.5) * 0.4;
-  const at = (x, y, extra, inline) => ({ x, y, w: width, h: HEIGHT, score: score + extra, ...inline });
+  const at = (x, y, extra, inline) => ({ x, y, w: width, h: height, score: score + extra, ...inline });
   const spots = [];
   if (horizontal && length >= Math.min(width + 16, width * 0.75 + 24)) {
-    spots.push(at(cx - width / 2, cy - HEIGHT - 3, 0), at(cx - width / 2, cy + 4, 0.15));
+    spots.push(at(cx - width / 2, cy - height - 3, 0), at(cx - width / 2, cy + 4, 0.15));
   }
-  if (!horizontal && length >= HEIGHT + 16) {
-    spots.push(at(cx + 7, cy - HEIGHT / 2, 0.25), at(cx - 7 - width, cy - HEIGHT / 2, 0.35));
+  if (!horizontal && length >= height + 16) {
+    spots.push(at(cx + 7, cy - height / 2, 0.25), at(cx - 7 - width, cy - height / 2, 0.35));
   }
-  if (!horizontal && length >= HEIGHT + 24) spots.push(at(cx - width / 2, cy - HEIGHT / 2, 0.6, { inline: true }));
-  if (horizontal && length >= width + 24) spots.push(at(cx - width / 2, cy - HEIGHT / 2, 0.7, { inline: true }));
+  if (!horizontal && length >= height + 24) spots.push(at(cx - width / 2, cy - height / 2, 0.6, { inline: true }));
+  if (horizontal && length >= width + 24) spots.push(at(cx - width / 2, cy - height / 2, 0.7, { inline: true }));
   return spots;
 }
 
 // The places a label may go on a route, best first: lower scores lie nearer the line's middle
 // and on the better side of it. Runs shorter than 18px hold none.
-function candidatesOf(points, width) {
+function candidatesOf(points, size) {
   const total = routeLength(points), candidates = [];
   let travelled = 0;
   for (let s = 0; s + 1 < points.length; s++) {
@@ -72,7 +72,7 @@ function candidatesOf(points, width) {
     const middle = Math.abs(travelled + length / 2 - total / 2) / (total || 1);
     travelled += length;
     const run = { a, b, length, middle, horizontal: Math.abs(a.y - b.y) < 0.01 };
-    if (length >= 18) candidates.push(...fractionsAlong(length).flatMap(t => spotsAt(run, t, width)));
+    if (length >= 18) candidates.push(...fractionsAlong(length).flatMap(t => spotsAt(run, t, size)));
   }
   return candidates.sort((a, b) => a.score - b.score);
 }
@@ -131,20 +131,20 @@ class LabelSpace {
 }
 
 // With no candidate at all: the middle between the line's ends.
-function middleSpot(points, width) {
+function middleSpot(points, { w, h }) {
   const a = points[0], b = points.at(-1);
-  return { x: (a.x + b.x) / 2 - width / 2, y: (a.y + b.y) / 2 - HEIGHT / 2, w: width, h: HEIGHT };
+  return { x: (a.x + b.x) / 2 - w / 2, y: (a.y + b.y) / 2 - h / 2, w, h };
 }
 
-function placeLabel(space, route, index, width) {
-  const candidates = candidatesOf(route.points, width);
+function placeLabel(space, route, index, size) {
+  const candidates = candidatesOf(route.points, size);
   let spot = space.cleanSpot(candidates, index);
   if (!spot) {
-    spot = space.leastCovering(candidates, index) || middleSpot(route.points, width);
+    spot = space.leastCovering(candidates, index) || middleSpot(route.points, size);
     route.labelCrowded = space.isCrowded(spot);
   }
   space.place(spot);
-  route.label = { text: route.edge.label, x: spot.x, y: spot.y, w: width, h: HEIGHT };
+  route.label = { text: route.edge.label, x: spot.x, y: spot.y, w: size.w, h: size.h };
 }
 
 // Longest labels first: they have the fewest places to go. The lines of a bundle that merged
@@ -152,6 +152,8 @@ function placeLabel(space, route, index, width) {
 // that runs on its own keeps its label.
 export function placeLabels(router, routes) {
   const space = new LabelSpace(router, routes), widthOf = text => router.measurer.width(text, T.edge);
+  // A label in the theme's font is 14px tall; one in a font of the author's own, as tall as it measures.
+  const height = router.measurer.styles.has(T.edge) ? Math.ceil(router.measurer.text('Hg', T.edge).h) : HEIGHT;
   const order = routes.map((route, index) => index).filter(index => routes[index].edge.label)
     .sort((a, b) => widthOf(routes[b].edge.label) - widthOf(routes[a].edge.label));
   const labelledTrees = new Set();
@@ -159,6 +161,6 @@ export function placeLabels(router, routes) {
     const { tree } = routes[index];
     if (tree && labelledTrees.has(tree)) continue;
     if (tree) labelledTrees.add(tree);
-    placeLabel(space, routes[index], index, widthOf(routes[index].edge.label));
+    placeLabel(space, routes[index], index, { w: widthOf(routes[index].edge.label), h: height });
   }
 }

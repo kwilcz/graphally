@@ -13,6 +13,13 @@ class Measurer {
     this.probe = document.createElementNS(NS, 'svg');
     this.box.root.append(this.probe);
     this.cache = new Map();
+    this.styles = new Map();
+  }
+
+  // A text class drawn in a style of the author's own (the lines' labels in a font of theirs).
+  restyle(cls, style) {
+    this.styles.set(cls, style);
+    for (const key of [...this.cache.keys()]) if (key.startsWith(`${cls}\u0000`)) this.cache.delete(key);
   }
 
   // A text's width, ascent and height in a text class.
@@ -25,6 +32,7 @@ class Measurer {
   measure(text, cls) {
     const element = document.createElementNS(NS, 'text');
     element.setAttribute('class', cls);
+    if (this.styles.has(cls)) element.setAttribute('style', this.styles.get(cls));
     element.textContent = text || ' ';
     this.probe.appendChild(element);
     const box = element.getBBox();

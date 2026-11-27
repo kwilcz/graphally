@@ -21,7 +21,7 @@ function pathLabel(figure, { ends: [from, to], via, options }) {
   const x = via.x + (upright ? 7 : 0), y = via.y - (upright ? 0 : 9);
   return svgElement('text', {
     class: T.edge, x: fmt(x), y: fmt(y + 4), 'text-anchor': upright ? 'start' : 'middle',
-    style: `fill: var(--ink); ${haloAt(figure.boxes, x, y)}`,
+    style: `${figure.lineLabel.font}fill: ${figure.lineLabel.color || 'var(--ink)'}; ${haloAt(figure.boxes, x, y)}`,
   }, escapeXml(options.label));
 }
 

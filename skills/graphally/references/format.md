@@ -256,6 +256,10 @@ With `"in": "left"` on children stacked in a column, the same entry draws a comb
 A connection is known by its key: its `"id"`, else `from->to`, with `#2` for a second line
 between the same boxes. Give an `id` to lines you want to refer to.
 
+The lines' labels are set in the theme's small type unless the diagram says otherwise:
+`:root { --line-label-font: 600 15px 'IBM Plex Sans', sans-serif; --line-label-color: #31475e }`
+(a CSS `font`, a family the diagram loads). The router measures and places them in it.
+
 ## Moving one thing
 
 `nudge="dx,dy"` on any element moves it from where the layout put it, and the lines follow:

@@ -125,6 +125,22 @@ export async function pageOwnColours() {
   check(/stroke: rgb\(0, 170, 85\)/.test(svg), 'a script colour does not read a custom property');
 }
 
+const LABELLED = '<style>:root { --line-label-font: 700 18px serif; --line-label-color: #ff0000 } '
+  + '.r { display: flex; justify-content: space-between; padding: 30px }</style>'
+  + '<div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>'
+  + '<script type="application/json">[["a", "b", "writes"]]</script>';
+
+// The lines' labels in a style of the author's own: drawn in it, and placed clear of the line by
+// their own height.
+export async function pageLineLabels() {
+  const dir = folder('page-line-labels'), out = path.join(dir, 'out');
+  checkSucceeded(await render(write(dir, pageDiagram(LABELLED, '', 'width=500')), out));
+  const label = /<text class="g-edge"[^>]*y="([\d.]+)" style="font: 700 18px serif; fill: #ff0000/.exec(svgOf(out));
+  const line = /<g data-edge="[^"]*"[^>]*><path d="M[\d.]+,([\d.]+) L/.exec(svgOf(out));
+  check(label, 'a label does not take --line-label-font and --line-label-color');
+  check(label && line && Number(line[1]) - Number(label[1]) >= 6, 'a label in a larger font sits on its line');
+}
+
 // A class of the author's own that a building block also styles, a full circle, a fade from nothing.
 export async function pageInfographicMarks() {
   const dir = folder('page-infographic-marks'), out = path.join(dir, 'out');
