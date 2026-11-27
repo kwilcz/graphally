@@ -59,6 +59,9 @@ is about choosing one.
   relative to the diagram file; the SVG holds the image, so it travels with it) and inline
   `<svg>`, sized with CSS (`height: 28px`) like any element. A logo goes in a header this
   way.
+- Elements paint in page order, as in a browser: a later sibling over an earlier one. A
+  positive `z-index` paints in front of its siblings and a negative one behind them (on a
+  positioned element, or an item of a flex or grid container).
 - What is not drawn: inset shadows, radial and conic gradients, background images,
   `filter` other than `grayscale()`, vertical text, a different radius per corner (every corner
   takes the top-left radius: round and clip a container instead, `overflow: hidden`). Draw such
@@ -306,7 +309,7 @@ also run as a page script when the file is opened in a browser (reported as `pla
 | `depend(a, b, { color, dashed })` | a dependency on a time chart: from the end of a to the start of b, clear of every other dated element and of other dependencies |
 | `draw.moveTo(p).lineTo(p).quadraticCurveTo(c, p).bezierCurveTo(c1, c2, p).closePath()` | any path, as on a canvas |
 | `draw.arc(centre, r, fromDeg, toDeg)` | an arc; degrees clockwise from the right |
-| `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path; `fill` takes a token or any CSS colour, `color-mix()` of tokens included |
+| `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path, which has no ends unless `head` or `tail` gives one; `fill` takes a token or any CSS colour, `color-mix()` of tokens included |
 | `shape('gateway parallel', p, { size, w, h, fill, stroke, width, dashed })` | a shape centred on a point, from the list above |
 | `gate(p, 'G1', { fill, size })` | a red decision diamond with a label, for phase charts |
 | `text(p, 'str', { size, weight, italic, color, anchor, halo, font })` | text centred on a point; `anchor`: `start`, `middle`, `end`; `halo: true` rims it in the colour under it, so a line through it does not cross the words; `font` a family named in `fonts` |

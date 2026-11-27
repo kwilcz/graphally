@@ -21,10 +21,16 @@ export function checkPageWidth(figure, size) {
 const overlap = (a, b, start, size) => Math.min(a[start] + a[size], b[start] + b[size]) - Math.max(a[start], b[start]);
 
 // Two lines of text of different elements on top of each other, judged by the band their glyphs
-// fill (from the ascenders, about 0.78 of the size above the baseline, to the descenders below),
-// not by their line boxes: display type set tight (a numeral at line-height 1) has line boxes that
-// overlap where its glyphs do not.
-const inkOf = text => ({ y: text.base - 0.78 * text.size, h: text.size });
+// fill, not by their line boxes: display type set tight (a numeral at line-height 1) has line
+// boxes that overlap where its glyphs do not. Capitals, figures and ascenders reach about 0.78 of
+// the size above the baseline, other lower case 0.55; descenders 0.22 below. Accented letters
+// and other scripts count as reaching both.
+const TALL = /[A-Z0-9bdfhiklt!?#$%&'"/\\()[\]{}|@^]|[^\x00-\x7F]/;
+const LOW = /[gjpqyQ,;()[\]{}|/\\_@]|[^\x00-\x7F]/;
+function inkOf({ text, base, size }) {
+  const top = base - (TALL.test(text) ? 0.78 : 0.55) * size, bottom = base + (LOW.test(text) ? 0.22 : 0.02) * size;
+  return { y: top, h: bottom - top };
+}
 const touching = (a, b) => overlap(inkOf(a), inkOf(b), 'y', 'h') <= Math.max(2, Math.min(a.size, b.size) * 0.05);
 const quoted = text => `"${text.length > 28 ? `${text.slice(0, 27).trimEnd()}…` : text}"`;
 

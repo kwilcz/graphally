@@ -65,11 +65,12 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
 
 - **One hero**, larger than anything else, carrying the point.
 - **Two typefaces at most**: a display face for the title, the big numbers and the labels, and
-  a text face for the sentences; the client's own when it has one. Choosing and loading them:
-  [fonts.md](fonts.md).
+  a text face for the sentences; the client's own when it has one. The display face need not
+  be condensed: a serif, a geometric or a wide grotesque carries big numbers as well. Choosing
+  and loading them: [fonts.md](fonts.md).
 - **Sizes for where it is read.** A slide on a screen, 1600px wide: title 56 to 72px, big
-  numbers 48 to 80px, labels 16 to 20px, sentences 13 to 17px, a letter-spaced eyebrow 12 to
-  13px. A page that will be printed is sized from the paper: 1600px across A4 or Letter
+  numbers 48 to 80px, labels 16 to 20px, sentences 13 to 17px, a letter-spaced eyebrow, tick
+  marks and axis labels 12 to 13px, never less. A page that will be printed is sized from the paper: 1600px across A4 or Letter
   landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
   20 to 24px and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for
   body text in print). A post in a social feed (1200 × 1200, 1200 × 627) is shown at a third to
@@ -89,7 +90,9 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
   of many slices.
 - **A guided eye**: one reading path, or steps numbered in reading order; thin leaders from
   callouts to what they name.
-- **A finish**: a source note for every figure quoted, the owner or brand in the footer.
+- **A finish**: a source note for every figure quoted, the owner or brand in the footer. A
+  number worked out from the brief (a payback year, a share of a total) says so in the note,
+  and is named to the user to confirm.
 
 What makes a slide look generated rather than designed, to leave out: rows of white cards with
 shadows, a tile per number, a gradient hero, emoji, everything centred, more than three colours,
@@ -100,9 +103,9 @@ clip-art scenes, text in boxes where a drawn number would do.
 **The canvas.** The SVG adds a 24px margin around the page, so a page of W × H pixels is
 `<diagram width=W-48>` holding one container `H-48` tall with `position: relative` (and
 `box-sizing: border-box` when it has padding); regions inside are placed with grid, flex or
-`position: absolute`. A 16:9 slide of 1600 × 900 is
-`width=1552` and a container of 852px; 1920 × 1080 is 1872 and 1032; A4 landscape at 1600 ×
-1131 is 1552 and 1083; A4 portrait at 1200 × 1697 is 1152 and 1649. A one-pager of free length
+`position: absolute`. A slide's 64px margin is the SVG's 24px and 40px of the container's own
+padding. A 16:9 slide of 1600 × 900 is
+`width=1552` and a container of 852px; 1920 × 1080 is 1872 and 1032. A one-pager of free length
 lets its height follow the content. Set the ground with `background` on `<diagram>`, so the
 margin takes it too.
 
@@ -113,11 +116,19 @@ it with `innerHTML` or `document.createElementNS`. The same function that makes 
 the elements on it (`left`, `top`), so they follow it. An inline SVG clips to its box; give it
 `overflow: visible` for a mark that reaches past its edge.
 
+**For a printer.** Size the page so `--png2x` gives 300 dpi: A4 portrait is 1240 × 1754
+(`width=1192`, a container of 1706), landscape 1754 × 1240. A printer that trims the sheet asks
+for bleed, usually 3 mm past the cut on every side: the ground runs to the image's edge, the page
+grows by 36px each way (1276 × 1790 for A4 portrait), and text stays 6 mm (about 35px) inside
+the cut. graphally writes RGB; the printer converts it to CMYK, so give the brand guide's RGB
+values and ask for a proof. Hand over the PNG; the printer or a layout tool makes a PDF.
+
 **Marks made from a value.** A before-script makes a count of marks from a number written in the
 markup (`data-of=100 data-on=70`), so the drawing and the numeral cannot disagree.
 
 **Lengths to scale.** `width: calc(var(--v) / 144 * 100%)` with `style="--v: 9"` on the mark:
-the value is data, the scale is the largest value.
+the value is data, the scale is the largest value. In a flex row beside a label, give the mark
+`flex: none`, or the row shrinks it off the scale.
 
 **Arcs.** In the drawing script, a track and a share: `draw.arc(c, 46, 0, 360)` and
 `draw.arc(c, 46, -90, -90 + 0.68 * 360)`, each `.style({ color, width: 14 })`; the numeral

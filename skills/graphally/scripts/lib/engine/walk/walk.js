@@ -73,6 +73,22 @@ function layoutGroup(element, box) {
 
 const isDrawnElement = node => node.nodeType === 1 && node.tagName !== 'STYLE' && node.tagName !== 'SCRIPT';
 
+// A child's z-index where the browser honours it (a positioned element, or an item of a flex or
+// grid container); 0 otherwise.
+function zOf(node, laysOut) {
+  if (node.nodeType !== 1) return 0;
+  const style = getComputedStyle(node), z = parseInt(style.zIndex, 10);
+  return (style.position !== 'static' || laysOut) && Number.isFinite(z) ? z : 0;
+}
+
+// The order children paint in: page order, except that a negative z-index paints behind its
+// siblings and a positive one in front of them, as in a browser.
+function paintOrder(parent) {
+  const laysOut = /flex|grid/.test(getComputedStyle(parent).display);
+  return [...parent.childNodes].map((node, index) => ({ node, index, z: zOf(node, laysOut) }))
+    .sort((a, b) => a.z - b.z || a.index - b.index).map(entry => entry.node);
+}
+
 // An element's own drawing: its frame and bullet, what is inside it (clipped when it clips) and
 // its outline, in a group with its id when it has one.
 function drawElement(figure, element, style, box, parentBox) {
@@ -82,7 +98,7 @@ function drawElement(figure, element, style, box, parentBox) {
   if (bullet) figure.out.push(bullet);
   const clipped = clipsContent(element, style);
   if (clipped) openClip(figure, box, frame.border, frame.cornerRadius);
-  for (const child of element.childNodes) {
+  for (const child of paintOrder(element)) {
     if (child.nodeType === 3) drawText(figure, child, element);
     else if (isDrawnElement(child)) visit(figure, child, ownBox || parentBox);
   }
@@ -113,7 +129,7 @@ function visit(figure, element, parentBox) {
 }
 
 export function walkPage(figure) {
-  for (const child of figure.root.childNodes) {
+  for (const child of paintOrder(figure.root)) {
     if (child.nodeType === 3) drawText(figure, child, figure.root);
     else if (child.nodeType === 1 && child.tagName !== 'STYLE') visit(figure, child, null);
   }

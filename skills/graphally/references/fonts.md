@@ -28,18 +28,19 @@ same on every machine.
   *The Non-Designer's Design Book*: concord, conflict, contrast).
 - **Choose the voice from the subject**, not from habit, then shortlist two or three families in
   it and compare them on this figure's own title, numbers and words:
-  - condensed grotesques (Barlow Condensed, Oswald, Saira Condensed, Archivo Narrow, Antonio)
-    fit many big numbers and long titles in little width: industry, operations, logistics;
-  - geometric sans (Montserrat, Poppins, Outfit, Urbanist, Lexend) read as modern and plain:
-    technology, products;
-  - grotesque and neo-grotesque sans (Inter, IBM Plex Sans, Work Sans, Public Sans, Manrope)
-    are neutral and dense: reports, dashboards, engineering;
-  - humanist sans (Source Sans 3, Fira Sans, Nunito Sans, Open Sans) are warm and legible small:
-    public services, health, education;
-  - serifs (Fraunces, Playfair Display, Source Serif 4, Libre Caslon Text, IBM Plex Serif)
-    carry authority and heritage: finance, law, publishing, editorial pages;
-  - slabs and monospaces (Roboto Slab, Zilla Slab, JetBrains Mono, IBM Plex Mono) suit
-    engineering and code.
+  - condensed grotesques fit many big numbers and long titles in little width: industry,
+    operations, logistics (Sofia Sans Condensed, Antonio, Archivo Narrow, Oswald, Saira
+    Condensed, Roboto Condensed, IBM Plex Sans Condensed, Barlow Condensed, Fjalla One);
+  - geometric sans read as modern and plain: technology, products (Outfit, Urbanist, Lexend,
+    Sora, Plus Jakarta Sans, Montserrat, Poppins);
+  - grotesque and neo-grotesque sans are neutral and dense: reports, dashboards, engineering
+    (Manrope, Work Sans, Public Sans, Schibsted Grotesk, Hanken Grotesk, IBM Plex Sans, Inter);
+  - humanist sans are warm and legible small: public services, health, education (Source Sans
+    3, Fira Sans, Nunito Sans, Mukta, Open Sans);
+  - serifs carry authority and heritage: finance, law, publishing, editorial pages (Source
+    Serif 4, Newsreader, Fraunces, Literata, Libre Caslon Text, Playfair Display, IBM Plex Serif);
+  - slabs and monospaces suit engineering and code (Zilla Slab, Roboto Slab, JetBrains Mono,
+    IBM Plex Mono).
 - **Small text needs a text face**: condensed, decorative and hairline faces are drawn for
   display sizes; set sentences and footnotes in the text face.
 - **Characters the face lacks** fall back to another font without a warning: subscripts and

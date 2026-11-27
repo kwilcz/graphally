@@ -86,6 +86,8 @@ Copy this checklist and work through it; render as often as the figure needs.
 7. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
    that loads graphally's viewer), so the file itself shows the diagram when opened in a
    browser, with nothing installed. Keep the header; anyone can edit the text and reload.
+   Where a font's licence keeps it out of the SVG (`embed-fonts="no"`), readers outside get
+   the PNG rendered with `--png2x`.
 
 **Changing an existing diagram:** edit its `.html` in place, then render. The render reads
 the previous SVG, so what you did not change stays where it was. Keep `nudge`, `out` and
@@ -256,7 +258,7 @@ A figure takes what it needs from as many as it needs.
 - `scripts/graphally.mjs render <file.html>... [--png | --png1x | --png2x] [--themes |
   --dark] [--out dir] [--recompute]`: compiles every `<diagram>` in the file to SVG;
   `--png` adds a half-size preview, `--png1x` a full-size one, `--png2x` a sharp PNG to
-  publish, `--themes` a dark copy, `--recompute` ignores the previous layout. Several
+  publish (each written as `<name>.png`, in place of the last one), `--themes` a dark copy, `--recompute` ignores the previous layout. Several
   files render in one call, in parallel; render them together rather than one by one.
 - `scripts/edit.mjs <file.html> --move id dx,dy | --connect from to [label] | --line 'a->b' json | --unline 'a->b' | --edits json | --lines`:
   patches moves, connections, text, structure and CSS and keeps the rest of the file as written.
