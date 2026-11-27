@@ -27,7 +27,8 @@ and stretch; none of them lists the figures allowed.
 Design each figure for its reader before writing any HTML. Read
 [references/design.md](references/design.md) first, for every figure: how to invent the form,
 and the look every figure shares (shapes chosen by role, lines that follow the content, colour
-that carries detail, type with a hierarchy). Then write the design in four lines:
+that carries detail, type with a hierarchy). Each figure gets a look of its own; when several
+must look alike, design.md shows how to share one style. Then write the design in four lines:
 
 1. **The point**: who reads the figure, and the one thing it must make obvious to them.
 2. **The visual metaphor**: a form, invented for this content, that shows the point before

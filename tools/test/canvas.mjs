@@ -36,7 +36,7 @@ async function checkGuards(url, file) {
 
 export async function canvas() {
   const file = path.join(work, 'canvas.html');
-  fs.copyFileSync(path.join(root, 'samples/architecture/diagram.html'), file);
+  fs.copyFileSync(path.join(root, 'tools/test/fixtures/architecture.html'), file);
   const { server } = await openCanvas('test', file);
   try {
     check((await fetch(server.url)).status === 200, 'the canvas page');

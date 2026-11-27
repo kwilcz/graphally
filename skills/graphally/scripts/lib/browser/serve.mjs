@@ -43,8 +43,9 @@ const sendFile = (response, file, headers = {}) => {
   fs.createReadStream(file).pipe(response);
 };
 
-// /near?from=/src/0/diagram.html&path=../brand/Acme-Bold.ttf: the path, from the diagram's folder.
-const NEAR = /\.(ttf|otf|woff2?|svg)$/i;
+// /near?from=/src/0/diagram.html&path=../brand/Acme-Bold.ttf: the path, from the diagram's folder
+// (fonts, icons, the parts a diagram includes and their images).
+const NEAR = /\.(ttf|otf|woff2?|svg|html?|png|jpe?g|gif|webp)$/i;
 function nearPath(url, skillRoot, srcDir) {
   const [root, relative] = rootOf(url.searchParams.get('from') || '', skillRoot, srcDir);
   if (!root || root === skillRoot) return null;

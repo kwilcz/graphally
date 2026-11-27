@@ -1,0 +1,74 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.min.js"></script>
+<diagram width=1880 title="Contoso Field Service on Azure" subtitle="Production architecture: request path, event path, external systems">
+<style>
+  .map { grid-template-areas: "users edge frontend apps msg fns" "key . . data ext ext" "band band band band band band" }
+</style>
+<div class="map grid gap-x-20 gap-y-10 items-start justify-between">
+  <div class="group plain [grid-area:users]"><h4>Users</h4>
+    <div class="node external" id=dispatch><icon name=browser></icon>Dispatcher<small>web browser</small></div>
+    <div class="node external" id=tech><icon name=mobile></icon>Technician<small>mobile app</small></div>
+  </div>
+  <div class="group [grid-area:edge]" id=edge><h4><icon name="front door"></icon>Edge</h4>
+    <div class=node id=fd><icon name="front door"></icon>Front Door<small>WAF</small></div>
+  </div>
+  <div class="group gap-[34px] [grid-area:frontend]" id=frontend><h4>Web front end <small>App Service</small><span class=badges><span class=badge><icon name=kv></icon></span><span class=badge><icon name="app insights"></icon></span></span></h4>
+    <div class=node id=web><icon name="app service"></icon>Web app<small>production slot</small></div>
+    <div class=node id=stg><icon name="app service"></icon>Web app<small>staging slot</small></div>
+  </div>
+  <div class="group [grid-area:apps]" id=apps><h4>Container Apps environment<span class=badges><span class=badge><icon name=acr></icon></span><span class=badge><icon name=kv></icon></span><span class=badge><icon name="app insights"></icon></span></span></h4>
+    <div class=node id=api><icon name="container app"></icon>jobs-api<small>public API</small></div>
+    <div class=node id=engine><icon name="container app"></icon>scheduling-engine<small>internal</small></div>
+  </div>
+  <div class="group [grid-area:msg]" id=msg><h4>Messaging</h4>
+    <div class="node accent" id=sb><icon name="service bus"></icon>Service Bus<small>job-events topic</small></div>
+  </div>
+  <div class="group [grid-area:fns]" id=fns><h4>Functions<span class=badges><span class=badge><icon name=kv></icon></span><span class=badge><icon name="app insights"></icon></span></span></h4>
+    <div class=node id=notify><icon name=functions></icon>notify<small>SMS and push</small></div>
+    <div class=node id=billing><icon name=functions></icon>billing-sync<small>completed jobs</small></div>
+  </div>
+  <div class="group [grid-area:data]" id=data><h4>Data</h4>
+    <div class=node id=sql><icon name=sql></icon>Jobs<small>Azure SQL Database</small></div>
+    <div class=node id=cosmos><icon name=cosmos></icon>Locations<small>Cosmos DB</small></div>
+    <div class=node id=blob><icon name=storage></icon>Job photos<small>Storage account</small></div>
+  </div>
+  <div class="group external [grid-area:ext]" id=ext><h4>External services</h4>
+    <div class="node external" id=twilio><icon name=mobile></icon>Twilio<small>SMS and push</small></div>
+    <div class="node external" id=sap><icon name=building></icon>SAP ERP<small>customer ERP</small></div>
+    <div class="node external" id=maps><icon name=globe></icon>Google Maps<small>Routes API</small></div>
+  </div>
+  <div class="key flex-col items-start gap-[10px] [grid-area:key]"><h4>Key</h4>
+    <span><i class="swatch border-0 h-2" id=k1></i>synchronous call</span>
+    <span><i class="swatch border-0 h-2" id=k2></i>asynchronous message or event</span>
+    <span><i class="swatch box"></i>outside our control</span>
+    <span><span class=badge><icon name=acr></icon></span>uses the shared service with this icon</span>
+  </div>
+  <div class="band justify-between px-10 py-[14px] [grid-area:band]">
+    <div class=node id=entra><icon name=entra></icon>Entra ID<small>sign-in, tokens</small></div>
+    <div class=node id=acr><icon name=acr></icon>Container Registry<small>images</small></div>
+    <div class=node id=kv><icon name=kv></icon>Key Vault<small>secrets</small></div>
+    <div class=node id=appi><icon name="app insights"></icon>App Insights<small>telemetry</small></div>
+    <div class=node id=law><icon name="log analytics"></icon>Log Analytics<small>logs</small></div>
+  </div>
+</div>
+<script type="application/json">
+[
+  { "from": ["dispatch", "tech"], "to": "entra", "label": "sign in (OIDC)" },
+  { "from": ["dispatch", "tech"], "to": "fd", "label": "HTTPS" },
+  ["fd", "web", "web app"], ["fd", "api", "API calls"],
+  { "from": "stg", "to": "web", "label": "swap", "arrow": false },
+  { "from": "api", "to": "entra", "label": "validates tokens", "in": "top" }, ["api", "sql", "jobs"], ["api", "blob", "photos"],
+  { "from": "api", "to": "sb", "label": "job-events", "dashed": true },
+  { "from": "sb", "to": ["notify", "billing"], "label": "events", "dashed": true },
+  { "from": "notify", "to": "twilio", "label": "SMS, push", "dashed": true },
+  { "from": "billing", "to": "sap", "label": "completed jobs", "dashed": true },
+  ["engine", "maps", "route plans"], ["engine", "cosmos", "locations"],
+  ["appi", "law", "stores logs"]
+]
+</script>
+<script type="graphally">
+arrow(el('k1').left, el('k1').right); arrow(el('k2').left, el('k2').right, { dashed: true });
+</script>
+</diagram>

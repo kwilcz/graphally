@@ -40,9 +40,10 @@ async function serveIcons() {
   return { base: `http://127.0.0.1:${server.address().port}`, served, server };
 }
 
-// The sample as a diagram file that loads the viewer, with its icons and font served from base.
+// A fixed diagram (tools/test/fixtures) as a file that loads the viewer, with its icons and font
+// served from base.
 function writeViewerFile(dir, base, name) {
-  const source = fs.readFileSync(path.join(root, 'samples', name, 'diagram.html'), 'utf8')
+  const source = fs.readFileSync(path.join(root, 'tools/test/fixtures', `${name}.html`), 'utf8')
     .replace(/<script src="[^"]*graphally\.js"><\/script>\n?/, '');
   const options = `graphallyOptions = { azure: '${base}/azure/', aws: '${base}/aws/', font: '${base}/font/' }`;
   const file = path.join(dir, `${name}.html`);

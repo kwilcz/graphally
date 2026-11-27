@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.min.js"></script>
+<diagram width=1700 icons=aws title="Serverless photo sharing" subtitle="AWS, eu-west-1: request path, async processing, shared services">
+<style>
+  .map { grid-template-areas: "clients edge api fns store" "identity key . async async" "band band band band band"; }
+</style>
+<div class="map grid justify-between items-start gap-x-20 gap-y-10">
+  <div class="group plain [grid-area:clients]"><h4>Customers</h4>
+    <div class="node external" id=mobile><icon name=mobile></icon>Mobile app<small>customer phone</small></div>
+    <div class="node external" id=web><icon name=browser></icon>Web app<small>customer browser</small></div>
+  </div>
+  <div class="group [grid-area:edge]" id=edge><h4><icon name=cloudfront></icon>Edge</h4>
+    <div class=node id=cdn><icon name=cloudfront></icon>CloudFront<small>static content and API</small></div>
+    <div class=node id=waf><icon name=waf></icon>AWS WAF<small>attached to CloudFront</small></div>
+  </div>
+  <div class="group [grid-area:api]" id=api><h4>API</h4>
+    <div class=node id=apigw><icon name="api gateway"></icon>API Gateway<small>REST API</small></div>
+  </div>
+  <div class="group [grid-area:fns]" id=fns><h4>Request functions<span class=badges><span class=badge><icon name=cloudwatch></icon></span><span class=badge><icon name="secrets manager"></icon></span></span></h4>
+    <div class=node id=upload><icon name=lambda></icon>Upload<small>Lambda</small></div>
+    <div class=node id=feed><icon name=lambda></icon>Feed<small>Lambda</small></div>
+  </div>
+  <div class="group [grid-area:store]" id=store><h4>Storage</h4>
+    <div class=node id=s3><icon name=s3></icon>Photo bucket<small>S3</small></div>
+    <div class=node id=ddb><icon name=dynamodb></icon>Photo metadata<small>DynamoDB</small></div>
+  </div>
+  <div class="group [grid-area:identity]" id=identity><h4>Identity</h4>
+    <div class=node id=cognito><icon name=cognito></icon>Amazon Cognito<small>customer sign-in</small></div>
+  </div>
+  <div class="key flex-col items-start gap-[10px] [grid-area:key]"><h4>Key</h4>
+    <span><i class="swatch border-0 h-2" id=k1></i>synchronous call</span>
+    <span><i class="swatch border-0 h-2" id=k2></i>asynchronous event</span>
+    <span><i class="swatch box"></i>outside our control</span>
+    <span><span class=badge><icon name=cloudwatch></icon></span>uses the shared service with this icon</span>
+  </div>
+  <div class="group [grid-area:async] grid grid-cols-2 gap-x-20 gap-y-12 justify-between" id=async><h4 class=col-span-full>Async processing<span class=badges><span class=badge><icon name=cloudwatch></icon></span><span class=badge><icon name="secrets manager"></icon></span></span></h4>
+    <div class=node id=queue><icon name=sqs></icon>Photo events<small>SQS</small></div>
+    <div class=node id=thumb><icon name=lambda></icon>Thumbnailer<small>Lambda</small></div>
+    <div class="node external" id=push><icon name=mobile></icon>Push<small>notifications</small></div>
+    <div class=node id=sns><icon name=sns></icon>Photo ready<small>SNS</small></div>
+  </div>
+  <div class="band justify-center gap-x-40 [grid-area:band]"><h4>Shared services</h4>
+    <div class=node id=cw><icon name=cloudwatch></icon>CloudWatch<small>logs and metrics</small></div>
+    <div class=node id=sm><icon name="secrets manager"></icon>Secrets Manager<small>secrets</small></div>
+  </div>
+</div>
+<script type="application/json">
+[
+  { "from": ["mobile", "web"], "to": "cdn", "label": "HTTPS" },
+  { "from": ["mobile", "web"], "to": "cognito", "label": "sign in" },
+  { "from": "cdn", "to": "waf", "arrow": false },
+  ["cdn", "apigw", "API"],
+  ["apigw", "upload", "upload request"], { "from": "apigw", "to": "feed", "label": "feed request", "out": "bottom" },
+  ["upload", "s3", "photo"], ["upload", "ddb", "metadata"], ["feed", "ddb", "query"],
+  { "from": "s3", "to": "queue", "label": "photo lands", "dashed": true },
+  { "from": "queue", "to": "thumb", "label": "reads", "dashed": true },
+  ["thumb", "s3", "thumbnails"],
+  { "from": "thumb", "to": "sns", "label": "photo ready", "dashed": true },
+  { "from": "sns", "to": "push", "label": "notify", "dashed": true }
+]
+</script>
+<script type="graphally">
+arrow(el('k1').left, el('k1').right); arrow(el('k2').left, el('k2').right, { dashed: true });
+</script>
+</diagram>

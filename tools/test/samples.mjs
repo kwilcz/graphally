@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // Every samples/*/diagram.html and docs/diagrams/*.html rendered through the CLI, the layout
 // each SVG carries, and how far a layout moves when a box is added: a stable re-render against
-// --recompute.
+// --recompute, on fixed copies of two diagrams (tools/test/fixtures), so the showcase can change.
 import fs from 'node:fs';
 import path from 'node:path';
 import { table } from './harness.mjs';
@@ -138,7 +138,7 @@ async function renderedLayout(dir, source, flags = []) {
 }
 
 async function checkStability(name, { newNode, pairs }) {
-  const source = fs.readFileSync(path.join(root, 'samples', name, 'diagram.html'), 'utf8');
+  const source = fs.readFileSync(path.join(root, 'tools/test/fixtures', `${name}.html`), 'utf8');
   const edited = pairs.reduce((text, [anchor, replacement]) => replaceOnce(text, anchor, replacement), source);
   const warmDir = folder(`stability-${name}`);
   const coldDir = folder(`stability-${name}-recompute`);
