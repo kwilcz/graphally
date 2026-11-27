@@ -12,7 +12,6 @@ whatever a page can lay out renders.
 - [The form](#the-form): three candidates, then the one only this content has
 - [Moves that make it read](#moves-that-make-it-read): the research behind a glanceable figure
 - [The look](#the-look): shapes, lines, colour, type, and what looks generated
-- [Freedom, and a shared style](#freedom-and-a-shared-style): each figure its own look, or one look for a set
 - [Sizes for where it is read](#sizes-for-where-it-is-read)
 - [Building any form](#building-any-form)
 - [Pitfalls](#pitfalls)
@@ -135,28 +134,6 @@ look designed: distinct, calm and clear.
 What makes a figure look generated rather than designed: rows of identical white cards with
 shadows, everything in boxes, everything centred, a colour that means nothing, a gradient for
 its own sake, emoji, clip-art scenes, text in a box where a drawn shape would say it.
-
-## Freedom, and a shared style
-
-Each figure gets the look its content and its reader call for. There is no house look: two
-figures need not resemble each other, and the rules above are what make any look professional,
-not a template to repeat. Choose the palette, the type, the shapes and the layout afresh.
-
-When figures must look alike (the figures of one document, a series, a company's style), share
-the style rather than retyping it:
-
-- **Write it once, in a part**: a file holding a `<style>` with the palette and the type as custom
-  properties (`:root { --brand: #0b3d2e; --line-label-font: 600 14px 'Barlow' }`), any
-  `@font-face` rules, and the classes the figures share (`.lane`, `.stage`). Each diagram
-  includes it: `<include src="../style/house.html"></include>`, the path relative to the diagram
-  and free to leave its folder ([format.md](format.md), Parts).
-- **Name the fonts and the icon sets on each `<diagram>`** (`fonts=`, `icon-sets=`): they are the
-  diagram's own attributes, not CSS.
-- **To follow one figure's style in another**, read its source and reuse its palette, its type,
-  its shapes and its line weights.
-
-The rendered SVG holds the shared style. A browser opening a diagram file from disk cannot read
-its parts; render it, or serve the page.
 
 ## Sizes for where it is read
 

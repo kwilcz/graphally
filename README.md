@@ -126,12 +126,12 @@ icons take the colour the CSS gives them. The skill's
 [fonts](skills/graphally/references/fonts.md) and [icons](skills/graphally/references/icons.md)
 references have the details.
 
-Each diagram gets a look of its own: the agent designs it for its content and its reader, with
-no house style to repeat. When a set of diagrams must look alike (one document, a series, your
-company's style), keep that style in one file beside them, a `<style>` with your palette, type and
-shared classes, and include it in each diagram with `<include src="../style/house.html">`; or ask
-the agent to follow an existing diagram's style. The skill's
-[design reference](skills/graphally/references/design.md#freedom-and-a-shared-style) has the details.
+Each diagram gets a look of its own: the agent has artistic freedom, and designs every figure for
+its content and its reader, with no house style to repeat. When a set of diagrams must look alike
+(one document, a series, your company's style), the style can be shared or enforced: keep it in one
+file in the diagrams' folder, a `<style>` with your palette as CSS custom properties, your fonts and
+the classes the diagrams share, and include it in each diagram with
+`<include src="house-style.html"></include>`. Or ask the agent to follow an existing diagram's style.
 
 To put diagrams in a page of your own (a site, a wiki, a report), load the viewer once and
 write any number of `<diagram>` elements where they should appear. Each one is isolated:

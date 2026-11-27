@@ -37,7 +37,6 @@ is about choosing one.
 - [Classes and icons](#classes-and-icons): utility classes, building blocks
 - [Before layout: dates and sequences](#before-layout-dates-and-sequences)
 - [Connections](#connections)
-- [Parts](#parts)
 - [Moving one thing](#moving-one-thing), [Changing a diagram](#changing-a-diagram)
 - [The script](#the-script): every call and option
 - [Lines](#lines): how connections find their way
@@ -264,16 +263,6 @@ The lines' labels are set in the theme's small type unless the diagram says othe
 `:root { --line-label-font: 600 15px 'IBM Plex Sans', sans-serif; --line-label-color: #31475e }`
 (a CSS `font`, a family the diagram loads). The router measures and places them in it.
 
-## Parts
-
-`<include src="parts/app.html"></include>` puts another file's content in its place: a piece used
-by several diagrams (a group of services, a legend), or a house style that several diagrams
-share (a part holding only a `<style>`). The path is relative to the file that names it and may
-leave the diagram's folder (`../style/house.html`); a part's own parts and images are relative to
-the part. A part whose root group has an id namespaces the ids inside it (`app.web`). A part that
-cannot be read is reported as `part-missing`. A browser opening a diagram file from disk cannot
-read its parts; the render can.
-
 ## Moving one thing
 
 `nudge="dx,dy"` on any element moves it from where the layout put it, and the lines follow:
@@ -428,7 +417,6 @@ else does.
 | `warning: box-overflow` | a box, an icon or a line of text sticks out of the drawn box that holds it (a node wider than its group, a word wider than its card): widen the holder or narrow what is inside. A warning: the render passes, and when the overflow is meant, leave it. What is placed with `position: absolute` (a badge on a corner, a timer on a task's edge) is not reported |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
 | `warning: class-taken` | a class of yours shares a building block's name, and part of the block's look (named in `keeps`) stays under your rule: set those properties, or rename your class |
-| `part-missing` | an `<include>`'s file did not load: check its path, relative to the file that includes it |
 | `warning: line-widths` | connections drawn alike (one colour, one dash) have different widths, named with a line of each: draw them alike, or give the width a meaning the key states |
 | `warning: font-missing` | a Google family could not be loaded (a misspelt name, or offline on its first use), or an `@font-face` file could not be read: check the name on fonts.google.com, or the file's path from the diagram file; the text falls back to the theme's font |
 | `unknown-utility` | a class that reads like a utility and means nothing: use a theme colour (`bg-wash`) or a bracket value (`bg-[#eef]`) |

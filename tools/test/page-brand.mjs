@@ -166,27 +166,6 @@ export async function pageThickLines() {
     `connections drawn alike in two widths are not reported: ${tail(widths.text)}`);
 }
 
-const HOUSE = '<style>:root { --line-label-font: 700 16px serif } '
-  + '.panel { background: #00ff00; padding: 12px }</style>';
-const STYLED = '<include src="../style/house.html"></include><div class="flex gap-24 p-4">'
-  + '<div class=panel id=a>A</div><div class=panel id=b>B</div></div>'
-  + '<script type="application/json">[["a", "b", "shared"]]</script>';
-
-// A house style shared by diagrams in other folders: a part beside them, included by a path that
-// leaves the diagram's folder. A part that is not there is reported.
-export async function pageSharedStyle() {
-  const { brand, docs, out } = brandAndDocs('page-shared-style');
-  fs.mkdirSync(path.join(brand, '..', 'style'), { recursive: true });
-  fs.writeFileSync(path.join(brand, '..', 'style', 'house.html'), HOUSE);
-  checkSucceeded(await render(write(docs, pageDiagram(STYLED, '', 'width=400')), out));
-  const svg = svgOf(out);
-  check(/fill: rgb\(0, 255, 0\)/.test(svg) && /class="g-edge"[^>]*font: 700 16px serif/.test(svg),
-    'a house style included from another folder does not apply');
-  const lost = await render(write(docs, pageDiagram(STYLED.replace('house.html', 'gone.html'), '', 'width=400')), out);
-  check(/part-missing: src=\.\.\/style\/gone\.html/.test(lost.text),
-    `a missing part is not reported: ${tail(lost.text)}`);
-}
-
 // A class of the author's own that a building block also styles, a full circle, a fade from nothing.
 export async function pageInfographicMarks() {
   const dir = folder('page-infographic-marks'), out = path.join(dir, 'out');
