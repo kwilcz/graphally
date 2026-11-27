@@ -2,7 +2,6 @@
 // Line ends: the head at a line's end and the tail at its start, drawn as SVG markers.
 import { svgElement } from '../svg.js';
 import { DASH_PATTERN } from '../css/box.js';
-import { endSize } from './line-ends.js';
 
 const ENDS = ['arrow', 'open', 'circle', 'dot', 'diamond', 'open-diamond', 'slash', 'none'];
 
@@ -64,28 +63,29 @@ const MARKER = {
   })],
 };
 
-// Where a marker sits on its line's end. A thick line stops 0.6 of a filled arrowhead's length
-// before the tip (line-ends.js), so that head is placed 6 of its 10 units ahead.
-const refOf = (kind, size) => (kind === 'arrow' && size > 9 ? 4 : MARKER[kind][0]);
+// Where a marker sits on its line's end. A thick line stops `tuck` before its arrowhead's tip
+// (line-ends.js), so that head is placed ahead of the line's end by as much.
+const refOf = (kind, { size, tuck }) => (tuck ? Math.round((10 - (10 * tuck) / size) * 100) / 100 : MARKER[kind][0]);
 
-// The figure's markers: one per kind, colour and size, numbered as they are first used.
+// The figure's markers: one per kind, colour, size and tuck, numbered as they are first used.
 export function createMarkers(figureId) {
   const markers = new Map();
-  const markerId = (kind, color, size) => {
-    const key = `${kind}|${color}|${size}`;
-    if (!markers.has(key)) markers.set(key, { id: `${figureId}-m${markers.size}`, kind, color, size });
+  const markerId = (kind, color, end) => {
+    const key = `${kind}|${color}|${end.size}|${end.tuck}`;
+    if (!markers.has(key)) markers.set(key, { id: `${figureId}-m${markers.size}`, kind, color, end });
     return markers.get(key).id;
   };
   return {
-    // A line's dash and its marker-end and marker-start, as attributes; the ends grow with its width.
-    endAttributes: (ends, color, width) => ({
+    // A line's dash and its marker-end and marker-start, as attributes; geometry: its ends' sizes
+    // and tucks (line-ends.js).
+    endAttributes: (ends, color, geometry) => ({
       'stroke-dasharray': ends.dash || null,
-      'marker-end': ends.head !== 'none' && `url(#${markerId(ends.head, color, endSize(width))})`,
-      'marker-start': ends.tail !== 'none' && `url(#${markerId(ends.tail, color, endSize(width))})`,
+      'marker-end': ends.head !== 'none' && `url(#${markerId(ends.head, color, geometry.end)})`,
+      'marker-start': ends.tail !== 'none' && `url(#${markerId(ends.tail, color, geometry.start)})`,
     }),
-    defs: () => [...markers.values()].map(({ id, kind, color, size }) => svgElement('marker', {
-      id, viewBox: '0 0 10 10', refX: refOf(kind, size), refY: 5, markerUnits: 'userSpaceOnUse',
-      markerWidth: size, markerHeight: size, orient: 'auto-start-reverse',
+    defs: () => [...markers.values()].map(({ id, kind, color, end }) => svgElement('marker', {
+      id, viewBox: '0 0 10 10', refX: refOf(kind, end), refY: 5, markerUnits: 'userSpaceOnUse',
+      markerWidth: end.size, markerHeight: end.size, orient: 'auto-start-reverse',
     }, MARKER[kind][1](color))),
   };
 }

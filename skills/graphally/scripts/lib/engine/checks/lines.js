@@ -3,6 +3,7 @@
 import { endsOf } from '../page/markers.js';
 import { pointsOfPath } from '../page/page-size.js';
 import { pairsOf } from '../shared/maps.js';
+import { lineWidth } from '../page/line-ends.js';
 
 // An end mark needs a run this long before it, or it sits on the bend.
 const SHORTEST_END = 12;
@@ -68,10 +69,30 @@ function shortEnds(routes, drawings, problems) {
   }
 }
 
+// Connections drawn alike (one colour, one dash) in different widths. A width is a meaning: the
+// figure states it (a key, a label), or the lines are drawn alike.
+const lookOf = edge => [edge.color || '', edge.accent ? 'accent' : '', edge.off ? 'off' : '', edge.ends.dash || '']
+  .join('|');
+function unevenWidths(routes, problems) {
+  const looks = new Map();
+  for (const { edge } of routes) {
+    if (!looks.has(lookOf(edge))) looks.set(lookOf(edge), new Map());
+    const widths = looks.get(lookOf(edge));
+    if (!widths.has(lineWidth(edge))) widths.set(lineWidth(edge), edge.key);
+  }
+  for (const widths of [...looks.values()].filter(each => each.size > 1)) {
+    problems.push({
+      rule: 'line-widths', warn: true, widths: [...widths.keys()].join(','), lines: [...widths.values()].join(' '),
+      hint: 'lines drawn alike have different widths: draw them alike, or give the width a meaning the key states',
+    });
+  }
+}
+
 export function checkLines(figure, routes) {
   crowdedLabels(routes, figure.problems);
   overlappingLines(routes, figure.problems);
   shortEnds(routes, figure.drawings, figure.problems);
+  unevenWidths(routes, figure.problems);
 }
 
 // A horizontal run of one line through a vertical run of another, away from their ends.

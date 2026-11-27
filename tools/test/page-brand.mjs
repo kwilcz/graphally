@@ -147,19 +147,23 @@ const THICK = '<style>.r { display: flex; justify-content: space-between; paddin
 const CURVE = "draw.moveTo(pt(60, 150)).bezierCurveTo(pt(120, 150), pt(200, 200), pt(260, 200))"
   + ".style({ width: 6, head: 'arrow' });";
 
-// A thick line ends in a head grown with it, and stops inside the head's base, not under its tip.
+// A thick line ends in a head as wide as it and a thin line's wings, stops just inside it, and a
+// curve reaches its head straight. Connections drawn alike in different widths are a warning.
 export async function pageThickLines() {
   const dir = folder('page-thick-lines'), out = path.join(dir, 'out');
   checkSucceeded(await render(write(dir, pageDiagram(THICK, CURVE, 'width=400')), out));
   const svg = svgOf(out);
-  check(/<marker [^>]*refX="4"[^>]*markerWidth="22" markerHeight="22"/.test(svg),
-    'a thick line\'s head does not grow with it');
+  check(/<marker [^>]*refX="4.81"[^>]*markerWidth="13.5" markerHeight="13.5"/.test(svg),
+    'a thick line\'s head is not the line\'s width and its wings');
   const routed = /<g data-edge="a-&gt;b"[^>]*><path d="M[\d.]+,[\d.]+ L([\d.]+),/.exec(svg);
   const boxB = /<g data-id="b" data-box="([\d.]+),/.exec(svg);
-  check(routed && boxB && Number(boxB[1]) - Number(routed[1]) >= 10,
+  check(routed && boxB && Number(boxB[1]) - Number(routed[1]) >= 6,
     'a thick connection runs under its head to the tip');
-  check(/C[^"]*,[^"]* (24[0-9]|25[0-6])(\.\d)?,[\d.]+"/.test(svg),
-    'a thick drawn curve runs under its head to the tip');
+  check(/ 24[0-9](\.\d)?,200 L253,200"/.test(svg), 'a thick drawn curve does not reach its head straight');
+  const uneven = THICK.replace('"width": 6 }', '"width": 2.5 }, ["b", "a"]');
+  const widths = await render(write(dir, pageDiagram(uneven, '', 'width=400')), out);
+  check(/warning: line-widths: widths=(2\.5,1\.5|1\.5,2\.5)/.test(widths.text),
+    `connections drawn alike in two widths are not reported: ${tail(widths.text)}`);
 }
 
 // A class of the author's own that a building block also styles, a full circle, a fade from nothing.
