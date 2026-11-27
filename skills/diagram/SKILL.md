@@ -12,7 +12,8 @@ the point.
    `../graphally/SKILL.md` beside this folder; its scripts are in `../graphally/scripts/`.
 2. Design the figure first, as graphally's workflow says: who reads it, the one thing it must make
    obvious, and a form invented for that point. Read graphally's `references/design.md`, then the
-   references the build needs (`references/infographics.md` for an infographic or a slide).
+   references the build needs: `references/infographics.md` as well when the figure is to make a
+   few facts land (a slide, a one-pager, numbers), rather than to explain how something works.
 3. Draw what the user typed with the command or described in the conversation. When it is not
    clear what the figure must make obvious, or to whom, ask first.
 

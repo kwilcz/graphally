@@ -64,8 +64,9 @@ is about choosing one.
   positioned element, or an item of a flex or grid container).
 - What is not drawn: inset shadows, radial and conic gradients, background images,
   `filter` other than `grayscale()`, vertical text, a different radius per corner (every corner
-  takes the top-left radius: round and clip a container instead, `overflow: hidden`). Draw such
-  marks in the script instead.
+  takes the top-left radius: round and clip a container instead, `overflow: hidden`), the
+  border of a box cut with `clip-path` (trace the outline with `draw`, or use `shape=`, which
+  takes a border). Draw such marks in the script instead.
 - So a component's own CSS carries over: a card's shadow, a badge's dot made with
   `::before`, a focus ring, a truncated name, a chevron turned with `rotate(45deg)`.
 - Colours: any CSS colour, or the theme tokens, which follow the dark theme: `var(--ink)`
@@ -81,7 +82,9 @@ is about choosing one.
 - Every figure paints its own background, the theme's `--bg`: `background="#fff"` on
   `<diagram>` sets a colour, `background="none"` leaves it transparent. `theme=dark` draws
   the dark theme; `render --themes` writes both (`diagram.svg`, `diagram-dark.svg`). Use the
-  tokens for colours, so the dark copy follows.
+  tokens for colours, so the dark copy follows. A page that follows its reader's theme (a
+  GitHub README) shows the matching copy with `<picture><source media="(prefers-color-scheme:
+  dark)" srcset="diagram-dark.svg"><img alt="…" src="diagram.svg"></picture>`.
 - A file may hold several `<diagram>` elements, among HTML of its own (a report, a wiki
   page). Each keeps its `<style>`, scripts, connections and ids to itself, and the page's
   CSS does not reach it, so two diagrams may both have `id=api` and a `.lane` of their own.

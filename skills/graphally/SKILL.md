@@ -64,10 +64,10 @@ Copy this checklist and work through it; render as often as the figure needs.
 - [ ] 7. Hand over diagram.svg and diagram.html; a PNG to share is rendered with --png2x
 ```
 
-1. **Design.** Three short lines, in your reply or a comment in the file. The design
+1. **Design.** Four short lines, in your reply or a comment in the file. The design
    decides the figure; the references only build it.
-2. **The references.** Each teaches its techniques through a complete example. Take what
-   the build needs, from as many as it needs.
+2. **The references.** They teach the techniques, most through a complete example. Take
+   what the build needs, from as many as it needs.
 3. **Write.** Start from an example below or in a reference, and change it as far as the
    design asks. Ids name what the connections and the script refer to; text is what the
    reader sees.

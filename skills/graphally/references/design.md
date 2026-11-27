@@ -111,12 +111,15 @@ look designed: distinct, calm and clear.
   4.5:1 with its ground, 3:1 when large (WCAG 2.2, 1.4.3).
 - **Type with a hierarchy.** Two typefaces at most, a display face for the headings and the big
   numbers and a text face for the rest, or one family in two weights; the client's own when it
-  has one ([fonts.md](fonts.md)). Sizes follow where the figure is read (below). Set the lines'
+  has one ([fonts.md](fonts.md)). A monospace of the same family for commands and code
+  (IBM Plex Mono beside Plex Sans) counts as that family. Sizes follow where the figure is read (below). Set the lines'
   labels in the same type with `--line-label-font` ([format.md](format.md), Connections).
 - **Air and alignment.** Equal outer margins, aligned edges, white space between groups;
   nothing touches, nothing floats.
 - **Accurate before persuasive.** In a technical figure, every component and connection the
-  brief names is drawn, and a title or a label claims only what the brief says. Where the
+  brief names is drawn, and a title or a label claims only what the brief says. Where the brief
+  is silent on what its kind of figure conventionally shows (the subnets of a VNet), follow
+  that kind's reference and say what is assumed. Where the
   figure leaves something out that a reader might look for, or draws marks that are
   illustrative rather than counted, a short note says so. A number worked out from the brief
   is marked as an estimate and named to the user to confirm.
@@ -131,7 +134,7 @@ its own sake, emoji, clip-art scenes, text in a box where a drawn shape would sa
 
 | Where | Width | Text |
 |---|---|---|
-| in a page (a README, a wiki, a report), shown at 700 to 900px | `width` 1000 to 1400 | labels 15 to 18px, nothing under 13px |
+| in a page (a README, a wiki, a report), shown at 700 to 900px | `width` 1000 to 1400 | labels 16 to 18px, nothing under 14px |
 | a slide on a screen | 1600 × 900 | headings 48 to 72px, labels 16 to 20px, sentences 15 to 17px, nothing under 12px |
 | printed (A4 or Letter) | 1240 across portrait, 1754 landscape | a point is about 2px: sentences 20 to 24px, nothing under 14px |
 | a social feed | 1200 × 1200 or 1200 × 627 | shown at a third to half: sentences 28px or more, nothing under 24px |

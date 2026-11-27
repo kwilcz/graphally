@@ -32,10 +32,12 @@ async function compileFile(page, job, { options, server }) {
 const UNTHEMED_ROOT = /^<svg ([^>]*?)class="graphally"(?! data-theme)/;
 const darkCopy = svg => svg.replace(UNTHEMED_ROOT, '<svg $1class="graphally" data-theme="dark"');
 
+// The page goes dark too, so a figure with no background of its own (background="none") is shown
+// on the dark ground it was drawn for.
 async function captureDark(page, selector, file, box, fast) {
-  await page.evaluate(`${selector}.setAttribute('data-theme', 'dark')`);
+  await page.evaluate(`${selector}.setAttribute('data-theme', 'dark'); document.documentElement.dataset.theme = 'dark'`);
   fs.writeFileSync(file, await page.screenshot(box, { fast }));
-  await page.evaluate(`${selector}.removeAttribute('data-theme')`);
+  await page.evaluate(`${selector}.removeAttribute('data-theme'); delete document.documentElement.dataset.theme`);
 }
 
 // The expression for where the element the selector finds sits on the page, scrolling included.
