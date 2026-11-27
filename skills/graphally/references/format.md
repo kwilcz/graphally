@@ -329,7 +329,7 @@ for `animate`.
 `a`, `b` and `p` take an element, an id, a selector, or a point.
 
 Options of lines (`connect`, `arrow`, `curve`): `color` (a CSS colour, a token name:
-`'teal'`, `'rust'`, or a custom property: `'var(--brand)'`), `width`, `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
+`'teal'`, `'rust'`, or a custom property: `'var(--brand)'`), `width` (its head and tail grow with it), `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
 `circle`, `dot`, `diamond`, `open-diamond`, `slash`, `none`; `head` defaults to `arrow`, `tail`
 to none), `both` (a head at each end), `arrow: false` (no head), and `message: true` for a BPMN
 message flow (dashed, an open circle at the source, an open arrowhead), `default: true` for a

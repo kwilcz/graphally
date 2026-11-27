@@ -8,6 +8,7 @@ import { closestName } from '../shared/messages.js';
 import { parseShape, drawShape } from '../shapes/shapes.js';
 import { haloAt } from './colors.js';
 import { endsOf } from './markers.js';
+import { tucks, tuckedPath } from './line-ends.js';
 
 const FONT = "Inter, 'Segoe UI', system-ui, sans-serif";
 // BPMN events and gateways have sizes of their own.
@@ -27,11 +28,12 @@ function pathLabel(figure, { ends: [from, to], via, options }) {
 
 function pathMark(figure, drawing, markers, labels) {
   const { options } = drawing, color = colorOf(figure, options.color || options.tone, 'var(--ink)');
+  const width = options.width || S.edge.width, ends = endsOf(options, false, figure.problems);
   const path = svgElement('path', {
-    d: drawing.path,
+    d: tuckedPath(drawing.path, tucks(ends, width)),
     style: `fill: ${colorOf(figure, options.fill, 'none')}; stroke: ${color}`,
-    'stroke-width': options.width || S.edge.width,
-    ...markers.endAttributes(endsOf(options, false, figure.problems), color),
+    'stroke-width': width,
+    ...markers.endAttributes(ends, color, width),
   });
   if (options.label && drawing.via) labels.push(pathLabel(figure, drawing));
   return [path];

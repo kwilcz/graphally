@@ -141,6 +141,27 @@ export async function pageLineLabels() {
   check(label && line && Number(line[1]) - Number(label[1]) >= 6, 'a label in a larger font sits on its line');
 }
 
+const THICK = '<style>.r { display: flex; justify-content: space-between; padding: 40px }</style>'
+  + '<div class=r><div class=card id=a>A</div><div class=card id=b>B</div></div>'
+  + '<script type="application/json">[{ "from": "a", "to": "b", "width": 6 }]</script>';
+const CURVE = "draw.moveTo(pt(60, 150)).bezierCurveTo(pt(120, 150), pt(200, 200), pt(260, 200))"
+  + ".style({ width: 6, head: 'arrow' });";
+
+// A thick line ends in a head grown with it, and stops inside the head's base, not under its tip.
+export async function pageThickLines() {
+  const dir = folder('page-thick-lines'), out = path.join(dir, 'out');
+  checkSucceeded(await render(write(dir, pageDiagram(THICK, CURVE, 'width=400')), out));
+  const svg = svgOf(out);
+  check(/<marker [^>]*refX="4"[^>]*markerWidth="22" markerHeight="22"/.test(svg),
+    'a thick line\'s head does not grow with it');
+  const routed = /<g data-edge="a-&gt;b"[^>]*><path d="M[\d.]+,[\d.]+ L([\d.]+),/.exec(svg);
+  const boxB = /<g data-id="b" data-box="([\d.]+),/.exec(svg);
+  check(routed && boxB && Number(boxB[1]) - Number(routed[1]) >= 10,
+    'a thick connection runs under its head to the tip');
+  check(/C[^"]*,[^"]* (24[0-9]|25[0-6])(\.\d)?,[\d.]+"/.test(svg),
+    'a thick drawn curve runs under its head to the tip');
+}
+
 // A class of the author's own that a building block also styles, a full circle, a fade from nothing.
 export async function pageInfographicMarks() {
   const dir = folder('page-infographic-marks'), out = path.join(dir, 'out');

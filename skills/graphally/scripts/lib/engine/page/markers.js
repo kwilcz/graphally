@@ -2,6 +2,7 @@
 // Line ends: the head at a line's end and the tail at its start, drawn as SVG markers.
 import { svgElement } from '../svg.js';
 import { DASH_PATTERN } from '../css/box.js';
+import { endSize } from './line-ends.js';
 
 const ENDS = ['arrow', 'open', 'circle', 'dot', 'diamond', 'open-diamond', 'slash', 'none'];
 
@@ -63,27 +64,28 @@ const MARKER = {
   })],
 };
 
-// The figure's markers: one per kind and colour, numbered as they are first used.
+// Where a marker sits on its line's end. A thick line stops 0.6 of a filled arrowhead's length
+// before the tip (line-ends.js), so that head is placed 6 of its 10 units ahead.
+const refOf = (kind, size) => (kind === 'arrow' && size > 9 ? 4 : MARKER[kind][0]);
+
+// The figure's markers: one per kind, colour and size, numbered as they are first used.
 export function createMarkers(figureId) {
   const markers = new Map();
-  const markerId = (kind, color) => {
-    const key = `${kind}|${color}`;
-    if (!markers.has(key)) markers.set(key, { id: `${figureId}-m${markers.size}`, kind, color });
+  const markerId = (kind, color, size) => {
+    const key = `${kind}|${color}|${size}`;
+    if (!markers.has(key)) markers.set(key, { id: `${figureId}-m${markers.size}`, kind, color, size });
     return markers.get(key).id;
   };
   return {
-    // A line's dash and its marker-end and marker-start, as attributes.
-    endAttributes: (ends, color) => ({
+    // A line's dash and its marker-end and marker-start, as attributes; the ends grow with its width.
+    endAttributes: (ends, color, width) => ({
       'stroke-dasharray': ends.dash || null,
-      'marker-end': ends.head !== 'none' && `url(#${markerId(ends.head, color)})`,
-      'marker-start': ends.tail !== 'none' && `url(#${markerId(ends.tail, color)})`,
+      'marker-end': ends.head !== 'none' && `url(#${markerId(ends.head, color, endSize(width))})`,
+      'marker-start': ends.tail !== 'none' && `url(#${markerId(ends.tail, color, endSize(width))})`,
     }),
-    defs: () => [...markers.values()].map(({ id, kind, color }) => {
-      const [refX, drawing] = MARKER[kind];
-      return svgElement('marker', {
-        id, viewBox: '0 0 10 10', refX, refY: 5, markerUnits: 'userSpaceOnUse',
-        markerWidth: 9, markerHeight: 9, orient: 'auto-start-reverse',
-      }, drawing(color));
-    }),
+    defs: () => [...markers.values()].map(({ id, kind, color, size }) => svgElement('marker', {
+      id, viewBox: '0 0 10 10', refX: refOf(kind, size), refY: 5, markerUnits: 'userSpaceOnUse',
+      markerWidth: size, markerHeight: size, orient: 'auto-start-reverse',
+    }, MARKER[kind][1](color))),
   };
 }

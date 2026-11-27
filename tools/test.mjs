@@ -26,6 +26,7 @@ import { canvas } from './test/canvas.mjs';
 import { entrySkills } from './test/entry-skills.mjs';
 import {
   pageBrandFonts, pageIconSets, pageInfographicMarks, pageLineLabels, pageOwnColours, pageTextOverlap,
+  pageThickLines,
 } from './test/page-brand.mjs';
 
 await test('samples', samples);
@@ -53,6 +54,7 @@ later('page-infographic-marks', pageInfographicMarks);
 later('page-text-overlap', pageTextOverlap);
 later('page-own-colours', pageOwnColours);
 later('page-line-labels', pageLineLabels);
+later('page-thick-lines', pageThickLines);
 later('viewer', viewer);
 later('page-utilities', pageUtilities);
 later('page-before-and-dates', pageBeforeAndDates);

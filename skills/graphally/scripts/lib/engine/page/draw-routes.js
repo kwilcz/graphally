@@ -8,6 +8,7 @@ import { SIDES } from '../route/geometry.js';
 import { haloAt } from './colors.js';
 import { flowMarks } from './motion.js';
 import { hopsOf } from './hops.js';
+import { tucks, tuckedPoints } from './line-ends.js';
 
 // The sides a line was routed by, and the sides the author fixed.
 const sidesOf = (route, fixed) => ({
@@ -20,12 +21,13 @@ function lineOf(figure, route, markers, steps, hops) {
   const { edge } = route;
   const plainTone = edge.accent ? 'var(--woad)' : 'var(--ink)';
   const tone = edge.off ? 'var(--muted)' : figure.colorOf(toneOf(edge.color)) || plainTone;
-  const path = roundedPath(route.points, S.edge.radius, hops, S.edge.hop);
+  const width = edge.width || (edge.accent ? 2 : S.edge.width);
+  const path = roundedPath(tuckedPoints(route.points, tucks(edge.ends, width)), S.edge.radius, hops, S.edge.hop);
   const line = svgElement('path', {
     d: path,
     style: `fill: none; stroke: ${tone}`,
-    'stroke-width': edge.width || (edge.accent ? 2 : S.edge.width),
-    ...markers.endAttributes(edge.ends, tone),
+    'stroke-width': width,
+    ...markers.endAttributes(edge.ends, tone, width),
   });
   const delay = edge.step ? steps.delayOf(edge.step) : 0;
   const flow = edge.flow ? flowMarks(figure, path, route.points, tone, delay) : '';

@@ -103,8 +103,11 @@ look designed: distinct, calm and clear.
   the weight of the main path, the type and the space around them.
 - **Lines that follow the content.** Streams that merge or split curve into each other; a call
   path, a sequence or a BPMN flow keeps straight, routed lines. Weight and dash carry meaning (a
-  thick line for the main path, a dashed one for what happens later or asynchronously). Curves
-  and streams are drawn in the page (an inline SVG) or by the drawing script's `curve`.
+  thick line for the main path, a dashed one for what happens later or asynchronously), and the
+  figure says which: in its key, or in the label of the path they mark. One weight for one
+  meaning, the same for every line that has it; a line made heavier only for emphasis reads as a
+  mistake. A line's arrowhead grows with its width. Curves and streams are drawn in the page (an
+  inline SVG) or by the drawing script's `curve`.
 - **Colour that carries detail.** Use as many colours as the figure has meanings, and let each
   colour mean one thing throughout: a tint per lane, team, zone or path, a strong accent for
   what matters most. Tinted grounds behind regions add contrast and say "these belong together";
