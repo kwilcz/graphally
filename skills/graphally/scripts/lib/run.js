@@ -3,6 +3,8 @@
 // <diagram>, and tell the CLI it is done.
 import { compile, registerPack } from './engine/index.js';
 import { resolveIcon } from './engine/icons/icons.js';
+import { loadPageFonts, withFonts } from './page-fonts.js';
+import { loadIconSets } from './page-icon-sets.js';
 
 const text = url => fetch(url).then(response => response.text());
 
@@ -90,21 +92,25 @@ const embedImages = (root, base) => {
 };
 
 // Icon packs are served at /icons/<vendor>.json when downloaded (scripts/fetch-icons.mjs). They
-// weigh 3 MB, so they are fetched only when the diagram may need them: an <icon> that is not a
-// generic one, or a script, which can draw or make icons.
-function mayNeedPacks(host) {
-  const generic = name => resolveIcon(name)?.kind === 'generic';
-  const icons = [...host.querySelectorAll('icon')].some(icon => !generic(icon.getAttribute('name') || ''));
-  return icons
-    || [...host.querySelectorAll('script[type="graphally"]')].some(script => /icon/i.test(script.textContent));
+// weigh megabytes, so they are fetched only when the diagram may need them: the cloud packs for an
+// <icon> that neither the generic set nor the diagram's own sets hold, or for a script (which can
+// draw or make icons), Phosphor when a name or the script asks for ph:.
+function packsNeeded(host, own) {
+  const names = [...host.querySelectorAll('icon')].map(icon => icon.getAttribute('name') || '');
+  const scripts = [...host.querySelectorAll('script[type="graphally"]')].map(script => script.textContent);
+  const theirs = name => /^ph[:/]/i.test(name) || own.includes(/^([a-z][\w-]*):/i.exec(name)?.[1].toLowerCase());
+  const cloud = names.some(name => !theirs(name) && resolveIcon(name)?.kind !== 'generic')
+    || scripts.some(text => /icon/i.test(text));
+  const ph = names.some(name => /^ph[:/]/i.test(name)) || scripts.some(text => /['"`]ph:/.test(text));
+  return [...(cloud ? ['azure', 'aws'] : []), ...(ph ? ['ph'] : [])];
 }
 
-async function loadPacks() {
+async function loadPacks(vendors) {
   const fetchPack = vendor => fetch(new URL(`/icons/${vendor}.json`, location.href))
     .then(response => (response.ok ? response.json() : null))
     .catch(() => null);
-  const packs = await Promise.all(['azure', 'aws'].map(fetchPack));
-  ['azure', 'aws'].forEach((vendor, index) => { if (packs[index]) registerPack(vendor, packs[index]); });
+  const packs = await Promise.all(vendors.map(fetchPack));
+  vendors.forEach((vendor, index) => { if (packs[index]) registerPack(vendor, packs[index]); });
 }
 
 // A part file (no <diagram>) renders on its own, wrapped in a diagram.
@@ -117,7 +123,7 @@ function wrapPart(host) {
 
 // Each diagram compiled and shown; the k-th diagram with an id gets the k-th earlier layout with it
 // (as the CLI does).
-function compileAll(host, previous, css, request) {
+function compileAll(host, previous, css, request, fonts) {
   const results = [], taken = new Map();
   for (const diagram of host.querySelectorAll('diagram')) {
     const id = diagram.id || '', k = taken.get(id) || 0;
@@ -127,7 +133,7 @@ function compileAll(host, previous, css, request) {
       standalone: !request.inline, css, theme, debug: request.debug,
       previous: previous.filter(layout => (layout?.id || '') === id)[k], source: request.source,
     };
-    const result = compile(diagram, options), wrap = document.createElement('div');
+    const result = withFonts(compile(diagram, options), fonts.get(diagram)), wrap = document.createElement('div');
     wrap.className = 'out';
     wrap.innerHTML = result.svg;
     document.body.append(wrap);
@@ -148,10 +154,11 @@ async function run() {
   host.innerHTML = source;
   await resolveIncludes(host, request.src);
   await embedImages(host, request.src);
-  if (mayNeedPacks(host)) await loadPacks();
+  await loadPacks(packsNeeded(host, await loadIconSets(host, request.src)));
   wrapPart(host);
+  const fonts = await loadPageFonts(host, request.src);
   await document.fonts.ready;
-  window.__results = compileAll(host, previous, css, request);
+  window.__results = compileAll(host, previous, css, request, fonts);
 }
 
 try {

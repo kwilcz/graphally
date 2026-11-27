@@ -8,11 +8,22 @@ import { DASH_PATTERN } from '../css/box.js';
 const nextPaintId = (figure, kind) => `${figure.id}-${kind}${figure.paints.length}`;
 const opacityValue = opacity => (opacity < 1 ? roundTo(opacity, 3) : null);
 
+// A transparent stop takes its nearest visible neighbour's colour: CSS fades in premultiplied
+// colour, SVG does not, and a fade to transparent black would turn grey on its way.
+function stopColors(figure, gradient) {
+  const parts = gradient.stops.map(stop => colorAndOpacity(figure.paintOf(stop.color) || 'rgba(0, 0, 0, 0)'));
+  const visible = list => list.find(([, opacity]) => opacity > 0);
+  return parts.map(([color, opacity], index) => {
+    const near = opacity > 0 ? null : visible(parts.slice(index + 1)) || visible(parts.slice(0, index).reverse());
+    return [near ? near[0] : color, opacity];
+  });
+}
+
 // A linear-gradient() background as a fill: the gradient goes in the defs, the fill points at it.
 export function gradientFill(figure, gradient) {
-  const gradientId = nextPaintId(figure, 'grad');
-  const stops = gradient.stops.map(stop => {
-    const [color, opacity] = colorAndOpacity(figure.paintOf(stop.color) || 'rgba(0, 0, 0, 0)');
+  const gradientId = nextPaintId(figure, 'grad'), colors = stopColors(figure, gradient);
+  const stops = gradient.stops.map((stop, index) => {
+    const [color, opacity] = colors[index];
     return svgElement('stop', {
       offset: roundTo(stop.at, 4),
       'stop-color': color,

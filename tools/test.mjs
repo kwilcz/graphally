@@ -5,8 +5,8 @@
 // then small diagrams written here: the layout each SVG carries, connection sides, blocked,
 // bad and dropped overrides, how far a layout moves when a box is added (a stable re-render
 // against --recompute), shapes, script errors, routing, problems, connections as data, the
-// viewer, utility classes, dates, sequences, dependencies, batches, icon packs on demand and
-// the skill's own examples.
+// viewer, utility classes, dates, sequences, dependencies, batches, icon packs on demand, brand
+// fonts and icon sets, and the skill's own examples.
 // Works in a fresh folder under os.tmpdir(), removed at the end unless --keep, which prints
 // its path. Exits 1 when a test fails. The tests live in tools/test/, one file per area; this
 // file runs them in order: the samples and their layout first, then the rest a few at a time
@@ -23,6 +23,7 @@ import { viewer } from './test/viewer.mjs';
 import { batch, docExamples, iconPacks, packageAndApi, versionNumbers } from './test/package.mjs';
 import { sourceEdits } from './test/source-edits.mjs';
 import { canvas } from './test/canvas.mjs';
+import { pageBrandFonts, pageIconSets, pageInfographicMarks } from './test/page-brand.mjs';
 
 await test('samples', samples);
 await test('layout', layout);
@@ -43,6 +44,9 @@ later('source-edits', sourceEdits);
 later('canvas', canvas);
 later('page-css-paint', pageCssPaint);
 later('page-images', pageImages);
+later('page-brand-fonts', pageBrandFonts);
+later('page-icon-sets', pageIconSets);
+later('page-infographic-marks', pageInfographicMarks);
 later('viewer', viewer);
 later('page-utilities', pageUtilities);
 later('page-before-and-dates', pageBeforeAndDates);

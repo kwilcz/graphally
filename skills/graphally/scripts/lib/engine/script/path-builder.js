@@ -16,12 +16,17 @@ const lineCommand = end => [`L${pair(end)}`, [end]];
 const quadraticCommand = (control, end) => [`Q${pair(control)} ${pair(end)}`, [control, end]];
 const cubicCommand = (first, second, end) => [`C${pair(first)} ${pair(second)} ${pair(end)}`, [first, second, end]];
 
-// arc(centre, radius, startDegrees, endDegrees): a line to the arc's start, then the arc.
+// arc(centre, radius, startDegrees, endDegrees): a line to the arc's start, then the arc. A whole
+// circle is drawn in two halves: an SVG arc whose ends meet draws nothing.
 function arcCommand(centre, radius, from, to) {
   const start = arcPoint(centre, radius, from), end = arcPoint(centre, radius, to);
-  const sweep = to > from ? 1 : 0, large = Math.abs(to - from) > 180 ? 1 : 0;
+  const sweep = to > from ? 1 : 0, large = Math.abs(to - from) > 180 ? 1 : 0, r = `${fmt(radius)},${fmt(radius)}`;
   const samples = Array.from({ length: 25 }, (_, step) => arcPoint(centre, radius, from + (to - from) * step / 24));
-  return [`L${pair(start)} A${fmt(radius)},${fmt(radius)} 0 ${large} ${sweep} ${pair(end)}`, samples];
+  if (Math.abs(to - from) >= 359.99) {
+    const half = pair(arcPoint(centre, radius, (from + to) / 2));
+    return [`L${pair(start)} A${r} 0 0 ${sweep} ${half} A${r} 0 0 ${sweep} ${pair(end)}`, samples];
+  }
+  return [`L${pair(start)} A${r} 0 ${large} ${sweep} ${pair(end)}`, samples];
 }
 
 // A path from a start point; point() turns what the script names into a point.

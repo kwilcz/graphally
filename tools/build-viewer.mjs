@@ -15,6 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ESBUILD = 'esbuild@0.24.0', INTER = 'inter-ui@4.1.1', AWS = 'aws-icons@3.3.0';
+const PHOSPHOR = '@phosphor-icons/core@2.1.1';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const skill = path.join(root, 'skills/graphally');
 const { findPack } = await import(path.join(skill, 'scripts/lib/iconpack.mjs'));
@@ -47,6 +48,7 @@ function iconIndex() {
       files: packFiles('azure'),
     },
     aws: { base: `https://cdn.jsdelivr.net/npm/${AWS}/icons/`, files: packFiles('aws') },
+    ph: { base: `https://cdn.jsdelivr.net/npm/${PHOSPHOR}/assets/` },
     font: `https://cdn.jsdelivr.net/npm/${INTER}/web/`,
   };
 }

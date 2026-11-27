@@ -1,8 +1,8 @@
 ---
 name: graphally
-description: Draws professional diagrams and explanatory figures as SVG and PNG from HTML and CSS - architecture with Azure and AWS icons, networks (VNets, subnets, peering, private endpoints), hierarchies and org charts, BPMN processes and flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, figures for proposals and solution designs (governance, scope, layered solution stacks), diagrams of Terraform repositories drafted from the code, and any figure a web page can hold, designed around the point it makes. The browser lays the figure out and graphally routes the connections, so nobody writes a coordinate. Use it whenever the user asks for a diagram, an architecture or network picture, a flow, a process map, a sequence, a timeline, a plan or a roadmap, or wants to visualise infrastructure, even without the word "diagram". Not for charts of numeric data (bar, line, pie).
+description: Draws professional diagrams, infographics and slides as SVG and PNG from HTML and CSS - architecture with Azure and AWS icons, networks, hierarchies and org charts, BPMN processes and flowcharts, sequence diagrams, Gantt plans and roadmaps, figures for proposals and solution designs, diagrams of Terraform repositories drafted from the code, and infographics for business decks (pitch and proposal slides, one-pagers, fact sheets, posters) - any figure a web page can hold, designed around the point it makes. The browser lays the figure out and graphally routes the connections, so nobody writes a coordinate. Use it whenever the user asks for a diagram, an infographic, a slide, a visual explanation, an architecture or network picture, a flow, a process map, a sequence, a timeline, a plan or a roadmap, or wants to visualise infrastructure, even without the word "diagram". Not for plotting datasets (axes, many data points).
 license: Apache-2.0. Copyright (c) 2026 Kamil Wilczyński (kwilcz), https://github.com/kwilcz/graphally. LICENSE.txt has the terms.
-compatibility: Requires Node.js 18 or later and Chrome, Chromium or Edge (or `npx playwright install chromium`). Internet once, to download the Azure and AWS icon packs.
+compatibility: Requires Node.js 18 or later and Chrome, Chromium or Edge (or `npx playwright install chromium`). Internet once, to download the icon packs and any Google font a diagram names.
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/edit.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/tf2graphally.mjs *) Bash(node ${CLAUDE_SKILL_DIR}/scripts/fetch-icons.mjs *)
 metadata:
   author: Kamil Wilczyński (kwilcz)
@@ -43,6 +43,12 @@ built for this content with whatever techniques it needs.
 
 Idea starters by point, and the design moves that make a figure read at a glance:
 [references/design.md](references/design.md).
+
+**An infographic or a slide** (a pitch or proposal slide, a one-pager, a fact sheet, a poster:
+a few facts for business readers) keeps a stricter standard: one hero, two typefaces, two or
+three colours, one icon style, every number drawn to scale. Read
+[references/infographics.md](references/infographics.md) before designing it: its method for
+inventing the hero takes the place of the idea starters.
 
 ## Workflow
 
@@ -156,7 +162,7 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
 
 - **`<diagram>`**: `width` in pixels (default 1200; the height follows the content),
   `title`, `subtitle`, `icons=aws` (AWS wins names both clouds share), `theme=dark`,
-  `background` (a colour, or `none`).
+  `background` (a colour, or `none`), `fonts` and `embed-fonts=no` (below), `icon-sets` (below).
 - **Utility classes** have Tailwind's names and spacing (one step is 4px): `grid`,
   `grid-cols-3`, `flex`, `flex-col`, `justify-between`, `items-center`, `gap-6`, `p-4`,
   `mt-10`, `col-span-2`, `w-40`, `text-center`, `font-semibold`, `rounded-lg`, `border-dashed`.
@@ -183,8 +189,16 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   `hexagon`, `chevron`, `semicircle`, `document`, `cloud`, BPMN `task`, `start`, `end`,
   `gateway exclusive`, `event timer` and more. `clip-path: polygon(…)` cuts any other
   straight-edged shape.
-- **Icons**: `<icon name="app service">`. Loose names work for every service of both
-  packs; an unknown name is reported with suggestions.
+- **Icons**: `<icon name="app service">`: Azure and AWS services by loose names, a generic
+  set (`user`, `database`), Phosphor line icons for any other idea (`ph:rocket-launch`), and a
+  company's own set from a folder or a sprite (`icon-sets="acme: ../brand/icons"` on
+  `<diagram>`, then `acme:shield`). An unknown name is reported with the nearest names.
+  [references/icons.md](references/icons.md) has the names, weights, colours and own sets.
+- **Fonts**: Inter unless the figure says otherwise. `fonts="Barlow Condensed:700,800;
+  Barlow:400"` on `<diagram>` loads Google fonts; an `@font-face` rule in the `<style>` loads a
+  font file of your own (a licensed brand font, the path relative to the diagram). Both are
+  measured for layout and embedded in the SVG. [references/fonts.md](references/fonts.md) has
+  choosing, loading and licences.
 - **Connections**: `<script type="application/json">`, a list of `["from", "to", "label"]`
   or objects with `dashed`, `out`/`in` (the sides), `both`, `via`, `color`. A list in `to`
   or `from` draws one bundle with a shared trunk.
@@ -212,17 +226,21 @@ The whole format, with every class, shape, option and call: [references/format.m
 | `unroutable` | the line has no way through: widen a gap, or give it `via` points |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts collide: give one more room |
+| `warning: class-taken` | a class of yours shares a building block's name, and the block's look stays under your rule: set what it names, or rename your class |
+| `warning: font-missing` | a Google family or an `@font-face` file could not be loaded: check the name on fonts.google.com, or the file's path; the text falls back |
 | `warning: box-overflow` | a box or text sticks out of the drawn box holding it: widen the holder or narrow what is inside. A warning, so the render passes: leave it when it is meant |
 | `script-error` | the message and line say what failed in a script |
 
 ## References
 
-Each teaches techniques through a complete example; a figure takes what it needs from as
-many as it needs.
+A figure takes what it needs from as many as it needs.
 
 | Techniques | Reference |
 |---|---|
 | Designing a figure: idea starters by point, the moves that make it read at a glance | [references/design.md](references/design.md) |
+| Infographics and slides: the professional standard, inventing the hero, numbers drawn to scale | [references/infographics.md](references/infographics.md) |
+| Fonts: choosing type, Google fonts, a company's licensed font files, licences and embedding | [references/fonts.md](references/fonts.md) |
+| Icons: choosing a set, cloud services, line icons, a company's own icon set | [references/icons.md](references/icons.md) |
 | Containers in containers (VNets, subnets), a map of named areas, peering and private links | [references/network.md](references/network.md) |
 | One column per leaf and one row per level; a bus from a parent to its children | [references/hierarchy.md](references/hierarchy.md) |
 | Lanes, events and gateways; a happy path with its branches | [references/process.md](references/process.md) |

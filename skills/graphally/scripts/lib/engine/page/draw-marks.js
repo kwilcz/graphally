@@ -51,21 +51,24 @@ function gateMark(figure, { at: { x, y }, label, options }) {
   }, escapeXml(label))];
 }
 
-// halo: a rim of the colour under the text, as edge labels have.
+// halo: a rim of the colour under the text, as edge labels have. font: a family the diagram loads.
 function textMark(figure, { at, text, options }) {
   const size = options.size || 12, color = colorOf(figure, options.color || options.tone, 'var(--ink)');
   const halo = options.halo ? `; ${haloAt(figure.boxes, at.x, at.y)}` : '';
-  const font = `${options.italic ? 'italic ' : ''}${options.weight || 400} ${size}px ${FONT}`;
+  const family = options.font ? `'${String(options.font).replace(/['";]/g, '')}', ${FONT}` : FONT;
+  const font = `${options.italic ? 'italic ' : ''}${options.weight || 400} ${size}px ${family}`;
   return [svgElement('text', {
     x: fmt(at.x), y: fmt(at.y + size * 0.35), 'text-anchor': options.anchor || 'middle',
     style: `font: ${font}; fill: ${color}${halo}`,
   }, escapeXml(text))];
 }
 
-function iconMark({ at, symbol, options }) {
-  const size = options.size || 24;
+// color paints a line icon (ph:…), which draws in the current colour.
+function iconMark(figure, { at, symbol, options }) {
+  const size = options.size || 24, color = options.color && colorOf(figure, options.color, null);
   return [svgElement('use', {
     href: `#${symbol}`, x: fmt(at.x - size / 2), y: fmt(at.y - size / 2), width: size, height: size,
+    ...(color ? { style: `color: ${color}` } : {}),
   })];
 }
 
@@ -93,7 +96,7 @@ function markOf(figure, drawing, markers, labels) {
   if (drawing.kind === 'path') return pathMark(figure, drawing, markers, labels);
   if (drawing.kind === 'gate') return gateMark(figure, drawing);
   if (drawing.kind === 'text') return textMark(figure, drawing);
-  if (drawing.kind === 'icon') return iconMark(drawing);
+  if (drawing.kind === 'icon') return iconMark(figure, drawing);
   if (drawing.kind === 'shape') return shapeMark(figure, drawing);
   return [];
 }

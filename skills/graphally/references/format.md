@@ -59,7 +59,9 @@ is about choosing one.
   `<svg>`, sized with CSS (`height: 28px`) like any element. A logo goes in a header this
   way.
 - What is not drawn: inset shadows, radial and conic gradients, background images,
-  `filter` other than `grayscale()`, vertical text. Draw such marks in the script instead.
+  `filter` other than `grayscale()`, vertical text, a different radius per corner (every corner
+  takes the top-left radius: round and clip a container instead, `overflow: hidden`). Draw such
+  marks in the script instead.
 - So a component's own CSS carries over: a card's shadow, a badge's dot made with
   `::before`, a focus ring, a truncated name, a chevron turned with `rotate(45deg)`.
 - Colours: any CSS colour, or the theme tokens, which follow the dark theme: `var(--ink)`
@@ -68,6 +70,9 @@ is about choosing one.
   `--lane-b` (green), `--lane-c` (purple), `--lane-d` (orange). Literal colours stay as
   written in both themes.
 - `title` and `subtitle` on `<diagram>` add the standard heading; or write your own `<h1>`.
+- Fonts: `fonts="Barlow Condensed:700,800; Barlow:400,600"` on `<diagram>` loads Google fonts; a
+  font file of your own (a licensed brand font) is an `@font-face` rule in the `<style>`. Both are
+  measured for layout and embedded in the SVG. Choosing, loading and licensing: `fonts.md`.
 - Every figure paints its own background, the theme's `--bg`: `background="#fff"` on
   `<diagram>` sets a colour, `background="none"` leaves it transparent. `theme=dark` draws
   the dark theme; `render --themes` writes both (`diagram.svg`, `diagram-dark.svg`). Use the
@@ -160,25 +165,21 @@ them:
 
 These names are taken (`disabled` too), and so are the sequence helper's: `seq`, `msg`, `num`, `guard`,
 `lifeline`, `activation` and `frag-…`. A class of your own with one of them gets their look
-too, so name yours differently (`lane`, not `band`; `amount`, not `num`).
+too, so name yours differently (`lane`, not `band`; `amount`, not `num`). Where a rule of yours
+styles one of the small ones (`num`, `card`, `pill`, `tag`, `badge`, `tile`, `box`, `banner`,
+`swatch`) and leaves some of the block's look standing, the render warns `class-taken` and names
+what stays.
 
-`<icon name="app service">` places an icon inline. Loose names work for every service of
-both packs (`elasticache`, `glue`, `purview`), for example:
+`<icon name="…">` places an icon inline, sized and coloured with CSS:
 
-- Azure: `app service`, `functions`, `aks`, `container app`, `acr`, `service bus`,
-  `event hubs`, `apim`, `front door`, `app gateway`, `firewall`, `vnet`, `subnet`, `nsg`,
-  `private endpoint`, `vpn gateway`, `entra`, `managed identity`, `kv`, `sql`, `cosmos`,
-  `redis`, `storage`, `app insights`, `log analytics`, `mg`, `subscription`.
-- AWS: `lambda`, `s3`, `dynamodb`, `api gateway`, `cloudfront`, `cognito`, `ec2`, `ecs`,
-  `eks`, `fargate`, `rds`, `aurora`, `sqs`, `sns`, `eventbridge`, `step functions`, `vpc`,
-  `alb`, `nat gateway`, `route 53`, `cloudwatch`, `iam`, `kms`, `secrets manager`, `waf`.
-- Generic: `user`, `users`, `browser`, `mobile`, `laptop`, `server`, `database`, `api`,
-  `globe`, `building`, `cloud`, `key`, `lock`, `shield`, `file`, `mail`.
+- Azure and AWS services by loose names: `app service`, `kv`, `aks`, `lambda`, `s3`, `alb`.
+- Generic: `user`, `users`, `browser`, `mobile`, `server`, `database`, `api`, `globe`, `building`.
+- Line icons for any other idea, from Phosphor: `ph:rocket-launch`, `ph:shield-check-bold`.
+- A company's own set, from a folder or a sprite: `icon-sets="acme: ../brand/icons"` on
+  `<diagram>`, then `acme:shield-check`.
 
-`icons=aws` on `<diagram>` makes AWS win names both clouds share (`load balancer`), or
-prefix one icon: `aws:waf`, `azure:firewall`. An unknown name is reported with
-suggestions. The first render downloads the Azure and AWS icon packs into the skill (once,
-a few seconds).
+An unknown name is reported with the nearest names. Which set to use, the names, weights,
+colours and your own sets: `icons.md`.
 
 ## Before layout: dates and sequences
 
@@ -303,8 +304,8 @@ also run as a page script when the file is opened in a browser (reported as `pla
 | `.style({ color, width, dashed, fill, head, tail })` | styles a `draw` path; `fill` takes a token or any CSS colour, `color-mix()` of tokens included |
 | `shape('gateway parallel', p, { size, w, h, fill, stroke, width, dashed })` | a shape centred on a point, from the list above |
 | `gate(p, 'G1', { fill, size })` | a red decision diamond with a label, for phase charts |
-| `text(p, 'str', { size, weight, italic, color, anchor, halo })` | text centred on a point; `anchor`: `start`, `middle`, `end`; `halo: true` rims it in the colour under it, so a line through it does not cross the words |
-| `icon(p, 'name', { size })` | an icon centred on a point |
+| `text(p, 'str', { size, weight, italic, color, anchor, halo, font })` | text centred on a point; `anchor`: `start`, `middle`, `end`; `halo: true` rims it in the colour under it, so a line through it does not cross the words; `font` a family named in `fonts` |
+| `icon(p, 'name', { size, color })` | an icon centred on a point; `color` paints a line icon or a one-colour icon of your own |
 | `animate(target, keyframes, { duration, iterations, origin, … })` | moves an element or a drawn mark when the figure is shown, as `element.animate` does in a browser (see Motion) |
 
 `draw` paths, `text`, `shape`, `icon`, `gate`, `arrow` and `curve` return the mark they drew,
@@ -400,6 +401,8 @@ else does.
 | `text-overlap` | two texts of the page collide: give one more room |
 | `warning: box-overflow` | a box, an icon or a line of text sticks out of the drawn box that holds it (a node wider than its group, a word wider than its card): widen the holder or narrow what is inside. A warning: the render passes, and when the overflow is meant, leave it. What is placed with `position: absolute` (a badge on a corner, a timer on a task's edge) is not reported |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
+| `warning: class-taken` | a class of yours shares a building block's name, and part of the block's look (named in `keeps`) stays under your rule: set those properties, or rename your class |
+| `warning: font-missing` | a Google family could not be loaded (a misspelt name, or offline on its first use), or an `@font-face` file could not be read: check the name on fonts.google.com, or the file's path from the diagram file; the text falls back to the theme's font |
 | `unknown-utility` | a class that reads like a utility and means nothing: use a theme colour (`bg-wash`) or a bracket value (`bg-[#eef]`) |
 | `plain-script` | a `<script>` without a type would run in the browser: write `<script type="graphally">` |
 
@@ -407,6 +410,6 @@ The script's `text`, `gate` and arrow labels are not checked for overlap: look a
 The render's summary counts crossings: lines crossing lines. A crossing is not a problem,
 but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 
-Designing a figure: `design.md`. Techniques, each with a complete example: `network.md`,
-`hierarchy.md`, `process.md`, `sequence.md`, `plan.md`, `charts.md`, `documents.md`,
-`terraform.md`.
+Designing a figure: `design.md`; infographics and slides: `infographics.md`; fonts: `fonts.md`;
+icons: `icons.md`. Techniques, each with a complete example: `network.md`, `hierarchy.md`,
+`process.md`, `sequence.md`, `plan.md`, `charts.md`, `documents.md`, `terraform.md`.

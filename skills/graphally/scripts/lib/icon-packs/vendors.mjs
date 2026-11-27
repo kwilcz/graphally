@@ -1,9 +1,10 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// The two vendors' icons, each turned into one pack: name -> { viewBox, body, folder, file }.
+// The icon packs, each turned into one pack: name -> { viewBox, body, folder, file }.
 //
 //   azure  Microsoft's official icons, as published in the draw.io repository at the commit named
 //          in assets/icon-sources/azure.txt.
 //   aws    AWS Architecture Icons, from the aws-icons package on the npm registry.
+//   ph     Phosphor's line icons (MIT), every weight, from @phosphor-icons/core on the npm registry.
 import { gunzipSync } from 'node:zlib';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -11,6 +12,7 @@ import { svgEntry, kebab } from '../engine/icons/icon-svg.js';
 import { download } from './download.mjs';
 
 const AWS_PACKAGE = 'aws-icons', AWS_VERSION = '3.3.0';
+export const PHOSPHOR = { name: '@phosphor-icons/core', version: '2.1.1' };
 
 // The lines of assets/icon-sources/azure.txt: the commit, then the icons' paths.
 function readAzureList(skillRoot) {
@@ -52,6 +54,22 @@ export async function fetchAws(skillRoot, tmp, log) {
     if (pack[name]) continue;
     const e = svgEntry(f.data.toString('utf8'));
     if (e) pack[name] = { ...e, folder, file: path.basename(f.name) };
+  }
+  return pack;
+}
+
+// Phosphor: rocket-launch (regular), rocket-launch-bold, -fill, -light, -thin, -duotone. Its
+// files paint in currentColor from their root, which a pack entry drops, so the body carries it.
+const PHOSPHOR_FILE = /^package\/assets\/([a-z]+)\/([a-z0-9-]+)\.svg$/;
+export async function fetchPhosphor(skillRoot, tmp, log) {
+  const url = `https://registry.npmjs.org/${PHOSPHOR.name}/-/core-${PHOSPHOR.version}.tgz`;
+  log?.(`ph: Phosphor icons from npm (${PHOSPHOR.name}@${PHOSPHOR.version})`);
+  const file = path.join(tmp, 'ph.tgz');
+  await download([[url, file]]);
+  const pack = {};
+  for (const f of untar(gunzipSync(fs.readFileSync(file)))) {
+    const match = PHOSPHOR_FILE.exec(f.name), e = match && svgEntry(f.data.toString('utf8'));
+    if (e) pack[match[2]] = { viewBox: e.viewBox, body: `<g fill="currentColor">${e.body}</g>` };
   }
   return pack;
 }

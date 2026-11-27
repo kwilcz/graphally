@@ -13,7 +13,7 @@ const packOrderOf = diagram => {
 export function iconSymbol(figure, name, written = name) {
   const icon = resolveIcon(name, packOrderOf(figure.diagram));
   if (!icon || icon.error) {
-    figure.problems.push({ rule: 'unknown-icon', icon: written, suggest: icon?.suggestions });
+    figure.problems.push({ rule: 'unknown-icon', icon: written, suggest: icon?.suggestions, hint: icon?.hint });
     return undefined;
   }
   const symbol = symbolFor(icon, figure.id);

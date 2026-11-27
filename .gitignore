@@ -1,5 +1,7 @@
 node_modules/
 out/
 *.zip
-# Cloud icon packs are downloaded by scripts/fetch-icons.mjs, never committed.
+# Icon packs are downloaded by scripts/fetch-icons.mjs, never committed.
 skills/graphally/assets/icons/
+# Display fonts are downloaded from Fontsource by the render on first use, never committed.
+skills/graphally/assets/fonts/

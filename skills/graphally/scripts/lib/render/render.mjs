@@ -7,12 +7,13 @@ import { launch } from '../browser/launch.mjs';
 import { openPage } from '../browser/page.mjs';
 import { serve } from '../browser/serve.mjs';
 import { PACKS, fetchPacks, findPack } from '../iconpack.mjs';
+import { ensureFonts, servedFonts } from '../fonts-cache.mjs';
 import { bundle } from '../bundle.mjs';
 import { SKILL_ROOT } from '../skill-root.mjs';
 import { checkFiles, createJob } from './jobs.mjs';
 import { renderFile } from './render-file.mjs';
 
-// First run: download the cloud icon packs. Without a network the diagram still renders, and
+// First run: download the icon packs. Without a network the diagram still renders, and
 // icons it names are reported with the command to fetch them later.
 async function downloadMissingPacks(log) {
   for (const name of PACKS.filter(each => !findPack(SKILL_ROOT, each))) {
@@ -31,13 +32,14 @@ async function downloadMissingPacks(log) {
 // A job's earlier layouts, as the server serves them.
 const previousFileOf = job => [`/previous/${job.index}.json`, { body: JSON.stringify(job.previous) }];
 
-// What the server serves besides the files: the icon packs, the earlier layouts, and the
-// browser side as one module.
+// What the server serves besides the files: the icon packs, the fonts, the earlier layouts, and
+// the browser side as one module.
 function servedFiles(jobs, options) {
   const packs = PACKS.map(name => [`/icons/${name}.json`, findPack(SKILL_ROOT, name)]).filter(([, file]) => file);
   const previous = options.recompute ? [] : jobs.map(previousFileOf);
   const run = { body: bundle(path.join(SKILL_ROOT, 'scripts/lib'), 'run.js'), type: 'text/javascript' };
-  return Object.fromEntries([...packs, ...previous, ['/scripts/lib/run.js', run]]);
+  const fonts = Object.entries(servedFonts(SKILL_ROOT));
+  return Object.fromEntries([...packs, ...fonts, ...previous, ['/scripts/lib/run.js', run]]);
 }
 
 // A few pages at once: as many as asked, else one fewer than the processors, up to 4.
@@ -105,6 +107,7 @@ export async function render(files, options = {}) {
   checkFiles(list, options);
   const jobs = list.map((file, index) => createJob(file, index, options));
   await downloadMissingPacks(log);
+  await ensureFonts(SKILL_ROOT, list, log);
   const exitCode = await runJobs(jobs, options, log);
   return { exitCode, lines, files: jobs.map(resultOf) };
 }

@@ -2,7 +2,8 @@
 // Icon resolution. Authors write what they mean ("app service", "lambda", "kv", "user");
 // we find the icon. Azure and AWS names come from the vendors' official packs (downloaded
 // by scripts/fetch-icons.mjs); generic concepts that have no vendor icon (people, devices,
-// external APIs) use a small built-in outline set. "aws:" or "azure:" picks a pack.
+// external APIs) use a small built-in outline set. "aws:" or "azure:" picks a pack; "ph:" names a
+// Phosphor line icon, and a prefix of the diagram's own (icon-sets="acme: …") an icon of that set.
 
 const packs = new Map();
 
@@ -122,7 +123,7 @@ const packIcon = (vendor, key) => ({ key: `${vendor}-${key}`, kind: vendor, def:
 function exactIcon(vendors, name) {
   const dashed = name.replace(/ /g, '-');
   for (const vendor of vendors.filter(each => packs.get(each))) {
-    const pack = packs.get(vendor), alias = ALIASES[vendor][name];
+    const pack = packs.get(vendor), alias = ALIASES[vendor]?.[name];
     if (pack[dashed]) return packIcon(vendor, dashed);
     if (alias && pack[alias]) return packIcon(vendor, alias);
   }
@@ -155,24 +156,54 @@ function looseIcon(vendors, want) {
   return null;
 }
 
-// Returns { key, kind: 'azure'|'aws'|'generic', def } or { error, suggestions, missing }.
-// order: which vendor pack wins for a name both could mean (<diagram icons=aws>). "aws:lambda" or
-// "azure/app-services" looks in one pack only.
+// A pack named before the icon: "aws:lambda", "azure/app-services", "ph:rocket", "acme:shield".
+const prefixOf = raw => /^(azure|aws|ph)[:/](.+)$/i.exec(raw) || /^([a-z][\w-]*):(.+)$/i.exec(raw);
+
+const unknownSet = prefix => ({
+  error: true, suggestions: [],
+  hint: `no icon set "${prefix}": name its folder or sprite with icon-sets="${prefix}: …" on <diagram>, and check the path`,
+});
+
+// Returns { key, kind: 'azure'|'aws'|'ph'|'generic'|<own set>, def } or { error, suggestions, missing }.
+// order: which vendor pack wins for a name both could mean (<diagram icons=aws>). A prefixed name
+// looks in that pack only; Phosphor's line icons are always named "ph:…".
 export function resolveIcon(name, order = ['azure', 'aws']) {
   if (!name) return null;
-  const raw = String(name).trim(), prefixed = /^(azure|aws)[:/](.+)$/i.exec(raw);
-  const vendors = prefixed ? [prefixed[1].toLowerCase()] : [...new Set([...order, 'azure', 'aws'])];
+  const raw = String(name).trim(), prefixed = prefixOf(raw), prefix = prefixed?.[1].toLowerCase();
+  if (prefix && !ALIASES[prefix] && prefix !== 'ph' && !packs.get(prefix)) return unknownSet(prefix);
+  const vendors = prefixed ? [prefix] : [...new Set([...order, 'azure', 'aws'])];
   const wanted = norm(prefixed ? prefixed[2] : raw), want = wanted.split(' ').map(stem);
   const found = (!prefixed && genericIcon(wanted)) || exactIcon(vendors, wanted) || looseIcon(vendors, want);
   if (found) return found;
   // A name meant for a pack that is not downloaded yet says so.
-  const missing = vendors.filter(vendor => !packs.get(vendor) && (prefixed || ALIASES[vendor][wanted]));
+  const missing = vendors.filter(vendor => !packs.get(vendor) && (prefixed || ALIASES[vendor]?.[wanted]));
   return { error: true, suggestions: suggest(want, vendors), missing };
 }
 
+// How alike two names are, spelling slips included: the share of letter pairs they have in common
+// (Dice's coefficient), from 0 to 1.
+const pairsOf = text => {
+  const letters = text.replace(/[^a-z0-9]/g, '');
+  return [...letters].slice(1).map((letter, index) => letters[index] + letter);
+};
+function likeness(a, b) {
+  const left = pairsOf(a), right = pairsOf(b), total = left.length + right.length;
+  let shared = 0;
+  for (const pair of left) {
+    const at = right.indexOf(pair);
+    if (at < 0) continue;
+    right.splice(at, 1);
+    shared += 1;
+  }
+  return total ? (2 * shared) / total : 0;
+}
+
+// The nearest names: those holding the words wanted, else (a misspelt name) those spelt most alike.
 function suggest(want, vendors) {
-  return vendors.flatMap(v => Object.keys(packs.get(v) || {}).map(k => ({ k: v === 'azure' ? k : `${v}:${k}`, s: want.filter(w => k.includes(w)).length })))
-    .filter(x => x.s).sort((a, b) => b.s - a.s || a.k.length - b.k.length).slice(0, 3).map(x => x.k);
+  const keys = vendors.flatMap(v => Object.keys(packs.get(v) || {}).map(k => ({ k, shown: v === 'azure' ? k : `${v}:${k}` })));
+  const byWords = keys.map(x => ({ ...x, s: want.filter(w => x.k.includes(w)).length })).filter(x => x.s);
+  const ranked = byWords.length ? byWords : keys.map(x => ({ ...x, s: likeness(want.join(''), x.k) })).filter(x => x.s > 0.5);
+  return ranked.sort((a, b) => b.s - a.s || a.k.length - b.k.length).slice(0, 3).map(x => x.shown);
 }
 
 // Symbol markup for one figure; internal ids made unique with the figure prefix.

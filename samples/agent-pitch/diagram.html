@@ -1,0 +1,150 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Open this file in a browser to see the diagram. Edit the text and reload; the format: https://github.com/kwilcz/graphally -->
+<script src="https://cdn.jsdelivr.net/gh/kwilcz/graphally@2/skills/graphally/viewer/graphally.min.js"></script>
+<!-- Point (Fabrikam to Contoso's leadership): agents can take tickets from your backlog and carry
+     them to production in hours, inside your environments, and every change waits for one of your
+     people. Form: one path through three environments, agents as stations on it, your approver as
+     the one white station at a control point; outcomes beneath. A 16:9 slide, two colours on navy.
+     Build: the path is inline SVG in the page (made before layout from one curve), so stations,
+     icons and callouts sit on top of it; dots and bars made from their values. -->
+<diagram width=1600 fonts="Barlow Condensed:700,800; Barlow:400,500,600" background="#0d2137">
+<style>
+  .slide { position: relative; height: 904px; color: #ffffff; font-family: 'Barlow', 'Inter', sans-serif; }
+  .eyebrow { position: absolute; left: 64px; top: 34px; font-size: 13px; font-weight: 600; letter-spacing: 3px; color: #7cc6ec; }
+  .title { position: absolute; left: 64px; top: 62px; font-family: 'Barlow Condensed', 'Inter', sans-serif; font-weight: 800; font-size: 62px; line-height: 60px; letter-spacing: .5px; }
+  .title span { color: #ff8a3d; }
+  .lead { position: absolute; left: 64px; top: 196px; width: 720px; font-size: 17px; line-height: 25px; color: #b8c9da; }
+  .field { position: absolute; right: 0; top: 0; width: 560px; height: 240px; }
+  .hero { position: absolute; left: 0; right: 0; top: 256px; height: 460px; }
+  .zone { position: absolute; top: 0; height: 460px; border-radius: 18px; background: rgba(124, 198, 236, .07); border: 1px solid rgba(124, 198, 236, .16); }
+  .zone b { position: absolute; left: 18px; bottom: 14px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 2.5px; color: #7cc6ec; }
+  .zone small { position: absolute; left: 18px; bottom: 38px; font-size: 12.5px; color: #8aa3bb; }
+  .gate { position: absolute; top: 0; height: 460px; border-left: 2px dashed rgba(255, 255, 255, .45); }
+  .gate b { position: absolute; right: 10px; bottom: 14px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 2px; white-space: nowrap; color: #ffffff; }
+  .road { position: absolute; left: 0; top: 0; width: 1600px; height: 460px; overflow: visible; }
+  .src { position: absolute; left: 64px; display: grid; grid-template-columns: 34px auto; gap: 10px; align-items: center; width: 200px; }
+  .src icon { width: 30px; height: 30px; color: #7cc6ec; }
+  .src b { display: block; font-size: 16px; font-weight: 600; }
+  .src span { font-size: 13px; color: #8aa3bb; }
+  .backlog { position: absolute; left: 64px; top: 14px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 2.5px; color: #7cc6ec; }
+  .st { position: absolute; width: 60px; height: 60px; translate: -50% -50%; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #ff8a3d; box-shadow: 0 0 0 6px rgba(255, 138, 61, .18); }
+  .st icon { width: 30px; height: 30px; color: #ffffff; }
+  .st.you { width: 68px; height: 68px; background: #ffffff; border-radius: 18px; rotate: 45deg; box-shadow: 0 0 0 7px rgba(255, 255, 255, .16); }
+  .st.you icon { rotate: -45deg; color: #0d2137; width: 34px; height: 34px; }
+  .st i { position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; background: #0d2137; border: 2px solid #ff8a3d; font-style: normal; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .st.you i { rotate: -45deg; border-color: #ffffff; top: -10px; right: auto; left: -10px; }
+  .co { position: absolute; width: 252px; translate: -50% 0; text-align: center; }
+  .co b { display: block; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 19px; line-height: 21px; letter-spacing: .6px; text-transform: uppercase; }
+  .co span { display: block; margin-top: 4px; font-size: 13.5px; line-height: 18px; color: #a9bdd0; }
+  .co.you { background: #0d2137; padding: 6px 2px; } .co.you b { color: #ffffff; } .co.you span { color: #dbe7f1; }
+  .co[data-for="1"] { translate: -38% 0; }
+  .lead-line { position: absolute; width: 0; translate: -0.5px 0; border-left: 1px solid rgba(124, 198, 236, .45); }
+  .outcomes { position: absolute; left: 64px; right: 64px; top: 742px; display: grid; grid-template-columns: 1.15fr 1fr 0.85fr 1.1fr; }
+  .kpi { padding: 0 28px; border-left: 1px solid rgba(124, 198, 236, .25); display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: center; }
+  .kpi:first-child { padding-left: 0; border-left: 0; }
+  .kpi .big { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 64px; line-height: 1.2; color: #ff8a3d; white-space: nowrap; }
+  .kpi .big.white { color: #ffffff; }
+  .kpi p { grid-column: 1 / -1; font-size: 14px; line-height: 19px; color: #a9bdd0; }
+  .dots { display: grid; grid-template-columns: repeat(20, 8px); gap: 4px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(124, 198, 236, .22); }
+  .dots i.on { background: #ff8a3d; }
+  .pills { display: grid; gap: 9px; }
+  .lane { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: 10px; font-size: 12.5px; color: #a9bdd0; }
+  .lane div { height: 14px; border-radius: 8px; border: 1.5px solid rgba(255, 255, 255, .55); overflow: hidden; }
+  .lane div i { display: block; height: 100%; width: calc(var(--v) / 144 * 100%); background: #7cc6ec; }
+  .lane.now div i { background: #ff8a3d; min-width: 8px; }
+  .ring { width: 58px; height: 58px; border-radius: 50%; border: 6px solid #ffffff; display: flex; align-items: center; justify-content: center; }
+  .ring icon { width: 26px; height: 26px; color: #ffffff; }
+  .weeks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; width: 240px; }
+  .weeks div { padding-top: 8px; border-top: 6px solid #ff8a3d; font-size: 12px; line-height: 15px; color: #a9bdd0; }
+  .weeks div:nth-child(2) { border-color: #ffb079; } .weeks div:nth-child(3) { border-color: #ffd2b0; }
+  .weeks b { display: block; color: #ffffff; font-size: 12.5px; }
+  .foot { position: absolute; left: 64px; right: 64px; bottom: 6px; display: flex; justify-content: space-between; font-size: 12px; color: #6f8aa3; }
+  .foot b { color: #a9bdd0; font-weight: 600; }
+</style>
+<div class=slide>
+  <svg class=field viewBox="0 0 560 240" id=field></svg>
+  <div class=eyebrow>FABRIKAM AGENT WORKS  ·  PROPOSAL FOR CONTOSO INSURANCE</div>
+  <div class=title>YOUR BACKLOG, WORKED BY AGENTS.<br><span>EVERY CHANGE CLEARED BY YOUR PEOPLE.</span></div>
+  <div class=lead>A new ticket starts the work. Agents carry it through your own environments, and nothing reaches production until one of your engineers approves it.</div>
+  <div class=hero id=hero>
+    <div class=zone style="left: 452px; width: 360px"><small>an isolated copy of your systems</small><b>SANDBOX</b></div>
+    <div class=zone style="left: 836px; width: 236px"><small>your rules, checked</small><b>STAGING</b></div>
+    <div class=gate style="left: 1150px"><b>YOUR CONTROL POINT</b></div>
+    <div class=zone style="left: 1240px; width: 296px"><small>in your change window</small><b>PRODUCTION</b></div>
+    <svg class=road id=road viewBox="0 0 1600 460"></svg>
+    <div class=backlog>BACKLOG</div>
+    <div class=src style="top: 92px"><icon name="ph:ticket"></icon><div><b>Jira</b><span>620 tickets a month</span></div></div>
+    <div class=src style="top: 176px"><icon name="ph:headset"></icon><div><b>ServiceNow</b><span>410 a month</span></div></div>
+    <div class=src style="top: 260px"><icon name="ph:git-pull-request"></icon><div><b>GitHub</b><span>210 a month</span></div></div>
+    <div class=st data-x=380 data-n=1 data-up=1><icon name="ph:lightning"></icon><i>1</i></div>
+    <div class=st data-x=556 data-n=2><icon name="ph:code"></icon><i>2</i></div>
+    <div class=st data-x=716 data-n=3 data-up=1><icon name="ph:flask"></icon><i>3</i></div>
+    <div class=st data-x=954 data-n=4><icon name="ph:shield-check"></icon><i>4</i></div>
+    <div class="st you" data-x=1150 data-n=5 data-up=1><icon name="ph:user-check"></icon><i>5</i></div>
+    <div class=st data-x=1330 data-n=6><icon name="ph:rocket-launch"></icon><i>6</i></div>
+    <div class=st data-x=1470 data-n=7 data-up=1><icon name="ph:pulse"></icon><i>7</i></div>
+    <div class=co data-for=1><b>A ticket wakes the pilot</b><span>it reads, sizes and routes the work, and asks a person when unsure</span></div>
+    <div class=co data-for=2><b>A builder writes the change</b><span>the code and its tests</span></div>
+    <div class=co data-for=3><b>A tester proves it</b><span>unit, integration and regression runs</span></div>
+    <div class=co data-for=4><b>An inspector checks it</b><span>security, your policies, performance</span></div>
+    <div class="co you" data-for=5><b>Your engineer approves</b><span>every change, with the agents' evidence attached</span></div>
+    <div class=co data-for=6><b>A release agent ships</b><span>with the rollback ready</span></div>
+    <div class=co data-for=7><b>A watcher stands guard</b><span>rolls back on alarm and logs every action</span></div>
+  </div>
+  <div class=outcomes>
+    <div class=kpi><span class=big>70%</span><div class=dots id=dots data-on=70></div><p>of routine tickets carried end to end by agents, measured in pilots</p></div>
+    <div class=kpi><span class=big>9 h</span><div class=pills>
+      <div class="lane"><span>today</span><div style="--v: 144"><i></i></div></div>
+      <div class="lane now"><span>with agents</span><div style="--v: 9"><i></i></div></div></div>
+      <p>from ticket to production for routine work, down from 6 days</p></div>
+    <div class=kpi><span class="big white">100%</span><span class=ring><icon name="ph:check-bold"></icon></span><p>of changes approved by one of your people</p></div>
+    <div class=kpi><span class=big>12 wk</span><div class=weeks>
+      <div><b>Weeks 1–4</b>sandbox, one team</div><div><b>Weeks 5–8</b>staging, approvers</div><div><b>Weeks 9–12</b>production, watch</div></div>
+      <p>to open the path, one environment at a time</p></div>
+  </div>
+  <div class=foot><span>Pilot figures from Fabrikam engagements with three insurers in 2026. Your results depend on your backlog and your rules.</span><span><b>Fabrikam Agent Works</b>  ·  agents run in your cloud, with only the access you grant</span></div>
+</div>
+<script type="graphally" before>
+// The path: one smooth curve from the backlog to production; stations and callouts follow it.
+const ease = t => t * t * (3 - 2 * t);
+const y = x => 262 - 74 * ease(Math.min(1, Math.max(0, (x - 290) / 1250)));
+const NS = 'http://www.w3.org/2000/svg';
+const road = el('#road');
+const svg = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); road.append(e); return e; };
+let d = `M 290 ${y(290)}`;
+for (let x = 310; x <= 1540; x += 20) d += ` L ${x} ${y(x).toFixed(1)}`;
+// Three tributaries from the sources into the start of the path.
+for (const top of [107, 191, 275]) svg('path', { d: `M 268 ${top} C 300 ${top}, 270 ${y(290)}, 300 ${y(300)}`, fill: 'none', stroke: 'rgba(124, 198, 236, .55)', 'stroke-width': 2.5 });
+svg('path', { d, fill: 'none', stroke: 'rgba(124, 198, 236, .22)', 'stroke-width': 40, 'stroke-linecap': 'round' });
+svg('path', { d, fill: 'none', stroke: 'rgba(255, 255, 255, .55)', 'stroke-width': 2, 'stroke-dasharray': '10 9' });
+// The returned changes: from your control point back over the top to the builder.
+svg('path', { d: `M 1150 ${y(1150) - 44} C 1150 24, 1150 24, 1080 24 L 640 24 C 556 24, 556 24, 556 ${y(556) - 42}`, fill: 'none', stroke: '#ff8a3d', 'stroke-width': 2, 'stroke-dasharray': '7 6' });
+svg('path', { d: `M 548 ${y(556) - 54} L 556 ${y(556) - 40} L 564 ${y(556) - 54}`, fill: 'none', stroke: '#ff8a3d', 'stroke-width': 2 });
+const note = svg('text', { x: 860, y: 16, 'text-anchor': 'middle', fill: '#ff8a3d', 'font-family': 'Barlow Condensed, sans-serif', 'font-weight': 700, 'font-size': 16, 'letter-spacing': 1.5 });
+note.textContent = 'ABOUT 1 IN 8 CHANGES GOES BACK WITH NOTES';
+// Stations on the curve; callouts above or below, joined by a leader.
+for (const st of all('#hero .st')) {
+  const x = Number(st.dataset.x), sy = y(x), up = st.dataset.up, n = st.dataset.n;
+  st.style.left = `${x}px`; st.style.top = `${sy}px`;
+  const co = el(`#hero .co[data-for="${n}"]`), line = make('i', { class: 'lead-line' });
+  co.style.left = `${x}px`;
+  if (up) { co.style.bottom = `${460 - sy + 90}px`; line.style.top = `${sy - 90}px`; line.style.height = '52px'; }
+  else { co.style.top = `${sy + 74}px`; line.style.top = `${sy + 38}px`; line.style.height = '36px'; }
+  line.style.left = `${x}px`;
+  el('#hero').append(line);
+}
+// 100 dots, as many lit as the share.
+const dots = el('#dots');
+for (let i = 0; i < 100; i++) dots.append(make('i', { class: i < Number(dots.dataset.on) ? 'on' : '' }));
+// A faint field of dots behind the title, thinning to the left.
+const field = el('#field');
+for (let gx = 0; gx < 28; gx++) for (let gy = 0; gy < 12; gy++) {
+  const c = document.createElementNS(NS, 'circle');
+  c.setAttribute('cx', 10 + gx * 20); c.setAttribute('cy', 10 + gy * 20); c.setAttribute('r', 2);
+  c.setAttribute('fill', `rgba(124, 198, 236, ${(0.02 + 0.16 * gx / 27).toFixed(3)})`);
+  field.append(c);
+}
+</script>
+</diagram>

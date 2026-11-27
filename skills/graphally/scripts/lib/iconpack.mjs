@@ -1,18 +1,20 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Cloud icon packs. The skill ships no vendor artwork: packs are downloaded from their
-// upstream sources into the skill's assets/icons/ (or a user cache when the skill folder
-// is read-only) and turned into one JSON file per vendor: name -> { viewBox, body, folder }.
+// Icon packs. The skill ships no vendor artwork: packs are downloaded from their upstream
+// sources into the skill's assets/icons/ (or a user cache when the skill folder is read-only)
+// and turned into one JSON file per pack: name -> { viewBox, body, folder }.
 //
 //   azure  Microsoft's official icons, as published in the draw.io repository at the
 //          commit named in assets/icon-sources/azure.txt.
 //   aws    AWS Architecture Icons, from the aws-icons package on the npm registry.
+//   ph     Phosphor's line icons (MIT) in six weights, written ph:rocket-launch or ph:rocket-launch-bold.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { svgEntry, kebab } from './engine/icons/icon-svg.js';
-import { fetchAzure, fetchAws } from './icon-packs/vendors.mjs';
+import { fetchAzure, fetchAws, fetchPhosphor } from './icon-packs/vendors.mjs';
 
-export const PACKS = ['azure', 'aws'];
+export const PACKS = ['azure', 'aws', 'ph'];
+const FETCHERS = { azure: fetchAzure, aws: fetchAws, ph: fetchPhosphor };
 
 // Where packs live: the skill's assets/icons/, else a user cache when the skill folder is read-only.
 export function iconDirs(skillRoot) {
@@ -65,7 +67,7 @@ export function loadPacks(skillRoot) {
 export { svgEntry, kebab };
 
 async function fetchPack(name, skillRoot, dir, tmp, log) {
-  const pack = await (name === 'azure' ? fetchAzure : fetchAws)(skillRoot, tmp, log);
+  const pack = await FETCHERS[name](skillRoot, tmp, log);
   if (!Object.keys(pack).length) throw new Error(`${name}: no icons found in the download`);
   fs.writeFileSync(path.join(dir, `${name}.json`), JSON.stringify(pack));
   return `${name}: ${Object.keys(pack).length} icons`;

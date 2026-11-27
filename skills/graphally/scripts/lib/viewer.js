@@ -18,7 +18,8 @@ import { compile } from './engine/index.js';
 import THEME from '../../assets/theme.css';
 import { WEIGHTS, addPageStyle } from './viewer/page-style.js';
 import { muteDiagramStyles, keepDiagramStylesMuted } from './viewer/mute-styles.js';
-import { registerLazyPacks } from './viewer/lazy-icons.js';
+import { registerLazyPacks, registerIconSets } from './viewer/lazy-icons.js';
+import { loadFonts } from './viewer/fonts.js';
 import { viewOf, show, problemsList, failureNote } from './viewer/diagram-view.js';
 
 const prefersDark = () => globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches;
@@ -76,6 +77,7 @@ async function diagramNodes(diagram, view, icons, alone) {
 async function renderDiagram(diagram, icons, alone) {
   const { view, shadow } = viewOf(diagram);
   try {
+    await Promise.all([loadFonts(diagram), registerIconSets(diagram, icons.used)]);
     show(shadow, await diagramNodes(diagram, view, icons, alone));
   } catch (error) {
     show(shadow, [failureNote(error)]);
@@ -96,7 +98,7 @@ async function renderAll(icons, only) {
 
 export function start(index) {
   const sources = {
-    azure: index.azure.base, aws: index.aws.base, font: index.font,
+    azure: index.azure.base, aws: index.aws.base, ph: index.ph?.base, font: index.font,
     ...(globalThis.graphallyOptions || {}),
   };
   addPageStyle(sources.font);

@@ -8,6 +8,7 @@ import { walkPage } from '../walk/walk.js';
 import { routeConnections, exposeRoutes } from '../connect/connectors.js';
 import { checkLines } from '../checks/lines.js';
 import { checkBoxes, checkPageWidth } from '../checks/boxes.js';
+import { checkTakenClasses } from '../checks/taken-classes.js';
 import { createFigure, measurePage } from './figure.js';
 import { resolvePageIcons } from './page-icons.js';
 import { pageSize } from './page-size.js';
@@ -19,6 +20,7 @@ import { assembleSvg } from './assemble.js';
 
 export function buildFigure(setup) {
   const figure = createFigure(setup);
+  checkTakenClasses(figure);
   // Icon sizes change the layout, so the page is measured after them.
   resolvePageIcons(figure);
   measurePage(figure);

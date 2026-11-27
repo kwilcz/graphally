@@ -10,8 +10,9 @@ theme, and writes an SVG and a PNG. Nobody writes a coordinate.
 
 It draws architecture (with Azure and AWS icons), networks, hierarchies, BPMN processes,
 flowcharts, sequence diagrams, Gantt plans and roadmaps, phase and role charts, figures
-for proposals and solution designs, and any other figure a grid can hold, and drafts
-diagrams of Terraform repositories from the code.
+for proposals and solution designs, infographics and slides for business decks, and any
+other figure a grid can hold, and drafts diagrams of Terraform repositories from the code.
+A figure can wear your company's look: its licensed fonts and its own icon set.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="samples/azure-platform/diagram-dark.png"><img alt="An Azure order platform: hub and spoke, private endpoints, the SAP sync through the hub firewall" src="samples/azure-platform/diagram.png"></picture>
 
@@ -44,7 +45,8 @@ browser follows the system setting.
 The skill is self-contained: one folder with its instructions, scripts and assets. It
 needs **Node.js 18 or later** and **Chrome, Chromium or Edge** on the machine where the
 agent runs. There is no `npm install` and nothing to clone. The first render downloads
-the Azure and AWS icon packs into the skill, which takes a few seconds once.
+the icon packs (Azure, AWS and Phosphor's line icons) into the skill, which takes a few
+seconds once, and a diagram that names a Google font downloads it on first use.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/install-dark.svg"><img alt="Five install routes copy the same skills/graphally folder; the agent draws with it, and readers open the diagram in any browser with nothing installed" src="docs/diagrams/install.svg"></picture>
 
@@ -106,6 +108,15 @@ firewall, commit [`skills/graphally/viewer/graphally.min.js`](skills/graphally/v
 next to the diagrams and point the header's `src` at it; `graphallyOptions` (see the top of
 [`viewer.js`](skills/graphally/scripts/lib/viewer.js)) points the icons and the typeface at a
 mirror.
+
+Your company's look travels with the diagrams. Keep a brand folder beside them: the font files
+your licence covers, named in each diagram with CSS's own `@font-face`, and your icon set as a
+folder of SVG files or a sprite, named with `icon-sets="acme: ../brand/icons"` and drawn as
+`<icon name="acme:shield">`. The render measures the text in your font and puts it in the SVG
+(or leaves it out, with `embed-fonts="no"`, where the licence forbids embedding); one-colour
+icons take the colour the CSS gives them. The skill's
+[fonts](skills/graphally/references/fonts.md) and [icons](skills/graphally/references/icons.md)
+references have the details.
 
 To put diagrams in a page of your own (a site, a wiki, a report), load the viewer once and
 write any number of `<diagram>` elements where they should appear. Each one is isolated:
@@ -246,4 +257,6 @@ and licence notices ([NOTICE](NOTICE)). The diagrams you make with it are yours.
 
 Cloud icons are not part of graphally and not covered by this licence. The skill
 downloads Microsoft's Azure icons from the draw.io project and the AWS Architecture Icons
-from the npm registry; they remain subject to Microsoft's and Amazon's terms.
+from the npm registry; they remain subject to Microsoft's and Amazon's terms. Phosphor's
+line icons (MIT licence) come from the npm registry, and Google fonts from Fontsource,
+under their open licences. Your own fonts and icons stay under the terms you have them on.

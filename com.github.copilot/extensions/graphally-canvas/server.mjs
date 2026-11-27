@@ -17,9 +17,10 @@ const NESTING = new URL('../../../skills/graphally/scripts/lib/edits/nesting.mjs
 const TYPES = {
   html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8',
   svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp',
+  woff2: 'font/woff2', woff: 'font/woff', ttf: 'font/ttf', otf: 'font/otf',
 };
-// What a diagram may take from its own folder: images, and the parts it includes.
-const BESIDE = /\.(svg|png|jpe?g|gif|webp)$|^\/parts\/.+\.html$/i;
+// What a diagram may take from its own folder: images and icons, font files, and the parts it includes.
+const BESIDE = /\.(svg|png|jpe?g|gif|webp|woff2?|ttf|otf)$|^\/parts\/.+\.html$/i;
 const LARGEST_BODY = 1 << 20;
 
 // Sent with every answer: no sniffing a type, and no address (with its secret) handed on to the
@@ -65,7 +66,8 @@ function appFile(pathname) {
   return /^\/[\w-]+\.(js|css)$/.test(pathname) ? new URL(pathname.slice(1), APP) : null;
 }
 
-// A file the diagram names beside it (<img src="my logo.svg">, parts/…), never outside its folder.
+// A file the diagram names beside it (<img src="my logo.svg">, fonts/Brand.woff2, parts/…), never
+// outside its folder.
 function besideFile(session, pathname) {
   let path;
   try {

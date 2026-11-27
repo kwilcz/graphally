@@ -22,10 +22,12 @@ const ownerName = owner => owner.id || owner.tagName.toLowerCase();
 
 const overlap = (a, b, start, size) => Math.min(a[start] + a[size], b[start] + b[size]) - Math.max(a[start], b[start]);
 
-// Two lines of text of different elements on top of each other.
+// Two lines of text of different elements on top of each other. Lines set tighter than their type
+// (a headline at line-height 0.95) touch at their edges; a collision covers more than a quarter.
+const touching = (a, b) => overlap(a, b, 'y', 'h') <= Math.max(2, Math.min(a.h, b.h) * 0.25);
 function textOverlaps(texts, problems) {
   for (const [a, b] of pairsOf(texts)) {
-    if (a.owner === b.owner || overlap(a, b, 'x', 'w') <= 2 || overlap(a, b, 'y', 'h') <= 2) continue;
+    if (a.owner === b.owner || overlap(a, b, 'x', 'w') <= 2 || touching(a, b)) continue;
     problems.push({
       rule: 'text-overlap', a: ownerName(a.owner), b: ownerName(b.owner),
       hint: 'give the text more room, or move one of them',
