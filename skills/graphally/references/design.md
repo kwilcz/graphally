@@ -98,7 +98,9 @@ look designed: distinct, calm and clear.
   chevron for a stage, a pill or a circle for an actor or an item, a band or a tinted region for
   an area, small marks (dots, squares, triangles) for records, a loop for what repeats. Frame a
   thing only where the frame means a boundary; set text on a tinted ground rather than in a card.
-  A figure of identical white boxes reads as a form to fill in, not as a picture.
+  A figure of identical white boxes reads as a form to fill in, not as a picture. Where a
+  notation fixes the shapes (BPMN, UML), keep them: the look then comes from the tinted lanes,
+  the weight of the main path, the type and the space around them.
 - **Lines that follow the content.** Streams that merge or split curve into each other; a call
   path, a sequence or a BPMN flow keeps straight, routed lines. Weight and dash carry meaning (a
   thick line for the main path, a dashed one for what happens later or asynchronously). Curves
