@@ -13,7 +13,7 @@ const FONT = "Inter, 'Segoe UI', system-ui, sans-serif";
 // BPMN events and gateways have sizes of their own.
 const SHAPE_SIZE = { start: 36, event: 36, end: 36, gateway: 44, cycle: 28 };
 
-const colorOf = (figure, value, fallback) => figure.paintOf(toneOf(value)) || fallback;
+const colorOf = (figure, value, fallback) => figure.colorOf(toneOf(value)) || fallback;
 
 // arrow and curve labels: beside the middle of a vertical line, above a horizontal one.
 function pathLabel(figure, { ends: [from, to], via, options }) {

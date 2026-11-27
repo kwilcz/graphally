@@ -27,9 +27,12 @@ features, even its flaws, when asked for something new (Jansson and Smith, *Desi
 2. **The hero.** One form, invented for this content, that shows the point before a label is
    read, and takes the largest area of the page. It is abstract or simplified, never an
    illustrated scene: shapes, lines, areas and type. See [Inventing the hero](#inventing-the-hero).
-3. **The numbers.** Each number that matters is written large and drawn to scale beside it,
-   in the encoding read most accurately: position on a common scale and length before angle,
-   area and colour (Cleveland and McGill, *JASA*, 1984).
+3. **The numbers.** Each number compared with something (a whole, a before, a target, another
+   group) is written large and drawn to scale beside it, in the encoding read most accurately:
+   position on a common scale and length before angle, area and colour (Cleveland and McGill,
+   *JASA*, 1984). A count or a duration with nothing to compare (3 tiers, 30 days, within 90
+   seconds) is written large and not drawn: a chart of it shows no data (Tufte, *The Visual
+   Display of Quantitative Information*, 1983).
 4. **The rest.** Callouts beside the hero, supporting facts, the source note and the owner at
    the foot, all on one grid.
 
@@ -63,17 +66,25 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
 - **One hero**, larger than anything else, carrying the point.
 - **Two typefaces at most**: a display face for the title, the big numbers and the labels, and
   a text face for the sentences; the client's own when it has one. Choosing and loading them:
-  [fonts.md](fonts.md). Sizes on a 1600px slide: title 56 to 72px, big numbers 48 to 80px,
-  labels 16 to 20px, sentences 13 to 17px, a letter-spaced eyebrow 12 to 13px.
-- **Two or three colours on a neutral ground**: the client's brand colours when it has them;
-  otherwise a dark or a light ground, one main colour and one accent for what matters most.
-  A colour means one thing throughout: decide what each one stands for before using it.
+  [fonts.md](fonts.md).
+- **Sizes for where it is read.** A slide on a screen, 1600px wide: title 56 to 72px, big
+  numbers 48 to 80px, labels 16 to 20px, sentences 13 to 17px, a letter-spaced eyebrow 12 to
+  13px. A page that will be printed is sized from the paper: 1600px across A4 or Letter
+  landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
+  20 to 24px and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for
+  body text in print).
+- **Two or three colours on a neutral ground**: the client's brand colours when it has them.
+  Without them, take the palette from the subject or the reader's world (a bank's ink and
+  paper, a safety colour for operations, a sector's own convention), with one main colour and
+  one accent for what matters most. A colour means one thing throughout: decide what each one
+  stands for before using it. Text keeps a contrast of 4.5:1 with its ground, 3:1 when large
+  (WCAG 2.2, 1.4.3).
 - **One icon style**: the client's own set, or line icons in one weight, or cloud service
   icons where the figure is about those services: [icons.md](icons.md).
 - **A grid and air**: equal outer margins (64px on a slide), aligned edges, white space between
   groups; nothing touches, nothing floats.
-- **Numbers drawn, not only written**, each with its numeral beside the drawing. No pies of
-  many slices.
+- **Comparisons drawn, not only written**, each with its numeral beside the drawing. No pies
+  of many slices.
 - **A guided eye**: one reading path, or steps numbered in reading order; thin leaders from
   callouts to what they name.
 - **A finish**: a source note for every figure quoted, the owner or brand in the footer.
@@ -84,10 +95,13 @@ clip-art scenes, text in boxes where a drawn number would do.
 
 ## Techniques
 
-**The canvas.** A slide is `<diagram width=1600>` holding one container of fixed height (about
-900px for 16:9) with `position: relative`; regions inside are placed with grid, flex or
-`position: absolute`. A portrait one-pager is `width=1000` to `1200`, with the height following
-the content. Set the ground with `background` on `<diagram>`.
+**The canvas.** The SVG adds a 24px margin around the page, so a page of W × H pixels is
+`<diagram width=W-48>` holding one container `H-48` tall with `position: relative`; regions
+inside are placed with grid, flex or `position: absolute`. A 16:9 slide of 1600 × 900 is
+`width=1552` and a container of 852px; 1920 × 1080 is 1872 and 1032; A4 landscape at 1600 ×
+1131 is 1552 and 1083; A4 portrait at 1200 × 1697 is 1152 and 1649. A one-pager of free length
+lets its height follow the content. Set the ground with `background` on `<diagram>`, so the
+margin takes it too.
 
 **Shapes the page sits on.** The drawing script paints above the page, so a route, a band or a
 field that page elements sit on is drawn in the page instead: an inline `<svg>` placed first in

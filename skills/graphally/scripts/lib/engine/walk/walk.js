@@ -92,18 +92,23 @@ function drawElement(figure, element, style, box, parentBox) {
   if (element.id) figure.out.push('</g>');
 }
 
+// A picture (an icon, an image, an inline SVG), in a group with its id when it has one, as any
+// element is, so the next render reads its box back too.
+function drawPictureElement(figure, element, style, box, parentBox) {
+  if (element.id) figure.out.push(layoutGroup(element, box));
+  drawPicture(figure, element, style, box);
+  if (element.id) figure.out.push('</g>');
+  figure.boxes.push({ element, box, painted: true, parent: parentBox });
+}
+
 function visit(figure, element, parentBox) {
   const style = getComputedStyle(element);
   if (style.display === 'none' || style.visibility === 'hidden') return;
   const turn = startTurn(figure, element, style);
   const box = figure.boxOf(element);
   const closeGroups = openGroups(figure, element, style, turn);
-  if (isPicture(element)) {
-    drawPicture(figure, element, style, box);
-    figure.boxes.push({ element, box, painted: true, parent: parentBox });
-  } else {
-    drawElement(figure, element, style, box, parentBox);
-  }
+  const draw = isPicture(element) ? drawPictureElement : drawElement;
+  draw(figure, element, style, box, parentBox);
   closeGroups();
 }
 

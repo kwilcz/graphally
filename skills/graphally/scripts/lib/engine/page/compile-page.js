@@ -37,6 +37,15 @@ function createPage(diagram, problems) {
   return root;
 }
 
+// A copy of a child for the page. The page is laid out in a shadow root, where :root names
+// nothing: a diagram's :root rule (custom properties, a font) is the page's.
+function pageCopy(child) {
+  const copy = child.cloneNode(true);
+  if (copy.nodeType !== 1 || copy.tagName !== 'STYLE') return copy;
+  copy.textContent = copy.textContent.replace(/:root\b/g, '.graphally-page');
+  return copy;
+}
+
 // The diagram's scripts, by kind, and the rest of it copied onto the page. <script
 // type="graphally"> draws after layout, with before it runs before; <script
 // type="application/json"> is the connections, as data. A script without a type of its own also
@@ -46,7 +55,7 @@ function takeScripts(diagram, root, problems) {
   const scripts = { drawing: [], before: [], connections: [] };
   for (const child of diagram.childNodes) {
     if (child.nodeType !== 1 || child.tagName !== 'SCRIPT') {
-      root.appendChild(child.cloneNode(true));
+      root.appendChild(pageCopy(child));
       continue;
     }
     const type = (child.getAttribute('type') || '').toLowerCase();

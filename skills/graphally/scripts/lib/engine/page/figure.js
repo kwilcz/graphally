@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // The figure as it is built: the laid-out page, and what each stage adds to it. The stages
 // (build-figure.js) take it in turn; each reads what the ones before it left.
-import { tokenColors, painter } from './colors.js';
+import { tokenColors, painter, writtenColors } from './colors.js';
 
 export function createFigure({ root, diagram, options, measurer, problems }) {
   const figure = {
@@ -17,7 +17,7 @@ export function createFigure({ root, diagram, options, measurer, problems }) {
     // is drawn grey.
     out: [], boxes: [], texts: [], paints: [], turnedOutlines: [], steps: new Set(), greyed: false,
     // Set when the page is measured.
-    pageRect: null, paintOf: null,
+    pageRect: null, paintOf: null, colorOf: null,
     // An element's box on the page.
     boxOf: element => {
       const rect = element.getBoundingClientRect(), page = figure.pageRect;
@@ -31,4 +31,5 @@ export function createFigure({ root, diagram, options, measurer, problems }) {
 export function measurePage(figure) {
   figure.pageRect = figure.root.getBoundingClientRect();
   figure.paintOf = painter(tokenColors(figure.root));
+  figure.colorOf = writtenColors(figure.root, figure.paintOf);
 }

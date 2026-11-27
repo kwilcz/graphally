@@ -20,6 +20,37 @@ export function tokenColors(root) {
 
 const TRANSPARENT = /rgba\(.*,\s*0\)$/;
 
+// A colour as written in the drawing script or a connection (a theme token, any CSS colour, or a
+// custom property of the diagram: var(--brand)), as the figure paints it: read in the diagram, so
+// the SVG holds the colour and not a property it does not define.
+// Where a value is read: inside the first element that has the custom properties it names (an
+// author sets --brand on :root, the slide or a section), else the page.
+function holderOf(root, value) {
+  const names = [...value.matchAll(/var\(\s*(--[\w-]+)/g)].map(match => match[1]);
+  const has = element => names.every(name => getComputedStyle(element).getPropertyValue(name).trim());
+  if (!names.length || has(root)) return root;
+  return [...root.querySelectorAll('*')].find(element => element instanceof HTMLElement && has(element)) || root;
+}
+
+export function writtenColors(root, paintOf) {
+  const known = new Map();
+  const read = value => {
+    const probe = document.createElement('div');
+    probe.style.cssText = 'display: none';
+    probe.style.color = value;
+    if (!probe.style.color) return paintOf(value);
+    holderOf(root, value).appendChild(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+    return paintOf(color);
+  };
+  return value => {
+    if (!value) return null;
+    if (!known.has(value)) known.set(value, read(value));
+    return known.get(value);
+  };
+}
+
 // A computed colour as the figure paints it: its token, a portable colour, or null for none.
 export const painter = tokens => color => {
   if (!color || TRANSPARENT.test(color) || color === 'transparent') return null;

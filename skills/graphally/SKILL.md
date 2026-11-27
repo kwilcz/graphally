@@ -225,7 +225,7 @@ The whole format, with every class, shape, option and call: [references/format.m
 | `lines-overlap` | two lines share a stretch: give one other sides (`out`/`in`) or `via` points |
 | `unroutable` | the line has no way through: widen a gap, or give it `via` points |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
-| `text-overlap` | two texts collide: give one more room |
+| `text-overlap` | two texts collide (quoted in `texts`): give one more room, or move one |
 | `warning: class-taken` | a class of yours shares a building block's name, and the block's look stays under your rule: set what it names, or rename your class |
 | `warning: font-missing` | a Google family or an `@font-face` file could not be loaded: check the name on fonts.google.com, or the file's path; the text falls back |
 | `warning: box-overflow` | a box or text sticks out of the drawn box holding it: widen the holder or narrow what is inside. A warning, so the render passes: leave it when it is meant |

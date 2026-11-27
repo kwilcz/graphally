@@ -46,7 +46,8 @@ is about choosing one.
 ## The page
 
 - `width` on `<diagram>` sets the page width (default 1200); the SVG adds a 24px margin on
-  each side. The height follows the content, the script's drawings included.
+  each side, painted with the diagram's background. The page holds the diagram's top-level
+  elements whole (an empty padding included) and whatever the script draws beyond them.
 - Any CSS for layout works: grid (with `grid-column: span 2`, `subgrid`), flexbox,
   `position: absolute` inside a `position: relative` box, margins, padding.
 - What is drawn: background colours and `linear-gradient()`, borders (solid, dashed,
@@ -68,7 +69,8 @@ is about choosing one.
   (text), `--muted`, `--line`, `--card` (white), `--wash`, `--bg`; strong `--woad` (blue),
   `--rust` (red), `--teal`, `--green`, `--purple`, `--amber`; pale `--lane-a` (blue),
   `--lane-b` (green), `--lane-c` (purple), `--lane-d` (orange). Literal colours stay as
-  written in both themes.
+  written in both themes. Custom properties of your own (`:root { --brand: #0b3d2e }`, or on any
+  element) work as in a page, in CSS and as colours of the drawing script and the connections.
 - `title` and `subtitle` on `<diagram>` add the standard heading; or write your own `<h1>`.
 - Fonts: `fonts="Barlow Condensed:700,800; Barlow:400,600"` on `<diagram>` loads Google fonts; a
   font file of your own (a licensed brand font) is an `@font-face` rule in the `<style>`. Both are
@@ -185,7 +187,10 @@ colours and your own sets: `icons.md`.
 
 `<script type="graphally" before>` runs on the page before the browser lays it out. Use it to make
 elements from a list (`make('div', { class: 'card' }, 'text')`, `root`, `el`, `all`), and
-to call the two helpers. Each helper does what CSS cannot. What it makes are plain
+to call the two helpers. Here `el` and `all` return the page's elements, to fill, style and
+place; in the drawing script, after layout, they return boxes. `make(tag, attributes, text)`
+returns an element to append; what it makes (an `<icon>`, an inline `<svg>`) is drawn like
+anything written in the page. Each helper does what CSS cannot. What it makes are plain
 elements with classes, styled like everything else.
 
 `schedule()` reads `data-start`, `data-end`, `data-duration` (`5d`, `2w`) and `data-after`
@@ -313,8 +318,8 @@ for `animate`.
 
 `a`, `b` and `p` take an element, an id, a selector, or a point.
 
-Options of lines (`connect`, `arrow`, `curve`): `color` (a CSS colour or a token name:
-`'teal'`, `'rust'`), `width`, `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
+Options of lines (`connect`, `arrow`, `curve`): `color` (a CSS colour, a token name:
+`'teal'`, `'rust'`, or a custom property: `'var(--brand)'`), `width`, `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
 `circle`, `dot`, `diamond`, `open-diamond`, `slash`, `none`; `head` defaults to `arrow`, `tail`
 to none), `both` (a head at each end), `arrow: false` (no head), and `message: true` for a BPMN
 message flow (dashed, an open circle at the source, an open arrowhead), `default: true` for a
@@ -398,7 +403,7 @@ else does.
 | `short-end` | an arrowhead sits on a bend right before its box: give the line room there (a wider gap, other sides, `via`) |
 | `lines-overlap` | two lines share a stretch and read as one: give one `via` points or other sides |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
-| `text-overlap` | two texts of the page collide: give one more room |
+| `text-overlap` | two texts of the page collide, quoted in `texts`: give one more room, or move one |
 | `warning: box-overflow` | a box, an icon or a line of text sticks out of the drawn box that holds it (a node wider than its group, a word wider than its card): widen the holder or narrow what is inside. A warning: the render passes, and when the overflow is meant, leave it. What is placed with `position: absolute` (a badge on a corner, a timer on a task's edge) is not reported |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
 | `warning: class-taken` | a class of yours shares a building block's name, and part of the block's look (named in `keeps`) stays under your rule: set those properties, or rename your class |

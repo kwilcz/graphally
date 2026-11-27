@@ -19,7 +19,7 @@ const sidesOf = (route, fixed) => ({
 function lineOf(figure, route, markers, steps, hops) {
   const { edge } = route;
   const plainTone = edge.accent ? 'var(--woad)' : 'var(--ink)';
-  const tone = edge.off ? 'var(--muted)' : figure.paintOf(toneOf(edge.color)) || plainTone;
+  const tone = edge.off ? 'var(--muted)' : figure.colorOf(toneOf(edge.color)) || plainTone;
   const path = roundedPath(route.points, S.edge.radius, hops, S.edge.hop);
   const line = svgElement('path', {
     d: path,

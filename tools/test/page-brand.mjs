@@ -96,6 +96,35 @@ export async function pageIconSets() {
   }
 }
 
+const TIGHT = '<style>.big { font-size: 56px; line-height: 58px } .lab { font-size: 13px; line-height: 16px }</style>'
+  + '<div class=big>4,812</div><div class=lab>changes released</div>';
+const COVERED = '<style>.k { position: relative; height: 120px } .big { font-size: 80px; line-height: 1.2 } '
+  + '.lab { position: absolute; left: 60px; top: 50px }</style>'
+  + '<div class=k><div class=big>62%</div><div class=lab>use AI coding assistants every day</div></div>';
+
+// Display type set tight is not text on text; a label laid over a numeral is, named by its words.
+export async function pageTextOverlap() {
+  const dir = folder('page-text-overlap'), out = path.join(dir, 'out');
+  checkSucceeded(await render(write(dir, pageDiagram(TIGHT, '', 'width=400')), out));
+  const covered = await render(write(dir, pageDiagram(COVERED, '', 'width=400')), out);
+  check(/text-overlap: a=div\.big b=div\.lab texts="62%" \/ "use AI coding assistants ev…"/.test(covered.text),
+    `a label over a numeral is not reported by its words: ${tail(covered.text)}`);
+}
+
+const OWN_COLOURS = '<style>:root { --brand: #ff0000 } .w { height: 20px; background: var(--brand) } '
+  + '.s { --line-two: #00aa55 }</style><div class=w id=w></div><div class=s><div class=h-5></div></div>';
+
+// Custom properties of the diagram's own: set on :root they reach its elements, and the drawing
+// script's colours read them where they are set.
+export async function pageOwnColours() {
+  const dir = folder('page-own-colours'), out = path.join(dir, 'out');
+  const rule = "draw.moveTo(el('w').left).lineTo(el('w').right).style({ color: 'var(--line-two)' });";
+  checkSucceeded(await render(write(dir, pageDiagram(OWN_COLOURS, rule, 'width=300')), out));
+  const svg = svgOf(out);
+  check(/fill: rgb\(255, 0, 0\)/.test(svg), 'a custom property set on :root does not reach the page');
+  check(/stroke: rgb\(0, 170, 85\)/.test(svg), 'a script colour does not read a custom property');
+}
+
 // A class of the author's own that a building block also styles, a full circle, a fade from nothing.
 export async function pageInfographicMarks() {
   const dir = folder('page-infographic-marks'), out = path.join(dir, 'out');

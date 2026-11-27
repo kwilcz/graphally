@@ -23,7 +23,9 @@ import { viewer } from './test/viewer.mjs';
 import { batch, docExamples, iconPacks, packageAndApi, versionNumbers } from './test/package.mjs';
 import { sourceEdits } from './test/source-edits.mjs';
 import { canvas } from './test/canvas.mjs';
-import { pageBrandFonts, pageIconSets, pageInfographicMarks } from './test/page-brand.mjs';
+import {
+  pageBrandFonts, pageIconSets, pageInfographicMarks, pageOwnColours, pageTextOverlap,
+} from './test/page-brand.mjs';
 
 await test('samples', samples);
 await test('layout', layout);
@@ -47,6 +49,8 @@ later('page-images', pageImages);
 later('page-brand-fonts', pageBrandFonts);
 later('page-icon-sets', pageIconSets);
 later('page-infographic-marks', pageInfographicMarks);
+later('page-text-overlap', pageTextOverlap);
+later('page-own-colours', pageOwnColours);
 later('viewer', viewer);
 later('page-utilities', pageUtilities);
 later('page-before-and-dates', pageBeforeAndDates);

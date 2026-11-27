@@ -111,7 +111,9 @@ export function drawText(figure, node, owner) {
       text = withEllipsis(text, style, ellipsisEdge - line.left);
       line.right = line.left + textMeasure.measureText(text).width;
     }
-    figure.texts.push({ x: line.left, y: line.top, w: line.right - line.left, h: line.height, owner, text });
+    const base = line.top + ascent, size = parseFloat(style.fontSize);
+    const w = line.right - line.left;
+    figure.texts.push({ x: line.left, y: line.top, w, h: line.height, owner, text, base, size });
     const position = { x: fmt(line.left), y: fmt(line.top + ascent) };
     figure.out.push(svgElement('text', { ...position, style: textStyle }, escapeXml(text)));
   }

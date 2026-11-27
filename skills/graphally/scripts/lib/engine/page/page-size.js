@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// The figure's size: what the page shows, a turned element by its outline on the page, and the
-// script's drawings, which may reach past the page.
+// The figure's size: the diagram's top-level elements, what the page shows, a turned element by
+// its outline on the page, and the script's drawings, which may reach past the page.
 import { S } from '../style.js';
 import { endsOf } from './markers.js';
 
@@ -54,9 +54,17 @@ function drawingsReach(drawings) {
   return { x: right, y: bottom };
 }
 
+// The diagram's own top-level elements, painted or not: a slide of a fixed height keeps it, its
+// empty padding included, though nothing is drawn at its edge.
+const NOT_LAID_OUT = new Set(['STYLE', 'SCRIPT', 'TEMPLATE', 'LINK']);
+const topLevelRects = figure => [...figure.root.children]
+  .filter(element => !NOT_LAID_OUT.has(element.tagName))
+  .map(element => figure.boxOf(element)).filter(box => box && box.w > 0 && box.h > 0);
+
 export function pageSize(figure) {
   const far = drawingsReach(figure.drawings);
   const shownRects = [
+    ...topLevelRects(figure),
     ...figure.boxes.filter(entry => !entry.turned).map(entry => entry.box),
     ...figure.texts.filter(text => !text.turned),
     ...figure.turnedOutlines,

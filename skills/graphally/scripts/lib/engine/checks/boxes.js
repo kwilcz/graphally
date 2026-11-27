@@ -18,18 +18,21 @@ export function checkPageWidth(figure, size) {
   });
 }
 
-const ownerName = owner => owner.id || owner.tagName.toLowerCase();
-
 const overlap = (a, b, start, size) => Math.min(a[start] + a[size], b[start] + b[size]) - Math.max(a[start], b[start]);
 
-// Two lines of text of different elements on top of each other. Lines set tighter than their type
-// (a headline at line-height 0.95) touch at their edges; a collision covers more than a quarter.
-const touching = (a, b) => overlap(a, b, 'y', 'h') <= Math.max(2, Math.min(a.h, b.h) * 0.25);
+// Two lines of text of different elements on top of each other, judged by the band their glyphs
+// fill (from the ascenders, about 0.78 of the size above the baseline, to the descenders below),
+// not by their line boxes: display type set tight (a numeral at line-height 1) has line boxes that
+// overlap where its glyphs do not.
+const inkOf = text => ({ y: text.base - 0.78 * text.size, h: text.size });
+const touching = (a, b) => overlap(inkOf(a), inkOf(b), 'y', 'h') <= Math.max(2, Math.min(a.size, b.size) * 0.05);
+const quoted = text => `"${text.length > 28 ? `${text.slice(0, 27).trimEnd()}…` : text}"`;
+
 function textOverlaps(texts, problems) {
   for (const [a, b] of pairsOf(texts)) {
     if (a.owner === b.owner || overlap(a, b, 'x', 'w') <= 2 || touching(a, b)) continue;
     problems.push({
-      rule: 'text-overlap', a: ownerName(a.owner), b: ownerName(b.owner),
+      rule: 'text-overlap', a: nameOf(a.owner), b: nameOf(b.owner), texts: `${quoted(a.text)} / ${quoted(b.text)}`,
       hint: 'give the text more room, or move one of them',
     });
   }

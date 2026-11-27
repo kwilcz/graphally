@@ -89,7 +89,9 @@ not: desktop licences often forbid placing the font file in documents others rec
 licences cover serving it on a site. Ask whoever holds the licence. Where embedding is not
 allowed, `embed-fonts="no"` on `<diagram>` lays the figure out in the font but leaves the files
 out of the SVG: the SVG shows the font where it is installed and falls back elsewhere, and the
-PNG shows it everywhere.
+PNG shows it everywhere. Hand readers outside the PNG, rendered with `--png2x`; desktop licences
+usually allow static images made with the font, but check yours. Keep the SVG for readers who
+have the font installed: in another font the text keeps its places and may collide.
 
 ## Installed fonts
 
