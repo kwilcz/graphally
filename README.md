@@ -63,7 +63,7 @@ On versions of Claude Code without the one-step form, run
 and the other agents it supports:
 
 ```sh
-gh skill install kwilcz/graphally graphally --scope user
+gh skill install kwilcz/graphally --all --scope user
 ```
 
 **GitHub Copilot CLI**
@@ -80,7 +80,7 @@ boxes where its layout allows rather than by coordinates.
 **skills CLI**
 
 ```sh
-npx skills add kwilcz/graphally --skill graphally -g
+npx skills add kwilcz/graphally --skill '*' -g
 ```
 
 **Claude.ai and Claude Desktop**: download `graphally-skill.zip` from the
@@ -96,6 +96,14 @@ once online.
 
 Ask your agent for a diagram as you would ask a colleague: "draw the architecture of
 this service", "diagram the Terraform in ./infra", "a sequence diagram of the checkout".
+
+Or name the kind yourself. Beside the `graphally` skill, which holds the engine and draws
+anything, come entry skills that the agent can also pick on its own: `diagram` (any figure,
+its form chosen for the point), `infographic` (slides, one-pagers, fact sheets),
+`architecture-diagram`, `flowchart`, `bpmn`, `sequence-diagram`, `roadmap`, `org-chart` and
+`terraform-diagram`. In Claude Code, GitHub Copilot and VS Code they run as
+`/graphally:infographic` and so on; in Codex as `$infographic`. Each sends the agent to
+graphally with the right reference, so installing `graphally` alone still draws everything.
 The agent writes the source, renders it, fixes anything reported, and looks at a preview
 once.
 

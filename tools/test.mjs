@@ -6,7 +6,7 @@
 // bad and dropped overrides, how far a layout moves when a box is added (a stable re-render
 // against --recompute), shapes, script errors, routing, problems, connections as data, the
 // viewer, utility classes, dates, sequences, dependencies, batches, icon packs on demand, brand
-// fonts and icon sets, and the skill's own examples.
+// fonts and icon sets, the skill's own examples, and the entry skills beside it.
 // Works in a fresh folder under os.tmpdir(), removed at the end unless --keep, which prints
 // its path. Exits 1 when a test fails. The tests live in tools/test/, one file per area; this
 // file runs them in order: the samples and their layout first, then the rest a few at a time
@@ -23,6 +23,7 @@ import { viewer } from './test/viewer.mjs';
 import { batch, docExamples, iconPacks, packageAndApi, versionNumbers } from './test/package.mjs';
 import { sourceEdits } from './test/source-edits.mjs';
 import { canvas } from './test/canvas.mjs';
+import { entrySkills } from './test/entry-skills.mjs';
 import {
   pageBrandFonts, pageIconSets, pageInfographicMarks, pageOwnColours, pageTextOverlap,
 } from './test/page-brand.mjs';
@@ -61,6 +62,7 @@ later('version', versionNumbers);
 later('batch', batch);
 later('icon-packs', iconPacks);
 later('doc-examples', docExamples);
+later('entry-skills', entrySkills);
 
 await runQueue();
 finish();
