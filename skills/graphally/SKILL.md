@@ -54,6 +54,15 @@ inventing the hero takes the place of the idea starters.
 
 Copy this checklist and work through it; render as often as the figure needs.
 
+**Try it rather than think it through.** A render takes a second or two; working out in your
+head how a grid, a `clip-path`, a route or a typeface will look takes far longer, and the guess
+is often wrong. When a question can be answered by rendering, render: write the smallest file
+that answers it (`try.html` beside the diagram: one grid, one shape, two boxes and a line),
+look, decide, and delete it. Write each version of the figure quickly and let the render show
+what to change. Keep the thinking for what no render answers: who reads the figure, what it must
+make obvious, which form shows that. Designers who iterate through more prototypes reach better
+designs than those who plan longer (Dow et al., *Creativity & Cognition*, 2009).
+
 ```
 - [ ] 1. Design: write the point, the visual metaphor and the build
 - [ ] 2. Read the references for the techniques the build uses (table below), and no others
@@ -227,8 +236,9 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   `--green`, `--purple`, `--amber`; grounds `--bg`, `--card`, `--wash`, `--icon-soft`, `--vnet`,
   `--note`, and lane tints `--lane-a` to `--lane-d`. Each has a dark value, so a figure built
   from them follows the dark theme. A CSS `color-mix()` of tokens is worked out once, in the
-  light theme: for a tint that follows the dark one, use a token or a colour with opacity
-  (`rgb(31 99 182 / 12%)`).
+  light theme: for a tint that follows the dark one, use a lane or ground token (`--lane-a`,
+  `--wash`, `--icon-soft`). A colour with opacity (`rgb(31 99 182 / 12%)`) follows too, but
+  darkens on the dark ground, so a light-to-strong run of tints flattens there.
 - **Themes**: `--themes` writes `diagram-dark.svg` beside the light one; `--dark` draws
   dark only.
 

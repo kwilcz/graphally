@@ -303,7 +303,7 @@ also run as a page script when the file is opened in a browser (reported as `pla
 |---|---|
 | `el('id')`, `el('.css selector')` | an element's box |
 | `all('.selector')` | every match, in page order |
-| box `.x .y .w .h`, `.center`, `.top`, `.right`, `.bottom`, `.left` | numbers; points on the box |
+| box `.x .y .w .h`; `.center`, `.top`, `.right`, `.bottom`, `.left` | numbers; points (the middle of each side), so the right edge is `box.right.x` |
 | box `.topLeft`, `.topRight`, `.bottomLeft`, `.bottomRight`, `.at('top', 0.25)` | corners; a point a fraction along a side |
 | point `.x`, `.y`, `.up(d)`, `.down(d)`, `.left(d)`, `.right(d)`, `.move(dx, dy)` | its numbers; the point moved |
 | `pt(x, y)`, `mid(a, b)`, `lerp(a, b, t)` | a point; the midpoint; a point a fraction of the way |
@@ -321,7 +321,9 @@ also run as a page script when the file is opened in a browser (reported as `pla
 | `animate(target, keyframes, { duration, iterations, origin, … })` | moves an element or a drawn mark when the figure is shown, as `element.animate` does in a browser (see Motion) |
 
 `draw` paths, `text`, `shape`, `icon`, `gate`, `arrow` and `curve` return the mark they drew,
-for `animate`.
+for `animate`. Only a `draw` path takes `.style({…})`; `arrow`, `curve`, `connect`, `text` and
+the rest take their style as options. `text` without `font` is set in the theme's Inter: name
+the figure's family when it has another.
 
 `a`, `b` and `p` take an element, an id, a selector, or a point.
 
