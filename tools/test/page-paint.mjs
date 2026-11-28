@@ -128,6 +128,35 @@ export async function pageText() {
   check(/transform="rotate\(90 /.test(down), `vertical-rl text is not one downward text: ${down}`);
   check(/<text [^>]*font-family: Georgia, serif[^>]*>Claims process</.test(svg),
     'the title did not take the page\'s font family');
+  await checkIconRoom(dir, out);
+}
+
+const MIXED = '<style>.r { display: flex; gap: 40px; align-items: center } .c { display: grid; gap: 12px; width: 220px }' +
+  ' [shape^=task] { width: 130px }</style>' +
+  '<div class=r><div class=figure><icon name="app service"></icon>Web app</div><div class=figure>Legacy ERP</div></div>' +
+  '<div class=c><div class=node><icon name="app service"></icon>Web shop</div><div class=node>Partner API</div></div>' +
+  '<div class=c><div shape=task id=plain>Review</div><div shape="task user" id=typed>Review</div></div>';
+
+// The x and y a text is written at.
+const at = (svg, text) => {
+  const tag = svg.match(new RegExp(`<text [^>]*>${text}</text>`))?.[0] || '';
+  return ['x', 'y'].map(name => Number(new RegExp(` ${name}="([\\d.]+)"`).exec(tag)?.[1]));
+};
+
+// An item without an icon among siblings with one keeps the icon's room: a figure's name on its
+// neighbour's line, a node's name beside where the icon would be; a typed task's label stays centred.
+async function checkIconRoom(dir, out) {
+  const svg = await renderedSvg(dir, out, pageDiagram(MIXED, '', 'width=600'));
+  const [, appY] = at(svg, 'Web app'), [, erpY] = at(svg, 'Legacy ERP');
+  const [shopX] = at(svg, 'Web shop'), [apiX] = at(svg, 'Partner API');
+  check(Math.abs(appY - erpY) < 1 && Math.abs(shopX - apiX) < 1,
+    `names off their neighbours': figures at y ${appY} and ${erpY}, nodes at x ${shopX} and ${apiX}`);
+  // The same label in a plain and a typed task of one width sits at the same place in each.
+  const file = path.join(out, 'diagram.svg');
+  const [plainX, typedX] = [...svg.matchAll(/<text [^>]*x="([\d.]+)"[^>]*>Review<\/text>/g)].map(m => Number(m[1]));
+  const [plainBox, typedBox] = ['plain', 'typed'].map(id => nodeRect(file, id));
+  check(Math.abs((plainX - plainBox[0]) - (typedX - typedBox[0])) < 1,
+    `a typed task's label is off a plain one's: ${plainX - plainBox[0]} and ${typedX - typedBox[0]} from the left`);
 }
 
 // Paint the stylesheet gives an inline SVG's marks reaches the copy, a token as a token; a mark's

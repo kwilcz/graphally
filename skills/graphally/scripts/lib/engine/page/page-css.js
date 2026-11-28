@@ -35,6 +35,8 @@ const BASE_CSS = `
   border-radius: 8px;
   padding: 10px 12px;
 }
+/* An icon that opens a line of text keeps a gap before it. */
+:where(.graphally-page :is(.card, .box, .pill, .tag, .banner) > icon:first-child) { margin-right: 8px; }
 :where(.graphally-page .box) {
   border: 1.5px solid var(--ink);
   border-radius: 6px;

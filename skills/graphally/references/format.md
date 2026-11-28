@@ -165,6 +165,8 @@ them:
   or `external`, `vnet`, `subnet`, `region`, `plain`. Put `badges` holding `badge` icons
   in the `<h4>`.
 - `tile`: an icon over its name in a small frame.
+- A `figure`, `node` or `tile` without an icon among siblings that have one keeps the icon's
+  room, so the names line up; give an icon where one fits rather than leave the room empty.
 - `band`: a full-width strip of shared services.
 - `key` with `swatch`, `swatch dashed` and `swatch box` (a dashed box, for an external or
   disabled part; a filled one takes `border-style: solid` and a `background`): a legend, one

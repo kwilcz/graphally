@@ -3,7 +3,8 @@
 // outline and centred content; events and gateways have their BPMN sizes, and each shape's
 // padding keeps its text inside its outline. An activity with a marker at its bottom
 // (subprocess, loop, multi-instance) keeps its label clear of it, and so does a task with its
-// type's marker in its top-left corner (user, service, send).
+// type's marker in its top-left corner (user, service, send), on both sides, so its label stays
+// centred like a plain task's.
 
 // Any element with one of these words in its shape.
 const any = names => names.map(name => `[shape~="${name}"]`).join(', ');
@@ -44,7 +45,7 @@ ${shaped(any(['task', 'activity', 'subprocess', 'sub-process']))} { padding: 10p
 ${shaped(`${SUBPROCESSES}, :is(${TASKS}):is(${BOTTOM_MARKED})`)} {
   padding-bottom: 22px;
 }
-${shaped(`:is(${TASKS}):is(${TYPE_MARKED})`)} { padding-left: 26px; }
+${shaped(`:is(${TASKS}):is(${TYPE_MARKED})`)} { padding-left: 26px; padding-right: 26px; }
 ${shaped(any(['diamond', 'decision', 'rhombus']))} { padding: 22px 30px; min-height: 64px; }
 ${shaped(any(['circle']))} { aspect-ratio: 1; padding: 10px; }
 ${shaped(any(['ellipse', 'oval']))} { padding: 12px 26px; }

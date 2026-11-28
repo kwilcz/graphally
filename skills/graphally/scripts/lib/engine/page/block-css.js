@@ -112,6 +112,11 @@ export const BLOCK_CSS = `
   line-height: 15px;
 }
 :where(.graphally-page .figure > icon) { width: 48px; height: 48px; }
+/* An item without an icon among siblings with one keeps the icon's room, so the names line up:
+   a node's beside where the icon would be, a tile's and a figure's below it. */
+:where(.graphally-page :has(> .node > icon) > .node:not(:has(> icon))) { padding-left: 48px; }
+:where(.graphally-page :has(> .tile > icon) > .tile:not(:has(> icon))) { padding-top: 56px; }
+:where(.graphally-page :has(> .figure > icon) > .figure:not(:has(> icon))) { padding-top: 54px; }
 :where(.graphally-page .band) {
   display: flex;
   flex-wrap: wrap;
