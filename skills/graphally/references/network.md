@@ -56,8 +56,12 @@ it, and place the VNets with a grid map.
   group takes one with `[grid-area:hub]`. Put the internet and on-premises on top, the hub
   in the middle, spokes beside it, shared PaaS in a `band` at the bottom.
 - **Address ranges** go in the group title's `<small>`: `<h4>snet-pe <small>10.10.2.0/24</small></h4>`.
+  A title is a flex row, where `<br>` does nothing: two names in one title (a pair of subnets
+  drawn as one) are two `<span>`s in `<h4 class="flex-col items-start">`.
 - **A hub with several subnets** is a grid inside the VNet group:
-  `class="group vnet grid grid-cols-2 gap-x-36 gap-y-11"` with `class=col-span-full` on its `<h4>`.
+  `class="group vnet grid grid-cols-[repeat(2,auto)] gap-x-36 gap-y-11"` with `class=col-span-full`
+  on its `<h4>`. Its columns are as wide as their subnets; `grid-cols-2` makes two equal columns
+  that may be narrower than a subnet, which then sticks out of the VNet.
 - **Peering** is a connection between the two VNet groups (their ids), `"both": true`.
 - **Items are figures**: an icon over its name and a `<small>` line, with no frame; the
   subnet around it is the frame. Give them one width (`.figure { width: 150px; }`), so a

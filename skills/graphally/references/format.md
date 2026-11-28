@@ -352,8 +352,10 @@ takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and 
   round, which a line between lanes crosses straight. A framed box (a subnet) stays a box
   that lines keep out of unless they connect into it. The
   script's straight lines count as taken, so `connect` keeps off them.
-- Lines that share a side split it evenly: one meets it at the middle, two at a third and
-  two thirds, n at k/(n+1), ordered so they do not cross. A line alone on two facing sides
+- Lines that share a side meet it straight across from their other ends, when each other end
+  lies across from the side with 16px or more between them (message flows into a wide pool,
+  three boxes beside a tall one); otherwise they split it evenly: one at the middle, two at a
+  third and two thirds, n at k/(n+1), ordered so they do not cross. A line alone on two facing sides
   runs straight when both ends fit in the middle 80% of their sides. Lines into (or out of)
   one box with the same label and style merge into one trunk with one label. Two boxes line up only when they share a grid row
   or column: put boxes that a straight line joins in one grid (or a `subgrid`), rather
@@ -416,6 +418,9 @@ else does.
 | `lines-overlap` | two lines share a stretch and read as one: give one `via` points or other sides |
 | `page-overflow` | the content is wider than `width`: widen `width`, or narrow the columns |
 | `text-overlap` | two texts of the page collide, quoted in `texts`: give one more room, or move one |
+| `line-through-text` | a line runs through a text it does not belong to (a VNet's title, a heading): widen the gap, move the title, or give the line `out`, `in` or `via` |
+| `text-cut` | a line's label or a script's `text` reaches past the page's edge, where the SVG cuts it: move it in, or give the page room |
+| `marker-overlap` | a task's label runs under its type's marker in the top-left corner: keep the task's default 26px `padding-left` (a `padding` rule of yours takes it back), or shorten the label |
 | `warning: box-overflow` | a box, an icon or a line of text sticks out of the drawn box that holds it (a node wider than its group, a word wider than its card): widen the holder or narrow what is inside. A warning: the render passes, and when the overflow is meant, leave it. What is placed with `position: absolute` (a badge on a corner, a timer on a task's edge) is not reported |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
 | `warning: class-taken` | a class of yours shares a building block's name, and part of the block's look (named in `keeps`) stays under your rule: set those properties, or rename your class |
@@ -423,7 +428,8 @@ else does.
 | `unknown-utility` | a class that reads like a utility and means nothing: use a theme colour (`bg-wash`) or a bracket value (`bg-[#eef]`) |
 | `plain-script` | a `<script>` without a type would run in the browser: write `<script type="graphally">` |
 
-The script's `text`, `gate` and arrow labels are not checked for overlap: look at the PNG.
+The script's `text`, `gate` and arrow labels are not checked for overlap with each other: look
+at the PNG.
 The render's summary counts crossings: lines crossing lines. A crossing is not a problem,
 but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 

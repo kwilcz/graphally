@@ -27,7 +27,7 @@ const overlap = (a, b, start, size) => Math.min(a[start] + a[size], b[start] + b
 // and other scripts count as reaching both.
 const TALL = /[A-Z0-9bdfhiklt!?#$%&'"/\\()[\]{}|@^]|[^\x00-\x7F]/;
 const LOW = /[gjpqyQ,;()[\]{}|/\\_@]|[^\x00-\x7F]/;
-function inkOf({ text, base, size, sideways, y, h }) {
+export function inkOf({ text, base, size, sideways, y, h }) {
   if (sideways) return { y, h };
   const top = base - (TALL.test(text) ? 0.78 : 0.55) * size, bottom = base + (LOW.test(text) ? 0.22 : 0.02) * size;
   return { y: top, h: bottom - top };
@@ -139,9 +139,29 @@ function boxOverflows(boxes, texts, root, problems) {
   }
 }
 
+// A task's label under its type's marker, which sits in the top-left corner, 6 to 22px in.
+const TASK_TYPES = ['user', 'service', 'send', 'receive', 'manual', 'script', 'business-rule'];
+const isTyped = element => {
+  const words = (element.getAttribute('shape') || '').trim().split(/\s+/);
+  return /^(task|activity)$/.test(words[0]) && words.some(word => TASK_TYPES.includes(word));
+};
+function markerOverlaps(boxes, texts, problems) {
+  for (const { element, box } of boxes.filter(entry => isTyped(entry.element))) {
+    const mark = { x: box.x + 6, y: box.y + 6, w: 16, h: 16 };
+    const hit = texts.find(text => text.owner === element && overlap(text, mark, 'x', 'w') > 0
+      && overlap(inkOf(text), mark, 'y', 'h') > 0);
+    if (!hit) continue;
+    problems.push({
+      rule: 'marker-overlap', box: nameOf(element), text: quoted(hit.text),
+      hint: 'the label runs under the task type marker: keep padding-left at 26px, or shorten the label',
+    });
+  }
+}
+
 // Turned boxes and text were read unturned, so the checks leave them out.
 export function checkBoxes(figure) {
   const unturnedTexts = figure.texts.filter(text => !text.turned);
   textOverlaps(unturnedTexts, figure.problems);
+  markerOverlaps(figure.boxes.filter(entry => !entry.turned), unturnedTexts, figure.problems);
   boxOverflows(figure.boxes.filter(entry => !entry.turned), unturnedTexts, figure.root, figure.problems);
 }

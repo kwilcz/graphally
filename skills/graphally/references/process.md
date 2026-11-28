@@ -94,7 +94,8 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
 - **A pool and its lanes.** The pool is a flex row: its name in a band at the left
   (`writing-mode: sideways-lr`, read upward), then the lanes, full-width subgrid rows with their
   names in the same kind of band. A lane with two paths gets two rows inside it: `row-[1]`,
-  `row-[2]` on its items. Another participant (a customer, a bank) is a pool of its own; when
+  `row-[2]` on its items and `row-span-2` on its name, whose band otherwise covers the first row
+  only. Another participant (a customer, a bank) is a pool of its own; when
   its inside does not matter, a bar with its name (a black-box pool), joined by message flows.
 - **Events and gateways** carry a caption: a wrapper (`.ev`, `.gw`) holds the shape and a
   `<span>` hung outside the layout (`position: absolute`), below an event and above a gateway,
@@ -106,7 +107,9 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
   `"out": "bottom"`.
 - **A task's type** is a marker: `shape="task user"` (a person does it), `service` (a system
   does it), `send` and `receive` (a message), `manual`, `script`, `business-rule`. Mark the
-  tasks whose type the reader needs; a plain `task` says nothing more.
+  tasks whose type the reader needs; a plain `task` says nothing more. The marker takes the
+  top-left corner and the task keeps 26px of `padding-left` for it; a `padding` rule of yours
+  takes that back.
 - **Events say what they wait for or send:** the trigger after the shape name
   (`event timer`, `end message`), `throw` for an intermediate event that sends
   (`event message throw`), and `non-interrupting` for a boundary event that lets its task
@@ -135,7 +138,8 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
   source). A flow with a condition straight out of a task: `"conditional": true` (an open
   diamond at the source).
 - **Message flows** between pools: `{ "from": "a", "to": "b", "message": true }` (dashed, an
-  open circle at the source); never inside one pool, where a hand-off is a sequence flow.
+  open circle at the source); never inside one pool, where a hand-off is a sequence flow. Flows
+  into a black-box pool meet it straight above each step, as connections, with no script.
 
 ## Waiting for a response
 

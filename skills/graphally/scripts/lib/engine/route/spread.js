@@ -26,9 +26,34 @@ function sideUsers(connections, paths) {
 // The middle of a side.
 const middleOf = (rect, side) => (side % 2 === 0 ? rect.y + rect.h / 2 : rect.x + rect.w / 2);
 
+// The least room between two lines that meet a side straight across from their other ends.
+const FACING_GAP = 16;
+
+// Where a line meets a side to run straight across to its other end: the other end's middle
+// along the side, when that end lies across from it. Null when it does not.
+function facingAt(router, id, side, other) {
+  const rect = router.rectOf(id), far = router.rectOf(other);
+  const across = side === 0 ? far.x >= rect.x + rect.w : side === 1 ? far.y >= rect.y + rect.h
+    : side === 2 ? far.x + far.w <= rect.x : far.y + far.h <= rect.y;
+  if (!across) return null;
+  return side % 2 === 0 ? far.y + far.h / 2 : far.x + far.w / 2;
+}
+
+// Lines that share a side and each face their other end across it meet it straight across from
+// that end (message flows into a wide pool), when those points keep the lines' order, room
+// between them, and a free side. Null when any does not.
+function facingCoords(router, { id, side, list }, connections, lo, hi) {
+  const otherOf = user => connections[user.index][user.which === 'source' ? 'target' : 'source'].id;
+  const coords = list.map(user => facingAt(router, id, side, otherOf(user)));
+  const fits = (coord, k) => coord !== null && coord >= lo + 6 && coord <= hi - 6
+    && router.sideFree(id, side, coord) && (k === 0 || coord - coords[k - 1] >= FACING_GAP);
+  return list.length > 1 && coords.every(fits) ? coords : null;
+}
+
 // Lines that share a side split it evenly: one at the middle, two at a third and two thirds,
-// n at k/(n+1) of its free stretch, in the order they head off. A bundle meets its shared box at
-// one point, and a circle or diamond is met at its points.
+// n at k/(n+1) of its free stretch, in the order they head off, unless each can meet it straight
+// across from its other end. A bundle meets its shared box at one point, and a circle or diamond
+// is met at its points.
 function spreadSide(router, { id, side, list }, connections, fixed) {
   const rect = router.rectOf(id);
   const bundles = new Set(list.map(user => connections[user.index].bundle));
@@ -44,8 +69,10 @@ function spreadSide(router, { id, side, list }, connections, fixed) {
     if (router.sideFree(id, side, at)) free.push(at);
   }
   const lo = free.length ? free[0] - 6 : origin, hi = free.length ? free.at(-1) + 6 : origin + along;
+  const facing = facingCoords(router, { id, side, list }, connections, lo, hi);
   list.forEach((user, order) => {
-    fixed[user.index][user.which] = { side, coord: lo + (hi - lo) * (order + 1) / (list.length + 1) };
+    const coord = facing ? facing[order] : lo + (hi - lo) * (order + 1) / (list.length + 1);
+    fixed[user.index][user.which] = { side, coord };
   });
 }
 

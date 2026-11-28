@@ -61,6 +61,24 @@ async function checkShortEnds(dir, out) {
   checkSucceeded(await render(write(dir, pageDiagram(BPMN_FRAGMENT, BPMN_FLOWS)), out));
 }
 
+const HEADING_BETWEEN = '<style>.r { display: grid; grid-template-columns: 140px 140px; gap: 120px 200px } ' +
+  'h3 { grid-column: 1 / -1; justify-self: center; margin: 0 }</style><div class=r>' +
+  '<h3 id=note>A heading between the rows</h3><div class=card id=a>A</div><div class=card id=b>B</div></div>';
+const THROUGH_HEADING = "connect('a', 'b', { via: [pt(mid(el('a').right, el('b').left).x, el('note').center.y)] })";
+
+// A line forced through a heading, a drawn text past the page's left edge, and a task's label
+// under its type's marker (where the author's padding takes the room back) are reported.
+async function checkTextHits(dir, out) {
+  const through = await render(write(dir, pageDiagram(HEADING_BETWEEN, THROUGH_HEADING)), out);
+  checkReported(through, /line-through-text: line=a->b text="A heading between the rows"/, 'line-through-text');
+  const cut = pageDiagram(CARD_A, "text(pt(10, 20), 'a label that runs off the left', { anchor: 'end' })");
+  checkReported(await render(write(dir, cut), out), /text-cut: text="a label that runs off the left"/, 'text-cut');
+  const task = padding => `<div shape="task user" id=t style="width: 130px${padding}">Review the claim</div>`;
+  checkSucceeded(await render(write(dir, pageDiagram(task(''))), out));
+  checkReported(await render(write(dir, pageDiagram(task('; padding: 8px 10px'))), out),
+    /marker-overlap: box=t text="Review the claim"/, 'marker-overlap');
+}
+
 export async function pageProblems() {
   const dir = folder('page-problems');
   const out = path.join(dir, 'out');
@@ -71,6 +89,7 @@ export async function pageProblems() {
   checkReported(await render(write(dir, longLabel), out), /label-crowded: edge=a -> b/, 'label-crowded');
   await checkSharedGap(dir, out);
   await checkShortEnds(dir, out);
+  await checkTextHits(dir, out);
   const tooWide = pageDiagram('<div style="width: 900px" class=card>wide</div>', '', 'width=600');
   const wide = await render(write(dir, tooWide), out);
   checkReported(wide, /page-overflow: width=600 content=9\d\d/, 'page-overflow');

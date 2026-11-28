@@ -99,16 +99,33 @@ async function checkAcrossLanes() {
   check(corners(edgePath(svg, 'a->b')) === 0, 'the line from lane One to lane Three goes round lane Two');
 }
 
-// Lines that share a side split it evenly: three lines into t's left side at a quarter, a
-// half and three quarters of its height, in order.
+// Lines that share a side and face their other ends across it meet it straight across from
+// them: three lines into t's left side, each at its box's middle, with no bend.
 async function checkSharedSide(dir, out) {
   const script = "connect('a', 't'); connect('b', 't'); connect('c', 't')";
   const svg = await renderedSvg(dir, out, pageDiagram(THREE_AND_TALL, script));
-  const tall = nodeRect(path.join(out, 'diagram.svg'), 't');
+  const file = path.join(out, 'diagram.svg');
   const ends = ['a', 'b', 'c'].map(from => pointsOf(edgePath(svg, `${from}->t`)).at(-1).y);
-  const want = [1, 2, 3].map(quarter => tall[1] + tall[3] * quarter / 4);
+  const want = ['a', 'b', 'c'].map(from => { const box = nodeRect(file, from); return box[1] + box[3] / 2; });
+  const bent = ['a', 'b', 'c'].filter(from => corners(edgePath(svg, `${from}->t`)) > 0);
+  check(ends.every((y, i) => Math.abs(y - want[i]) < 1.5) && !bent.length, `lines into t at ` +
+    `${ends.map(Math.round)}, not straight across from a, b and c (${want.map(Math.round)})`);
+}
+
+// Lines whose other ends do not lie across from the side split it evenly: two lines from
+// boxes below t into its left side at a third and two thirds of its height, in order.
+async function checkSpreadSide(dir, out) {
+  const page = '<style>.g { display: grid; grid-template-columns: 160px 160px 160px; gap: 80px 60px } ' +
+    '.t { grid-column: 3; grid-row: 1; height: 120px }</style><div class=g><div class="card t" id=t>T</div>' +
+    '<div class=card id=a style="grid-row: 2; grid-column: 1">A</div>' +
+    '<div class=card id=b style="grid-row: 2; grid-column: 2">B</div></div>';
+  const script = "connect('a', 't', { in: 'left' }); connect('b', 't', { in: 'left' })";
+  const svg = await renderedSvg(dir, out, pageDiagram(page, script));
+  const tall = nodeRect(path.join(out, 'diagram.svg'), 't');
+  const ends = ['a', 'b'].map(from => pointsOf(edgePath(svg, `${from}->t`)).at(-1).y).sort((x, y) => x - y);
+  const want = [1, 2].map(third => tall[1] + tall[3] * third / 3);
   check(ends.every((y, i) => Math.abs(y - want[i]) < 1.5), `lines into t at ${ends.map(Math.round)}, ` +
-    `not at a quarter, a half and three quarters (${want.map(Math.round)})`);
+    `not at a third and two thirds (${want.map(Math.round)})`);
 }
 
 // A via line passes through its waypoint, far below the straight path.
@@ -140,6 +157,7 @@ export async function pageRouting() {
   await checkLaneBackground(dir, out);
   await checkAcrossLanes();
   await checkSharedSide(dir, out);
+  await checkSpreadSide(dir, out);
   await checkVia(dir, out);
   await checkHop(dir, out);
 }

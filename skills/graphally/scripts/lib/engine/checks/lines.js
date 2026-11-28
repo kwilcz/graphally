@@ -4,6 +4,7 @@ import { endsOf } from '../page/markers.js';
 import { pointsOfPath } from '../page/page-size.js';
 import { pairsOf } from '../shared/maps.js';
 import { lineWidth } from '../page/line-ends.js';
+import { inkOf } from './boxes.js';
 
 // An end mark needs a run this long before it, or it sits on the bend.
 const SHORTEST_END = 12;
@@ -88,11 +89,58 @@ function unevenWidths(routes, problems) {
   }
 }
 
+// A straight run that cuts through a box by more than 2px on both axes.
+function cutsBox([from, to], box) {
+  const left = Math.min(from.x, to.x), right = Math.max(from.x, to.x);
+  const top = Math.min(from.y, to.y), bottom = Math.max(from.y, to.y);
+  const acrossX = Math.min(right, box.x + box.w - 2) - Math.max(left, box.x + 2);
+  const acrossY = Math.min(bottom, box.y + box.h - 2) - Math.max(top, box.y + 2);
+  return acrossX >= 0 && acrossY >= 0 && (acrossX > 0 || acrossY > 0);
+}
+
+// A line drawn through text, judged by the band its glyphs fill: the words read struck through.
+function throughText(routes, texts, problems) {
+  const inks = texts.map(text => ({ text: text.text, box: { x: text.x, w: text.w, ...inkOf(text) } }));
+  for (const { points, edge } of routes) {
+    const hit = inks.find(ink => segmentsOf(points).some(segment => cutsBox(segment, ink.box)));
+    if (!hit) continue;
+    problems.push({
+      rule: 'line-through-text', line: edge.key, text: `"${String(hit.text).slice(0, 40)}"`,
+      hint: 'move the text or the line clear: widen the gap, move the title, or give the line out, in or via',
+    });
+  }
+}
+
 export function checkLines(figure, routes) {
+  throughText(routes, figure.texts, figure.problems);
   crowdedLabels(routes, figure.problems);
   overlappingLines(routes, figure.problems);
   shortEnds(routes, figure.drawings, figure.problems);
   unevenWidths(routes, figure.problems);
+}
+
+// A drawn text's box, its width judged leniently (half the size a character), so only text that
+// is plainly cut is reported; at is its middle, across its height.
+function drawnTextBox({ at, text, options = {} }) {
+  const size = options.size || 12, width = text.length * size * 0.5;
+  const left = { start: 0, middle: width / 2, end: width }[options.anchor || 'middle'] ?? width / 2;
+  return { x: at.x - left, y: at.y - size / 2, w: width, h: size };
+}
+const outside = (box, { width, height }) => box.x < -1 || box.y < -1
+  || box.x + box.w > width + 1 || box.y + box.h > height + 1;
+
+// A line's label or a drawn text the page's edge cuts: the SVG shows the page and nothing past it.
+export function checkCutText(figure, routes, size) {
+  const labels = routes.filter(route => route.label).map(({ label }) => ({ box: label, text: label.text }));
+  const drawn = figure.drawings.filter(drawing => drawing.kind === 'text')
+    .map(drawing => ({ box: drawnTextBox(drawing), text: drawing.text }));
+  for (const { box, text } of [...labels, ...drawn]) {
+    if (!outside(box, size)) continue;
+    figure.problems.push({
+      rule: 'text-cut', text: `"${String(text).slice(0, 40)}"`,
+      hint: 'the page edge cuts it: move it in, or give it room with padding or width',
+    });
+  }
 }
 
 // A horizontal run of one line through a vertical run of another, away from their ends.
