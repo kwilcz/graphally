@@ -342,6 +342,8 @@ message flow (dashed, an open circle at the source, an open arrowhead), `default
 BPMN default flow (a slash at the source) and `conditional: true` for a conditional one (an
 open diamond at the source). `connect` also
 takes `out` and `in` (`top`, `right`, `bottom`, `left`: the sides it leaves and enters),
+`near: 'from'` or `'to'` (its label as close to that end as the space allows, rather than at
+the line's middle),
 `via: [points]` (waypoints it passes through) and `flow: true` (see Motion).
 
 ## Lines

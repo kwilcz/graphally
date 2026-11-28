@@ -143,7 +143,8 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
   diamond at the source).
 - **Message flows** between pools: `{ "from": "a", "to": "b", "message": true }` (dashed, an
   open circle at the source); never inside one pool, where a hand-off is a sequence flow. Flows
-  into a black-box pool meet it straight above each step, as connections, with no script.
+  into a black-box pool meet it straight above each step, as connections, with no script; their
+  labels sit by the pool with `"near": "to"` on a flow into it and `"near": "from"` on one out of it.
 
 ## Waiting for a response
 

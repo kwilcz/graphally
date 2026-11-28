@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// Line labels, each where it collides with nothing: near the middle of its line, above or below
-// a horizontal run, beside an upright one, or on the line itself in a narrow channel.
+// Line labels, each where it collides with nothing: near the middle of its line (or the end it is
+// near), above or below a horizontal run, beside an upright one, or on the line itself in a narrow
+// channel.
 import { T } from '../style.js';
 import { intersects } from './geometry.js';
 
@@ -44,11 +45,21 @@ function fractionsAlong(length) {
   return fractions;
 }
 
+// Every few pixels along a run, its ends aside: for a label near one end of the line, which the
+// scores order.
+function fractionsAcross(length) {
+  const fractions = [];
+  for (let d = 9; d <= length - 9; d += 6) fractions.push(d / length);
+  return fractions;
+}
+
 // The places for a label at a fraction along a run: above or below a horizontal run, beside an
-// upright one, or on the line itself, its halo interrupting it, in a narrow channel.
-function spotsAt(run, t, { w: width, h: height }) {
+// upright one, or on the line itself, its halo interrupting it, in a narrow channel. A label
+// near one end scores by its distance from that end (away, a share of the line's length).
+function spotsAt(run, t, { w: width, h: height }, away = null) {
   const { a, b, length, middle, horizontal } = run;
-  const cx = a.x + (b.x - a.x) * t, cy = a.y + (b.y - a.y) * t, score = middle + Math.abs(t - 0.5) * 0.4;
+  const cx = a.x + (b.x - a.x) * t, cy = a.y + (b.y - a.y) * t;
+  const score = away ?? middle + Math.abs(t - 0.5) * 0.4;
   const at = (x, y, extra, inline) => ({ x, y, w: width, h: height, score: score + extra, ...inline });
   const spots = [];
   if (horizontal && length >= Math.min(width + 16, width * 0.75 + 24)) {
@@ -62,17 +73,22 @@ function spotsAt(run, t, { w: width, h: height }) {
   return spots;
 }
 
-// The places a label may go on a route, best first: lower scores lie nearer the line's middle
-// and on the better side of it. Runs shorter than 18px hold none.
-function candidatesOf(points, size) {
-  const total = routeLength(points), candidates = [];
+// The places a label may go on a route, best first: lower scores lie nearer the line's middle,
+// or the end it is near ('from' or 'to'), and on the better side of it. Runs shorter than 18px
+// hold none.
+function candidatesOf(points, size, near) {
+  const total = routeLength(points) || 1, candidates = [], aim = { from: 0, to: total }[near];
   let travelled = 0;
   for (let s = 0; s + 1 < points.length; s++) {
-    const a = points[s], b = points[s + 1], length = runLength(a, b);
-    const middle = Math.abs(travelled + length / 2 - total / 2) / (total || 1);
+    const a = points[s], b = points[s + 1], length = runLength(a, b), start = travelled;
+    const middle = Math.abs(travelled + length / 2 - total / 2) / total;
     travelled += length;
     const run = { a, b, length, middle, horizontal: Math.abs(a.y - b.y) < 0.01 };
-    if (length >= 18) candidates.push(...fractionsAlong(length).flatMap(t => spotsAt(run, t, size)));
+    if (length < 18) continue;
+    const spots = aim === undefined
+      ? fractionsAlong(length).flatMap(t => spotsAt(run, t, size))
+      : fractionsAcross(length).flatMap(t => spotsAt(run, t, size, Math.abs(start + t * length - aim) / total));
+    candidates.push(...spots);
   }
   return candidates.sort((a, b) => a.score - b.score);
 }
@@ -137,7 +153,7 @@ function middleSpot(points, { w, h }) {
 }
 
 function placeLabel(space, route, index, size) {
-  const candidates = candidatesOf(route.points, size);
+  const candidates = candidatesOf(route.points, size, route.edge.near);
   let spot = space.cleanSpot(candidates, index);
   if (!spot) {
     spot = space.leastCovering(candidates, index) || middleSpot(route.points, size);

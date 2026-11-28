@@ -151,6 +151,24 @@ async function checkHop(dir, out) {
   check(arcs[0] + arcs[1] === 1, `expected one hop at the crossing, got ${arcs.join(' and ')}`);
 }
 
+const TALL_GAP = '<style>.c { display: grid; justify-items: start; row-gap: 420px }</style>' +
+  '<div class=c><div class=card id=a>A</div><div class=card id=b>B</div></div>';
+
+// The y of the line label whose text is given.
+const labelY = (svg, text) => Number(svg.match(new RegExp(`<text[^>]*class="g-edge"[^>]*y="([\\d.]+)"[^>]*>${text}<`))[1]);
+
+// A label near one end of a long line sits by that end, not at the line's middle; a bad end is reported.
+async function checkLabelNear(dir, out) {
+  const svg = await renderedSvg(dir, out, pageDiagram(TALL_GAP,
+    "connect('a', 'b', { label: 'by the end', near: 'to' }); connect('a', 'b', { label: 'by the start', near: 'from' })"));
+  const file = path.join(out, 'diagram.svg'), top = nodeRect(file, 'a'), bottom = nodeRect(file, 'b');
+  const [start, end] = [labelY(svg, 'by the start'), labelY(svg, 'by the end')];
+  check(start < top[1] + top[3] + 60 && end > bottom[1] - 60,
+    `labels near their ends at y=${start} and y=${end}, between ${top[1] + top[3]} and ${bottom[1]}`);
+  const bad = await render(write(dir, pageDiagram(TALL_GAP, "connect('a', 'b', { label: 'x', near: 'middle' })")), out);
+  checkReported(bad, /bad-option: option=near value=middle/, 'bad-option for near');
+}
+
 export async function pageRouting() {
   const dir = folder('page-routing');
   const out = path.join(dir, 'out');
@@ -158,6 +176,7 @@ export async function pageRouting() {
   await checkAcrossLanes();
   await checkSharedSide(dir, out);
   await checkSpreadSide(dir, out);
+  await checkLabelNear(dir, out);
   await checkVia(dir, out);
   await checkHop(dir, out);
 }

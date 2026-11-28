@@ -18,6 +18,13 @@ function sidesFixed(options, problems) {
   return Object.fromEntries(fixed.map(end => [end, SIDES.indexOf(options[end])]));
 }
 
+// The end a line's label sits near, 'from' or 'to'; by default, none: the middle.
+function nearEnd(options, problems) {
+  if (options.near == null || ['from', 'to'].includes(options.near)) return options.near || null;
+  problems.push({ rule: 'bad-option', option: 'near', value: String(options.near), hint: 'from or to' });
+  return null;
+}
+
 // The step an element appears in: its own, or that of the stepped box it sits in.
 const stepIn = element => Number(element.closest('[data-step]')?.getAttribute('data-step')) || 0;
 
@@ -30,7 +37,7 @@ function edgeOf(call, index, from, to, key, problems) {
   const ends = endsOf(options, true, problems);
   if (off && !ends.dash) ends.dash = '5 4';
   return {
-    id: `e${index}`, key, from, to, label: options.label || '', ends, off,
+    id: `e${index}`, key, from, to, label: options.label || '', near: nearEnd(options, problems), ends, off,
     // A line appears with the later of its two ends.
     step: Math.max(stepIn(call.from), stepIn(call.to)),
     flow: !!options.flow, accent: !!options.accent, color: options.color, width: options.width,
