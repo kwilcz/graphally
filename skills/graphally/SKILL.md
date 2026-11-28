@@ -44,11 +44,14 @@ built for this content with whatever techniques it needs.
 Idea starters by point, and the design moves that make a figure read at a glance:
 [references/design.md](references/design.md).
 
-**An infographic or a slide** (a pitch or proposal slide, a one-pager, a fact sheet, a poster:
-a few facts for business readers) keeps a stricter standard: one hero, one plain family, a small title or none, two or
-three colours, one icon style, every number drawn to scale. Read
-[references/infographics.md](references/infographics.md) before designing it: its method for
-inventing the hero takes the place of the idea starters.
+**Every figure keeps one standard**, a diagram for a README as much as a slide: one hero that
+carries the point (a topology or a notation can be it), one plain family, a small title or none,
+colours that each mean one thing, nothing that looks measured and isn't, nothing the brief does
+not say. Read [references/infographics.md](references/infographics.md) before designing any
+figure: its method for inventing the hero and its standard apply to all of them; its page
+sizes, slides and print apply to slides and pages. A notation (BPMN, a flowchart, UML) also
+keeps its own rules ([references/process.md](references/process.md),
+[references/sequence.md](references/sequence.md)).
 
 ## Workflow
 

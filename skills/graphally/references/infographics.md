@@ -4,7 +4,8 @@ An infographic makes a few facts land with one reader: a proposal slide, a one-p
 page, a poster. Business readers judge it the way they judge a printed brochure, so it has to look
 designed and professional: one strong form, a disciplined grid, few colours, real typography,
 and every number drawn to scale. A diagram explains how a system works; an infographic makes
-someone remember and act on a point.
+someone remember and act on a point. The method and the standard below hold for both: a
+diagram's hero is often its topology or its notation, emphasised where the point is.
 
 This reference holds no finished slide on purpose: a designer shown one example reproduces its
 features, even its flaws, when asked for something new (Jansson and Smith, *Design Studies*,
@@ -85,7 +86,9 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
 - **Nothing the brief does not say**, unless it is marked as assumed: a technical detail from
   general knowledge (SNAT on the firewall, a SKU, a region read from a name) is left out or
   labelled "assumed", and named to the user.
-- **Sizes for where it is read.** A slide on a screen, 1600px wide: big numbers 48 to 80px,
+- **Sizes for where it is read.** A figure in a page (a README, a wiki, a report) is shown at
+  most about 880px wide, so it is 1000 to 1400 wide with labels of 15 to 17px, 13px at the
+  least; rather than a wider figure, make the layout compact. A slide on a screen, 1600px wide: big numbers 48 to 80px,
   labels 16 to 20px, sentences 15 to 17px, tick marks and axis labels 12 to 13px, never less. A page that will be printed is sized from the paper: 1600px across A4 or Letter
   landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
   20 to 24px and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for

@@ -5,6 +5,21 @@ give each message a row of its own, so `sequence()` does that placing: it puts e
 participant in a column and each message in a row, and adds lifelines, activation bars,
 numbers and fragment boxes. The arrows are the drawing script's, one loop for all.
 
+## UML: the rules
+
+A sequence diagram keeps UML 2.5's notation, which its readers already know:
+
+- **Lifelines**: each participant a head box with its name (a person may be an actor), and a
+  dashed line down from it; time runs downward.
+- **Messages**: a synchronous call is a solid line with a filled head; an asynchronous message a
+  solid line with an open head (`async`); a reply a dashed line (`reply`). A message is named
+  by what it asks or carries ("create payment", "client secret").
+- **Activation bars** show while a participant is busy with a call.
+- **Combined fragments** are frames with their operator in the corner tab (`alt`, `opt`,
+  `loop`, `par`, `break`, `critical`) and each operand's guard in square brackets; `alt`'s
+  operands are split by a dashed line.
+- **Numbers** before the messages when the order is referred to elsewhere.
+
 ```html
 <diagram width=1100 title="Checkout" subtitle="Payment with 3-D Secure">
 <div class=seq id=seq>
