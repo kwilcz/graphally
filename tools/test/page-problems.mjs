@@ -58,7 +58,14 @@ async function checkShortEnds(dir, out) {
   const shortArrow = pageDiagram(CARD_A, "arrow(el('a').bottom.down(20), el('a').bottom.down(28))");
   const short = await render(write(dir, shortArrow), out);
   checkReported(short,/short-end: line=a drawn line end=head/, 'short-end');
-  checkSucceeded(await render(write(dir, pageDiagram(BPMN_FRAGMENT, BPMN_FLOWS)), out));
+  const whole = await render(write(dir, pageDiagram(BPMN_FRAGMENT, BPMN_FLOWS)), out);
+  checkSucceeded(whole);
+  check(!/flow-missing/.test(whole.text), `a whole process reports a missing flow: ${tail(whole.text)}`);
+  // The flow into the end event left out: a warning names it.
+  const cut = BPMN_FLOWS.replace("connect('g', 'e', { label: 'valid' }); ", '');
+  const open = await render(write(dir, pageDiagram(BPMN_FRAGMENT, cut)), out);
+  check(open.code === 0 && /warning: flow-missing: step=e gap=no flow reaches it/.test(open.text),
+    `expected a flow-missing warning for e: ${tail(open.text)}`);
 }
 
 const HEADING_BETWEEN = '<style>.r { display: grid; grid-template-columns: 140px 140px; gap: 120px 200px } ' +

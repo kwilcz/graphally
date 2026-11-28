@@ -7,6 +7,7 @@ import { addConnectionsData } from '../script/connections-data.js';
 import { walkPage } from '../walk/walk.js';
 import { routeConnections, exposeRoutes } from '../connect/connectors.js';
 import { checkCutText, checkLines } from '../checks/lines.js';
+import { checkFlows } from '../checks/flows.js';
 import { checkBoxes, checkPageWidth } from '../checks/boxes.js';
 import { checkTakenClasses } from '../checks/taken-classes.js';
 import { createFigure, measurePage } from './figure.js';
@@ -34,6 +35,7 @@ export function buildFigure(setup) {
   checkLines(figure, routes);
   checkPageWidth(figure, size);
   checkCutText(figure, routes, size);
+  checkFlows(figure);
   if (figure.options.debug) exposeRoutes(routes);
   const markers = createMarkers(figure.id), steps = stepTimes(figure.steps);
   const lines = drawRoutes(figure, routes, markers, steps);

@@ -159,6 +159,13 @@ async function checkTextSize(dir, out) {
   const [name, small] = [sizeOf('App'), sizeOf('web')].map(Number);
   check(Math.abs(name - 15.38) < 0.01 && Math.abs(small - 14.15) < 0.01 && Math.abs(Number(label) - 14.15) < 0.01,
     `--text-size: 16px gives a name at ${name}, its small line at ${small} and a line label at ${label}`);
+  // A family in double quotes, scaled or the author's, stays inside the label's style attribute.
+  const quoted = SIZED.replace('--text-size: 16px', '--line-label-font: 500 14px "IBM Plex Sans", sans-serif');
+  for (const page of [SIZED, quoted]) {
+    checkSucceeded(await render(write(dir, pageDiagram(page, '', 'width=500')), out));
+    check(/<text class="g-edge"[^>]* style="font: [^"]*; fill: [^"]+"/.test(svgOf(out)),
+      'a quoted family ends the line label\'s style attribute before its fill');
+  }
 }
 
 const THICK = '<style>.r { display: flex; justify-content: space-between; padding: 40px }</style>'

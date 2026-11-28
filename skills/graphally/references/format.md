@@ -429,6 +429,7 @@ else does.
 | `text-overlap` | two texts of the page collide, quoted in `texts`: give one more room, or move one |
 | `line-through-text` | a line runs through a text it does not belong to (a VNet's title, a heading): widen the gap, move the title, or give the line `out`, `in` or `via` |
 | `text-cut` | a line's label or a script's `text` reaches past the page's edge, where the SVG cuts it: move it in, or give the page room |
+| `warning: flow-missing` | a BPMN step with an id that no sequence flow reaches (`no flow reaches it`) or leaves (`no flow leaves it`): a flow left out of the list. A start event and a boundary event need only a flow out, an end event only one in; message flows do not count, and steps in a `key` are left alone |
 | `marker-overlap` | a task's label runs under its type's marker in the top-left corner: keep the task's default 26px `padding-left` (a `padding` rule of yours takes it back), or shorten the label |
 | `warning: box-overflow` | a box, an icon or a line of text sticks out of the drawn box that holds it (a node wider than its group, a word wider than its card): widen the holder or narrow what is inside. A warning: the render passes, and when the overflow is meant, leave it. What is placed with `position: absolute` (a badge on a corner, a timer on a task's edge) is not reported |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |

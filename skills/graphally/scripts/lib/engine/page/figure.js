@@ -50,7 +50,7 @@ function writtenProperty(root, name) {
 // The lines' labels in a style of the author's own, set on :root: --line-label-font (a CSS font,
 // 600 14px 'IBM Plex Sans') and --line-label-color. Measured in it, so the router leaves them room.
 // The theme's line label, 11.5px, grows with --text-size like the rest of the theme's text.
-const LABEL_FAMILY = 'Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif';
+const LABEL_FAMILY = "Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif";
 function scaledLabelFont(textSizeValue) {
   const size = /^[\d.]+px$/.test(textSizeValue) ? parseFloat(textSizeValue) : TEXT_SIZE;
   return size === TEXT_SIZE ? '' : `400 ${(11.5 * size) / TEXT_SIZE}px ${LABEL_FAMILY}`;
@@ -58,7 +58,8 @@ function scaledLabelFont(textSizeValue) {
 
 function readLineLabel(figure) {
   const style = getComputedStyle(figure.root), own = name => style.getPropertyValue(name).trim();
-  const font = own('--line-label-font') || scaledLabelFont(own('--text-size'));
+  // The font goes into a double-quoted style attribute: its family names take single quotes.
+  const font = (own('--line-label-font') || scaledLabelFont(own('--text-size'))).replace(/"/g, "'");
   const color = writtenProperty(figure.root, '--line-label-color') || own('--line-label-color');
   figure.lineLabel = { font: font ? `font: ${font}; ` : '', color: color ? figure.colorOf(color) : null };
   if (font) figure.measurer.restyle(T.edge, `font: ${font}`);
