@@ -74,5 +74,8 @@ it, and place the VNets with a grid map.
 ## Pitfalls
 
 - A subnet title in the way of a vertical line makes it jog: widen the items so the line
-  runs clear of the title, or move the title.
+  runs clear of the title, or move the title. A title taller than 48px (two lines with padding)
+  or a centred one (`items-center` on the group) blocks a line as one box: keep titles to two
+  lines without vertical padding, at the start of the group, or point the line at the group
+  instead of the item inside it.
 - Do not draw a line from every VNet to a shared service; badge it.

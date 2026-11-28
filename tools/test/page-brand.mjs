@@ -139,6 +139,10 @@ export async function pageLineLabels() {
   const line = /<g data-edge="[^"]*"[^>]*><path d="M[\d.]+,([\d.]+) L/.exec(svgOf(out));
   check(label, 'a label does not take --line-label-font and --line-label-color');
   check(label && line && Number(line[1]) - Number(label[1]) >= 6, 'a label in a larger font sits on its line');
+  // A theme token stays as written, so the dark copy follows it.
+  const token = LABELLED.replace(/--line-label-color:[^;}]+/, '--line-label-color: var(--ink)');
+  checkSucceeded(await render(write(dir, pageDiagram(token, '', 'width=500')), out));
+  check(/<text class="g-edge"[^>]*fill: var\(--ink\)/.test(svgOf(out)), 'a token in --line-label-color is fixed at its light colour');
 }
 
 const THICK = '<style>.r { display: flex; justify-content: space-between; padding: 40px }</style>'

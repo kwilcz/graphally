@@ -97,7 +97,10 @@ is about choosing one.
 `shape="…"` on any element draws it as that shape. The element is still a box in the
 layout, sized by its content and your CSS; its background is the shape's fill and its
 border the outline (`border-style: dashed` dashes it). By default a shape has a white fill,
-a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a background.
+a 1.5px ink outline and centred content. For a filled bar, set `border: 0` and a background;
+`border: 0` draws any shape without its outline. A shape's padding and minimum height fit a
+label, so a small mark without text (a 14px triangle) takes `padding: 0; min-height: 0` with
+its width and height.
 
 | Shapes | |
 |---|---|

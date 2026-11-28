@@ -129,3 +129,17 @@ export async function pageText() {
   check(/<text [^>]*font-family: Georgia, serif[^>]*>Claims process</.test(svg),
     'the title did not take the page\'s font family');
 }
+
+// Paint the stylesheet gives an inline SVG's marks reaches the copy, a token as a token; a mark's
+// own attribute stays as written.
+export async function pageInlineSvgPaint() {
+  const dir = folder('page-inline-svg'), out = path.join(dir, 'out');
+  const body = '<style>.mk circle { fill: var(--woad); stroke: #ff0000; stroke-width: 3px }</style>'
+    + '<svg class=mk width=40 height=40><circle cx=20 cy=20 r=15></circle>'
+    + '<rect x=2 y=2 width=6 height=6 fill="currentColor"></rect></svg>';
+  const svg = await renderedSvg(dir, out, pageDiagram(body));
+  check(/<circle[^>]*fill="var\(--woad\)"/.test(svg) && /<circle[^>]*stroke="#ff0000|stroke="rgb\(255, 0, 0\)"/.test(svg),
+    'stylesheet paint on an inline SVG mark did not reach the figure');
+  check(/<circle[^>]*stroke-width="3"/.test(svg), 'a stylesheet stroke width on an inline SVG mark was lost');
+  check(/<rect[^>]*fill="currentColor"/.test(svg), 'a mark\'s own fill attribute was overwritten');
+}

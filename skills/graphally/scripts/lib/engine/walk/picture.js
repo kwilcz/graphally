@@ -9,10 +9,35 @@ const PICTURE_TAGS = new Set(['ICON', 'IMG', 'svg']);
 export const isPicture = element => PICTURE_TAGS.has(element.tagName);
 const inkOf = (figure, style) => figure.paintOf(style.color) || 'var(--ink)';
 
+// Paint the diagram's stylesheet gives an inline SVG's marks (`.lane path { stroke: … }`) does not
+// travel with the copy, so it goes onto the marks as attributes: each value that differs from
+// what the mark would inherit, colours as tokens where they are one. A mark's own attribute stays.
+const PAINT = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'fill-opacity', 'stroke-opacity', 'opacity'];
+const INITIAL = { fill: 'rgb(0, 0, 0)', stroke: 'none', 'stroke-width': '1px', 'stroke-dasharray': 'none',
+  'fill-opacity': '1', 'stroke-opacity': '1', opacity: '1' };
+const written = (figure, name, value) =>
+  (name === 'fill' || name === 'stroke' ? figure.paintOf(value) || 'none' : value.replace(/px\b/g, ''));
+
+function paintMark(figure, mark, markCopy, parent) {
+  const own = getComputedStyle(mark);
+  for (const name of PAINT) {
+    const value = own.getPropertyValue(name);
+    const inherited = name === 'opacity' || !parent ? INITIAL[name] : parent.getPropertyValue(name);
+    if (value !== inherited && !markCopy.hasAttribute(name)) markCopy.setAttribute(name, written(figure, name, value));
+  }
+}
+
+function carryPaint(figure, original, copy) {
+  const marks = [original, ...original.querySelectorAll('*')], copies = [copy, ...copy.querySelectorAll('*')];
+  marks.forEach((mark, index) =>
+    paintMark(figure, mark, copies[index], mark === original ? null : getComputedStyle(mark.parentElement)));
+}
+
 // An inline <svg>, copied into the figure at its content box and coloured by its CSS colour.
 // Without a viewBox, the drawing keeps the size its own width and height gave it.
 function inlineSvgOf(figure, element, style, placement) {
   const copy = element.cloneNode(true);
+  carryPaint(figure, element, copy);
   for (const attribute of ['x', 'y', 'width', 'height', 'style', 'class', 'id']) {
     copy.removeAttribute(attribute);
   }

@@ -36,11 +36,23 @@ export function measurePage(figure) {
   readLineLabel(figure);
 }
 
+// A custom property as the author wrote it in the diagram's style. Its computed value has its
+// var()s replaced, which would fix a theme token (var(--ink)) at its light colour.
+function writtenProperty(root, name) {
+  const pattern = new RegExp(`${name}\\s*:\\s*([^;}]+)`);
+  for (const style of root.querySelectorAll('style')) {
+    const match = style.textContent.match(pattern);
+    if (match) return match[1].trim();
+  }
+  return '';
+}
+
 // The lines' labels in a style of the author's own, set on :root: --line-label-font (a CSS font,
 // 600 14px 'IBM Plex Sans') and --line-label-color. Measured in it, so the router leaves them room.
 function readLineLabel(figure) {
   const style = getComputedStyle(figure.root), own = name => style.getPropertyValue(name).trim();
-  const font = own('--line-label-font'), color = own('--line-label-color');
+  const font = own('--line-label-font');
+  const color = writtenProperty(figure.root, '--line-label-color') || own('--line-label-color');
   figure.lineLabel = { font: font ? `font: ${font}; ` : '', color: color ? figure.colorOf(color) : null };
   if (font) figure.measurer.restyle(T.edge, `font: ${font}`);
 }

@@ -85,7 +85,9 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
   stands for before using it. Text keeps a contrast of 4.5:1 with its ground, 3:1 when large
   (WCAG 2.2, 1.4.3).
 - **One icon style**: the client's own set, or line icons in one weight, or cloud service
-  icons where the figure is about those services: [icons.md](icons.md).
+  icons where the figure is about those services: [icons.md](icons.md). The service icons count
+  as one style and keep their colours; where those colours compete with the accent, draw the
+  services with line icons instead.
 - **A grid and air**: equal outer margins (64px on a slide), aligned edges, white space between
   groups; nothing touches, nothing floats.
 - **Comparisons drawn, not only written**, each with its numeral beside the drawing. No pies
@@ -113,8 +115,10 @@ margin takes it too.
 
 **Shapes the page sits on.** The drawing script paints above the page, so a route, a band or a
 field that page elements sit on is drawn in the page instead: an inline `<svg>` placed first in
-its region, its shapes made by a before-script (`<script type="graphally" before>`), which fills
-it with `innerHTML` or `document.createElementNS`. The same function that makes a shape can place
+its region, its shapes made by a before-script (`<script type="graphally" before>`), which finds
+the SVG with `el('#field')` (the page is not the document, so `document.getElementById` finds
+nothing) and fills it with `innerHTML`. The stylesheet's paint reaches its marks, and
+`currentColor` or a token follows the dark theme. The same function that makes a shape can place
 the elements on it (`left`, `top`), so they follow it. An inline SVG clips to its box; give it
 `overflow: visible` for a mark that reaches past its edge.
 
