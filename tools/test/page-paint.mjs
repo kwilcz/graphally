@@ -138,8 +138,21 @@ export async function pageInlineSvgPaint() {
     + '<svg class=mk width=40 height=40><circle cx=20 cy=20 r=15></circle>'
     + '<rect x=2 y=2 width=6 height=6 fill="currentColor"></rect></svg>';
   const svg = await renderedSvg(dir, out, pageDiagram(body));
-  check(/<circle[^>]*fill="var\(--woad\)"/.test(svg) && /<circle[^>]*stroke="#ff0000|stroke="rgb\(255, 0, 0\)"/.test(svg),
-    'stylesheet paint on an inline SVG mark did not reach the figure');
+  const filled = /<circle[^>]*fill="var\(--woad\)"/.test(svg);
+  const painted = filled && /<circle[^>]*stroke="(#ff0000|rgb\(255, 0, 0\))"/.test(svg);
+  check(painted, 'stylesheet paint on an inline SVG mark did not reach the figure');
   check(/<circle[^>]*stroke-width="3"/.test(svg), 'a stylesheet stroke width on an inline SVG mark was lost');
   check(/<rect[^>]*fill="currentColor"/.test(svg), 'a mark\'s own fill attribute was overwritten');
+}
+
+// A repeating-linear-gradient() is one period of the line, repeated: a hatch keeps its stripes.
+export async function pageRepeatingGradient() {
+  const dir = folder('page-repeating-gradient'), out = path.join(dir, 'out');
+  const body = '<style>.h { width: 200px; height: 60px;'
+    + ' background: repeating-linear-gradient(45deg, #c4391d 0 4px, transparent 4px 10px) }</style><div class=h></div>';
+  const svg = await renderedSvg(dir, out, pageDiagram(body));
+  const gradient = /<linearGradient[^>]*spreadMethod="repeat"[^>]*>/.exec(svg)?.[0] || '';
+  const value = name => Number(new RegExp(`${name}="([-\\d.]+)"`).exec(gradient)?.[1]);
+  const period = Math.hypot(value('x2') - value('x1'), value('y2') - value('y1'));
+  check(gradient && Math.abs(period - 10) < 0.5, `a repeating gradient lost its 10px period: ${gradient}`);
 }

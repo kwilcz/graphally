@@ -15,7 +15,9 @@ import { finish, later, runQueue, test } from './test/harness.mjs';
 import { layout, samples, stability } from './test/samples.mjs';
 import { badSides, dropped, sides } from './test/sides.mjs';
 import { pageShapes } from './test/page-shapes.mjs';
-import { pageCssPaint, pageImages, pageInlineSvgPaint, pageText, pageUtilities } from './test/page-paint.mjs';
+import {
+  pageCssPaint, pageImages, pageInlineSvgPaint, pageRepeatingGradient, pageText, pageUtilities,
+} from './test/page-paint.mjs';
 import { bundles, pageDrawingReach, pageRouting, pageScriptErrors } from './test/page-lines.mjs';
 import { pageData, pageProblems } from './test/page-problems.mjs';
 import { pageBeforeAndDates, pageDepend, pageMotion, pageSequence } from './test/page-time.mjs';
@@ -59,6 +61,7 @@ later('viewer', viewer);
 later('page-utilities', pageUtilities);
 later('page-text', pageText);
 later('page-inline-svg-paint', pageInlineSvgPaint);
+later('page-repeating-gradient', pageRepeatingGradient);
 later('page-before-and-dates', pageBeforeAndDates);
 later('page-sequence', pageSequence);
 later('page-depend', pageDepend);

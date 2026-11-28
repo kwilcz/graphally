@@ -55,11 +55,23 @@ function stopsOf(args, lineLength) {
   return stops;
 }
 
-// The first linear-gradient() of a computed background-image, laid on a box: the line it runs
-// along and its stops. As in CSS, the line runs through the box's centre, just long enough
-// for its ends to reach the corners furthest along it.
+// A repeating-linear-gradient(): one period of the line, from its first stop to its last, which
+// SVG repeats along the line (spreadMethod="repeat").
+function repeated(gradient) {
+  const first = gradient.stops[0].at, period = gradient.stops.at(-1).at - first;
+  if (!(period > 0) || period >= 1) return gradient;
+  const along = t => [gradient.x1 + (gradient.x2 - gradient.x1) * t, gradient.y1 + (gradient.y2 - gradient.y1) * t];
+  const [x1, y1] = along(first), [x2, y2] = along(first + period);
+  const stops = gradient.stops.map(stop => ({ ...stop, at: (stop.at - first) / period }));
+  return { x1, y1, x2, y2, stops, repeat: true };
+}
+
+// The first linear-gradient() of a computed background-image, repeating or not, laid on a box:
+// the line it runs along and its stops. As in CSS, the line runs through the box's centre, just
+// long enough for its ends to reach the corners furthest along it.
 export function linearGradient(backgroundImage, box) {
-  const layer = splitTopLevel(backgroundImage || '').find(candidate => /^linear-gradient\(/.test(candidate));
+  const isLinear = candidate => /^(repeating-)?linear-gradient\(/.test(candidate);
+  const layer = splitTopLevel(backgroundImage || '').find(isLinear);
   if (!layer) return null;
   const args = splitTopLevel(layer.slice(layer.indexOf('(') + 1, -1));
   const direction = directionOf(args, box);
@@ -67,11 +79,12 @@ export function linearGradient(backgroundImage, box) {
   const stops = stopsOf(args, lineLength);
   if (!stops) return null;
   const centreX = box.x + box.w / 2, centreY = box.y + box.h / 2, half = lineLength / 2;
-  return {
+  const gradient = {
     x1: centreX - direction.x * half,
     y1: centreY - direction.y * half,
     x2: centreX + direction.x * half,
     y2: centreY + direction.y * half,
     stops,
   };
+  return layer.startsWith('repeating-') ? repeated(gradient) : gradient;
 }

@@ -31,7 +31,8 @@ export function gradientFill(figure, gradient) {
     });
   });
   const line = { x1: fmt(gradient.x1), y1: fmt(gradient.y1), x2: fmt(gradient.x2), y2: fmt(gradient.y2) };
-  const definition = { id: gradientId, gradientUnits: 'userSpaceOnUse', ...line };
+  const spreadMethod = gradient.repeat ? 'repeat' : null;
+  const definition = { id: gradientId, gradientUnits: 'userSpaceOnUse', ...line, spreadMethod };
   figure.paints.push(svgElement('linearGradient', definition, stops.join('')));
   return `url(#${gradientId})`;
 }

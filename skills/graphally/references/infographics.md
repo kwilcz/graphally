@@ -39,6 +39,11 @@ features, even its flaws, when asked for something new (Jansson and Smith, *Desi
    the foot, all on one grid. Source and owner come from the brief; when it names neither,
    leave them out rather than invent them, and say so to the user.
 
+**A topology as the hero.** When the brief needs every component drawn (a network, an
+architecture), the topology is the hero: the infographic is in the emphasis. The one path,
+gate or boundary the point is about takes the accent and the weight; the rest stays quiet;
+labels are 15 to 17px; address ranges and names are labels, not numbers to draw.
+
 ## Inventing the hero
 
 Sketch three candidates in words before drawing any, one sentence each, each from a different
@@ -75,7 +80,11 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
 - **A small, plain title, or none**: 15 to 18px, in the family's semibold, at the top left; it
   names the subject or states the point in a few words. No line of small capitals above it, no
   coloured words in it, no sentence-long lead under it. Where the page around the figure names
-  it, leave the title out.
+  it, leave the title out. On a printed page it grows with the paper, as all text does: about
+  24 to 30px on an A4 page 1240 wide.
+- **Nothing the brief does not say**, unless it is marked as assumed: a technical detail from
+  general knowledge (SNAT on the firewall, a SKU, a region read from a name) is left out or
+  labelled "assumed", and named to the user.
 - **Sizes for where it is read.** A slide on a screen, 1600px wide: big numbers 48 to 80px,
   labels 16 to 20px, sentences 15 to 17px, tick marks and axis labels 12 to 13px, never less. A page that will be printed is sized from the paper: 1600px across A4 or Letter
   landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
