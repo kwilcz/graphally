@@ -56,34 +56,47 @@ Copy this checklist and work through it; render as often as the figure needs.
 
 ```
 - [ ] 1. Design: write the point, the visual metaphor and the build
-- [ ] 2. Read the references for the techniques the build uses (table below)
-- [ ] 3. Write diagram.html
-- [ ] 4. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
-- [ ] 5. Fix every reported problem; render again until it prints ok
-- [ ] 6. Look at diagram.png: the form shows the point before the labels are read; rework until it does
-- [ ] 7. Hand over diagram.svg and diagram.html; a PNG to share is rendered with --png2x
+- [ ] 2. Read the references for the techniques the build uses (table below), and no others
+- [ ] 3. Sketch: the layout as plain boxes, rendered with --png; change it until the form reads
+- [ ] 4. Write diagram.html on the sketch's layout
+- [ ] 5. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
+- [ ] 6. Fix every reported problem; render again until it prints ok
+- [ ] 7. Look at diagram.png: the form shows the point before the labels are read; rework until it does
+- [ ] 8. Render once more with --png1x --themes: check the full size and the dark copy
+- [ ] 9. Hand over diagram.svg and diagram.html; a PNG to share is rendered with --png2x
 ```
 
 1. **Design.** Three short lines, in your reply or a comment in the file. The design
-   decides the figure; the references only build it.
-2. **The references.** Each teaches its techniques through a complete example. Take what
-   the build needs, from as many as it needs.
-3. **Write.** Start from an example below or in a reference, and change it as far as the
-   design asks. Ids name what the connections and the script refer to; text is what the
-   reader sees.
-4. **Render.** The command writes `diagram.svg` (the deliverable) and `diagram.png` (a
+   decides the figure; the references only build it. Decide the broad form here and the
+   details on the page: a sketch shows in a minute what a long deliberation would guess at.
+2. **The references.** Read the ones your entry skill names and the one for the figure's kind
+   (table below), not the others. `format.md` is a lookup: search it for the class, shape or
+   call you need rather than reading it whole. Everything the format offers is in these
+   references and the format in brief below: the engine's code in `scripts/` never needs
+   reading.
+3. **Sketch.** Write the layout first as plain boxes: the regions and the main items with their
+   names, in the grid you mean to use, with no styling, icons or connections. Render it with
+   `--png` and look: does the form show the point, does it fill the page, is anything cramped?
+   Move things until it does. When two candidate forms seem equally good, sketch both and keep
+   the better. Then build the real figure on the sketch's grid.
+4. **Write.** Start from the sketch and from an example below or in a reference, and change it
+   as far as the design asks. Ids name what the connections and the script refer to; text is
+   what the reader sees.
+5. **Render.** The command writes `diagram.svg` (the deliverable) and `diagram.png` (a
    half-size preview: enough to read every label and judge the form, at a quarter of the
    tokens), then prints `ok` or one line per problem. Overlaps and overflows are the
    problems' job, not the picture's; `--png1x` gives a full-size look when one is needed.
    `${CLAUDE_SKILL_DIR}` is this skill's directory: Claude Code fills it in; elsewhere,
    use the path of the folder that holds this file.
-5. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
-   again.
-6. **Look.** `ok` means nothing collides, not that the figure works. Read it as its reader
+6. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
+   again. Change the file with small edits rather than rewriting it.
+7. **Look.** `ok` means nothing collides, not that the figure works. Read it as its reader
    would, labels last: the form alone shows the point from step 1. Then check that it reads
    one way, labels sit by what they name, and one element draws the eye first. When the
    form misses the point, change the form.
-7. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
+8. **Check.** Iterate on the light half-size preview; render `--png1x --themes` once at the
+   end, to see the full size and the dark copy.
+9. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
    that loads graphally's viewer), so the file itself shows the diagram when opened in a
    browser, with nothing installed. Keep the header; anyone can edit the text and reload.
    Where a font's licence keeps it out of the SVG (`embed-fonts="no"`), readers outside get
@@ -210,6 +223,12 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   `shape`.
 - **Helpers**: `<script type="graphally" before>` calls `schedule()` and `timeline()`
   (plans) or `sequence()` (sequence diagrams) before layout.
+- **Colour tokens**: `--ink`, `--muted`, `--line`, `--woad` (blue), `--rust` (red), `--teal`,
+  `--green`, `--purple`, `--amber`; grounds `--bg`, `--card`, `--wash`, `--icon-soft`, `--vnet`,
+  `--note`, and lane tints `--lane-a` to `--lane-d`. Each has a dark value, so a figure built
+  from them follows the dark theme. A CSS `color-mix()` of tokens is worked out once, in the
+  light theme: for a tint that follows the dark one, use a token or a colour with opacity
+  (`rgb(31 99 182 / 12%)`).
 - **Themes**: `--themes` writes `diagram-dark.svg` beside the light one; `--dark` draws
   dark only.
 
@@ -235,7 +254,8 @@ The whole format, with every class, shape, option and call: [references/format.m
 
 ## References
 
-A figure takes what it needs from as many as it needs.
+Read only what the figure needs: your entry skill names it, and the table gives the one
+reference for the figure's kind. `format.md` is for looking things up.
 
 | Techniques | Reference |
 |---|---|

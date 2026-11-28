@@ -38,7 +38,9 @@ features, even its flaws, when asked for something new (Jansson and Smith, *Desi
 
 ## Inventing the hero
 
-Sketch three candidates in words before drawing any, each from a different source, then choose.
+Sketch three candidates in words before drawing any, one sentence each, each from a different
+source, then choose; when two seem equally good, sketch both as rough layouts (SKILL.md,
+Sketch) and keep the better.
 Designers who weigh several ideas side by side reach better and more varied designs than those
 who refine their first (Dow et al., *ACM TOCHI*, 2010).
 
