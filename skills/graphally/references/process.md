@@ -28,6 +28,13 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
 - **Colour carries no meaning** in BPMN: shapes stay outlined in ink on the card, lanes may be
   tinted, and anything coloured beyond that is named in a key.
 - **Flow left to right**, lines orthogonal, crossings avoided.
+- **Compact.** A lane is as low as its content (padding 16 to 24px, one row unless it holds two
+  paths at once). A step takes the column after the one it follows; the alternatives after a
+  gateway share columns in their own lanes; so the figure is as wide as its longest path, and
+  no lane stands mostly empty.
+- **Long processes.** At a README's width about nine columns stay legible. A longer process
+  keeps its main phases on one figure and folds the detail of a phase into a collapsed
+  `subprocess` (its + marker), drawn in a figure of its own, when the reader needs both.
 
 ```html
 <diagram width=1200 title="Expense claim process">
