@@ -25,42 +25,42 @@ and stretch; none of them lists the figures allowed.
 ## Design the figure first
 
 Design each figure for its reader before writing any HTML. Read
-[references/design.md](references/design.md) first, for every figure. The default is a
-professional diagram: the notation's rules kept (BPMN, flowchart symbols, UML), the page's own
-ground, one plain typeface, a small title or none, labels rather than sentences. Then write the
-design in four lines:
+[references/design.md](references/design.md) first, for every figure: how to invent the form,
+and the look every figure shares (shapes chosen by role, lines that follow the content, colour
+that carries detail, type with a hierarchy). Then write the design in four lines:
 
 1. **The point**: who reads the figure, and the one thing it must make obvious to them.
-2. **The form**: the notation where the figure has one (BPMN, a flowchart, a UML sequence, a
-   topology, a Gantt chart), arranged around the point. Otherwise write three candidates, one
-   line each, from design.md's three sources, and keep the one only this content has: an
-   overlap for what two parties share, a track whose two slow stations are marked, rings for
-   what is in and out, a stack of slabs for layers. The first idea is usually the generic one
-   (three columns, a row of boxes, a box per item): it is a candidate, rarely the choice.
-3. **The look**: what each colour, shape and line weight means, the typeface, and the size
+2. **The visual metaphor**: a form, invented for this content, that shows the point before
+   a word is read. A conveyor whose two slow stations are red; the floors of a building for
+   the layers of a platform; walls in rings around what must be protected; a split screen
+   with what changes lit up.
+3. **The look**: what each colour, shape and line weight means, the typefaces, and the size
    for where the figure is read.
 4. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
    drawing script.
 
-A topology (icons joined by labelled lines) shows one point: the system's parts, where they
-run, and how they communicate. When the user asks to explain or present a system whose
-topology they already have, the point is a different one, and so is the form.
+A topology (icons joined by labelled lines) is the visual metaphor for one point: the
+system's parts, where they run, and how they communicate. When the user asks to explain,
+present, sell or simplify a system whose topology they already have, the point is a
+different one, and so is the form.
+A request to make a figure better, clearer or more advanced asks for a new visual metaphor,
+built for this content with whatever techniques it needs.
 
 **An infographic or a slide** (a pitch or proposal slide, a one-pager, a fact sheet, a poster:
-a few facts for business readers) may take a headline, a display face, numbers drawn to scale
-and a ground of its own: read [references/infographics.md](references/infographics.md) as well.
+a few facts for business readers) adds a hero, numbers drawn to scale, exact page sizes and
+print: read [references/infographics.md](references/infographics.md) as well.
 
 ## Workflow
 
 Copy this checklist and work through it; render as often as the figure needs.
 
 ```
-- [ ] 1. Design: read references/design.md; write the point, the form, the look and the build
+- [ ] 1. Design: read references/design.md; write the point, the metaphor, the look and the build
 - [ ] 2. Read the references for the techniques the build uses (table below)
 - [ ] 3. Write diagram.html
 - [ ] 4. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
 - [ ] 5. Fix every reported problem; render again until it prints ok
-- [ ] 6. Look at diagram.png as its reader will see it; rework the form until every check holds
+- [ ] 6. Look at diagram.png: the form shows the point before the labels are read; rework until it does
 - [ ] 7. Hand over diagram.svg and diagram.html; a PNG to share is rendered with --png2x
 ```
 
@@ -80,12 +80,9 @@ Copy this checklist and work through it; render as often as the figure needs.
 5. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
    again.
 6. **Look.** `ok` means nothing collides, not that the figure works. Read it as its reader
-   would, labels last, and check:
-   - the form alone shows the point from step 1, and would not fit another brief unchanged;
-   - one element draws the eye first, and each region's tint says what the region is;
-   - no region or corner stands empty: the layout is as compact as its content;
-   - the text, at the width it will be shown (880px in a README), is 11px or more.
-   When a check fails, change the form or the layout, not only the colours.
+   would, labels last: the form alone shows the point from step 1. Then check that it reads
+   one way, labels sit by what they name, and one element draws the eye first. When the
+   form misses the point, change the form.
 7. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
    that loads graphally's viewer), so the file itself shows the diagram when opened in a
    browser, with nothing installed. Keep the header; anyone can edit the text and reload.
@@ -100,9 +97,8 @@ new design: start again at step 1, and render with `--recompute`.
 
 ## Examples
 
-The examples teach the format and its techniques, in the default look: the theme's page, its
-Inter, the small title. Give each figure the layout, shapes and colours its content needs, as
-references/design.md describes.
+The examples teach the format and its techniques. Their look is plain on purpose: give each
+figure its own, as references/design.md describes.
 
 A topology: the system's parts, where they run, and how they communicate. Items are icons
 over their names (`figure`), with no frame; groups carry the structure, labelled lines the
@@ -134,7 +130,7 @@ flow.
 </diagram>
 ```
 
-A figure arranged around its point, "two stations hold most of the delay". The track is the
+A figure designed for its point, "two stations hold most of the delay". The track is the
 order's path, so no lines join the stations; the red stops and their notes carry the point.
 
 ```html
@@ -248,8 +244,8 @@ A figure takes what it needs from as many as it needs.
 
 | Techniques | Reference |
 |---|---|
-| Designing any figure: the professional default, the notations, the point, the form, the look, sizes for where it is read | [references/design.md](references/design.md) |
-| Infographics and slides: the hero, a headline and display type, numbers drawn to scale, page sizes, print | [references/infographics.md](references/infographics.md) |
+| Designing any figure: the point, inventing the form, the look (shapes, lines, colour, type), sizes for where it is read | [references/design.md](references/design.md) |
+| Infographics and slides: the hero, numbers drawn to scale, page sizes, print | [references/infographics.md](references/infographics.md) |
 | Fonts: choosing type, Google fonts, a company's licensed font files, licences and embedding | [references/fonts.md](references/fonts.md) |
 | Icons: choosing a set, cloud services, line icons, a company's own icon set | [references/icons.md](references/icons.md) |
 | Containers in containers (VNets, subnets), a map of named areas, peering and private links | [references/network.md](references/network.md) |

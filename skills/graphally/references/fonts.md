@@ -42,8 +42,9 @@ looks the same on every machine.
 
 ## Faces for infographics and slides
 
-An infographic, a slide or a poster ([infographics.md](infographics.md)), or a figure whose user
-asks for a voice, may set its headline and big numbers in a display face over a plain text face:
+A display face is for a figure whose user or brand guide asks for one (a poster, a campaign
+slide); without that, an infographic or a slide keeps the plain family above. When one is asked
+for, it sets the headline and big numbers over a plain text face:
 
 - **Two families at most**: one display face for titles and big numbers, one text face for the
   rest. A third reads as noise (Lupton, *Thinking with Type*).

@@ -2,9 +2,9 @@
 
 An infographic makes a few facts land with one reader: a proposal slide, a one-pager, a report
 page, a poster, a social image. A diagram explains how a system works; an infographic makes
-someone remember and act on a point. [design.md](design.md)'s moves, accuracy and craft hold for
-it; this page adds the expressive register a diagram does not use, a hero, numbers drawn to
-scale, exact page sizes and print.
+someone remember and act on a point. Everything in [design.md](design.md) holds for it: the
+form, the look, the sizes. This page adds what an infographic needs beyond that: a hero, numbers
+drawn to scale, exact page sizes and print.
 
 This reference holds no finished slide on purpose: a designer shown one example reproduces its
 features, even its flaws, when asked for something new (Jansson and Smith, *Design Studies*,
@@ -12,33 +12,10 @@ features, even its flaws, when asked for something new (Jansson and Smith, *Desi
 
 ## Contents
 
-- [The expressive register](#the-expressive-register): headline, display face, ground, form, sizes
 - [The method](#the-method): the point, the hero, the numbers, the rest
 - [Numbers](#numbers): what to draw, and how
 - [Techniques](#techniques): page sizes, print, marks from a value, lengths, arcs
 - [Before you hand it over](#before-you-hand-it-over)
-
-## The expressive register
-
-What a diagram leaves out, an infographic may use, each for a reason the page can name:
-
-- **A headline that states the point**, large, with the supporting line under it; or no
-  headline, when the hero carries the point alone.
-- **A display face** for the headline and the big numbers, over a plain text face
-  ([fonts.md](fonts.md), faces for infographics and slides).
-- **A ground of its own**: a colour or a panel, kept the same in light and dark.
-- **A form from the reader's world**: an object, a place or a tool they handle every day,
-  reduced to a few shapes, when it shows the point better than a diagram would. Abstract or
-  simplified, never an illustrated scene.
-- **Numbers written large** where a number is the point.
-
-Sizes for where it is read:
-
-| Where | Size | Text |
-|---|---|---|
-| a slide on a screen | 1600 × 900 | headings 40 to 64px, labels 16 to 20px, sentences 15 to 17px, nothing under 12px |
-| a social feed | 1200 × 1200 or 1200 × 627 | shown at a third to half: sentences 28px or more, nothing under 24px |
-| printed (A4 or Letter) | 1240 × 1754 portrait | sentences 20 to 24px, nothing under 14px |
 
 ## The method
 
