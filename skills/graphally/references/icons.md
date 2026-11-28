@@ -33,8 +33,9 @@ packs (`elasticache`, `glue`, `purview`); a few of the many:
 
 - Azure: `app service`, `functions`, `aks`, `container app`, `acr`, `service bus`,
   `event hubs`, `apim`, `front door`, `app gateway`, `firewall`, `vnet`, `subnet`, `nsg`,
-  `private endpoint`, `vpn gateway`, `entra`, `managed identity`, `kv`, `sql`, `cosmos`,
-  `redis`, `storage`, `app insights`, `log analytics`, `mg`, `subscription`.
+  `private endpoint`, `vpn gateway`, `expressroute` (the circuit), `expressroute gateway`,
+  `bastion`, `dns resolver`, `private dns`, `databricks`, `entra`, `managed identity`, `kv`,
+  `sql`, `cosmos`, `redis`, `storage`, `app insights`, `log analytics`, `mg`, `subscription`.
 - AWS: `lambda`, `s3`, `dynamodb`, `api gateway`, `cloudfront`, `cognito`, `ec2`, `ecs`,
   `eks`, `fargate`, `rds`, `aurora`, `sqs`, `sns`, `eventbridge`, `step functions`, `vpc`,
   `alb`, `nat gateway`, `route 53`, `cloudwatch`, `iam`, `kms`, `secrets manager`, `waf`.
