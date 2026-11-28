@@ -6,7 +6,7 @@ import { timeline } from '../time/timeline.js';
 import { sequence } from '../sequence/sequence.js';
 import { runAuthorScript } from './run-script.js';
 
-const DATED = '[data-start], [data-after], [data-at]';
+const DATED = '[data-start], [data-after], [data-at], [data-end]';
 // A reference that is already a selector, not a bare id.
 const SELECTOR = /^[#.[]|[\s>:]/;
 

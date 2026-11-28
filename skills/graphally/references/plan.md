@@ -51,7 +51,8 @@ for (const b of all('[data-after]')) for (const d of b.el.dataset.after.split(' 
 
 - **Dates** on any element: `data-start=2026-03-02`, `data-end=2026-04-30` (a boundary:
   the bar stops at the start of that day), `data-duration=5d` or `2w`, `data-after="a b"`
-  (starts when the last of them ends), `data-at` for a single day.
+  (starts when the last of them ends), `data-at` for a single day. An end with a duration
+  counts back: `data-end=2026-05-25 data-duration=2w` starts on 11 May.
 - **`schedule()`** resolves them; **`timeline('#plan', { lead: '280px' })`** makes `#plan` a
   grid: a `lead` column for the task table, then one column per day from the start of the
   first month to after the last date (`from`, `to` set it; `unit: 'week'` for long plans).

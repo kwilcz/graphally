@@ -113,13 +113,14 @@ const PLAN = `<div id=plan class="grid gap-y-2">
 <div class=card id=t1 data-start=2026-03-02 data-duration=2w>One</div>
 <div class=card id=t2 data-after=t1 data-duration=10d>Two</div>
 <div class=card id=t3 data-after="t1 t2" data-end=2026-04-30>Three</div>
+<div class=card id=t4 data-end=2026-04-30 data-duration=3w>Four</div>
 </div>`;
 const MONTHS = [
   '<script type="graphally" before>',
   'schedule();',
   "const t = timeline('#plan');",
   "for (const m of t.months) root.querySelector('#plan').append(make('div', " +
-    "{ id: 'm' + m.month, style: 'grid-row: 4; grid-column: ' + m.column }, m.label));",
+    "{ id: 'm' + m.month, style: 'grid-row: 5; grid-column: ' + m.column }, m.label));",
   '</script>',
 ].join('\n');
 const LOOP = '<div id=p><div id=x data-after=y data-duration=1d></div>' +
@@ -134,6 +135,10 @@ function checkSchedule(svgFile) {
   check(Math.abs(second[2] / day - 10) < 0.1, `10d is ${second[2] / day} days wide`);
   // An end date is a boundary: 2026-03-26 to 2026-04-30 is 35 days.
   check(Math.abs(third[2] / day - 35) < 0.2, `t3 from 2026-03-26 to 2026-04-30 is ${third[2] / day} days wide`);
+  // An end and a duration count back: t4 is three weeks wide and ends where t3 ends.
+  const fourth = nodeRect(svgFile, 't4');
+  check(Math.abs(fourth[2] / day - 21) < 0.2 && Math.abs(fourth[0] + fourth[2] - (third[0] + third[2])) < 1,
+    `t4 (end and duration) is ${fourth[2] / day} days wide at ${fourth[0]}`);
   const march = nodeRect(svgFile, 'm2026-03');
   const april = nodeRect(svgFile, 'm2026-04');
   check(Math.abs(march[0] - (first[0] - day)) < 1 && Math.abs(april[0] - (march[0] + 31 * day)) < 1,

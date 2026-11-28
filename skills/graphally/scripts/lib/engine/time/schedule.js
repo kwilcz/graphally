@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
-// schedule(elements): data-after="a,b" data-duration="2w" (or data-start, data-end, data-at)
+// schedule(elements): data-after="a,b" data-duration="2w" (or data-start, data-end, data-at;
+// data-end with data-duration counts back)
 // become data-start and data-end, YYYY-MM-DD. A task after others starts when the last of them
 // ends. Each element's dates come back as day numbers, { s, e }.
 import { dayOf, isoOf, lengthOf } from './dates.js';
@@ -39,6 +40,8 @@ class Scheduler {
     let start = dayOf(data.start ?? data.at), end = dayOf(data.end);
     const after = Number.isNaN(start) && data.after ? this.dependenciesOf(element) : [];
     if (after.length) start = Math.max(...after.map(dependency => this.resolve(dependency, seen).e));
+    // An end and a duration count back to the start.
+    if (Number.isNaN(start) && !Number.isNaN(end)) start = end - lengthOf(data.duration);
     if (Number.isNaN(end) && !Number.isNaN(start)) {
       const duration = lengthOf(data.duration);
       end = start + (Number.isNaN(duration) ? 0 : duration);
