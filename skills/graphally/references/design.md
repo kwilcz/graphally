@@ -202,9 +202,11 @@ Some forms, built:
   removed ones struck through (`line-through`).
 - **A funnel**: bands that narrow row by row (`clip-path`), the count at each step written large
   beside it.
-- **An emphasised element in a topology**: its group tinted with the accent at about 10% opacity
-  (`rgb(178 59 31 / 10%)`, which follows the dark theme where `color-mix()` does not), its border
-  in the accent token, its lines `"color"` the same token, and a `<small>` callout under its name.
+- **An emphasised element in a topology**: its group on the lane ground that pairs with the
+  accent (`background: var(--lane-d)` for `--rust`, `--lane-a` for `--woad`, `--lane-b` for
+  `--green` or `--teal`, `--lane-c` for `--purple`; each follows the dark theme), its border in
+  the accent token, its lines `"color"` the same token, and a `<small>` callout under its name. A
+  tint with opacity mixes with what lies under it, and over a VNet's blue turns grey.
 
 ## Before you hand it over
 
