@@ -1,14 +1,13 @@
 # Fonts
 
-Every figure is set in the theme's Inter unless it says otherwise, and most need nothing else: a
-diagram's type is plain, one family, with weight and size for the hierarchy. The render
-measures the text in the face it is drawn in and puts the font inside the SVG, so the figure
-looks the same on every machine.
+Every figure is set in the theme's Inter unless it says otherwise. A figure for a client, a slide
+or a poster often wants a face with more character, or the client's own. The render measures
+the text in the face it is drawn in and puts the font inside the SVG, so the figure looks the
+same on every machine.
 
 ## Contents
 
-- [Choosing type](#choosing-type): a plain face, one family; the brand's when it has one
-- [Faces for infographics and slides](#faces-for-infographics-and-slides): a display face and a voice
+- [Choosing type](#choosing-type): the brand's face first, then a voice, two families at most
 - [A Google font](#a-google-font): `fonts="…"` on `<diagram>`
 - [A font file of your own](#a-font-file-of-your-own): a licensed brand font, in `@font-face`
 - [Licences and embedding](#licences-and-embedding)
@@ -20,45 +19,33 @@ looks the same on every machine.
 
 - **The client's brand font**, when it has one: its readers know it from everything else they
   receive. Ask for the files, or use the Google font its brand guide names.
-- **Otherwise a standard face**, the kind technical documents are set in:
-  - Inter, the theme's, for most figures;
-  - Arial or Helvetica, the look of office documents: `fonts="Arimo:400,600"`, Arial's metric
-    twin, so the text measures and embeds the same everywhere (Arial itself is not embedded,
-    and a machine without it falls back);
-  - a plain serif where the document around the figure is set in one: `Gelasio` (Georgia's
-    metrics) or `Tinos` (Times New Roman's);
-  - IBM Plex Sans with IBM Plex Mono, Roboto, or Source Sans 3 where the documentation already
-    uses them.
-- **One family.** Weight and size carry the hierarchy, in two or three sizes (a name, the line
-  under it, a group's heading); bold for names, regular for the rest. A monospace of the same
-  family, or the system's, for commands, code and addresses. A second family reads as a
-  second voice; in a diagram there is one (Bringhurst, *The Elements of Typographic Style*:
-  one family suffices for most documents).
-- **Sentence case** for names and labels; small capitals with a little letter-spacing only for
-  a region's heading.
+- **Two families at most**: one display face for titles, big numbers and labels, one text face
+  for sentences, or one family in two weights. A third family reads as noise (Visme's design
+  guide; Lupton, *Thinking with Type*).
+- **Pair by clear contrast, or stay in one family**: a condensed display face over a
+  normal-width text face of the same build, a serif title over a sans text, a heavy weight over
+  a regular one. Two faces that differ only a little conflict, and read as a mistake (Williams,
+  *The Non-Designer's Design Book*: concord, conflict, contrast).
+- **Choose the voice from the subject**, not from habit, then shortlist two or three families in
+  it and compare them on this figure's own title, numbers and words:
+  - condensed grotesques fit many big numbers and long titles in little width: industry,
+    operations, logistics (Sofia Sans Condensed, Antonio, Archivo Narrow, Oswald, Saira
+    Condensed, Roboto Condensed, IBM Plex Sans Condensed, Barlow Condensed, Fjalla One);
+  - geometric sans read as modern and plain: technology, products (Outfit, Urbanist, Lexend,
+    Sora, Plus Jakarta Sans, Montserrat, Poppins);
+  - grotesque and neo-grotesque sans are neutral and dense: reports, dashboards, engineering
+    (Manrope, Work Sans, Public Sans, Schibsted Grotesk, Hanken Grotesk, IBM Plex Sans, Inter);
+  - humanist sans are warm and legible small: public services, health, education (Source Sans
+    3, Fira Sans, Nunito Sans, Mukta, Open Sans);
+  - serifs carry authority and heritage: finance, law, publishing, editorial pages (Source
+    Serif 4, Newsreader, Fraunces, Literata, Libre Caslon Text, Playfair Display, IBM Plex Serif);
+  - slabs and monospaces suit engineering and code (Zilla Slab, Roboto Slab, JetBrains Mono,
+    IBM Plex Mono).
+- **Small text needs a text face**: condensed, decorative and hairline faces are drawn for
+  display sizes; set sentences and footnotes in the text face.
 - **Characters the face lacks** fall back to another font without a warning: subscripts and
   superscripts (CO₂), arrows, symbols. Write `CO<sub>2</sub>`, draw an arrow as an icon or a
   line, and look for them in the PNG.
-
-## Faces for infographics and slides
-
-A display face is for a figure whose user or brand guide asks for one (a poster, a campaign
-slide); without that, an infographic or a slide keeps the plain family above. When one is asked
-for, it sets the headline and big numbers over a plain text face:
-
-- **Two families at most**: one display face for titles and big numbers, one text face for the
-  rest. A third reads as noise (Lupton, *Thinking with Type*).
-- **Pair by clear contrast, or stay in one family**: a condensed display face over a
-  normal-width text face of the same build, a serif title over a sans text, a heavy weight over
-  a regular one. Two faces that differ only a little conflict (Williams, *The Non-Designer's
-  Design Book*).
-- **Choose the voice from the subject**, then compare two or three families on the figure's own
-  title and numbers: condensed grotesques for many big numbers in little width (Sofia Sans
-  Condensed, Barlow Condensed, IBM Plex Sans Condensed); geometric sans for products (Outfit,
-  Plus Jakarta Sans); serifs for finance, law and publishing (Source Serif 4, Newsreader,
-  IBM Plex Serif).
-- **Small text needs a text face**: condensed, decorative and hairline faces are drawn for
-  display sizes; set sentences and footnotes in the text face.
 
 ## A Google font
 

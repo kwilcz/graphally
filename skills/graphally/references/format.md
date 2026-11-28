@@ -64,9 +64,8 @@ is about choosing one.
   positioned element, or an item of a flex or grid container).
 - What is not drawn: inset shadows, radial and conic gradients, background images,
   `filter` other than `grayscale()`, vertical text, a different radius per corner (every corner
-  takes the top-left radius: round and clip a container instead, `overflow: hidden`), the
-  border of a box cut with `clip-path` (trace the outline with `draw`, or use `shape=`, which
-  takes a border). Draw such marks in the script instead.
+  takes the top-left radius: round and clip a container instead, `overflow: hidden`). Draw such
+  marks in the script instead.
 - So a component's own CSS carries over: a card's shadow, a badge's dot made with
   `::before`, a focus ring, a truncated name, a chevron turned with `rotate(45deg)`.
 - Colours: any CSS colour, or the theme tokens, which follow the dark theme: `var(--ink)`
@@ -82,9 +81,7 @@ is about choosing one.
 - Every figure paints its own background, the theme's `--bg`: `background="#fff"` on
   `<diagram>` sets a colour, `background="none"` leaves it transparent. `theme=dark` draws
   the dark theme; `render --themes` writes both (`diagram.svg`, `diagram-dark.svg`). Use the
-  tokens for colours, so the dark copy follows. A page that follows its reader's theme (a
-  GitHub README) shows the matching copy with `<picture><source media="(prefers-color-scheme:
-  dark)" srcset="diagram-dark.svg"><img alt="…" src="diagram.svg"></picture>`.
+  tokens for colours, so the dark copy follows.
 - A file may hold several `<diagram>` elements, among HTML of its own (a report, a wiki
   page). Each keeps its `<style>`, scripts, connections and ids to itself, and the page's
   CSS does not reach it, so two diagrams may both have `id=api` and a `.lane` of their own.
@@ -259,10 +256,6 @@ With `"in": "left"` on children stacked in a column, the same entry draws a comb
 A connection is known by its key: its `"id"`, else `from->to`, with `#2` for a second line
 between the same boxes. Give an `id` to lines you want to refer to.
 
-The lines' labels are set in the theme's small type unless the diagram says otherwise:
-`:root { --line-label-font: 600 15px 'IBM Plex Sans', sans-serif; --line-label-color: #31475e }`
-(a CSS `font`, a family the diagram loads). The router measures and places them in it.
-
 ## Moving one thing
 
 `nudge="dx,dy"` on any element moves it from where the layout put it, and the lines follow:
@@ -329,7 +322,7 @@ for `animate`.
 `a`, `b` and `p` take an element, an id, a selector, or a point.
 
 Options of lines (`connect`, `arrow`, `curve`): `color` (a CSS colour, a token name:
-`'teal'`, `'rust'`, or a custom property: `'var(--brand)'`), `width` (its head and tail grow with it), `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
+`'teal'`, `'rust'`, or a custom property: `'var(--brand)'`), `width`, `dashed`, `dotted`, `head` and `tail` (`arrow`, `open`,
 `circle`, `dot`, `diamond`, `open-diamond`, `slash`, `none`; `head` defaults to `arrow`, `tail`
 to none), `both` (a head at each end), `arrow: false` (no head), and `message: true` for a BPMN
 message flow (dashed, an open circle at the source, an open arrowhead), `default: true` for a
@@ -417,7 +410,6 @@ else does.
 | `warning: box-overflow` | a box, an icon or a line of text sticks out of the drawn box that holds it (a node wider than its group, a word wider than its card): widen the holder or narrow what is inside. A warning: the render passes, and when the overflow is meant, leave it. What is placed with `position: absolute` (a badge on a corner, a timer on a task's edge) is not reported |
 | `bad-attribute`, `bad-option` | a value that is not allowed (`width=1200px`, a `head` name, a side that is not `top`, `right`, `bottom` or `left`) |
 | `warning: class-taken` | a class of yours shares a building block's name, and part of the block's look (named in `keeps`) stays under your rule: set those properties, or rename your class |
-| `warning: line-widths` | connections drawn alike (one colour, one dash) have different widths, named with a line of each: draw them alike, or give the width a meaning the key states |
 | `warning: font-missing` | a Google family could not be loaded (a misspelt name, or offline on its first use), or an `@font-face` file could not be read: check the name on fonts.google.com, or the file's path from the diagram file; the text falls back to the theme's font |
 | `unknown-utility` | a class that reads like a utility and means nothing: use a theme colour (`bg-wash`) or a bracket value (`bg-[#eef]`) |
 | `plain-script` | a `<script>` without a type would run in the browser: write `<script type="graphally">` |

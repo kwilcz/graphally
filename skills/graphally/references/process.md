@@ -1,86 +1,41 @@
 # Processes: BPMN and flowcharts
 
-Two notations with rules of their own. A reader who knows them reads the figure at once, so keep
-their rules exactly: the look comes from the layout, the lanes and the space, not from new
-shapes or colours. A process is a grid: one column per step, in the order the flow runs, and
-for BPMN one row per lane. A step's column says when it happens, its lane who does it.
-
-## BPMN: the rules
-
-BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and Style*:
-
-- **Shapes.** A start event is a thin circle, an intermediate event a double circle, an end
-  event a thick one; a task is a rounded rectangle; a gateway a diamond with its marker (×
-  exclusive, + parallel, ○ inclusive). Use the shapes `shape=` names; draw no others for these.
-- **Pools and lanes.** A pool is one participant (an organisation, a system); its lanes are the
-  roles inside it. The pool's name stands in a band at its left, read upward, and so does each
-  lane's.
-- **Sequence flows** (solid, a filled head) join the steps inside one pool: they may cross
-  lanes, never a pool's border. **Message flows** (dashed, an open circle at the start, an open
-  head) run only between pools.
-- **Labels.** A task is a verb and an object, in sentence case ("Check completeness"). A
-  gateway that splits asks a question ("Complete?"), and each flow out of it carries an answer
-  ("yes", "no", "over 10,000 EUR"). Every path ends in an end event named for the state it ends
-  in ("Claim paid", "Claim closed").
-- **Waiting and time** are events: a timer on a task's border for a deadline, an event-based
-  gateway when the process waits for the first of several events.
-- **Joins match splits**: paths that a parallel gateway split meet again at a parallel one.
-- **Colour carries no meaning** in BPMN: shapes stay outlined in ink on the card, lanes may be
-  tinted, and anything coloured beyond that is named in a key.
-- **Flow left to right**, lines orthogonal, crossings avoided.
-- **Compact.** A lane is as low as its content (padding 16 to 24px, one row unless it holds two
-  paths at once). A step takes the column after the one it follows; the alternatives after a
-  gateway share columns in their own lanes; so the figure is as wide as its longest path, and
-  no lane stands mostly empty.
-- **Long processes.** At a README's width about nine columns stay legible. A longer process
-  keeps its main phases on one figure and folds the detail of a phase into a collapsed
-  `subprocess` (its + marker), drawn in a figure of its own, when the reader needs both.
+A process is a grid: one column per step, in the order the flow runs, and for BPMN one row
+per lane. A step's column says when it happens, its lane says who does it. Events,
+gateways and tasks are shapes; the sequence flows are connections.
 
 ```html
-<diagram width=1200 title="Expense claim process">
+<diagram width=1400 title="Expense claim" subtitle="Finance operations">
 <style>
-  .pool { display: flex; border: 1.5px solid var(--ink); }
-  .pool > b, .lane > h4 { writing-mode: sideways-lr; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
-  .pool > b { width: 30px; border-right: 1.5px solid var(--ink); }
-  .lanes { flex: 1; display: grid; grid-template-columns: 30px repeat(6, auto); justify-content: space-between; column-gap: 24px; }
-  .lane { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; padding: 36px 24px 36px 0; border-bottom: 1px solid var(--ink); }
-  .lane:last-child { border-bottom: 0; }
-  .lane > h4 { grid-column: 1; align-self: stretch; margin: -36px 0; border-right: 1px solid var(--ink); }
-  [shape^=task] { width: 132px; min-height: 52px; position: relative; }
-  .ev, .gw { position: relative; display: grid; justify-items: center; width: 96px; text-align: center; font-size: 12px; }
-  .ev span { position: absolute; top: calc(100% + 4px); }
-  .gw span { position: absolute; bottom: calc(100% + 4px); }
-  .bank { margin-top: 56px; border: 1.5px solid var(--ink); padding: 12px; text-align: center; font-weight: 600; }
+  .lane { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .lane > h4 { grid-column: 1; align-self: stretch; display: flex; align-items: center; margin: -24px 0; padding: 0 14px; font-size: 12px; }
+  [shape=task] { width: 140px; min-height: 52px; font-weight: 500; position: relative; }
+  [shape=task] small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+  .ev, .gw { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px; text-align: center; font-size: 11.5px; }
+  .gw { translate: 0 10px; }
 </style>
-<div class=pool>
-  <b>Northwind</b>
-  <div class=lanes>
-    <div class=lane><h4>Employee</h4>
-      <div class="ev col-[2]"><i shape=start id=start></i><span>Expense incurred</span></div>
-      <div shape=task class="col-[3]" id=submit>Submit claim</div>
-    </div>
-    <div class=lane><h4>Manager</h4>
-      <div shape="task user" class="col-[4]" id=review>Review claim<i shape="event timer non-interrupting" class="absolute -bottom-[18px] right-[14px]" id=late></i></div>
-      <div class="gw col-[5]"><i shape="gateway exclusive" id=approved></i><span>Approved?</span></div>
-      <div class="ev col-[6]"><i shape=end id=rejected></i><span>Claim rejected</span></div>
-    </div>
-    <div class=lane><h4>Finance</h4>
-      <div shape="task send" class="col-[4]" id=remind>Send reminder</div>
-      <div class="ev col-[5]"><i shape=end id=reminded></i><span>Reminder sent</span></div>
-      <div shape="task service" class="col-[6]" id=pay>Schedule payment</div>
-      <div class="ev col-[7]"><i shape=end id=paid></i><span>Claim paid</span></div>
-    </div>
+<div class="grid grid-cols-[120px_repeat(6,auto)] justify-between gap-x-8 border border-line">
+  <div class=lane><h4 class=bg-lane-a>Employee</h4>
+    <div class="ev col-[2]"><i shape=start id=s></i>Expense incurred</div>
+    <div shape=task class="col-[3]" id=submit>Submit claim<small>with receipts</small></div>
+    <div class="ev col-[7]"><i shape=end id=paid></i>Claim paid</div>
+  </div>
+  <div class=lane><h4 class=bg-lane-b>Manager</h4>
+    <div shape=task class="col-[4]" id=review>Review claim<i shape="event timer" class="absolute -bottom-[18px] right-[14px]" id=late></i></div>
+    <div class="gw col-[5]"><i shape="gateway exclusive" id=ok></i>Approved?</div>
+  </div>
+  <div class="lane border-b-0"><h4 class=bg-lane-c>Finance</h4>
+    <div shape=task class="col-[4]" id=remind>Send reminder</div>
+    <div shape=task class="col-[6]" id=pay>Schedule payment<small>next payment run</small></div>
   </div>
 </div>
-<div class=bank id=bank>Bank</div>
 <script type="application/json">
 [
-  ["start", "submit"], ["submit", "review"], ["review", "approved"],
-  { "from": "approved", "to": "rejected", "label": "no" },
-  { "from": "approved", "to": "pay", "label": "yes", "out": "bottom", "in": "top" },
-  { "from": "late", "to": "remind", "label": "3 days", "out": "bottom", "in": "top" },
-  ["remind", "reminded"], ["pay", "paid"],
-  { "from": "pay", "to": "bank", "label": "payment order", "message": true }
+  ["s", "submit"], ["submit", "review"], ["review", "ok"],
+  ["ok", "pay", "yes"],
+  { "from": "late", "to": "remind", "label": "3 days", "out": "bottom" },
+  { "from": "remind", "to": "review", "label": "reminder", "dashed": true, "in": "bottom" },
+  { "from": "pay", "to": "paid", "label": "payment", "dashed": true }
 ]
 </script>
 </diagram>
@@ -88,22 +43,19 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
 
 ## How to
 
-- **Columns follow the flow.** `grid-template-columns: 30px repeat(N, auto)` with
-  `justify-content: space-between`: the lane's name band, then one column per step. Each item
-  takes its column with `col-[4]`; two items in one column happen at the same time.
-- **A pool and its lanes.** The pool is a flex row: its name in a band at the left
-  (`writing-mode: sideways-lr`, read upward), then the lanes, full-width subgrid rows with their
-  names in the same kind of band. A lane with two paths gets two rows inside it: `row-[1]`,
-  `row-[2]` on its items. Another participant (a customer, a bank) is a pool of its own; when
-  its inside does not matter, a bar with its name (a black-box pool), joined by message flows.
-- **Events and gateways** carry a caption: a wrapper (`.ev`, `.gw`) holds the shape and a
-  `<span>` hung outside the layout (`position: absolute`), below an event and above a gateway,
-  so every shape centres on its row and the flows run straight.
+- **Columns follow the flow.** `grid-cols-[120px_repeat(N,auto)] justify-between`: a label
+  column, then one column per step. Each item takes its column with `col-[4]`; two items
+  in one column happen at the same time.
+- **Lanes** are full-width subgrid rows (`.lane` above) with the lane name in the first
+  column. A lane with two paths gets two rows inside it: `row-[1]`, `row-[2]` on its items.
+- **Events and gateways** carry a caption: a wrapper (`.ev`, `.gw`) holds the shape and the
+  text. Put a gateway's caption below it when its branches leave from the top, above it
+  (`flex-direction: column-reverse`) when they leave from the bottom.
 - **A boundary event** is a child of its task, placed on the border:
   `<i shape="event timer" class="absolute -bottom-[18px] right-[14px]" id=late>` inside a
   task with `position: relative`. Lines may leave from it.
-- **Branches** are connections with labels; give the branch that leaves downward
-  `"out": "bottom"`.
+- **Branches** are connections with labels (`yes`, `no`); give the branch that leaves
+  sideways `"out": "top"` or `"out": "bottom"`.
 - **A task's type** is a marker: `shape="task user"` (a person does it), `service` (a system
   does it), `send` and `receive` (a message), `manual`, `script`, `business-rule`. Mark the
   tasks whose type the reader needs; a plain `task` says nothing more.
@@ -135,7 +87,7 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
   source). A flow with a condition straight out of a task: `"conditional": true` (an open
   diamond at the source).
 - **Message flows** between pools: `{ "from": "a", "to": "b", "message": true }` (dashed, an
-  open circle at the source); never inside one pool, where a hand-off is a sequence flow.
+  open circle at the source). Within one pool, a dashed connection reads as a notice.
 
 ## Waiting for a response
 
@@ -177,61 +129,12 @@ its row and the branches leave from any side.
 A 200 and a 400 are both a response: the same event, told apart by its data, so they
 branch at the exclusive gateway, not the event-based one.
 
-## Flowcharts: the rules
+## Flowcharts
 
-A flowchart uses the symbols of ISO 5807 (ANSI X3.5), without lanes unless the user asks for a
-cross-functional one, and without BPMN's events and gateways:
-
-- **Symbols.** `terminator` (a stadium) starts and ends the flow; `rect` is a step; `decision`
-  (a diamond) a question; `io` (a parallelogram) data read or written; `predefined` (a rectangle
-  with double sides) a process defined elsewhere; `document` a printed or generated document;
-  `cylinder` stored data; `manual-input` and `delay` as they say; `off-page` and a small
-  `circle` connect to another page or another part.
-- **Flowlines** carry an arrowhead and run top to bottom or left to right; they join a symbol at
-  one entry and avoid crossing.
-- **A decision** has one entry and two or more exits, each labelled with its answer ("yes",
-  "no", "above 2%").
-- **Every path ends** at a terminator; a step is an imperative ("Read order lines"), a decision
-  a question ("In stock?").
-- **The main path runs straight** down the middle, its branches to the sides. Colour, when it is
-  used, means one thing (a failure path in red) and the figure says so.
-
-```html
-<diagram width=760 title="Order handling">
-<style>
-  .flow { display: grid; grid-template-columns: 220px 200px 220px; justify-content: space-between; justify-items: center; align-items: center; row-gap: 36px; }
-  .flow > [shape] { width: 200px; min-height: 48px; text-align: center; }
-  .flow > [shape=decision] { width: 150px; min-height: 76px; font-size: 12px; }
-</style>
-<div class=flow>
-  <div shape=terminator class="col-[2]" id=start>Order received</div>
-  <div shape=io class="col-[2]" id=read>Read order lines</div>
-  <div shape=decision class="col-[2]" id=stock>In stock?</div>
-  <div shape=rect class="col-[3] row-[3]" id=backorder>Back-order the items</div>
-  <div shape=terminator class="col-[3] row-[4]" id=held>Order on hold</div>
-  <div shape=predefined class="col-[2] row-[4]" id=pay>Take payment</div>
-  <div shape=decision class="col-[2]" id=paid>Payment accepted?</div>
-  <div shape=rect class="col-[1] row-[5]" id=cancel>Cancel the order</div>
-  <div shape=document class="col-[2]" id=slip>Print packing slip</div>
-  <div shape=terminator class="col-[2]" id=done>Order shipped</div>
-  <div shape=terminator class="col-[1] row-[7]" id=cancelled>Order cancelled</div>
-</div>
-<script type="application/json">
-[
-  ["start", "read"], ["read", "stock"],
-  { "from": "stock", "to": "pay", "label": "yes" },
-  { "from": "stock", "to": "backorder", "label": "no" },
-  ["pay", "paid"],
-  { "from": "paid", "to": "slip", "label": "yes" },
-  { "from": "paid", "to": "cancel", "label": "no" },
-  ["slip", "done"], ["cancel", "cancelled"], ["backorder", "held"]
-]
-</script>
-</diagram>
-```
-
-A step with an icon: `<div shape=rect><icon name=user></icon>Approve</div>`, the icon placed
-absolutely in the corner and `padding-left` on the step.
+The same grid without lanes: the happy path runs along the middle row, and every failure
+branches to the row above (`row-[1]`), so the reader can follow the main line and see each
+way out. A task with an icon: `<div shape=task><icon name=user></icon>Approve</div>` with
+the icon placed absolutely in the corner and `padding-left` on the task.
 
 ## Pitfalls
 
