@@ -98,9 +98,28 @@ function withEllipsis(text, style, width) {
   return `${kept.trimEnd()}…`;
 }
 
+// Text set on its side (writing-mode: sideways-lr reads upward, as a BPMN pool's name;
+// vertical-rl and sideways-rl read downward): one <text>, turned a quarter round about the
+// centre of the box the browser gave it, its baseline at the ascent from that box's top.
+function drawSideways(figure, node, owner, style) {
+  const range = document.createRange();
+  range.selectNodeContents(node);
+  const rect = range.getBoundingClientRect(), page = figure.pageRect;
+  const cx = rect.left - page.left + rect.width / 2, cy = rect.top - page.top + rect.height / 2;
+  const turn = style.writingMode === 'sideways-lr' ? -90 : 90;
+  const text = casedFor(style)(node.textContent.trim().replace(/\s+/g, ' '));
+  const size = parseFloat(style.fontSize), base = cy - rect.width / 2 + ascentOf(style);
+  figure.texts.push({ x: cx - rect.width / 2, y: cy - rect.height / 2, w: rect.width, h: rect.height,
+    owner, text, base, size, sideways: true });
+  const attributes = { x: fmt(cx), y: fmt(base), 'text-anchor': 'middle',
+    transform: `rotate(${turn} ${fmt(cx)} ${fmt(cy)})`, style: textStyleOf(figure, style, owner) };
+  figure.out.push(svgElement('text', attributes, escapeXml(text)));
+}
+
 export function drawText(figure, node, owner) {
   if (!node.textContent.trim()) return;
   const style = getComputedStyle(owner);
+  if (style.writingMode !== 'horizontal-tb') return drawSideways(figure, node, owner, style);
   const ascent = ascentOf(style), cased = casedFor(style);
   const lines = linesOf(node, figure.pageRect);
   const textStyle = textStyleOf(figure, style, owner);

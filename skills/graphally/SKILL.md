@@ -25,37 +25,35 @@ and stretch; none of them lists the figures allowed.
 ## Design the figure first
 
 Design each figure for its reader before writing any HTML. Read
-[references/design.md](references/design.md) first, for every figure: how to invent the form,
-and the look every figure shares (shapes chosen by role, lines that follow the content, colour
-that carries detail, type with a hierarchy). Then write the design in four lines:
+[references/design.md](references/design.md) first, for every figure. The default is a
+professional diagram: the notation's rules kept (BPMN, flowchart symbols, UML), the page's own
+ground, one plain typeface, a small title or none, labels rather than sentences. Then write the
+design in four lines:
 
 1. **The point**: who reads the figure, and the one thing it must make obvious to them.
-2. **The visual metaphor**: a form, invented for this content, that shows the point before
-   a word is read. A conveyor whose two slow stations are red; the floors of a building for
-   the layers of a platform; walls in rings around what must be protected; a split screen
-   with what changes lit up.
-3. **The look**: what each colour, shape and line weight means, the typefaces, and the size
+2. **The form**: the kind of diagram (a flowchart, BPMN lanes, a sequence, a topology, a
+   layered stack, a tree, a Gantt chart, a matrix) and how it is arranged around the point:
+   the main path straight, the two slow steps in the one strong colour, what is shared in a
+   band below.
+3. **The look**: what each colour, shape and line weight means, the typeface, and the size
    for where the figure is read.
 4. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
    drawing script.
 
-A topology (icons joined by labelled lines) is the visual metaphor for one point: the
-system's parts, where they run, and how they communicate. When the user asks to explain,
-present, sell or simplify a system whose topology they already have, the point is a
-different one, and so is the form.
-A request to make a figure better, clearer or more advanced asks for a new visual metaphor,
-built for this content with whatever techniques it needs.
+A topology (icons joined by labelled lines) shows one point: the system's parts, where they
+run, and how they communicate. When the user asks to explain or present a system whose
+topology they already have, the point is a different one, and so is the form.
 
 **An infographic or a slide** (a pitch or proposal slide, a one-pager, a fact sheet, a poster:
-a few facts for business readers) adds a hero, numbers drawn to scale, exact page sizes and
-print: read [references/infographics.md](references/infographics.md) as well.
+a few facts for business readers) may take a headline, a display face, numbers drawn to scale
+and a ground of its own: read [references/infographics.md](references/infographics.md) as well.
 
 ## Workflow
 
 Copy this checklist and work through it; render as often as the figure needs.
 
 ```
-- [ ] 1. Design: read references/design.md; write the point, the metaphor, the look and the build
+- [ ] 1. Design: read references/design.md; write the point, the form, the look and the build
 - [ ] 2. Read the references for the techniques the build uses (table below)
 - [ ] 3. Write diagram.html
 - [ ] 4. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
@@ -97,8 +95,9 @@ new design: start again at step 1, and render with `--recompute`.
 
 ## Examples
 
-The examples teach the format and its techniques. Their look is plain on purpose: give each
-figure its own, as references/design.md describes.
+The examples teach the format and its techniques, in the default look: the theme's page, its
+Inter, the small title. Give each figure the layout, shapes and colours its content needs, as
+references/design.md describes.
 
 A topology: the system's parts, where they run, and how they communicate. Items are icons
 over their names (`figure`), with no frame; groups carry the structure, labelled lines the
@@ -130,11 +129,11 @@ flow.
 </diagram>
 ```
 
-A figure designed for its point, "two stations hold most of the delay". The track is the
+A figure arranged around its point, "two stations hold most of the delay". The track is the
 order's path, so no lines join the stations; the red stops and their notes carry the point.
 
 ```html
-<diagram width=1200 title="Two stations hold most of the delay" subtitle="What happens to an order, from the web shop to the door">
+<diagram width=1200 title="Order fulfilment" subtitle="From the web shop to the door">
 <style>
   .line { display: grid; grid-template-columns: repeat(5, 1fr); justify-items: center; row-gap: 16px; }
   .figure { width: 150px; }
@@ -199,8 +198,9 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   company's own set from a folder or a sprite (`icon-sets="acme: ../brand/icons"` on
   `<diagram>`, then `acme:shield`). An unknown name is reported with the nearest names.
   [references/icons.md](references/icons.md) has the names, weights, colours and own sets.
-- **Fonts**: Inter unless the figure says otherwise. `fonts="Barlow Condensed:700,800;
-  Barlow:400"` on `<diagram>` loads Google fonts; an `@font-face` rule in the `<style>` loads a
+- **Fonts**: Inter unless the figure says otherwise. `fonts="Arimo:400,600"` on `<diagram>`
+  with `:root { font-family: Arimo, Arial, sans-serif }` sets the whole figure, title included,
+  in a Google font; an `@font-face` rule in the `<style>` loads a
   font file of your own (a licensed brand font, the path relative to the diagram). Both are
   measured for layout and embedded in the SVG. [references/fonts.md](references/fonts.md) has
   choosing, loading and licences.
@@ -243,14 +243,14 @@ A figure takes what it needs from as many as it needs.
 
 | Techniques | Reference |
 |---|---|
-| Designing any figure: the point, inventing the form, the look (shapes, lines, colour, type), sizes for where it is read | [references/design.md](references/design.md) |
-| Infographics and slides: the hero, numbers drawn to scale, page sizes, print | [references/infographics.md](references/infographics.md) |
+| Designing any figure: the professional default, the notations, the point, the form, the look, sizes for where it is read | [references/design.md](references/design.md) |
+| Infographics and slides: the hero, a headline and display type, numbers drawn to scale, page sizes, print | [references/infographics.md](references/infographics.md) |
 | Fonts: choosing type, Google fonts, a company's licensed font files, licences and embedding | [references/fonts.md](references/fonts.md) |
 | Icons: choosing a set, cloud services, line icons, a company's own icon set | [references/icons.md](references/icons.md) |
 | Containers in containers (VNets, subnets), a map of named areas, peering and private links | [references/network.md](references/network.md) |
 | One column per leaf and one row per level; a bus from a parent to its children | [references/hierarchy.md](references/hierarchy.md) |
-| Lanes, events and gateways; a happy path with its branches | [references/process.md](references/process.md) |
-| Participants across, messages down in time, fragments | [references/sequence.md](references/sequence.md) |
+| BPMN and flowcharts: the notations' rules, lanes, events and gateways, a happy path with its branches | [references/process.md](references/process.md) |
+| Sequence diagrams: UML's rules, participants across, messages down in time, fragments | [references/sequence.md](references/sequence.md) |
 | Dates as grid columns: bars, milestones, dependencies | [references/plan.md](references/plan.md) |
 | Rows lined up across stages (subgrid), phase chevrons, gates on boundaries, matrices | [references/charts.md](references/charts.md) |
 | Shapes cut with `clip-path`, placing by angle and distance, geometry drawn around the layout | [references/documents.md](references/documents.md) |

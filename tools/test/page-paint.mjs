@@ -111,3 +111,21 @@ export async function pageUtilities() {
     `expected unknown-utility: ${tail(bad.text)}`);
   check(!/wobble/.test(bad.text), 'an author class was reported as a utility');
 }
+
+// Text set on its side (a BPMN pool's name) is one <text> turned a quarter round about its box's
+// centre, upward for sideways-lr; the diagram's title takes the family the page sets on :root.
+export async function pageText() {
+  const dir = folder('page-text');
+  const out = path.join(dir, 'out');
+  const body = '<style>:root { font-family: Georgia, serif } .pool { writing-mode: sideways-lr; height: 160px; }' +
+    ' .down { writing-mode: vertical-rl; height: 120px; }</style>' +
+    '<div class="flex gap-10"><div class=pool>Northwind Insurance</div><div class=down>Down the side</div></div>';
+  const svg = await renderedSvg(dir, out, pageDiagram(body, '', 'width=500 title="Claims process"'));
+  const pool = svg.match(/<text [^>]*>Northwind Insurance<\/text>/)?.[0] || '';
+  const down = svg.match(/<text [^>]*>Down the side<\/text>/)?.[0] || '';
+  check(/text-anchor="middle"/.test(pool) && /transform="rotate\(-90 [\d.]+ [\d.]+\)"/.test(pool),
+    `sideways-lr text is not one upward text: ${pool}`);
+  check(/transform="rotate\(90 /.test(down), `vertical-rl text is not one downward text: ${down}`);
+  check(/<text [^>]*font-family: Georgia, serif[^>]*>Claims process</.test(svg),
+    'the title did not take the page\'s font family');
+}

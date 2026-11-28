@@ -27,7 +27,8 @@ const overlap = (a, b, start, size) => Math.min(a[start] + a[size], b[start] + b
 // and other scripts count as reaching both.
 const TALL = /[A-Z0-9bdfhiklt!?#$%&'"/\\()[\]{}|@^]|[^\x00-\x7F]/;
 const LOW = /[gjpqyQ,;()[\]{}|/\\_@]|[^\x00-\x7F]/;
-function inkOf({ text, base, size }) {
+function inkOf({ text, base, size, sideways, y, h }) {
+  if (sideways) return { y, h };
   const top = base - (TALL.test(text) ? 0.78 : 0.55) * size, bottom = base + (LOW.test(text) ? 0.22 : 0.02) * size;
   return { y: top, h: bottom - top };
 }

@@ -12,7 +12,8 @@ import { PAGE_CSS } from './page-css.js';
 import { buildFigure } from './build-figure.js';
 import { layoutModelOf } from './layout-model.js';
 
-const TITLE_FONT = "600 15px Inter, 'Segoe UI', system-ui, sans-serif";
+// The title takes the page's family (the theme's Inter, or the diagram's own on :root).
+const TITLE_STYLE = 'font-size: 15px; font-weight: 600; line-height: normal; margin-bottom: 4px';
 const SUBTITLE_STYLE = 'font-size: 12.5px; color: var(--muted); margin-bottom: 4px';
 const PLAIN_SCRIPT_HINT =
   'a browser runs it on its own when the file is opened: write <script type="graphally">';
@@ -31,7 +32,7 @@ function createPage(diagram, problems) {
   root.style.cssText = `position:absolute; left:0; top:0; width:${width}px; padding:${S.pad}px;`;
   const title = diagram.getAttribute('title'), subtitle = diagram.getAttribute('subtitle');
   const add = html => root.insertAdjacentHTML('beforeend', html);
-  if (title) add(`<div style="font: ${TITLE_FONT}; margin-bottom: 4px">${escapeXml(title)}</div>`);
+  if (title) add(`<div style="${TITLE_STYLE}">${escapeXml(title)}</div>`);
   if (subtitle) add(`<div style="${SUBTITLE_STYLE}">${escapeXml(subtitle)}</div>`);
   if (title || subtitle) add(`<div style="height: ${S.titleGap - 4}px"></div>`);
   return root;
