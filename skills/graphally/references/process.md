@@ -24,7 +24,10 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
   in ("Claim paid", "Claim closed").
 - **Waiting and time** are events: a timer on a task's border for a deadline, an event-based
   gateway when the process waits for the first of several events.
-- **Joins match splits**: paths that a parallel gateway split meet again at a parallel one.
+- **Joins match splits**: paths that a parallel gateway split meet again at a parallel one. A
+  gateway splits or merges, not both (Silver): a path that skips a check (a claim under the
+  limit) runs past the check's gateway to the step after it, never into the gateway, which
+  would put the question to it too.
 - **Colour carries no meaning** in BPMN: shapes stay outlined in ink on the card, lanes may be
   tinted, and anything coloured beyond that is named in a key.
 - **Flow left to right**, lines orthogonal, crossings avoided.

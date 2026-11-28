@@ -57,7 +57,10 @@ it, and place the VNets with a grid map.
   in the middle, spokes beside it, shared PaaS in a `band` at the bottom.
 - **Address ranges** go in the group title's `<small>`: `<h4>snet-pe <small>10.10.2.0/24</small></h4>`.
   A title is a flex row, where `<br>` does nothing: two names in one title (a pair of subnets
-  drawn as one) are two `<span>`s in `<h4 class="flex-col items-start">`.
+  drawn as one) are two lines in `<h4 class="flex-col items-start">`, each
+  `<span>snet-dbw-public <small>10.20.0.0/24</small></span>`.
+- **A line to the internet or on-premises** ends on the item in it (its figure's id): a `plain`
+  group has no frame, so a line to the group stops in empty space.
 - **A hub with several subnets** is a grid inside the VNet group:
   `class="group vnet grid grid-cols-[repeat(2,auto)] gap-x-36 gap-y-11"` with `class=col-span-full`
   on its `<h4>`. Its columns are as wide as their subnets; `grid-cols-2` makes two equal columns
