@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Kamil Wilczyński (kwilcz). Licensed under the Apache License, Version 2.0: see LICENSE.
 // The building blocks' CSS: group, node, tile, figure, band, key and their variants.
+import { textSize } from '../style.js';
 
 export const BLOCK_CSS = `
 /* Building blocks, styled like the rest of graphally: plain CSS that any rule of yours
@@ -20,14 +21,14 @@ export const BLOCK_CSS = `
   align-items: center;
   gap: 6px;
   margin: 0 0 -6px;
-  font-size: 12px;
+  font-size: ${textSize(12)};
   font-weight: 600;
   color: var(--muted);
 }
 :where(.graphally-page .group > h4 > icon) { width: 18px; height: 18px; }
 :where(.graphally-page .group > h4 small, .graphally-page .band > h4 small) {
   font-weight: 400;
-  font-size: 11.5px;
+  font-size: ${textSize(11.5)};
 }
 :where(.graphally-page .group.dashed, .graphally-page .group.external) {
   background: none;
@@ -70,7 +71,7 @@ export const BLOCK_CSS = `
 :where(.graphally-page .node > icon) { grid-row: 1 / span 2; width: 26px; height: 26px; }
 :where(.graphally-page :is(.node, .tile, .figure) > small) {
   grid-column: -2;
-  font-size: 11.5px;
+  font-size: ${textSize(11.5)};
   font-weight: 400;
   line-height: 15px;
   color: var(--muted);
@@ -94,7 +95,7 @@ export const BLOCK_CSS = `
   border: 1px solid var(--line);
   border-radius: 8px;
   text-align: center;
-  font-size: 12.5px;
+  font-size: ${textSize(12.5)};
   font-weight: 500;
   line-height: 15px;
 }
@@ -106,7 +107,7 @@ export const BLOCK_CSS = `
   gap: 6px;
   width: 104px;
   text-align: center;
-  font-size: 12.5px;
+  font-size: ${textSize(12.5)};
   font-weight: 500;
   line-height: 15px;
 }
@@ -124,7 +125,7 @@ export const BLOCK_CSS = `
 :where(.graphally-page .band > h4) {
   flex-basis: 100%;
   margin: 0;
-  font-size: 12px;
+  font-size: ${textSize(12)};
   font-weight: 600;
   color: var(--muted);
 }
@@ -133,7 +134,7 @@ export const BLOCK_CSS = `
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 22px;
-  font-size: 11.5px;
+  font-size: ${textSize(11.5)};
   color: var(--muted);
 }
 :where(.graphally-page .key > *) { display: flex; align-items: center; gap: 8px; }

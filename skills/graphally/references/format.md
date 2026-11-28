@@ -48,6 +48,9 @@ is about choosing one.
 - `width` on `<diagram>` sets the page width (default 1200); the SVG adds a 24px margin on
   each side, painted with the diagram's background. The page holds the diagram's top-level
   elements whole (an empty padding included) and whatever the script draws beyond them.
+- `:root { --text-size: 16px }` scales every default size of the theme's text together (13px
+  by default): names, `<small>` lines, titles, keys and line labels. A rule of yours that sets a
+  size keeps it; `--line-label-font` still sets the labels' own.
 - Any CSS for layout works: grid (with `grid-column: span 2`, `subgrid`), flexbox,
   `position: absolute` inside a `position: relative` box, margins, padding.
 - What is drawn: background colours and `linear-gradient()`, borders (solid, dashed,

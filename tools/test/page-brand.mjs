@@ -143,6 +143,22 @@ export async function pageLineLabels() {
   const token = LABELLED.replace(/--line-label-color:[^;}]+/, '--line-label-color: var(--ink)');
   checkSucceeded(await render(write(dir, pageDiagram(token, '', 'width=500')), out));
   check(/<text class="g-edge"[^>]*fill: var\(--ink\)/.test(svgOf(out)), 'a token in --line-label-color is fixed at its light colour');
+  await checkTextSize(dir, out);
+}
+
+const SIZED = '<style>:root { --text-size: 16px }</style><div class="flex gap-x-40">' +
+  '<div class=figure id=a><icon name="app service"></icon>App<small>web</small></div><div class=card id=b>B</div></div>' +
+  '<script type="application/json">[{ "from": "a", "to": "b", "label": "calls" }]</script>';
+
+// --text-size scales the theme's text together: a figure's name (12.5 of 13), its small line and a
+// line's label (11.5 of 13) at 16px.
+async function checkTextSize(dir, out) {
+  checkSucceeded(await render(write(dir, pageDiagram(SIZED, '', 'width=500')), out));
+  const svg = svgOf(out), sizeOf = text => new RegExp(`font-size: ([\\d.]+)px[^>]*>${text}<`).exec(svg)?.[1];
+  const label = /<text class="g-edge"[^>]*font: 400 ([\d.]+)px/.exec(svg)?.[1];
+  const [name, small] = [sizeOf('App'), sizeOf('web')].map(Number);
+  check(Math.abs(name - 15.38) < 0.01 && Math.abs(small - 14.15) < 0.01 && Math.abs(Number(label) - 14.15) < 0.01,
+    `--text-size: 16px gives a name at ${name}, its small line at ${small} and a line label at ${label}`);
 }
 
 const THICK = '<style>.r { display: flex; justify-content: space-between; padding: 40px }</style>'

@@ -2,7 +2,7 @@
 // <diagram>: the page is the layout. The author writes ordinary HTML and CSS and the browser
 // places everything; an optional script then connects and draws by name (script/). This lays the
 // page out and hands it to build-figure.js, which turns it into SVG.
-import { S, hostTheme, shadowBox } from '../style.js';
+import { S, hostTheme, shadowBox, textSize } from '../style.js';
 import { escapeXml } from '../svg.js';
 import { utilitiesFor } from '../css/utilities.js';
 import { materializePseudo } from '../css/pseudo.js';
@@ -13,8 +13,8 @@ import { buildFigure } from './build-figure.js';
 import { layoutModelOf } from './layout-model.js';
 
 // The title takes the page's family (the theme's Inter, or the diagram's own on :root).
-const TITLE_STYLE = 'font-size: 15px; font-weight: 600; line-height: normal; margin-bottom: 4px';
-const SUBTITLE_STYLE = 'font-size: 12.5px; color: var(--muted); margin-bottom: 4px';
+const TITLE_STYLE = `font-size: ${textSize(15)}; font-weight: 600; line-height: normal; margin-bottom: 4px`;
+const SUBTITLE_STYLE = `font-size: ${textSize(12.5)}; color: var(--muted); margin-bottom: 4px`;
 const PLAIN_SCRIPT_HINT =
   'a browser runs it on its own when the file is opened: write <script type="graphally">';
 

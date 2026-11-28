@@ -15,6 +15,12 @@ export const S = {
   edge: { width: 1.5, radius: 6, hop: 4, nodePad: 12, labelPad: 4, portGap: 12 },
 };
 
+// A size of the theme's text, scaled by --text-size (13px by default): one setting enlarges
+// every default size together, for a figure shown smaller than it is drawn.
+export const TEXT_SIZE = 13;
+export const textSize = px => (px === TEXT_SIZE ? `var(--text-size, ${TEXT_SIZE}px)`
+  : `calc(var(--text-size, ${TEXT_SIZE}px) * ${px} / ${TEXT_SIZE})`);
+
 // Text classes, shared by measurement and output.
 export const T = {
   title: 'g-title', subtitle: 'g-subtitle', label: 'g-label', sub: 'g-sub', group: 'g-group',

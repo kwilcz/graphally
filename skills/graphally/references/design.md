@@ -140,7 +140,8 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
   labelled "assumed", and named to the user.
 - **Sizes for where it is read.** A figure in a page (a README, a wiki, a report) is shown at
   most about 880px wide: a wider one is scaled down, so at 1000 to 1400 wide its labels are 15
-  to 17px, 13px at the least, and one that fits in 880 is shown at its size. Make it no wider
+  to 17px, 13px at the least (`:root { --text-size: 16px }` raises every default size together,
+  line labels included), and one that fits in 880 is shown at its size. Make it no wider
   than its content needs (a tall flowchart is often narrower than 880); rather than a wider
   figure, make the layout compact. Slides, print and posts: [infographics.md](infographics.md).
 - **Two or three colours on a neutral ground**: the client's brand colours when it has them.
