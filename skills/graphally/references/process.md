@@ -185,23 +185,25 @@ cross-functional one, and without BPMN's events and gateways:
 - **Symbols.** `terminator` (a stadium) starts and ends the flow; `rect` is a step; `decision`
   (a diamond) a question; `io` (a parallelogram) data read or written; `predefined` (a rectangle
   with double sides) a process defined elsewhere; `document` a printed or generated document;
-  `cylinder` stored data; `manual-input` and `delay` as they say; `off-page` and a small
-  `circle` connect to another page or another part.
+  `cylinder` stored data; `manual-input` as it says; `off-page` and a small `circle` connect
+  to another page or another part. `delay` (a D shape) is not in ISO 5807 but is widely read
+  as a wait: a time limit is a `delay` ("Wait up to 24 h for approval") and then a decision.
 - **Flowlines** carry an arrowhead and run top to bottom or left to right; they join a symbol at
   one entry and avoid crossing.
 - **A decision** has one entry and two or more exits, each labelled with its answer ("yes",
   "no", "above 2%").
 - **Every path ends** at a terminator; a step is an imperative ("Read order lines"), a decision
   a question ("In stock?").
-- **The main path runs straight** down the middle, its branches to the sides. Colour, when it is
+- **The main path runs straight** down one column, its branches to the side they leave by, each
+  on its decision's row; with all branches on one side, the main path is the first column. Colour, when it is
   used, means one thing (a failure path in red) and the figure says so.
 
 ```html
-<diagram width=760 title="Order handling">
+<diagram width=850 title="Order handling">
 <style>
-  .flow { display: grid; grid-template-columns: 220px 200px 220px; justify-content: space-between; justify-items: center; align-items: center; row-gap: 36px; }
-  .flow > [shape] { width: 200px; min-height: 48px; text-align: center; }
-  .flow > [shape=decision] { width: 150px; min-height: 76px; font-size: 12px; }
+  .flow { display: grid; grid-template-columns: repeat(3, 240px); column-gap: 64px; row-gap: 36px; justify-items: center; align-items: center; font-size: 15px; }
+  .flow > [shape] { width: 220px; min-height: 52px; text-align: center; }
+  .flow > [shape=decision] { width: 200px; min-height: 96px; }
 </style>
 <div class=flow>
   <div shape=terminator class="col-[2]" id=start>Order received</div>
@@ -237,6 +239,7 @@ absolutely in the corner and `padding-left` on the step.
 
 - Captions under gateways block the bottom side: a branch that must leave downward gets
   its gateway's caption above.
-- Equal-width columns make long flows too wide: `auto` columns with `justify-between`
-  spend the width on the gaps.
+- `justify-content: space-between` hands the spare width to the gaps, and a flow whose branches
+  all leave one way sits wide and empty: give the columns a fixed `column-gap` and set `width`
+  to what they need.
 - If a line detours far round, it is usually avoiding a crossing: try another `in` side.

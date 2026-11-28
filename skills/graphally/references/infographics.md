@@ -87,8 +87,10 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
   general knowledge (SNAT on the firewall, a SKU, a region read from a name) is left out or
   labelled "assumed", and named to the user.
 - **Sizes for where it is read.** A figure in a page (a README, a wiki, a report) is shown at
-  most about 880px wide, so it is 1000 to 1400 wide with labels of 15 to 17px, 13px at the
-  least; rather than a wider figure, make the layout compact. A slide on a screen, 1600px wide: big numbers 48 to 80px,
+  most about 880px wide: a wider one is scaled down, so at 1000 to 1400 wide its labels are 15
+  to 17px, 13px at the least, and one that fits in 880 is shown at its size. Make it no wider
+  than its content needs (a tall flowchart is often narrower than 880); rather than a wider
+  figure, make the layout compact. A slide on a screen, 1600px wide: big numbers 48 to 80px,
   labels 16 to 20px, sentences 15 to 17px, tick marks and axis labels 12 to 13px, never less. A page that will be printed is sized from the paper: 1600px across A4 or Letter
   landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
   20 to 24px and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for
