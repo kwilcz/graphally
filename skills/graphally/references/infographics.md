@@ -92,6 +92,14 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
   groups; nothing touches, nothing floats.
 - **Comparisons drawn, not only written**, each with its numeral beside the drawing. No pies
   of many slices.
+- **Nothing looks measured that isn't.** Bars of different lengths, a pie's slices, a filled
+  level and an area read as quantities: draw them only from a number the brief gives.
+  Illustrative marks (records, examples, a crowd) are alike in size, and a note says they are not
+  counts.
+- **What the point follows keeps its look.** When the figure traces things from where they
+  start to where they end (sources into reports, steps through stages), each keeps one colour or
+  one mark shape all the way, so the reader follows it without a legend; a mark that loses its
+  identity at a boundary loses the point there.
 - **A guided eye**: one reading path, or steps numbered in reading order; thin leaders from
   callouts to what they name.
 - **A finish**: a source note for every figure quoted, the owner or brand in the footer. A
