@@ -10,7 +10,9 @@ graphally draws this; this skill routes to it.
 1. Load the graphally skill and follow its workflow. Where skills are not loaded by name, read
    `../graphally/SKILL.md` beside this folder; its scripts are in `../graphally/scripts/`.
 2. Before designing, read graphally's `references/infographics.md` and `references/fonts.md`
-   (choosing type), and `references/icons.md` when the client has icons of its own.
+   (choosing type), the reference for the figure's kind when it has one (`network.md` for a
+   network, `process.md` for a process: graphally's table), and `references/icons.md` when the
+   client has icons of its own.
 3. Draw what the user typed with the command or described in the conversation. When the facts,
    their sources or the format (a 16:9 slide, a one-pager, a printed page, a social image) are
    missing, ask for them first; when there is no one to ask, choose the format the use suggests

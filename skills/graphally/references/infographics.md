@@ -32,9 +32,12 @@ features, even its flaws, when asked for something new (Jansson and Smith, *Desi
    position on a common scale and length before angle, area and colour (Cleveland and McGill,
    *JASA*, 1984). A count or a duration with nothing to compare (3 tiers, 30 days, within 90
    seconds) is written large and not drawn: a chart of it shows no data (Tufte, *The Visual
-   Display of Quantitative Information*, 1983).
+   Display of Quantitative Information*, 1983). A brief with no numbers to compare (a process,
+   a topology, a lineage) has nothing to draw to scale: the hero carries the point alone, and
+   counts (four systems, three stages) are written where they help.
 4. **The rest.** Callouts beside the hero, supporting facts, the source note and the owner at
-   the foot, all on one grid.
+   the foot, all on one grid. Source and owner come from the brief; when it names neither,
+   leave them out rather than invent them, and say so to the user.
 
 ## Inventing the hero
 
@@ -81,6 +84,8 @@ pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
   half its size, so its smallest text is about 24px, its sentences 28px or more, and its words
   few (Apple's Human Interface Guidelines put the smallest legible text at 11pt).
 - **Two or three colours on a neutral ground**: the client's brand colours when it has them.
+  Two exceptions: one colour per source or path when the figure follows them through (below),
+  and cloud service icons, which keep their own colours and do not count.
   Without them, take the palette from the subject or the reader's world (a bank's ink and
   paper, a safety colour for operations, a sector's own convention), with one main colour and
   one accent for what matters most. A colour means one thing throughout: decide what each one
@@ -130,7 +135,10 @@ the SVG with `el('#field')` (the page is not the document, so `document.getEleme
 nothing) and fills it with `innerHTML`. The stylesheet's paint reaches its marks, and
 `currentColor` or a token follows the dark theme. The same function that makes a shape can place
 the elements on it (`left`, `top`), so they follow it. An inline SVG clips to its box; give it
-`overflow: visible` for a mark that reaches past its edge.
+`overflow: visible` for a mark that reaches past its edge. Lines that follow boxes the layout
+placed (streams from each source into a store, ribbons out to the uses) are drawn after layout,
+by the drawing script (`curve`, `draw` paths from the boxes' points): a before-script runs
+before anything has a place.
 
 **For a printer.** Size the page so `--png2x` gives 300 dpi: A4 portrait is 1240 × 1754
 (`width=1192`, a container of 1706), landscape 1754 × 1240. A printer that trims the sheet asks
@@ -183,5 +191,5 @@ Render with `--png1x` and look at the image at full size, as the reader will:
   ground (or one per source, when the figure follows sources); one icon style
 - [ ] Every number that matters is drawn to scale and labelled
 - [ ] Margins are equal, edges align, nothing touches or overflows
-- [ ] Sources are noted; the owner is in the footer
+- [ ] Sources and owner as the brief gives them; none invented
 - [ ] The render prints ok, or only warnings you meant
