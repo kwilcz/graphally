@@ -11,9 +11,8 @@ the point.
 1. Load the graphally skill and follow its workflow. Where skills are not loaded by name, read
    `../graphally/SKILL.md` beside this folder; its scripts are in `../graphally/scripts/`.
 2. Design the figure first, as graphally's workflow says: who reads it, the one thing it must make
-   obvious, and a form invented for that point. Read graphally's `references/infographics.md` (the
-   method and the standard every figure keeps) and `references/design.md` (idea starters), then
-   the references the build needs.
+   obvious, and a form invented for that point. Read graphally's `references/design.md` (the
+   method and the standard every figure keeps), then the references the build needs.
 3. Draw what the user typed with the command or described in the conversation. When it is not
    clear what the figure must make obvious, or to whom, ask first.
 

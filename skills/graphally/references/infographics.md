@@ -1,135 +1,33 @@
 # Infographics and slides
 
 An infographic makes a few facts land with one reader: a proposal slide, a one-pager, a report
-page, a poster. Business readers judge it the way they judge a printed brochure, so it has to look
-designed and professional: one strong form, a disciplined grid, few colours, real typography,
-and every number drawn to scale. A diagram explains how a system works; an infographic makes
-someone remember and act on a point. The method and the standard below hold for both: a
-diagram's hero is often its topology or its notation, emphasised where the point is.
-
-This reference holds no finished slide on purpose: a designer shown one example reproduces its
-features, even its flaws, when asked for something new (Jansson and Smith, *Design Studies*,
-1991). Every figure starts from its own content.
+page, a poster, a post. Business readers judge it the way they judge a printed brochure. The
+method and the standard are the same as for every figure, in [design.md](design.md): read it
+first. This page adds what a page of its own needs: its size, its type sizes, and the
+techniques for numbers drawn to scale.
 
 ## Contents
 
-- [The method](#the-method): the point, the hero, the numbers, the rest
-- [Inventing the hero](#inventing-the-hero): three candidates, then the one only this content has
-- [The standard](#the-standard): the rules a professional slide keeps
-- [Techniques](#techniques): mechanics the format needs for this kind of page
+- [Formats and sizes](#formats-and-sizes): a slide, a printed page, a post
+- [Techniques](#techniques): the canvas, a printer, marks and lengths to scale, arcs
 - [Pitfalls](#pitfalls)
 - [Before you hand it over](#before-you-hand-it-over)
 
-## The method
+## Formats and sizes
 
-1. **The point.** One sentence the reader should take away, in the reader's terms: what they
-   gain, with the fact or the safeguard that makes it believable. The hero carries it; a title,
-   when the figure has one, is small and plain (below).
-2. **The hero.** One form, invented for this content, that shows the point before a label is
-   read, and takes the largest area of the page. It is abstract or simplified, never an
-   illustrated scene: shapes, lines, areas and type. See [Inventing the hero](#inventing-the-hero).
-3. **The numbers.** Each number compared with something (a whole, a before, a target, another
-   group) is written large and drawn to scale beside it, in the encoding read most accurately:
-   position on a common scale and length before angle, area and colour (Cleveland and McGill,
-   *JASA*, 1984). A count or a duration with nothing to compare (3 tiers, 30 days, within 90
-   seconds) is written large and not drawn: a chart of it shows no data (Tufte, *The Visual
-   Display of Quantitative Information*, 1983). A brief with no numbers to compare (a process,
-   a topology, a lineage) has nothing to draw to scale: the hero carries the point alone, and
-   counts (four systems, three stages) are written where they help.
-4. **The rest.** Callouts beside the hero, supporting facts, the source note and the owner at
-   the foot, all on one grid. Source and owner come from the brief; when it names neither,
-   leave them out rather than invent them, and say so to the user.
+- **A slide on a screen**, 1600px wide: big numbers 48 to 80px, labels 16 to 20px, sentences
+  15 to 17px, tick marks and axis labels 12 to 13px, never less; outer margins of 64px.
+- **A page that will be printed** is sized from the paper: 1600px across A4 or Letter landscape,
+  or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are 20 to 24px
+  and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for body text in
+  print). The title grows with the paper, as all text does: about 24 to 30px on an A4 page 1240
+  wide.
+- **A post in a social feed** (1200 × 1200, 1200 × 627) is shown at a third to half its size, so
+  its smallest text is about 24px, its sentences 28px or more, and its words few (Apple's Human
+  Interface Guidelines put the smallest legible text at 11pt).
+- **A one-pager of free length** lets its height follow the content.
 
-**A topology as the hero.** When the brief needs every component drawn (a network, an
-architecture), the topology is the hero: the infographic is in the emphasis. The one path,
-gate or boundary the point is about takes the accent and the weight; the rest stays quiet;
-labels are 15 to 17px; address ranges and names are labels, not numbers to draw.
-
-## Inventing the hero
-
-Sketch three candidates in words before drawing any, one sentence each, each from a different
-source, then choose; when two seem equally good, sketch both as rough layouts (SKILL.md,
-Sketch) and keep the better.
-Designers who weigh several ideas side by side reach better and more varied designs than those
-who refine their first (Dow et al., *ACM TOCHI*, 2010).
-
-- **From the content's own structure.** Ask what the facts do: something moves through stages,
-  splits, accumulates, shrinks, waits, is contained in something larger, is guarded, branches,
-  repeats, or is compared with something else. The verb suggests a form: what moves needs a
-  route, what accumulates needs a level, what is contained needs a boundary.
-- **From the reader's world.** An object, a place, a tool or a document the reader handles every
-  day, reduced to a few shapes: its outline, its sections, its scale. The figure then speaks
-  their language before it says anything.
-- **From the main number.** A form that makes the number felt: a length against the length it
-  replaces, a count of marks against the whole, an area filled to the share, a gap left empty.
-
-Then keep the candidate only this content could have. One that would fit another client or
-another subject unchanged is generic; drop it, however polished it would look. Give the chosen
-form one idea of its own that a reader remembers: a single element in the accent that breaks
-the pattern, a boundary that one item crosses, an empty space where something is missing.
-
-## The standard
-
-These rules hold for every infographic; designers and the research agree on them (one or two
-main colours and an accent, two fonts at most, one icon style: Visme's infographic design guide;
-pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
-
-- **One hero**, larger than anything else, carrying the point.
-- **One plain family**: Inter, IBM Plex Sans with Plex Mono, or Arimo (Arial's metrics), the
-  client's own when it has one; weight and size carry the hierarchy. A display face only when
-  the user or the brand guide asks for one ([fonts.md](fonts.md)).
-- **A small, plain title, or none**: 15 to 18px, in the family's semibold, at the top left; it
-  names the subject or states the point in a few words. No line of small capitals above it, no
-  coloured words in it, no sentence-long lead under it. Where the page around the figure names
-  it, leave the title out. On a printed page it grows with the paper, as all text does: about
-  24 to 30px on an A4 page 1240 wide.
-- **Nothing the brief does not say**, unless it is marked as assumed: a technical detail from
-  general knowledge (SNAT on the firewall, a SKU, a region read from a name) is left out or
-  labelled "assumed", and named to the user.
-- **Sizes for where it is read.** A figure in a page (a README, a wiki, a report) is shown at
-  most about 880px wide: a wider one is scaled down, so at 1000 to 1400 wide its labels are 15
-  to 17px, 13px at the least, and one that fits in 880 is shown at its size. Make it no wider
-  than its content needs (a tall flowchart is often narrower than 880); rather than a wider
-  figure, make the layout compact. A slide on a screen, 1600px wide: big numbers 48 to 80px,
-  labels 16 to 20px, sentences 15 to 17px, tick marks and axis labels 12 to 13px, never less. A page that will be printed is sized from the paper: 1600px across A4 or Letter
-  landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
-  20 to 24px and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for
-  body text in print). A post in a social feed (1200 × 1200, 1200 × 627) is shown at a third to
-  half its size, so its smallest text is about 24px, its sentences 28px or more, and its words
-  few (Apple's Human Interface Guidelines put the smallest legible text at 11pt).
-- **Two or three colours on a neutral ground**: the client's brand colours when it has them.
-  Two exceptions: one colour per source or path when the figure follows them through (below),
-  and cloud service icons, which keep their own colours and do not count.
-  Without them, take the palette from the subject or the reader's world (a bank's ink and
-  paper, a safety colour for operations, a sector's own convention), with one main colour and
-  one accent for what matters most. A colour means one thing throughout: decide what each one
-  stands for before using it. Text keeps a contrast of 4.5:1 with its ground, 3:1 when large
-  (WCAG 2.2, 1.4.3).
-- **One icon style**: the client's own set, or line icons in one weight, or cloud service
-  icons where the figure is about those services: [icons.md](icons.md). The service icons count
-  as one style and keep their colours; where those colours compete with the accent, draw the
-  services with line icons instead.
-- **A grid and air**: equal outer margins (64px on a slide), aligned edges, white space between
-  groups; nothing touches, nothing floats.
-- **Comparisons drawn, not only written**, each with its numeral beside the drawing. No pies
-  of many slices.
-- **Nothing looks measured that isn't.** Bars of different lengths, a pie's slices, a filled
-  level and an area read as quantities: draw them only from a number the brief gives.
-  Illustrative marks (records, examples, a crowd) are alike in size, and a note says they are not
-  counts.
-- **What the point follows keeps its look.** When the figure traces things from where they
-  start to where they end (sources into reports, steps through stages), each keeps one colour or
-  one mark shape all the way, so the reader follows it without a legend; a mark that loses its
-  identity at a boundary loses the point there.
-- **A guided eye**: one reading path, or steps numbered in reading order; thin leaders from
-  callouts to what they name.
-- **A finish**: a source note for every figure quoted, the owner or brand in the footer. A
-  number worked out from the brief (a payback year, a share of a total) says so in the note,
-  and is named to the user to confirm.
-
-What makes a slide look generated rather than designed, to leave out: rows of white cards with
-shadows, a tile per number, a gradient hero, emoji, everything centred, more than three colours,
-clip-art scenes, text in boxes where a drawn number would do.
+With no one to ask, choose the format from where the figure will be used, and say which.
 
 ## Techniques
 
@@ -197,13 +95,8 @@ overflow: hidden`); a box takes one radius for all four corners.
 
 ## Before you hand it over
 
-Render with `--png1x` and look at the image at full size, as the reader will:
+Besides [design.md](design.md)'s list:
 
-- [ ] The point reads from the hero alone, in a few seconds
-- [ ] The hero belongs to this content: it would not fit another client unchanged
-- [ ] One plain family; a small, plain title or none; two or three colours on a neutral
-  ground (or one per source, when the figure follows sources); one icon style
-- [ ] Every number that matters is drawn to scale and labelled
-- [ ] Margins are equal, edges align, nothing touches or overflows
-- [ ] Sources and owner as the brief gives them; none invented
-- [ ] The render prints ok, or only warnings you meant
+- [ ] Every number that matters is written large and drawn to scale beside it
+- [ ] The format's sizes hold: nothing under the smallest size its format allows
+- [ ] For print: 300 dpi with `--png2x`, bleed when the printer trims, text 35px inside the cut

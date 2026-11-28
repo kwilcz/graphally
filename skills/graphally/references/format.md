@@ -436,6 +436,6 @@ at the PNG.
 The render's summary counts crossings: lines crossing lines. A crossing is not a problem,
 but fewer read better; rearranging the grid or giving a line `out`/`in` or `via` removes one.
 
-Designing a figure: `design.md`; infographics and slides: `infographics.md`; fonts: `fonts.md`;
+Designing any figure: `design.md`; slides, print and posts: `infographics.md`; fonts: `fonts.md`;
 icons: `icons.md`. Techniques, each with a complete example: `network.md`, `hierarchy.md`,
 `process.md`, `sequence.md`, `plan.md`, `charts.md`, `documents.md`, `terraform.md`.

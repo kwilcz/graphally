@@ -24,34 +24,32 @@ and stretch; none of them lists the figures allowed.
 
 ## Design the figure first
 
-Design each figure for its reader before writing any HTML. Write the design in three lines:
+Design each figure for its reader before writing any HTML, by one method for every figure (a
+network for a README, a BPMN process, a slide). Write it in a few lines, in your reply or a
+comment in the file:
 
 1. **The point**: who reads the figure, and the one thing it must make obvious to them.
-2. **The visual metaphor**: a form, invented for this content, that shows the point before
-   a word is read. A conveyor whose two slow stations are red; the floors of a building for
-   the layers of a platform; walls in rings around what must be protected; a split screen
-   with what changes lit up.
-3. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
+2. **The hero**: three candidate forms, one sentence each, then the one only this content has.
+   A conveyor whose two slow stations are red; the floors of a building for the layers of a
+   platform; walls in rings around what must be protected. When the brief needs every
+   component or step drawn, the topology or the notation is the hero and the point is in the
+   emphasis: the one path, gate or end state it is about takes the accent and a short callout.
+3. **The numbers**: what the brief compares (ranges, durations, shares), drawn to scale;
+   counts written large; nothing drawn that the brief does not measure.
+4. **The rest**: callouts, the key, and a finish (what is assumed or left out, the source).
+5. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
    drawing script.
 
-A topology (icons joined by labelled lines) is the visual metaphor for one point: the
-system's parts, where they run, and how they communicate. When the user asks to explain,
-present, sell or simplify a system whose topology they already have, the point is a
-different one, and so is the form.
-A request to make a figure better, clearer or more advanced asks for a new visual metaphor,
-built for this content with whatever techniques it needs.
+The method, its research and the standard every figure keeps (one hero, one plain family, a
+small title or none, two or three colours that each mean one thing, nothing measured that
+isn't, nothing the brief does not say, sizes for where it is read):
+[references/design.md](references/design.md). Read it before designing any figure. A notation
+keeps its own rules as well ([references/process.md](references/process.md),
+[references/sequence.md](references/sequence.md)); slides, printed pages and posts add
+[references/infographics.md](references/infographics.md).
 
-Idea starters by point, and the design moves that make a figure read at a glance:
-[references/design.md](references/design.md).
-
-**Every figure keeps one standard**, a diagram for a README as much as a slide: one hero that
-carries the point (a topology or a notation can be it), one plain family, a small title or none,
-colours that each mean one thing, nothing that looks measured and isn't, nothing the brief does
-not say. Read [references/infographics.md](references/infographics.md) before designing any
-figure: its method for inventing the hero and its standard apply to all of them; its page
-sizes, slides and print apply to slides and pages. A notation (BPMN, a flowchart, UML) also
-keeps its own rules ([references/process.md](references/process.md),
-[references/sequence.md](references/sequence.md)).
+A request to make a figure better, clearer or more advanced asks for a new hero, built for this
+content with whatever techniques it needs.
 
 ## Workflow
 
@@ -67,7 +65,7 @@ make obvious, which form shows that. Designers who iterate through more prototyp
 designs than those who plan longer (Dow et al., *Creativity & Cognition*, 2009).
 
 ```
-- [ ] 1. Design: write the point, the visual metaphor and the build
+- [ ] 1. Design: the point, three candidate heroes and the one chosen, the numbers, the rest, the build
 - [ ] 2. Read the references for the techniques the build uses (table below), and no others
 - [ ] 3. Sketch: the layout as plain boxes, rendered with --png; change it until the form reads
 - [ ] 4. Write diagram.html on the sketch's layout
@@ -78,7 +76,7 @@ designs than those who plan longer (Dow et al., *Creativity & Cognition*, 2009).
 - [ ] 9. Hand over diagram.svg and diagram.html; a PNG to share is rendered with --png2x
 ```
 
-1. **Design.** Three short lines, in your reply or a comment in the file. The design
+1. **Design.** A few short lines, in your reply or a comment in the file. The design
    decides the figure; the references only build it. Decide the broad form here and the
    details on the page: a sketch shows in a minute what a long deliberation would guess at.
 2. **The references.** Read the ones your entry skill names and the one for the figure's kind
@@ -103,9 +101,10 @@ designs than those who plan longer (Dow et al., *Creativity & Cognition*, 2009).
 6. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
    again. Change the file with small edits rather than rewriting it.
 7. **Look.** `ok` means nothing collides, not that the figure works. Read it as its reader
-   would, labels last: the form alone shows the point from step 1. Then check that it reads
-   one way, labels sit by what they name, and one element draws the eye first. When the
-   form misses the point, change the form.
+   would, labels last: the form alone shows the point from step 1. Then go through
+   `design.md`'s list (Before you hand it over): one element draws the eye first, numbers
+   that compare are to scale, every colour is in the key, nothing is invented. When the form
+   misses the point, change the form.
 8. **Check.** Iterate on the light half-size preview; render `--png1x --themes` once at the
    end, to see the full size and the dark copy.
 9. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
@@ -274,8 +273,8 @@ reference for the figure's kind. `format.md` is for looking things up.
 
 | Techniques | Reference |
 |---|---|
-| Designing a figure: idea starters by point, the moves that make it read at a glance | [references/design.md](references/design.md) |
-| Infographics and slides: the professional standard, inventing the hero, numbers drawn to scale | [references/infographics.md](references/infographics.md) |
+| Designing any figure: the method (point, hero, numbers, the rest), the standard, the hand-over list | [references/design.md](references/design.md) |
+| Slides, printed pages and posts: formats, sizes, numbers drawn to scale | [references/infographics.md](references/infographics.md) |
 | Fonts: choosing type, Google fonts, a company's licensed font files, licences and embedding | [references/fonts.md](references/fonts.md) |
 | Icons: choosing a set, cloud services, line icons, a company's own icon set | [references/icons.md](references/icons.md) |
 | Containers in containers (VNets, subnets), a map of named areas, peering and private links | [references/network.md](references/network.md) |

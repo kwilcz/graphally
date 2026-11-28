@@ -28,8 +28,9 @@ BPMN 2.0 (OMG; ISO/IEC 19510), with the labelling of Silver's *BPMN Method and S
   gateway splits or merges, not both (Silver): a path that skips a check (a claim under the
   limit) runs past the check's gateway to the step after it, never into the gateway, which
   would put the question to it too.
-- **Colour carries no meaning** in BPMN: shapes stay outlined in ink on the card, lanes may be
-  tinted, and anything coloured beyond that is named in a key.
+- **Colour adds no BPMN meaning**: shapes stay outlined in ink on the card and lanes may be
+  tinted. The emphasis that carries the point (the end states a claim can reach, the path most
+  cases take, the step where they wait) may take the accent and a short callout, named in a key.
 - **Flow left to right**, lines orthogonal, crossings avoided.
 - **Compact.** A lane is as low as its content (padding 16 to 24px, one row unless it holds two
   paths at once). A step takes the column after the one it follows; the alternatives after a
