@@ -69,7 +69,8 @@ than those who refine their first (Dow et al., *ACM TOCHI*, 2010).
 - **From the main number,** when there is one: a length against the length it replaces.
 
 Keep the candidate that shows this content best. One that would fit any other subject
-unchanged is generic: three columns of identical cards fit every subject, and show none.
+unchanged is generic: three columns of identical cards fit every subject, and show none. The
+first idea is usually that one; write it down, and keep looking.
 
 | The point is about | Forms that show it |
 |---|---|
@@ -195,6 +196,12 @@ Some forms, built:
 - **A layered stack**: bands in one grid column, each naming its layer at the left, the
   components of the layer in a row inside it; what runs through every layer as a column
   beside the stack.
+- **Overlapping territories**: two regions in one grid that share a column (`grid-column: 1 / 3`
+  and `2 / 4`, both in `grid-row: 1`), each a translucent tint with its owner's outline, so the
+  shared column shows both; the shared items placed in that column (`grid-column: 2`,
+  `grid-row: 1`, `z-index: 1`), and what joins the two parties at its centre.
+- **A track with stations**: a band cut by `clip-path` along a grid row, numbered stops on it,
+  the stations above and their notes below (SKILL.md's second example).
 - **Nested regions**: `group` inside `group`, each with its `<h4>`; a scope boundary as one
   heavier outline with what is out of scope outside it.
 - **Two panels**: one grid holding both states on the same layout, the changed items in the

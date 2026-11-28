@@ -32,9 +32,11 @@ design in four lines:
 
 1. **The point**: who reads the figure, and the one thing it must make obvious to them.
 2. **The form**: the notation where the figure has one (BPMN, a flowchart, a UML sequence, a
-   topology, a Gantt chart), otherwise a form invented for this content from geometry: an
+   topology, a Gantt chart), arranged around the point. Otherwise write three candidates, one
+   line each, from design.md's three sources, and keep the one only this content has: an
    overlap for what two parties share, a track whose two slow stations are marked, rings for
-   what is in and out, a stack of slabs for layers. Then how it is arranged around the point.
+   what is in and out, a stack of slabs for layers. The first idea is usually the generic one
+   (three columns, a row of boxes, a box per item): it is a candidate, rarely the choice.
 3. **The look**: what each colour, shape and line weight means, the typeface, and the size
    for where the figure is read.
 4. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
@@ -58,7 +60,7 @@ Copy this checklist and work through it; render as often as the figure needs.
 - [ ] 3. Write diagram.html
 - [ ] 4. Render: node ${CLAUDE_SKILL_DIR}/scripts/graphally.mjs render diagram.html --png
 - [ ] 5. Fix every reported problem; render again until it prints ok
-- [ ] 6. Look at diagram.png: the form shows the point before the labels are read; rework until it does
+- [ ] 6. Look at diagram.png as its reader will see it; rework the form until every check holds
 - [ ] 7. Hand over diagram.svg and diagram.html; a PNG to share is rendered with --png2x
 ```
 
@@ -78,9 +80,12 @@ Copy this checklist and work through it; render as often as the figure needs.
 5. **Fix.** Each problem names its cause and a fix (table below). Edit the file and render
    again.
 6. **Look.** `ok` means nothing collides, not that the figure works. Read it as its reader
-   would, labels last: the form alone shows the point from step 1. Then check that it reads
-   one way, labels sit by what they name, and one element draws the eye first. When the
-   form misses the point, change the form.
+   would, labels last, and check:
+   - the form alone shows the point from step 1, and would not fit another brief unchanged;
+   - one element draws the eye first, and each region's tint says what the region is;
+   - no region or corner stands empty: the layout is as compact as its content;
+   - the text, at the width it will be shown (880px in a README), is 11px or more.
+   When a check fails, change the form or the layout, not only the colours.
 7. **Hand over.** The render adds a header to the `.html` (a doctype and a `<script>`
    that loads graphally's viewer), so the file itself shows the diagram when opened in a
    browser, with nothing installed. Keep the header; anyone can edit the text and reload.
