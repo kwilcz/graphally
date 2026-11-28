@@ -21,9 +21,9 @@ features, even its flaws, when asked for something new (Jansson and Smith, *Desi
 
 ## The method
 
-1. **The point.** One sentence the reader should take away, written as the title in the
-   reader's terms: what they gain, with the fact or the safeguard that makes it believable. A
-   lead line says for whom and how.
+1. **The point.** One sentence the reader should take away, in the reader's terms: what they
+   gain, with the fact or the safeguard that makes it believable. The hero carries it; a title,
+   when the figure has one, is small and plain (below).
 2. **The hero.** One form, invented for this content, that shows the point before a label is
    read, and takes the largest area of the page. It is abstract or simplified, never an
    illustrated scene: shapes, lines, areas and type. See [Inventing the hero](#inventing-the-hero).
@@ -66,13 +66,15 @@ main colours and an accent, two fonts at most, one icon style: Visme's infograph
 pictograms and titles drive recall: Borkin et al., *IEEE TVCG*, 2013 and 2016).
 
 - **One hero**, larger than anything else, carrying the point.
-- **Two typefaces at most**: a display face for the title, the big numbers and the labels, and
-  a text face for the sentences; the client's own when it has one. The display face need not
-  be condensed: a serif, a geometric or a wide grotesque carries big numbers as well. Choosing
-  and loading them: [fonts.md](fonts.md).
-- **Sizes for where it is read.** A slide on a screen, 1600px wide: title 56 to 72px, big
-  numbers 48 to 80px, labels 16 to 20px, sentences 13 to 17px, a letter-spaced eyebrow, tick
-  marks and axis labels 12 to 13px, never less. A page that will be printed is sized from the paper: 1600px across A4 or Letter
+- **One plain family**: Inter, IBM Plex Sans with Plex Mono, or Arimo (Arial's metrics), the
+  client's own when it has one; weight and size carry the hierarchy. A display face only when
+  the user or the brand guide asks for one ([fonts.md](fonts.md)).
+- **A small, plain title, or none**: 15 to 18px, in the family's semibold, at the top left; it
+  names the subject or states the point in a few words. No line of small capitals above it, no
+  coloured words in it, no sentence-long lead under it. Where the page around the figure names
+  it, leave the title out.
+- **Sizes for where it is read.** A slide on a screen, 1600px wide: big numbers 48 to 80px,
+  labels 16 to 20px, sentences 15 to 17px, tick marks and axis labels 12 to 13px, never less. A page that will be printed is sized from the paper: 1600px across A4 or Letter
   landscape, or 1200px across portrait, makes a point about 2px, so sentences at 10 to 12pt are
   20 to 24px and nothing is under 7pt, 14px (Butterick, *Practical Typography*: 10 to 12pt for
   body text in print). A post in a social feed (1200 × 1200, 1200 × 627) is shown at a third to
@@ -175,9 +177,10 @@ overflow: hidden`); a box takes one radius for all four corners.
 
 Render with `--png1x` and look at the image at full size, as the reader will:
 
-- [ ] The point reads from the title and the hero alone, in a few seconds
+- [ ] The point reads from the hero alone, in a few seconds
 - [ ] The hero belongs to this content: it would not fit another client unchanged
-- [ ] Two typefaces at most, two or three colours on a neutral ground, one icon style
+- [ ] One plain family; a small, plain title or none; two or three colours on a neutral
+  ground (or one per source, when the figure follows sources); one icon style
 - [ ] Every number that matters is drawn to scale and labelled
 - [ ] Margins are equal, edges align, nothing touches or overflows
 - [ ] Sources are noted; the owner is in the footer

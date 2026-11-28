@@ -9,7 +9,10 @@ techniques that build any form; whatever a page can lay out renders.
 
 - **One sentence** the reader should come away with, in their words: "payments and packing
   hold up orders", rather than "order system overview".
-- **The title states it**; the subtitle gives the context (whose, where, when).
+- **The figure carries it.** A title, when the figure needs one, is small and plain: the
+  diagram's `title` (15px) or a 15 to 18px line at the top left, naming the subject or the
+  point in a few words; no line of small capitals above it, no coloured words. The type is one
+  plain family (Inter, IBM Plex, Arimo).
 - **One figure per point.** A brief with several points gets several figures, or one figure
   whose sections each carry one.
 

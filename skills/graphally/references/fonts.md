@@ -26,8 +26,9 @@ same on every machine.
   normal-width text face of the same build, a serif title over a sans text, a heavy weight over
   a regular one. Two faces that differ only a little conflict, and read as a mistake (Williams,
   *The Non-Designer's Design Book*: concord, conflict, contrast).
-- **Choose the voice from the subject**, not from habit, and pick one family from its list; no
-  test renders: the figure's first render shows the face, and it can change then:
+- **Plain by default**: one family, Inter (the theme's), IBM Plex Sans with Plex Mono, or Arimo
+  (Arial's metrics), with weight for the hierarchy. The voices below are for a user or brand
+  that asks for a display face; pick one family from its list, with no test renders:
   - condensed grotesques fit many big numbers and long titles in little width: industry,
     operations, logistics (Sofia Sans Condensed, Antonio, Archivo Narrow, Oswald, Saira
     Condensed, Roboto Condensed, IBM Plex Sans Condensed, Barlow Condensed, Fjalla One);

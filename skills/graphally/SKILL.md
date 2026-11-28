@@ -45,7 +45,7 @@ Idea starters by point, and the design moves that make a figure read at a glance
 [references/design.md](references/design.md).
 
 **An infographic or a slide** (a pitch or proposal slide, a one-pager, a fact sheet, a poster:
-a few facts for business readers) keeps a stricter standard: one hero, two typefaces, two or
+a few facts for business readers) keeps a stricter standard: one hero, one plain family, a small title or none, two or
 three colours, one icon style, every number drawn to scale. Read
 [references/infographics.md](references/infographics.md) before designing it: its method for
 inventing the hero takes the place of the idea starters.
@@ -153,7 +153,7 @@ A figure designed for its point, "two stations hold most of the delay". The trac
 order's path, so no lines join the stations; the red stops and their notes carry the point.
 
 ```html
-<diagram width=1200 title="Two stations hold most of the delay" subtitle="What happens to an order, from the web shop to the door">
+<diagram width=1200 title="Order fulfilment: where orders wait">
 <style>
   .line { display: grid; grid-template-columns: repeat(5, 1fr); justify-items: center; row-gap: 16px; }
   .figure { width: 150px; }
@@ -218,8 +218,9 @@ all('.slow').forEach((s, i) => draw.moveTo(s.bottom).lineTo(pt(s.center.x, stall
   company's own set from a folder or a sprite (`icon-sets="acme: ../brand/icons"` on
   `<diagram>`, then `acme:shield`). An unknown name is reported with the nearest names.
   [references/icons.md](references/icons.md) has the names, weights, colours and own sets.
-- **Fonts**: Inter unless the figure says otherwise. `fonts="Barlow Condensed:700,800;
-  Barlow:400"` on `<diagram>` loads Google fonts; an `@font-face` rule in the `<style>` loads a
+- **Fonts**: Inter unless the figure says otherwise: one plain family (Inter, IBM Plex, Arimo).
+  `fonts="IBM Plex Sans:400,600"` on `<diagram>` with `:root { font-family: 'IBM Plex Sans',
+  sans-serif }` sets the whole figure, title included; an `@font-face` rule in the `<style>` loads a
   font file of your own (a licensed brand font, the path relative to the diagram). Both are
   measured for layout and embedded in the SVG. [references/fonts.md](references/fonts.md) has
   choosing, loading and licences.
