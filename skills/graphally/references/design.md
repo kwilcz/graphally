@@ -13,7 +13,7 @@ or to a user who asks for them.
 
 - [The register](#the-register): standards first; a diagram, not a poster
 - [The point](#the-point): one sentence, and a title only when it helps
-- [The form](#the-form): the standard kind first, arranged around the point
+- [The form](#the-form): the notation, or three candidates; abstract, not illustrated
 - [Moves that make it read](#moves-that-make-it-read): the research behind a glanceable figure
 - [The look](#the-look): ground, type, labels, shapes, lines, colour
 - [Sizes for where it is read](#sizes-for-where-it-is-read)
@@ -53,31 +53,45 @@ or to a user who asks for them.
 
 ## The form
 
-Choose the kind of diagram first, then arrange it around the point.
+Where the figure has a notation (BPMN, a flowchart, a UML sequence, a topology of cloud
+services, a Gantt chart), the notation is the form: keep it, and arrange it around the point.
+Otherwise, sketch three candidates in words before drawing any, each from a different source,
+then choose. Designers who weigh several ideas side by side reach better and more varied designs
+than those who refine their first (Dow et al., *ACM TOCHI*, 2010).
 
-| The point is about | The standard kind |
+- **From the content's own structure.** Ask what the things do: move through stages, split,
+  merge, accumulate, wait, sit inside something larger, are shared, branch, repeat, or are
+  compared. The verb suggests the form: what moves needs a track, what merges needs streams,
+  what is contained needs a boundary, what is shared needs an overlap.
+- **From a convention the reader knows**: a waterfall for a cost bridge, a matrix of roles and
+  tasks, rings for what is in and out, two panels for before and after. Readers infer the
+  meaning from a familiar shape (Moody, 2009).
+- **From the main number,** when there is one: a length against the length it replaces.
+
+Keep the candidate that shows this content best. One that would fit any other subject
+unchanged is generic: three columns of identical cards fit every subject, and show none.
+
+| The point is about | Forms that show it |
 |---|---|
-| steps and decisions, in order | a flowchart; with roles, BPMN lanes |
-| who calls whom, in time | a sequence diagram |
-| the parts, where they run, how they communicate | a topology: icons over names in groups, labelled lines |
-| layers: what each part is for | a layered stack of bands |
-| ownership: who does what | swimlanes, or a matrix of roles and tasks (RACI) |
-| a hierarchy | a tree, one level per row or column |
-| dates, durations, dependencies | a Gantt chart or a timeline |
-| in or out, contained in | nested regions; a scope boundary |
-| before and after, or two options | two panels on one layout, the differences marked |
-| states and what moves between them | a state diagram |
-| where data comes from and goes to | a flow from sources through stages to its uses |
+| a sequence: what happens, in order | a flowchart; a track with stations; a relay of hand-offs between lanes |
+| where things stall or fail | the track with its slow stations marked; a funnel narrowing where cases drop out |
+| where things come from and go to | streams merging into a store and leaving it; stages the records pass through |
+| layers: what each part is for | a stack of slabs; a cross-section |
+| ownership: who does what | lanes; overlapping territories with what is shared in the overlap; a matrix |
+| boundaries: in or out | rings; nested regions; a line with what is outside it |
+| change: before and after | two panels on one layout, the changes marked; a waterfall from one total to the other |
+| a hierarchy | a tree; a stepped stack, the senior level on top |
+| a cycle or a repeat | a ring of stages; a loop drawn around the steps that repeat |
+| the parts, where they run, how they communicate | a topology: icons over their names in regions, joined by labelled lines |
 
-- **Arrange it around the point.** The main path runs straight and central, its branches
-  beside it; what belongs together shares a region; the reading runs one way; the element that
-  carries the point is the strongest. "Two failed checks page on-call" is a flowchart whose two
-  paging ends sit in one column, in the one strong colour.
-- **When no standard kind fits**, build a structural form from diagram parts (regions, bands,
-  lanes, layers, nodes, lines, a scale): sketch two or three in words and keep the one that
-  shows this content best; designers who compare several ideas reach better ones (Dow et al.,
-  *ACM TOCHI*, 2010). A picture standing in for the structure (a lake, a building with a roof,
-  price tags, a round table) is an infographic's device, not a diagram's.
+- **Arrange it around the point.** The main path runs straight and central, its branches beside
+  it; what belongs together shares a region; the reading runs one way; the element that carries
+  the point is the strongest. Give the figure one structural idea a reader remembers: the overlap
+  where both parties sit, the loop around the steps that repeat, the one line that crosses a
+  boundary.
+- **Abstract, not illustrated.** Build the form from geometry (regions, bands, overlaps, rings,
+  tracks, lines, a scale), so it reads as a diagram. An illustration (water in a lake, a building
+  with a roof, price tags on strings, chairs round a table) belongs to an infographic.
 
 ## Moves that make it read
 
@@ -100,7 +114,10 @@ Each move rests on research into how people read pictures.
 ## The look
 
 The reader gets the overview at a glance, and the figure looks professional: calm,
-consistent, and conventional where a convention exists.
+consistent, and conventional where a convention exists. Professional is not plain: a figure of
+white boxes in grey groups, with nothing strong, reads as a draft. It has distinct shapes for
+distinct roles, a tint for each region by what the region is, the main path heavier than the
+rest, one element that draws the eye, and a layout that fills its width with no empty corner.
 
 - **The page's ground.** Draw on the theme's page, with regions as tints of it, so the figure
   sits in the document and follows its dark theme. No paper colour, dark panel or gradient
@@ -116,15 +133,17 @@ consistent, and conventional where a convention exists.
   them; the look then comes from the lanes, the weight of the main path and the space. Elsewhere
   let the shape say what a thing is: an icon over its name for a component, a band or a tinted
   region for an area, a pill for an actor or a state. Frame a thing only where the frame means
-  a boundary. A figure of identical white cards reads as a form to fill in.
+  a boundary. A figure of identical white cards reads as a form to fill in. A region's name is
+  text on the region's tint (semibold, or small capitals), not a filled bar: solid colour is
+  for the element that carries the point.
 - **Lines that follow the content.** A flow, a call path or a sequence runs on straight, routed
   lines; streams that merge or split may curve into each other. Weight and dash carry meaning
   (a thicker line for the main path, a dashed one for what is asynchronous), and the figure
   says which, in its key or in the label of the path. One weight for one meaning, the same for
   every line that has it. Curves are drawn in the page (an inline SVG) or by `curve`.
-- **Colour that carries detail.** Neutral ink for the structure; a tint per lane, zone or
-  group; a strong colour only for what carries the point, and red or green only for failure or
-  success. As many colours as the figure has meanings, each meaning one thing throughout.
+- **Colour that carries detail.** Neutral ink for the structure; a tint per lane, zone, owner
+  or path; a strong colour for what carries the point. `--rust`, the theme's red, means failure,
+  danger or a stop, and `--green` success; for emphasis take `--woad`, `--teal` or `--purple`. As many colours as the figure has meanings, each meaning one thing throughout.
   Vendor icons keep their own colours; brand colours come first when there are some. Text
   keeps a contrast of 4.5:1 with its ground, 3:1 when large (WCAG 2.2, 1.4.3).
 - **Air and alignment.** Equal outer margins, aligned edges, white space between groups;
@@ -150,9 +169,14 @@ colour that means nothing, gradients, emoji, clip-art.
 | a slide on a screen | 1600 × 900 | labels 16 to 20px, nothing under 12px |
 | printed (A4 or Letter) | 1240 across portrait, 1754 landscape | a point is about 2px: labels 18 to 22px, nothing under 14px |
 
-A figure in a page is shrunk to the page's column, so its text starts larger than the theme's
-13px (Butterick, *Practical Typography*: body text on screens 15 to 25px). Slides, social
-images and print production: [infographics.md](infographics.md).
+A figure in a page is shrunk to the page's column: in a README it shows at most about 880px
+wide, so its text shows at its size × 880 ÷ `width`. Keep that at 11px or more: labels of 13px
+fit a figure 1000 wide, 15px one 1200 wide, 17px one 1400 wide (Butterick, *Practical
+Typography*: body text on screens 15 to 25px). The building blocks' text starts at 11.5 to
+13px, so set it for the width: `.figure, .node, [shape] { font-size: 15px }`, their `small`
+lines 13px, `h4` 14px, a sequence's `.msg` 15px, and `--line-label-font`. Rather than a wider
+figure with larger text, make the layout more compact: wrap a long row, shorten labels.
+Slides, social images and print production: [infographics.md](infographics.md).
 
 ## Building any form
 

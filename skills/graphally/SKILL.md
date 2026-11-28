@@ -31,10 +31,10 @@ ground, one plain typeface, a small title or none, labels rather than sentences.
 design in four lines:
 
 1. **The point**: who reads the figure, and the one thing it must make obvious to them.
-2. **The form**: the kind of diagram (a flowchart, BPMN lanes, a sequence, a topology, a
-   layered stack, a tree, a Gantt chart, a matrix) and how it is arranged around the point:
-   the main path straight, the two slow steps in the one strong colour, what is shared in a
-   band below.
+2. **The form**: the notation where the figure has one (BPMN, a flowchart, a UML sequence, a
+   topology, a Gantt chart), otherwise a form invented for this content from geometry: an
+   overlap for what two parties share, a track whose two slow stations are marked, rings for
+   what is in and out, a stack of slabs for layers. Then how it is arranged around the point.
 3. **The look**: what each colour, shape and line weight means, the typeface, and the size
    for where the figure is read.
 4. **The build**: the techniques that make it: grid areas, `shape=`, `clip-path`, the
