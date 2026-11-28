@@ -163,7 +163,10 @@ them:
   in the `<h4>`.
 - `tile`: an icon over its name in a small frame.
 - `band`: a full-width strip of shared services.
-- `key` with `swatch`, `swatch dashed` and `swatch box`: a legend.
+- `key` with `swatch`, `swatch dashed` and `swatch box`: a legend, one row per meaning, a
+  swatch taking its line's colour with `border-color`:
+  `<div class=key><span><i class=swatch style="border-color: var(--rust)"></i>stops the
+  release</span><span><i class="swatch dashed"></i>peering</span></div>`.
 - `card`, `box`, `pill`, `tag`, `banner`.
 - `disabled` on any of them: a part that is there but does not run (switched off, kept
   for rollback, not yet live). It turns grey, icon included, fades to half and dashes its

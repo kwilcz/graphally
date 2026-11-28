@@ -200,7 +200,7 @@ cross-functional one, and without BPMN's events and gateways:
   a question ("In stock?").
 - **The main path runs straight** down one column, its branches to the side they leave by, each
   on its decision's row; with all branches on one side, the main path is the first column. Colour, when it is
-  used, means one thing (a failure path in red) and the figure says so.
+  used, means one thing (a failure path in red) and the figure says so in a `key` (`format.md`).
 
 ```html
 <diagram width=850 title="Order handling">
