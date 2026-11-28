@@ -56,7 +56,10 @@ for (const m of all('.msg')) {
 ## How to
 
 - **Participants** are direct children of the container with `data-who`, in the order of
-  their columns. Any block works; `node` gives the usual card.
+  their columns. Any block works; `node` gives the usual card. The columns share the
+  container's width equally and each head fills its own: for longer names widen the diagram
+  (about 170px a participant holds an icon, a two-word name and a `<small>` line). A `width` on
+  a head moves it off its lifeline; a narrower head takes `justify-self: center`.
 - **Messages**: `<p class=msg data-from=a data-to=b>text</p>`. Add `reply` for a dashed
   return, `async` for an open arrowhead. A message to oneself loops on the right.
 - **Fragments**: `<div class=frag data-kind=alt data-guard="condition">` around messages;
@@ -68,6 +71,10 @@ for (const m of all('.msg')) {
   come first in each message; `sequence('#seq', { number: false, activations: false })`
   leaves them out.
 - **The arrows** are the loop in the example, copied as it is.
+- **The point's messages** (the webhook that marks an order paid, the call that fails) take a
+  class of their own, `msg hot`: the text in CSS (`.msg.hot { color: var(--rust) }`), the arrow
+  in the loop (`color: m.el.matches('.hot') ? 'rust' : undefined` among the options), and a
+  `key` under the diagram names it (`format.md`).
 
 ## Pitfalls
 
